@@ -176,6 +176,14 @@
           <span class="cat-circle-title">Dates Laddu</span>
         </a>
 
+        <!-- Category 6: Moringa Chikki -->
+        <a href="categories.html?cat=Moringa%20Chikki" class="cat-circle-card">
+          <div class="cat-circle-frame">
+            <img src="https://images.unsplash.com/photo-1590080875515-8a3a8dc5735e?w=300&auto=format&fit=crop&q=80" alt="Moringa Chikki">
+          </div>
+          <span class="cat-circle-title">Moringa Chikki</span>
+        </a>
+
       </div>
     </section>
 
@@ -804,6 +812,34 @@
       window.location.href = 'product.html?id=' + id;
     }
 
+    function triggerFlyToCart(e) {
+      if (!e || !e.clientX) return;
+      const dot = document.createElement('div');
+      dot.className = 'flying-cart-dot';
+      dot.style.left = `${e.clientX - 9}px`;
+      dot.style.top = `${e.clientY - 9}px`;
+      document.body.appendChild(dot);
+
+      const target = document.querySelector('.minimal-cart-icon-btn') || document.querySelector('.mobile-dock-btn[href="cart.html"]');
+      const targetRect = target ? target.getBoundingClientRect() : { left: window.innerWidth - 40, top: 20, width: 30, height: 30 };
+
+      requestAnimationFrame(() => {
+        dot.style.transform = `scale(0.5)`;
+        dot.style.left = `${targetRect.left + (targetRect.width / 2) - 9}px`;
+        dot.style.top = `${targetRect.top + (targetRect.height / 2) - 9}px`;
+        dot.style.opacity = '0.3';
+      });
+
+      setTimeout(() => {
+        dot.remove();
+        document.querySelectorAll('.minimal-cart-badge').forEach(b => {
+          b.classList.remove('badge-pop');
+          void b.offsetWidth;
+          b.classList.add('badge-pop');
+        });
+      }, 550);
+    }
+
     function updateCardSteppersUI() {
       ['prod_1', 'prod_2', 'prod_3', 'prod_4', 'prod_5', 'prod_6'].forEach(id => {
         const item = cart.find(i => i.id === id);
@@ -815,9 +851,9 @@
           if (qty > 0) {
             bsEl.innerHTML = `
               <div class="card-stepper-active" onclick="event.stopPropagation()">
-                <button onclick="updateQty('${id}', -1)">-</button>
-                <span>${qty}</span>
-                <button onclick="updateQty('${id}', 1)">+</button>
+                <button onclick="updateQty('${id}', -1, event)">-</button>
+                <span class="num-bump">${qty}</span>
+                <button onclick="updateQty('${id}', 1, event)">+</button>
               </div>
             `;
           } else {
@@ -825,7 +861,7 @@
               <button class="zepto-btn-buynow" onclick="event.stopPropagation(); buyNowDirect('${id}')">
                 <i class="ri-flashlight-fill"></i> Buy
               </button>
-              <button class="zepto-btn-cart-icon" onclick="event.stopPropagation(); addToCart('${id}')" aria-label="Add to cart">
+              <button class="zepto-btn-cart-icon" onclick="event.stopPropagation(); addToCart('${id}', event)" aria-label="Add to cart">
                 <i class="ri-shopping-cart-2-line"></i>
               </button>
             `;
@@ -838,9 +874,9 @@
           if (qty > 0) {
             scEl.innerHTML = `
               <div class="card-stepper-active" onclick="event.stopPropagation()">
-                <button onclick="updateQty('${id}', -1)">-</button>
-                <span>${qty}</span>
-                <button onclick="updateQty('${id}', 1)">+</button>
+                <button onclick="updateQty('${id}', -1, event)">-</button>
+                <span class="num-bump">${qty}</span>
+                <button onclick="updateQty('${id}', 1, event)">+</button>
               </div>
             `;
           } else {
@@ -848,7 +884,7 @@
               <button class="btn-buy-light-green" onclick="event.stopPropagation(); buyNowDirect('${id}')">
                 <i class="ri-flashlight-fill"></i> Buy Now
               </button>
-              <button class="btn-add-cart-outline" onclick="event.stopPropagation(); addToCart('${id}')" aria-label="Add to cart">
+              <button class="btn-add-cart-outline" onclick="event.stopPropagation(); addToCart('${id}', event)" aria-label="Add to cart">
                 <i class="ri-shopping-cart-2-line"></i>
               </button>
             `;
@@ -857,7 +893,8 @@
       });
     }
 
-    function addToCart(id) {
+    function addToCart(id, event) {
+      if (event) triggerFlyToCart(event);
       const existing = cart.find(i => i.id === id);
       if (existing) {
         existing.qty += 1;
@@ -877,7 +914,8 @@
       window.location.href = 'checkout.html';
     }
 
-    function updateQty(id, delta) {
+    function updateQty(id, delta, event) {
+      if (delta > 0 && event) triggerFlyToCart(event);
       const item = cart.find(i => i.id === id);
       if (!item) return;
       item.qty += delta;
