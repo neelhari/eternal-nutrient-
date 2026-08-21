@@ -1493,3 +1493,177 @@ body {
     font-weight: 800;
   }
 }
+
+/* ==========================================================================
+   DESKTOP RESPONSIVE & PREMIUM LAYOUT ENHANCEMENTS (>= 900px)
+   ========================================================================== */
+@media (min-width: 900px) {
+  .site-wrapper {
+    max-width: 1220px !important;
+    margin: 0 auto !important;
+    padding: 0 16px 40px !important;
+  }
+
+  .main-header {
+    padding: 14px 28px !important;
+    border-radius: 0 0 16px 16px !important;
+  }
+
+  .content-section {
+    padding: 24px 16px !important;
+  }
+
+  .section-main-title.serif-title,
+  .section-main-title,
+  .section-main-heading {
+    font-size: 22px !important;
+  }
+
+  /* Desktop 1:1 Hero Promo Banner */
+  .hero-section-wrap {
+    padding: 20px 16px !important;
+  }
+
+  .hero-banner-card {
+    min-height: 280px !important;
+    padding: 44px 50px !important;
+    border-radius: 24px !important;
+  }
+
+  .hero-title-main {
+    font-size: 30px !important;
+    line-height: 1.25 !important;
+    margin-bottom: 20px !important;
+  }
+
+  .hero-sub-tag {
+    font-size: 14.5px !important;
+    margin-bottom: 8px !important;
+  }
+
+  .hero-cta-btn {
+    font-size: 14.5px !important;
+    padding: 12px 28px !important;
+    border-radius: 10px !important;
+  }
+
+  /* Desktop Shop by Category Grid */
+  .category-row-container {
+    display: grid !important;
+    grid-template-columns: repeat(5, 1fr) !important;
+    gap: 24px !important;
+    overflow: visible !important;
+    padding: 12px 0 20px !important;
+  }
+
+  .cat-circle-card {
+    flex: none !important;
+    max-width: none !important;
+    width: 100% !important;
+  }
+
+  .cat-circle-frame {
+    width: 104px !important;
+    height: 104px !important;
+    border-width: 2px !important;
+  }
+
+  .cat-circle-title {
+    font-size: 13.5px !important;
+    margin-top: 10px !important;
+  }
+
+  /* Desktop Best Sellers 5-Column Grid Shelf */
+  .zepto-rail-container {
+    display: grid !important;
+    grid-template-columns: repeat(5, 1fr) !important;
+    gap: 20px !important;
+    overflow: visible !important;
+    padding: 12px 0 24px !important;
+  }
+
+  .zepto-item-card {
+    width: 100% !important;
+    min-width: 0 !important;
+    padding: 14px !important;
+    border-radius: 16px !important;
+  }
+
+  .zepto-img-box {
+    aspect-ratio: 1 / 1 !important;
+    border-radius: 12px !important;
+    margin-bottom: 10px !important;
+  }
+
+  .zepto-card-title {
+    font-size: 15.5px !important;
+  }
+
+  .zepto-card-badge {
+    font-size: 11px !important;
+  }
+
+  .zepto-price-num {
+    font-size: 16px !important;
+  }
+
+  .zepto-btn-buynow {
+    font-size: 12.5px !important;
+    padding: 8px 6px !important;
+  }
+
+  .zepto-btn-cart-icon {
+    width: 34px !important;
+    height: 34px !important;
+  }
+
+  /* Desktop Showcase Product Grid */
+  .showcase-grid-responsive {
+    display: grid !important;
+    grid-template-columns: repeat(3, 1fr) !important;
+    gap: 24px !important;
+  }
+
+  .product-showcase-card {
+    padding: 16px !important;
+    border-radius: 18px !important;
+  }
+
+  .product-photo-wrap {
+    aspect-ratio: 1.1 / 1 !important;
+    margin-bottom: 14px !important;
+  }
+
+  .card-item-title {
+    font-size: 17.5px !important;
+  }
+
+  .card-price-current {
+    font-size: 19px !important;
+  }
+
+  .btn-buy-light-green {
+    font-size: 14px !important;
+    padding: 10px 14px !important;
+  }
+
+  .btn-add-cart-outline {
+    width: 40px !important;
+    height: 40px !important;
+  }
+
+  /* Desktop Trust Pillars */
+  .pillars-row-container {
+    padding: 24px 36px !important;
+    border-radius: 20px !important;
+    margin: 30px 16px !important;
+  }
+
+  .pillar-icon {
+    font-size: 26px !important;
+  }
+
+  .pillar-label {
+    font-size: 13.5px !important;
+  }
+}
