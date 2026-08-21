@@ -1678,3 +1678,124 @@ body {
     font-size: 13px !important;
   }
 }
+
+/* ==========================================================================
+   TOP-NOTCH D2C LUXURY ANIMATIONS
+   ========================================================================== */
+
+/* 1. WhatsApp Radar Breathing Pulse */
+.footer-wa-direct-btn, .whatsapp-checkout-btn, .float-wa-beacon {
+  animation: waRadarPulse 2.4s infinite cubic-bezier(0.4, 0, 0.6, 1) !important;
+}
+
+@keyframes waRadarPulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(37, 211, 102, 0.6), 0 4px 14px rgba(37, 211, 102, 0.25);
+  }
+  70% {
+    box-shadow: 0 0 0 14px rgba(37, 211, 102, 0), 0 4px 14px rgba(37, 211, 102, 0.25);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(37, 211, 102, 0), 0 4px 14px rgba(37, 211, 102, 0.25);
+  }
+}
+
+/* 2. Seamless Infinite Marquee Ticker Strip */
+.marquee-ribbon-wrap {
+  width: 100%;
+  overflow: hidden;
+  background: #202B1B;
+  color: #DDE8D6;
+  padding: 12px 0;
+  border-top: 1px solid #2C3C26;
+  border-bottom: 1px solid #2C3C26;
+  user-select: none;
+  white-space: nowrap;
+  position: relative;
+}
+
+.marquee-track {
+  display: inline-flex;
+  gap: 36px;
+  animation: marqueeScroll 22s linear infinite;
+}
+
+.marquee-track:hover {
+  animation-play-state: paused;
+}
+
+@keyframes marqueeScroll {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+.marquee-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 12.5px;
+  font-weight: 700;
+  letter-spacing: 0.4px;
+}
+
+.marquee-item i {
+  color: #A3E635;
+  font-size: 15px;
+}
+
+/* 3. Stats Counter Section */
+.stats-strip-container {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+  padding: 12px 16px;
+}
+
+@media (min-width: 768px) {
+  .stats-strip-container {
+    grid-template-columns: repeat(4, 1fr);
+    gap: 18px;
+    padding: 16px 24px;
+  }
+}
+
+.stat-box-card {
+  background: #FFFFFF;
+  border: 1px solid #EAEFE6;
+  border-radius: 14px;
+  padding: 14px;
+  text-align: center;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.02);
+  transition: transform 0.2s ease, border-color 0.2s ease;
+}
+
+.stat-box-card:hover {
+  transform: translateY(-2px);
+  border-color: #BDDE9F;
+}
+
+.stat-num-val {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 20px;
+  font-weight: 800;
+  color: #2D5C14;
+  line-height: 1.1;
+  margin-bottom: 3px;
+}
+
+.stat-desc-label {
+  font-size: 11.5px;
+  font-weight: 600;
+  color: #6C7E64;
+}
+
+/* 4. Organic Floating Animation */
+.float-gentle {
+  animation: gentleFloat 3.5s ease-in-out infinite;
+}
+
+@keyframes gentleFloat {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-6px); }
+}
+

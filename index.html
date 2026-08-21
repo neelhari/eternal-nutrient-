@@ -16,6 +16,9 @@
   <link rel="stylesheet" href="styles/theme.css">
   <link rel="stylesheet" href="styles/storefront.css">
 
+  <!-- AOS (Animate On Scroll) -->
+  <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+
   <style>
     /* 4 Tabs in bottom dock */
     .mobile-bottom-dock {
@@ -110,7 +113,7 @@
     </div>
 
     <!-- 2. Hero Promo Banner (Exact Reference Match) -->
-    <section class="hero-section-wrap">
+    <section class="hero-section-wrap" data-aos="zoom-in-up">
       <div class="hero-banner-card">
         <img class="hero-banner-bg-img" src="assets/hero_banner.jpg" alt="Pure Organic Honey & Nature">
         <div class="hero-banner-text">
@@ -129,7 +132,7 @@
     </section>
 
     <!-- 3. Shop by Category (Exact Reference Circle Avatars) -->
-    <section class="content-section">
+    <section class="content-section" data-aos="fade-up">
       <div class="section-header-bar">
         <h2 class="section-main-title serif-title">Shop by Category</h2>
         <a href="categories.html" class="section-view-link">View all</a>
@@ -137,7 +140,7 @@
       <div class="category-row-container">
         
         <!-- Category 1: Organic Honey -->
-        <a href="categories.html?cat=Honey" class="cat-circle-card">
+        <a href="categories.html?cat=Honey" class="cat-circle-card" data-aos="fade-up" data-aos-delay="50">
           <div class="cat-circle-frame">
             <img src="assets/cat_honey.jpg" alt="Organic Honey">
           </div>
@@ -145,7 +148,7 @@
         </a>
 
         <!-- Category 2: Pickles -->
-        <a href="categories.html?cat=Pickles" class="cat-circle-card">
+        <a href="categories.html?cat=Pickles" class="cat-circle-card" data-aos="fade-up" data-aos-delay="100">
           <div class="cat-circle-frame">
             <img src="assets/cat_pickles.jpg" alt="Pickles">
           </div>
@@ -153,7 +156,7 @@
         </a>
 
         <!-- Category 3: Millets -->
-        <a href="categories.html?cat=Millet%20Rava" class="cat-circle-card">
+        <a href="categories.html?cat=Millet%20Rava" class="cat-circle-card" data-aos="fade-up" data-aos-delay="150">
           <div class="cat-circle-frame">
             <img src="assets/cat_millets.jpg" alt="Millets">
           </div>
@@ -161,7 +164,7 @@
         </a>
 
         <!-- Category 4: Organic Biscuits -->
-        <a href="categories.html?cat=Millet%20Biscuits" class="cat-circle-card">
+        <a href="categories.html?cat=Millet%20Biscuits" class="cat-circle-card" data-aos="fade-up" data-aos-delay="200">
           <div class="cat-circle-frame">
             <img src="assets/cat_biscuits.jpg" alt="Organic Biscuits">
           </div>
@@ -169,7 +172,7 @@
         </a>
 
         <!-- Category 5: Dates Laddu -->
-        <a href="categories.html?cat=Dates%20Laddu%27s" class="cat-circle-card">
+        <a href="categories.html?cat=Dates%20Laddu%27s" class="cat-circle-card" data-aos="fade-up" data-aos-delay="250">
           <div class="cat-circle-frame">
             <img src="assets/dates_laddu.jpg" alt="Dates Laddu">
           </div>
@@ -177,7 +180,7 @@
         </a>
 
         <!-- Category 6: Moringa Chikki -->
-        <a href="categories.html?cat=Moringa%20Chikki" class="cat-circle-card">
+        <a href="categories.html?cat=Moringa%20Chikki" class="cat-circle-card" data-aos="fade-up" data-aos-delay="300">
           <div class="cat-circle-frame">
             <img src="https://images.unsplash.com/photo-1590080875515-8a3a8dc5735e?w=300&auto=format&fit=crop&q=80" alt="Moringa Chikki">
           </div>
@@ -188,7 +191,7 @@
     </section>
 
     <!-- 4. Best Sellers (Zepto-Style Horizontal Rail) -->
-    <section class="content-section" style="padding-bottom: 4px;">
+    <section class="content-section" style="padding-bottom: 4px;" data-aos="fade-up">
       <div class="section-header-bar">
         <h2 class="section-main-title">Best Sellers</h2>
         <a href="categories.html" class="section-view-link">View all</a>
@@ -532,6 +535,45 @@
         </div>
       </div>
     </section>
+
+    <!-- Live Trust Stats Strip (AOS Animated) -->
+    <section class="stats-strip-container" data-aos="fade-up">
+      <div class="stat-box-card">
+        <div class="stat-num-val">10,000+</div>
+        <div class="stat-desc-label">Happy Families</div>
+      </div>
+      <div class="stat-box-card">
+        <div class="stat-num-val">100%</div>
+        <div class="stat-desc-label">Certified Organic</div>
+      </div>
+      <div class="stat-box-card">
+        <div class="stat-num-val">★ 4.9 / 5</div>
+        <div class="stat-desc-label">Customer Rating</div>
+      </div>
+      <div class="stat-box-card">
+        <div class="stat-num-val">Bangalore</div>
+        <div class="stat-desc-label">Express Delivery</div>
+      </div>
+    </section>
+
+    <!-- Infinite Continuous Marquee Ribbon -->
+    <div class="marquee-ribbon-wrap">
+      <div class="marquee-track">
+        <span class="marquee-item"><i class="ri-leaf-fill"></i> 100% Certified Organic</span>
+        <span class="marquee-item"><i class="ri-truck-fill"></i> Express Delivery in Bangalore</span>
+        <span class="marquee-item"><i class="ri-drop-fill"></i> Cold-Extracted Raw Forest Honey</span>
+        <span class="marquee-item"><i class="ri-shield-check-fill"></i> 100% Safe UPI & COD Checkout</span>
+        <span class="marquee-item"><i class="ri-heart-3-fill"></i> Zero Preservatives • Zero Maida</span>
+        <span class="marquee-item"><i class="ri-plant-fill"></i> Handcrafted in Small Batches</span>
+        <!-- Duplicate for infinite seamless loop -->
+        <span class="marquee-item"><i class="ri-leaf-fill"></i> 100% Certified Organic</span>
+        <span class="marquee-item"><i class="ri-truck-fill"></i> Express Delivery in Bangalore</span>
+        <span class="marquee-item"><i class="ri-drop-fill"></i> Cold-Extracted Raw Forest Honey</span>
+        <span class="marquee-item"><i class="ri-shield-check-fill"></i> 100% Safe UPI & COD Checkout</span>
+        <span class="marquee-item"><i class="ri-heart-3-fill"></i> Zero Preservatives • Zero Maida</span>
+        <span class="marquee-item"><i class="ri-plant-fill"></i> Handcrafted in Small Batches</span>
+      </div>
+    </div>
 
     <!-- 7. Luxury Interactive Deep-Forest Footer -->
     <footer class="site-footer">
@@ -1002,7 +1044,20 @@
       document.getElementById('bestsellers-section').scrollIntoView({ behavior: 'smooth' });
     }
 
-    window.addEventListener('DOMContentLoaded', renderCart);
+    window.addEventListener('DOMContentLoaded', () => {
+      renderCart();
+      if (typeof AOS !== 'undefined') {
+        AOS.init({
+          duration: 650,
+          easing: 'ease-out-cubic',
+          once: true,
+          offset: 40
+        });
+      }
+    });
   </script>
+
+  <!-- AOS Script CDN -->
+  <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
 </body>
 </html>
