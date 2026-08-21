@@ -1,0 +1,722 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Checkout - Eternal Nutricare</title>
+  
+  <!-- Remix Icons -->
+  <link href="https://cdn.jsdelivr.net/npm/remixicon@4.2.0/fonts/remixicon.css" rel="stylesheet">
+  
+  <!-- Google Fonts: Plus Jakarta Sans & DM Sans -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <!-- Core Layout Styles -->
+  <link rel="stylesheet" href="styles/theme.css">
+  <link rel="stylesheet" href="styles/storefront.css">
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    html, body {
+      width: 100%;
+      min-height: 100vh;
+      margin: 0;
+      padding: 0;
+      background-color: #FAFBF9;
+      font-family: 'DM Sans', 'Plus Jakarta Sans', system-ui, sans-serif;
+      color: #1E2519;
+      overflow-x: hidden;
+    }
+
+    /* Plain Clean Header with Go Back Navigation */
+    .plain-sub-header {
+      position: sticky;
+      top: 0;
+      width: 100%;
+      background: #FFFFFF;
+      border-bottom: 1px solid #F0F2EC;
+      height: 56px;
+      padding: 0 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      z-index: 100;
+      box-shadow: 0 1px 4px rgba(0, 0, 0, 0.02);
+    }
+
+    .sub-back-btn {
+      background: none;
+      border: none;
+      font-size: 22px;
+      color: #1E2519;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 40px;
+      height: 40px;
+      text-decoration: none;
+      border-radius: 50%;
+      margin-left: -8px;
+    }
+
+    .sub-page-title {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 17px;
+      font-weight: 700;
+      color: #1E2519;
+      text-align: center;
+    }
+
+    .sub-header-spacer {
+      width: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      color: #386618;
+      font-size: 18px;
+    }
+
+    /* Page Container (Full Screen Responsive) */
+    .checkout-screen-container {
+      width: 100%;
+      max-width: 560px;
+      margin: 0 auto;
+      padding: 14px 14px 100px;
+    }
+
+    @media (min-width: 900px) {
+      .checkout-screen-container {
+        max-width: 1060px;
+        display: grid;
+        grid-template-columns: 1.25fr 1fr;
+        gap: 32px;
+        align-items: start;
+        padding-top: 24px;
+      }
+    }
+
+    /* 3-Step Progress Tracker */
+    .checkout-step-tracker {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      margin-bottom: 20px;
+      padding: 12px 16px;
+      background: #FFFFFF;
+      border: 1px solid #EAEFE6;
+      border-radius: 14px;
+      grid-column: 1 / -1;
+    }
+
+    .step-node {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 12px;
+      font-weight: 700;
+      color: #8C9C87;
+    }
+
+    .step-node.completed {
+      color: #386618;
+    }
+
+    .step-node.active {
+      color: #2D5C14;
+    }
+
+    .step-circle {
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      background: #EFF3EC;
+      color: #55664F;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 11px;
+      font-weight: 800;
+    }
+
+    .step-node.active .step-circle {
+      background: #2D5C14;
+      color: #FFFFFF;
+    }
+
+    .step-node.completed .step-circle {
+      background: #EEF7E8;
+      color: #386618;
+    }
+
+    .step-arrow {
+      color: #CBD8BE;
+      font-size: 12px;
+    }
+
+    /* Form Cards */
+    .checkout-card {
+      background: #FFFFFF;
+      border: 1px solid #EAEFE6;
+      border-radius: 18px;
+      padding: 18px;
+      margin-bottom: 16px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.02);
+    }
+
+    .card-sec-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 14px;
+    }
+
+    .card-sec-title {
+      font-size: 15.5px;
+      font-weight: 800;
+      color: #1E2519;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .card-sec-title i {
+      color: #2D5C14;
+      font-size: 18px;
+    }
+
+    /* Address Type Chips */
+    .addr-type-pills {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 14px;
+    }
+
+    .addr-chip {
+      background: #F0F4EC;
+      border: 1.5px solid transparent;
+      color: #4A5B45;
+      font-size: 12px;
+      font-weight: 700;
+      padding: 5px 12px;
+      border-radius: 999px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .addr-chip.active {
+      background: #EEF7E8;
+      border-color: #BDDE9F;
+      color: #2D5C14;
+    }
+
+    /* Floating / Clean Input Fields */
+    .input-field-group {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 10px;
+    }
+
+    @media (min-width: 500px) {
+      .input-field-group.two-col {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+
+    .form-item {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .form-label {
+      font-size: 11px;
+      font-weight: 700;
+      color: #6C7E64;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .form-input {
+      width: 100%;
+      padding: 10px 12px;
+      border: 1.5px solid #DCE7D3;
+      border-radius: 10px;
+      font-size: 13.5px;
+      font-family: inherit;
+      outline: none;
+      background: #FAFBF8;
+      color: #1E2519;
+      transition: all 0.2s ease;
+    }
+
+    .form-input:focus {
+      border-color: #2D5C14;
+      background: #FFFFFF;
+      box-shadow: 0 0 0 3px rgba(45, 92, 20, 0.1);
+    }
+
+    /* Payment Radio Cards */
+    .payment-option-card {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 14px;
+      border: 1.5px solid #EAEFE6;
+      border-radius: 14px;
+      margin-bottom: 10px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      background: #FFFFFF;
+    }
+
+    .payment-option-card.selected {
+      border-color: #2D5C14;
+      background: #F4F8F0;
+      box-shadow: 0 2px 8px rgba(45, 92, 20, 0.08);
+    }
+
+    .pay-radio-circle {
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      border: 2px solid #CBD8BE;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .payment-option-card.selected .pay-radio-circle {
+      border-color: #2D5C14;
+    }
+
+    .payment-option-card.selected .pay-radio-circle::after {
+      content: '';
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #2D5C14;
+    }
+
+    /* Order Summary Column */
+    .order-items-preview-sec {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-bottom: 14px;
+      padding-bottom: 14px;
+      border-bottom: 1px solid #EEF2EA;
+    }
+
+    .checkout-item-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .checkout-thumb {
+      width: 44px;
+      height: 44px;
+      border-radius: 8px;
+      object-fit: cover;
+      background: #F8FAF6;
+      border: 1px solid #EAEFE6;
+      flex-shrink: 0;
+    }
+
+    .checkout-item-info {
+      flex: 1;
+    }
+
+    .checkout-item-name {
+      font-size: 13px;
+      font-weight: 700;
+      color: #1E2519;
+      line-height: 1.2;
+    }
+
+    .checkout-item-qty {
+      font-size: 11px;
+      color: #7A8C73;
+    }
+
+    .checkout-item-price {
+      font-size: 13.5px;
+      font-weight: 800;
+      color: #1E2519;
+    }
+
+    /* Promo Coupon Box */
+    .coupon-box-row {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 16px;
+    }
+
+    .coupon-input {
+      flex: 1;
+      padding: 9px 12px;
+      border: 1.5px dashed #BDDE9F;
+      border-radius: 10px;
+      font-size: 12.5px;
+      font-family: inherit;
+      outline: none;
+      background: #F8FAF5;
+      text-transform: uppercase;
+      font-weight: 700;
+      color: #2D5C14;
+    }
+
+    .coupon-btn {
+      background: #2D5C14;
+      color: #FFFFFF;
+      border: none;
+      border-radius: 10px;
+      padding: 9px 14px;
+      font-size: 12.5px;
+      font-weight: 800;
+      cursor: pointer;
+    }
+
+    /* Price Breakdown Rows */
+    .price-line-row {
+      display: flex;
+      justify-content: space-between;
+      font-size: 13.5px;
+      color: #4A5B45;
+      margin-bottom: 8px;
+    }
+
+    .price-line-row.grand-total {
+      font-size: 18px;
+      font-weight: 800;
+      color: #1E2519;
+      border-top: 1px solid #EEF2EA;
+      padding-top: 12px;
+      margin-top: 10px;
+    }
+
+    .btn-place-order-green {
+      width: 100%;
+      background: #2D5C14;
+      color: #FFFFFF;
+      border: none;
+      border-radius: 999px;
+      padding: 15px;
+      font-size: 15.5px;
+      font-weight: 800;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      margin-top: 16px;
+      box-shadow: 0 4px 16px rgba(45, 92, 20, 0.25);
+      transition: all 0.2s ease;
+    }
+
+    .btn-place-order-green:hover {
+      background: #22470F;
+    }
+
+    .secure-badge-foot {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      font-size: 11px;
+      font-weight: 700;
+      color: #6C7E64;
+      margin-top: 12px;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Plain Clean Header with Go Back Navigation (100% Width) -->
+  <header class="plain-sub-header">
+    <a href="cart.html" class="sub-back-btn" aria-label="Go Back">
+      <i class="ri-arrow-left-line"></i>
+    </a>
+    <h1 class="sub-page-title">Checkout</h1>
+    <div class="sub-header-spacer">
+      <i class="ri-shield-check-fill" title="256-Bit SSL Encrypted"></i>
+    </div>
+  </header>
+
+  <!-- Main Checkout Container (100% Responsive Grid) -->
+  <main class="checkout-screen-container">
+    
+    <!-- 3-Step Progress Tracker -->
+    <div class="checkout-step-tracker">
+      <div class="step-node completed">
+        <span class="step-circle"><i class="ri-check-line"></i></span>
+        <span>Cart</span>
+      </div>
+      <span class="step-arrow">➔</span>
+      <div class="step-node active">
+        <span class="step-circle">2</span>
+        <span>Address</span>
+      </div>
+      <span class="step-arrow">➔</span>
+      <div class="step-node">
+        <span class="step-circle">3</span>
+        <span>Payment</span>
+      </div>
+    </div>
+
+    <!-- Left Column: Address & Payment Forms -->
+    <div>
+      
+      <!-- 1. Delivery Address Card -->
+      <div class="checkout-card">
+        <div class="card-sec-header">
+          <h2 class="card-sec-title">
+            <i class="ri-map-pin-2-line"></i>
+            <span>1. Delivery Address</span>
+          </h2>
+          <button onclick="fillBangaloreDemo()" style="background:none; border:none; color:#2D5C14; font-size:12px; font-weight:700; cursor:pointer;">
+            📍 Auto-fill
+          </button>
+        </div>
+
+        <div class="addr-type-pills">
+          <button class="addr-chip active" onclick="selectAddrType(this)"><i class="ri-home-4-line"></i> Home</button>
+          <button class="addr-chip" onclick="selectAddrType(this)"><i class="ri-building-line"></i> Office</button>
+          <button class="addr-chip" onclick="selectAddrType(this)"><i class="ri-map-pin-user-line"></i> Other</button>
+        </div>
+
+        <div class="input-field-group two-col" style="margin-bottom: 10px;">
+          <div class="form-item">
+            <label class="form-label">Full Name *</label>
+            <input type="text" id="cust-name" class="form-input" placeholder="e.g. Siddaiah" value="Anita Sharma">
+          </div>
+          <div class="form-item">
+            <label class="form-label">Mobile Number *</label>
+            <input type="tel" id="cust-phone" class="form-input" placeholder="10-digit number" value="9876543210">
+          </div>
+        </div>
+
+        <div class="form-item" style="margin-bottom: 10px;">
+          <label class="form-label">Flat / House No. & Street Address *</label>
+          <input type="text" id="cust-address" class="form-input" placeholder="Flat / House / Landmark" value="Flat 402, Green Valley Apartments, Indiranagar">
+        </div>
+
+        <div class="input-field-group two-col">
+          <div class="form-item">
+            <label class="form-label">City *</label>
+            <input type="text" id="cust-city" class="form-input" placeholder="City" value="Bangalore">
+          </div>
+          <div class="form-item">
+            <label class="form-label">Pincode *</label>
+            <input type="text" id="cust-pincode" class="form-input" placeholder="e.g. 560087" value="560038">
+          </div>
+        </div>
+
+      </div>
+
+      <!-- 2. Payment Method Selector -->
+      <div class="checkout-card">
+        <h2 class="card-sec-title" style="margin-bottom: 14px;">
+          <i class="ri-wallet-3-line"></i>
+          <span>2. Payment Method</span>
+        </h2>
+
+        <!-- Option A: WhatsApp Dispatch -->
+        <div class="payment-option-card selected" onclick="selectPayment(this, 'whatsapp')">
+          <div class="pay-radio-circle"></div>
+          <div style="flex:1;">
+            <div style="font-size:14px; font-weight:800; color:#1E2519;">Order via WhatsApp (COD / Pay on Delivery)</div>
+            <div style="font-size:11.5px; color:#556B4E;">Instant receipt & dispatch with manager Siddaiah</div>
+          </div>
+          <i class="ri-whatsapp-fill" style="color:#25D366; font-size:24px;"></i>
+        </div>
+
+        <!-- Option B: Instant UPI -->
+        <div class="payment-option-card" onclick="selectPayment(this, 'upi')">
+          <div class="pay-radio-circle"></div>
+          <div style="flex:1;">
+            <div style="font-size:14px; font-weight:800; color:#1E2519;">Instant UPI (GPay, PhonePe, Paytm)</div>
+            <div style="font-size:11.5px; color:#556B4E;">UPI ID: 6302017482@ybl (Scan & Pay)</div>
+          </div>
+          <i class="ri-qr-code-line" style="color:#2D5C14; font-size:22px;"></i>
+        </div>
+
+        <!-- Option C: Card / NetBanking -->
+        <div class="payment-option-card" onclick="selectPayment(this, 'card')">
+          <div class="pay-radio-circle"></div>
+          <div style="flex:1;">
+            <div style="font-size:14px; font-weight:800; color:#1E2519;">Credit / Debit Card & NetBanking</div>
+            <div style="font-size:11.5px; color:#556B4E;">All major Indian banks supported</div>
+          </div>
+          <i class="ri-bank-card-line" style="color:#2D5C14; font-size:22px;"></i>
+        </div>
+
+      </div>
+
+    </div>
+
+    <!-- Right Column: Order Items & Price Summary -->
+    <div>
+      
+      <div class="checkout-card">
+        <h2 class="card-sec-title" style="margin-bottom: 14px;">
+          <i class="ri-shopping-bag-3-line"></i>
+          <span>Order Summary (2 Items)</span>
+        </h2>
+
+        <!-- Items Preview -->
+        <div class="order-items-preview-sec">
+          
+          <div class="checkout-item-row">
+            <img src="assets/showcase_honey.png" alt="Organic Honey" class="checkout-thumb">
+            <div class="checkout-item-info">
+              <div class="checkout-item-name">Raw Organic Honey</div>
+              <div class="checkout-item-qty">500g Jar • Qty: 1</div>
+            </div>
+            <div class="checkout-item-price">₹499</div>
+          </div>
+
+          <div class="checkout-item-row">
+            <img src="https://images.unsplash.com/photo-1586201375761-83865001e31c?w=300&auto=format&fit=crop&q=80" alt="Foxtail Millet Rava" class="checkout-thumb">
+            <div class="checkout-item-info">
+              <div class="checkout-item-name">Foxtail Millet Rava</div>
+              <div class="checkout-item-qty">500g Pack • Qty: 2</div>
+            </div>
+            <div class="checkout-item-price">₹378</div>
+          </div>
+
+        </div>
+
+        <!-- Promo Code -->
+        <div class="coupon-box-row">
+          <input type="text" id="coupon-code-input" class="coupon-input" placeholder="COUPON (e.g. ETERNAL10)" value="ETERNAL10">
+          <button class="coupon-btn" onclick="applyCoupon()">Apply</button>
+        </div>
+
+        <!-- Bill Breakdown -->
+        <div class="price-line-row">
+          <span>Items Subtotal</span>
+          <span id="co-subtotal">₹877</span>
+        </div>
+
+        <div class="price-line-row">
+          <span>Delivery Fee</span>
+          <span style="color:#2D5C14; font-weight:700;">FREE</span>
+        </div>
+
+        <div class="price-line-row" id="discount-row" style="color:#2D5C14; font-weight:700;">
+          <span>🎉 VIP Club Discount (10%)</span>
+          <span id="co-discount">-₹88</span>
+        </div>
+
+        <div class="price-line-row" style="color:#2D5C14; font-weight:700;">
+          <span>🌱 Eco-Packaging Discount</span>
+          <span>-₹20</span>
+        </div>
+
+        <div class="price-line-row grand-total">
+          <span>Total Payable</span>
+          <span id="co-grand-total">₹769</span>
+        </div>
+
+        <!-- Place Order CTA Button -->
+        <button class="btn-place-order-green" onclick="placeOrderFinal()">
+          <span>Place Order (₹769)</span>
+          <i class="ri-arrow-right-line"></i>
+        </button>
+
+        <div class="secure-badge-foot">
+          <i class="ri-lock-2-line"></i>
+          <span>100% Encrypted & Safe Farm-Direct Guarantee</span>
+        </div>
+
+      </div>
+
+    </div>
+
+  </main>
+
+  <script src="config/store.config.js"></script>
+  <script>
+    let selectedPaymentType = 'whatsapp';
+    let discountApplied = 88;
+
+    function selectAddrType(btn) {
+      document.querySelectorAll('.addr-chip').forEach(c => c.classList.remove('active'));
+      btn.classList.add('active');
+    }
+
+    function selectPayment(el, type) {
+      document.querySelectorAll('.payment-option-card').forEach(c => c.classList.remove('selected'));
+      el.classList.add('selected');
+      selectedPaymentType = type;
+    }
+
+    function fillBangaloreDemo() {
+      document.getElementById('cust-name').value = 'Siddaiah Customer';
+      document.getElementById('cust-phone').value = '6302017482';
+      document.getElementById('cust-address').value = 'Flat No. A1, Eco Greens Layout, Hegondanahalli, Gunjur';
+      document.getElementById('cust-city').value = 'Bangalore';
+      document.getElementById('cust-pincode').value = '560087';
+      alert('Filled with Bangalore store address demo!');
+    }
+
+    function applyCoupon() {
+      const code = document.getElementById('coupon-code-input').value.trim().toUpperCase();
+      if (code === 'ETERNAL10') {
+        discountApplied = 88;
+        document.getElementById('discount-row').style.display = 'flex';
+        document.getElementById('co-discount').textContent = '-₹88';
+        document.getElementById('co-grand-total').textContent = '₹769';
+        alert('🎉 Coupon ETERNAL10 applied! ₹88 saved.');
+      } else {
+        alert('Please enter valid coupon code "ETERNAL10"');
+      }
+    }
+
+    function placeOrderFinal() {
+      const name = document.getElementById('cust-name').value.trim();
+      const phone = document.getElementById('cust-phone').value.trim();
+      const address = document.getElementById('cust-address').value.trim();
+      const city = document.getElementById('cust-city').value.trim();
+      const pincode = document.getElementById('cust-pincode').value.trim();
+
+      if (!name || !phone || !address) {
+        alert('Please complete your delivery address.');
+        return;
+      }
+
+      const waNumber = (window.STORE_CONFIG && window.STORE_CONFIG.whatsAppNumber) ? window.STORE_CONFIG.whatsAppNumber : '916302017482';
+
+      let msg = `🛍️ *NEW CONFIRMED ORDER - ETERNAL NUTRICARE*\n`;
+      msg += `------------------------------------\n`;
+      msg += `👤 *Customer Name:* ${name}\n`;
+      msg += `📞 *Phone Number:* ${phone}\n`;
+      msg += `📍 *Delivery Address:* ${address}, ${city} - ${pincode}\n`;
+      msg += `💳 *Payment Method:* ${selectedPaymentType.toUpperCase()}\n`;
+      msg += `------------------------------------\n`;
+      msg += `*Ordered Items:*\n`;
+      msg += `1. Raw Organic Honey (500g Jar) × 1 = ₹499\n`;
+      msg += `2. Foxtail Millet Rava (500g Pack) × 2 = ₹378\n`;
+      msg += `------------------------------------\n`;
+      msg += `*Discount Applied:* -₹108 (VIP Club + Eco)\n`;
+      msg += `*Total Payable:* ₹769 (FREE Delivery)\n\n`;
+      msg += `Please confirm my order and share dispatch tracking time!`;
+
+      window.open(`https://wa.me/${waNumber}?text=${encodeURIComponent(msg)}`, '_blank');
+    }
+  </script>
+</body>
+</html>

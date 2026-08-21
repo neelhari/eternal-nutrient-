@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Portal - Eternal Nutricare</title>
+  
+  <!-- Remix Icons -->
+  <link href="https://cdn.jsdelivr.net/npm/remixicon@4.2.0/fonts/remixicon.css" rel="stylesheet">
+  
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <!-- Core Styles -->
+  <link rel="stylesheet" href="styles/theme.css">
+  <link rel="stylesheet" href="styles/admin.css">
+
+  <!-- Supabase CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body>
+
+  <!-- Admin App Layout -->
+  <div class="admin-layout">
+    
+    <!-- Sidebar Navigation -->
+    <aside class="admin-sidebar">
+      <div class="admin-brand-header">
+        <i class="ri-shield-check-fill" style="font-size: 28px; color: var(--primary);"></i>
+        <div>
+          <div class="admin-brand-title">Store Admin</div>
+          <span class="admin-badge">Production v2.0</span>
+        </div>
+      </div>
+
+      <nav class="admin-nav">
+        <button class="nav-item active" onclick="switchTab('products')">
+          <i class="ri-shopping-bag-3-line"></i>
+          <span>Products</span>
+        </button>
+        <button class="nav-item" onclick="switchTab('categories')">
+          <i class="ri-apps-2-line"></i>
+          <span>Categories</span>
+        </button>
+        <button class="nav-item" onclick="switchTab('orders')">
+          <i class="ri-file-list-3-line"></i>
+          <span>Orders</span>
+        </button>
+        <button class="nav-item" onclick="switchTab('settings')">
+          <i class="ri-settings-3-line"></i>
+          <span>Store Settings</span>
+        </button>
+        <div style="margin-top: auto; padding: 10px 0;">
+          <a href="index.html" class="nav-item" target="_blank" style="color: var(--primary);">
+            <i class="ri-external-link-line"></i>
+            <span>View Live Store</span>
+          </a>
+        </div>
+      </nav>
+    </aside>
+
+    <!-- Main Content Area -->
+    <main class="admin-main">
+      
+      <!-- Top Diagnostic Bar -->
+      <header class="admin-topbar">
+        <div id="cloud-status-badge" class="cloud-status-badge">
+          <span class="pulse-dot"></span>
+          <span id="cloud-status-text">Checking Cloud Database...</span>
+        </div>
+
+        <div style="display: flex; gap: 10px;">
+          <button class="btn-secondary" onclick="runHealthCheck()">
+            <i class="ri-refresh-line"></i> Test Cloud Sync
+          </button>
+        </div>
+      </header>
+
+      <div class="admin-container">
+        
+        <!-- TAB 1: PRODUCTS MANAGER -->
+        <section id="tab-products" class="tab-pane active">
+          <div class="page-action-bar">
+            <div>
+              <h2 style="font-size: 20px; font-weight: 800;">Product Catalog</h2>
+              <p style="font-size: 13px; color: #52604D;">Manage products, prices, images, and live inventory sync.</p>
+            </div>
+            <button class="btn-primary" onclick="openProductModal()">
+              <i class="ri-add-line"></i> Add New Product
+            </button>
+          </div>
+
+          <!-- Products Table -->
+          <div class="data-card">
+            <div class="table-responsive">
+              <table class="admin-table">
+                <thead>
+                  <tr>
+                    <th>Product</th>
+                    <th>Category</th>
+                    <th>Price</th>
+                    <th>Discount</th>
+                    <th>Stock</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="products-table-body">
+                  <!-- Rendered dynamically -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- TAB 2: CATEGORIES MANAGER -->
+        <section id="tab-categories" class="tab-pane" style="display: none;">
+          <div class="page-action-bar">
+            <div>
+              <h2 style="font-size: 20px; font-weight: 800;">Categories</h2>
+              <p style="font-size: 13px; color: #52604D;">Create and manage product classifications.</p>
+            </div>
+            <button class="btn-primary" onclick="openCategoryModal()">
+              <i class="ri-add-line"></i> Add Category
+            </button>
+          </div>
+
+          <div class="data-card">
+            <div class="table-responsive">
+              <table class="admin-table">
+                <thead>
+                  <tr>
+                    <th>Category Name</th>
+                    <th>Icon / Image</th>
+                    <th>Description</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="categories-table-body">
+                  <!-- Rendered dynamically -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- TAB 3: ORDERS MANAGER -->
+        <section id="tab-orders" class="tab-pane" style="display: none;">
+          <div class="page-action-bar">
+            <div>
+              <h2 style="font-size: 20px; font-weight: 800;">Customer Orders</h2>
+              <p style="font-size: 13px; color: #52604D;">View all WhatsApp & online orders.</p>
+            </div>
+          </div>
+
+          <div class="data-card">
+            <div class="table-responsive">
+              <table class="admin-table">
+                <thead>
+                  <tr>
+                    <th>Order ID</th>
+                    <th>Customer</th>
+                    <th>Items</th>
+                    <th>Total</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="orders-table-body">
+                  <!-- Rendered dynamically -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- TAB 4: SETTINGS -->
+        <section id="tab-settings" class="tab-pane" style="display: none;">
+          <div class="page-action-bar">
+            <div>
+              <h2 style="font-size: 20px; font-weight: 800;">Store Settings</h2>
+              <p style="font-size: 13px; color: #52604D;">Configure WhatsApp number, delivery fees, and credentials.</p>
+            </div>
+          </div>
+
+          <div class="data-card" style="padding: 24px; max-width: 600px;">
+            <form onsubmit="saveSettings(event)">
+              <div class="form-group" style="margin-bottom: 16px;">
+                <label style="font-size: 13px; font-weight: 700; display: block; margin-bottom: 6px;">Store Name</label>
+                <input type="text" id="setting-store-name" class="form-input" value="Eternal Nutricare" style="width: 100%; padding: 10px; border: 1px solid #CBD8BE; border-radius: 8px;">
+              </div>
+              <div class="form-group" style="margin-bottom: 16px;">
+                <label style="font-size: 13px; font-weight: 700; display: block; margin-bottom: 6px;">WhatsApp Order Number (Country code + 10 digits)</label>
+                <input type="text" id="setting-wa-num" class="form-input" value="919876543210" style="width: 100%; padding: 10px; border: 1px solid #CBD8BE; border-radius: 8px;">
+              </div>
+              <div class="form-group" style="margin-bottom: 16px;">
+                <label style="font-size: 13px; font-weight: 700; display: block; margin-bottom: 6px;">Free Shipping Minimum Cart (₹)</label>
+                <input type="number" id="setting-free-ship" class="form-input" value="499" style="width: 100%; padding: 10px; border: 1px solid #CBD8BE; border-radius: 8px;">
+              </div>
+              <button type="submit" class="btn-primary">Save Settings</button>
+            </form>
+          </div>
+        </section>
+
+      </div>
+    </main>
+  </div>
+
+  <!-- ADD / EDIT PRODUCT MODAL -->
+  <div id="product-modal" style="position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 100; display: none; align-items: center; justify-content: center; padding: 16px;">
+    <div style="background: #FFFFFF; width: 100%; max-width: 540px; border-radius: 16px; overflow: hidden; max-height: 90vh; display: flex; flex-direction: column;">
+      <div style="padding: 16px 20px; border-bottom: 1px solid #E2EAD8; display: flex; justify-content: space-between; align-items: center;">
+        <h3 id="modal-heading" style="font-size: 17px; font-weight: 800;">Add New Product</h3>
+        <button onclick="closeProductModal()" style="background:none; border:none; font-size: 22px; cursor: pointer;">&times;</button>
+      </div>
+
+      <div style="padding: 20px; overflow-y: auto; flex: 1;">
+        <form id="product-form" onsubmit="handleProductFormSubmit(event)">
+          <input type="hidden" id="prod-id">
+
+          <!-- Image Drop / Upload Area -->
+          <div class="form-group" style="margin-bottom: 16px;">
+            <label style="font-size: 13px; font-weight: 700; display: block; margin-bottom: 6px;">Product Image</label>
+            <div class="image-drop-area" onclick="document.getElementById('prod-file-input').click()">
+              <i class="ri-image-add-line" style="font-size: 28px; color: var(--primary);"></i>
+              <div style="font-size: 13px; font-weight: 600; margin-top: 4px;">Click to upload product photo</div>
+              <div style="font-size: 11px; color: #72836D;">Auto-compresses high-res camera photos to <200KB</div>
+            </div>
+            <input type="file" id="prod-file-input" accept="image/*" style="display: none;" onchange="handleImageFileSelect(this)">
+            <input type="text" id="prod-image-url" placeholder="Or paste image URL" style="width: 100%; margin-top: 8px; padding: 8px 12px; border: 1px solid #CBD8BE; border-radius: 8px; font-size: 13px;">
+            <img id="image-preview" class="image-preview-thumb" style="display: none;">
+          </div>
+
+          <div class="form-group" style="margin-bottom: 14px;">
+            <label style="font-size: 13px; font-weight: 700; display: block; margin-bottom: 6px;">Product Title *</label>
+            <input type="text" id="prod-title" required placeholder="e.g. Raw Organic Honey" style="width: 100%; padding: 10px 12px; border: 1px solid #CBD8BE; border-radius: 8px; font-size: 14px;">
+          </div>
+
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 14px;">
+            <div class="form-group">
+              <label style="font-size: 13px; font-weight: 700; display: block; margin-bottom: 6px;">Category</label>
+              <select id="prod-category" style="width: 100%; padding: 10px; border: 1px solid #CBD8BE; border-radius: 8px;">
+                <!-- Populated dynamically -->
+              </select>
+            </div>
+            <div class="form-group">
+              <label style="font-size: 13px; font-weight: 700; display: block; margin-bottom: 6px;">Unit / Weight</label>
+              <input type="text" id="prod-unit" placeholder="e.g. 500g / 250g" style="width: 100%; padding: 10px; border: 1px solid #CBD8BE; border-radius: 8px;">
+            </div>
+          </div>
+
+          <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin-bottom: 14px;">
+            <div class="form-group">
+              <label style="font-size: 13px; font-weight: 700; display: block; margin-bottom: 6px;">Selling Price (₹) *</label>
+              <input type="number" id="prod-price" required placeholder="499" oninput="calcDiscount()" style="width: 100%; padding: 10px; border: 1px solid #CBD8BE; border-radius: 8px;">
+            </div>
+            <div class="form-group">
+              <label style="font-size: 13px; font-weight: 700; display: block; margin-bottom: 6px;">Original MRP (₹)</label>
+              <input type="number" id="prod-original-price" placeholder="599" oninput="calcDiscount()" style="width: 100%; padding: 10px; border: 1px solid #CBD8BE; border-radius: 8px;">
+            </div>
+            <div class="form-group">
+              <label style="font-size: 13px; font-weight: 700; display: block; margin-bottom: 6px;">Stock Qty</label>
+              <input type="number" id="prod-stock" value="50" style="width: 100%; padding: 10px; border: 1px solid #CBD8BE; border-radius: 8px;">
+            </div>
+          </div>
+
+          <div class="form-group" style="margin-bottom: 14px;">
+            <label style="font-size: 13px; font-weight: 700; display: block; margin-bottom: 6px;">Badge / Highlight Tag</label>
+            <input type="text" id="prod-badge" placeholder="e.g. Raw & Unfiltered / 100% Organic" style="width: 100%; padding: 10px; border: 1px solid #CBD8BE; border-radius: 8px;">
+          </div>
+
+          <div class="form-group" style="margin-bottom: 16px;">
+            <label style="font-size: 13px; font-weight: 700; display: block; margin-bottom: 6px;">Description</label>
+            <textarea id="prod-desc" rows="3" placeholder="Nutritional benefits, ingredients, and storage..." style="width: 100%; padding: 10px; border: 1px solid #CBD8BE; border-radius: 8px; font-family: inherit; font-size: 13px;"></textarea>
+          </div>
+
+          <div style="display: flex; justify-content: flex-end; gap: 10px;">
+            <button type="button" class="btn-secondary" onclick="closeProductModal()">Cancel</button>
+            <button type="submit" id="save-product-btn" class="btn-primary">Save Product</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Core Scripts -->
+  <script src="config/store.config.js"></script>
+  <script src="core/cloud-db.js"></script>
+  <script src="core/image-uploader.js"></script>
+
+  <!-- Admin Controller -->
+  <script>
+    let currentProducts = [];
+    let currentCategories = [];
+
+    async function initAdmin() {
+      CloudDB.init();
+      await runHealthCheck();
+      await loadAllData();
+    }
+
+    async function runHealthCheck() {
+      const badge = document.getElementById('cloud-status-badge');
+      const text = document.getElementById('cloud-status-text');
+
+      text.textContent = 'Testing Cloud Sync...';
+      const result = await CloudDB.testConnection();
+
+      if (result.ok) {
+        badge.className = 'cloud-status-badge';
+        text.textContent = '🟢 Cloud DB Synced (Supabase Active)';
+      } else {
+        badge.className = 'cloud-status-badge error';
+        text.textContent = `🔴 Cloud Offline: ${result.error}`;
+      }
+    }
+
+    async function loadAllData() {
+      currentCategories = await CloudDB.getCategories();
+      currentProducts = await CloudDB.getProducts();
+
+      renderCategoriesTable();
+      renderProductsTable();
+      populateCategoryDropdown();
+    }
+
+    function renderProductsTable() {
+      const tbody = document.getElementById('products-table-body');
+      if (!tbody) return;
+
+      if (currentProducts.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="7" style="text-align: center; padding: 24px; color: #72836D;">No products found. Click 'Add New Product'.</td></tr>`;
+        return;
+      }
+
+      tbody.innerHTML = currentProducts.map(p => `
+        <tr>
+          <td>
+            <div class="table-product-cell">
+              <img class="table-thumb" src="${p.image}" alt="${p.title}">
+              <div>
+                <strong style="display:block; font-size: 14px;">${p.title}</strong>
+                <span style="font-size: 11px; color: #72836D;">${p.unit || 'Standard'}</span>
+              </div>
+            </div>
+          </td>
+          <td>${p.category}</td>
+          <td><strong>₹${p.price}</strong></td>
+          <td>${p.discount > 0 ? `<span style="color:#059669; font-weight:700;">${p.discount}% OFF</span>` : '-'}</td>
+          <td>${p.stockQty}</td>
+          <td>
+            <span class="badge-stock ${p.inStock && p.stockQty > 0 ? 'in' : 'out'}">
+              ${p.inStock && p.stockQty > 0 ? 'In Stock' : 'Out of Stock'}
+            </span>
+          </td>
+          <td>
+            <div style="display: flex; gap: 8px;">
+              <button class="btn-secondary" style="padding: 4px 8px;" onclick="editProduct('${p.id}')"><i class="ri-edit-line"></i></button>
+              <button class="btn-secondary" style="padding: 4px 8px; color: #DC2626;" onclick="deleteProduct('${p.id}')"><i class="ri-delete-bin-line"></i></button>
+            </div>
+          </td>
+        </tr>
+      `).join('');
+    }
+
+    function renderCategoriesTable() {
+      const tbody = document.getElementById('categories-table-body');
+      if (!tbody) return;
+
+      tbody.innerHTML = currentCategories.map(c => `
+        <tr>
+          <td><strong>${c.name}</strong></td>
+          <td><i class="${c.icon || 'ri-apps-2-line'}" style="font-size: 20px; color: var(--primary);"></i></td>
+          <td>${c.description || '-'}</td>
+          <td>
+            <button class="btn-secondary" style="padding: 4px 8px; color: #DC2626;" onclick="deleteCategory('${c.id}')"><i class="ri-delete-bin-line"></i></button>
+          </td>
+        </tr>
+      `).join('');
+    }
+
+    function populateCategoryDropdown() {
+      const select = document.getElementById('prod-category');
+      if (!select) return;
+      select.innerHTML = currentCategories.map(c => `<option value="${c.name}">${c.name}</option>`).join('');
+    }
+
+    /* Modals & Handlers */
+    function openProductModal(prod = null) {
+      document.getElementById('product-form').reset();
+      document.getElementById('image-preview').style.display = 'none';
+
+      if (prod) {
+        document.getElementById('modal-heading').textContent = 'Edit Product';
+        document.getElementById('prod-id').value = prod.id;
+        document.getElementById('prod-title').value = prod.title;
+        document.getElementById('prod-category').value = prod.category;
+        document.getElementById('prod-unit').value = prod.unit || '';
+        document.getElementById('prod-price').value = prod.price;
+        document.getElementById('prod-original-price').value = prod.originalPrice || '';
+        document.getElementById('prod-stock').value = prod.stockQty;
+        document.getElementById('prod-badge').value = prod.badge || '';
+        document.getElementById('prod-desc').value = prod.description || '';
+        document.getElementById('prod-image-url').value = prod.image || '';
+        if (prod.image) {
+          document.getElementById('image-preview').src = prod.image;
+          document.getElementById('image-preview').style.display = 'block';
+        }
+      } else {
+        document.getElementById('modal-heading').textContent = 'Add New Product';
+        document.getElementById('prod-id').value = '';
+      }
+
+      document.getElementById('product-modal').style.display = 'flex';
+    }
+
+    function closeProductModal() {
+      document.getElementById('product-modal').style.display = 'none';
+    }
+
+    function editProduct(id) {
+      const p = currentProducts.find(item => item.id === id);
+      if (p) openProductModal(p);
+    }
+
+    async function deleteProduct(id) {
+      if (!confirm('Are you sure you want to delete this product?')) return;
+      try {
+        await CloudDB.deleteProduct(id);
+        await loadAllData();
+      } catch (err) {
+        alert(err.message);
+      }
+    }
+
+    async function handleImageFileSelect(input) {
+      const file = input.files[0];
+      if (!file) return;
+
+      const btn = document.getElementById('save-product-btn');
+      btn.disabled = true;
+      btn.textContent = 'Compressing & Uploading...';
+
+      try {
+        const url = await ImageUploader.upload(file);
+        document.getElementById('prod-image-url').value = url;
+        const preview = document.getElementById('image-preview');
+        preview.src = url;
+        preview.style.display = 'block';
+      } catch (err) {
+        alert('Image Upload Error: ' + err.message);
+      } finally {
+        btn.disabled = false;
+        btn.textContent = 'Save Product';
+      }
+    }
+
+    function calcDiscount() {
+      const price = Number(document.getElementById('prod-price').value) || 0;
+      const mrp = Number(document.getElementById('prod-original-price').value) || 0;
+      if (mrp > price && price > 0) {
+        const disc = Math.round(((mrp - price) / mrp) * 100);
+        document.getElementById('prod-badge').value = `${disc}% OFF`;
+      }
+    }
+
+    async function handleProductFormSubmit(e) {
+      e.preventDefault();
+      const btn = document.getElementById('save-product-btn');
+      btn.disabled = true;
+      btn.textContent = 'Saving to Cloud...';
+
+      const price = Number(document.getElementById('prod-price').value);
+      const originalPrice = Number(document.getElementById('prod-original-price').value) || price;
+      const discount = originalPrice > price ? Math.round(((originalPrice - price) / originalPrice) * 100) : 0;
+
+      const product = {
+        id: document.getElementById('prod-id').value || undefined,
+        title: document.getElementById('prod-title').value.trim(),
+        category: document.getElementById('prod-category').value,
+        unit: document.getElementById('prod-unit').value.trim(),
+        price: price,
+        originalPrice: originalPrice,
+        discount: discount,
+        stockQty: Number(document.getElementById('prod-stock').value) || 0,
+        badge: document.getElementById('prod-badge').value.trim(),
+        description: document.getElementById('prod-desc').value.trim(),
+        image: document.getElementById('prod-image-url').value.trim() || 'https://images.unsplash.com/photo-1542838132-92c53300491e?w=400',
+        inStock: Number(document.getElementById('prod-stock').value) > 0
+      };
+
+      try {
+        await CloudDB.saveProduct(product);
+        closeProductModal();
+        await loadAllData();
+      } catch (err) {
+        alert('Cloud Save Error: ' + err.message);
+      } finally {
+        btn.disabled = false;
+        btn.textContent = 'Save Product';
+      }
+    }
+
+    function switchTab(tab) {
+      document.querySelectorAll('.tab-pane').forEach(el => el.style.display = 'none');
+      document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+
+      const target = document.getElementById(`tab-${tab}`);
+      if (target) target.style.display = 'block';
+      event.currentTarget.classList.add('active');
+
+      if (tab === 'orders') renderOrdersTable();
+    }
+
+    async function renderOrdersTable() {
+      const tbody = document.getElementById('orders-table-body');
+      if (!tbody) return;
+      const orders = await CloudDB.getOrders();
+
+      if (orders.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="6" style="text-align: center; padding: 24px; color: #72836D;">No orders received yet.</td></tr>`;
+        return;
+      }
+
+      tbody.innerHTML = orders.map(o => `
+        <tr>
+          <td><strong>#${o.order_number}</strong></td>
+          <td>
+            <div><strong>${o.customer_name}</strong></div>
+            <span style="font-size: 11px; color: #72836D;">${o.customer_phone}</span>
+          </td>
+          <td>${Array.isArray(o.items) ? o.items.length : 1} items</td>
+          <td><strong>₹${o.total_amount}</strong></td>
+          <td><span class="badge-stock in">${o.order_status || 'placed'}</span></td>
+          <td>
+            <a href="https://wa.me/${(o.customer_phone || '').replace(/[^0-9]/g, '')}" target="_blank" class="btn-secondary" style="padding: 4px 8px; color: #25D366;">
+              <i class="ri-whatsapp-line"></i> Chat
+            </a>
+          </td>
+        </tr>
+      `).join('');
+    }
+
+    function saveSettings(e) {
+      e.preventDefault();
+      alert('Settings saved successfully!');
+    }
+
+    window.addEventListener('DOMContentLoaded', initAdmin);
+  </script>
+</body>
+</html>

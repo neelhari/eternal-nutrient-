@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Cart - Eternal Nutricare</title>
+  
+  <!-- Remix Icons -->
+  <link href="https://cdn.jsdelivr.net/npm/remixicon@4.2.0/fonts/remixicon.css" rel="stylesheet">
+  
+  <!-- Google Fonts: Plus Jakarta Sans & DM Sans -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <!-- Core Layout Styles -->
+  <link rel="stylesheet" href="styles/theme.css">
+  <link rel="stylesheet" href="styles/storefront.css">
+
+  <style>
+    html, body {
+      width: 100%;
+      min-height: 100vh;
+      margin: 0;
+      padding: 0;
+      background-color: #FAFBF9;
+      font-family: 'DM Sans', 'Plus Jakarta Sans', system-ui, sans-serif;
+      overflow-x: hidden;
+    }
+
+    /* Plain Clean Header with Go Back Navigation */
+    .plain-sub-header {
+      position: sticky;
+      top: 0;
+      width: 100%;
+      background: #FFFFFF;
+      border-bottom: 1px solid #F0F2EC;
+      height: 56px;
+      padding: 0 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      z-index: 100;
+      box-shadow: 0 1px 4px rgba(0, 0, 0, 0.02);
+    }
+
+    .sub-back-btn {
+      background: none;
+      border: none;
+      font-size: 24px;
+      color: #1E2519;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 40px;
+      height: 40px;
+      text-decoration: none;
+      border-radius: 50%;
+      margin-left: -8px;
+    }
+
+    .sub-page-title {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 17px;
+      font-weight: 700;
+      color: #1E2519;
+      text-align: center;
+    }
+
+    .sub-header-spacer {
+      width: 40px;
+    }
+
+    /* Page Container (Full Screen Responsive) */
+    .cart-screen-container {
+      width: 100%;
+      max-width: 600px;
+      margin: 0 auto;
+      padding: 16px 16px 110px;
+    }
+
+    @media (min-width: 900px) {
+      .cart-screen-container {
+        max-width: 1000px;
+        display: grid;
+        grid-template-columns: 1.3fr 1fr;
+        gap: 28px;
+        align-items: start;
+        padding-top: 24px;
+      }
+    }
+
+    /* Free Shipping Progress Card */
+    .free-shipping-card {
+      background: #EFF7EA;
+      border-radius: 16px;
+      padding: 16px;
+      margin-bottom: 16px;
+      grid-column: 1 / -1;
+    }
+
+    .free-shipping-title {
+      font-size: 14.5px;
+      font-weight: 700;
+      color: #274D14;
+      margin-bottom: 8px;
+    }
+
+    .free-shipping-track {
+      height: 6px;
+      background: #DCE8D4;
+      border-radius: 999px;
+      overflow: hidden;
+      margin-bottom: 8px;
+    }
+
+    .free-shipping-fill {
+      height: 100%;
+      background: #3B6B1D;
+      border-radius: 999px;
+      transition: width 0.3s ease;
+    }
+
+    .free-shipping-sub {
+      font-size: 12px;
+      color: #556B4E;
+    }
+
+    /* Cart Item Card (Reference Style) */
+    .cart-product-card {
+      background: #FFFFFF;
+      border-radius: 20px;
+      padding: 14px;
+      display: flex;
+      gap: 14px;
+      position: relative;
+      margin-bottom: 12px;
+      box-shadow: 0 2px 12px rgba(0, 0, 0, 0.03);
+    }
+
+    .cart-thumb-box {
+      width: 80px;
+      height: 80px;
+      border-radius: 14px;
+      overflow: hidden;
+      background: #F8FAF6;
+      border: 1px solid #EEF3E9;
+      flex-shrink: 0;
+    }
+
+    .cart-thumb-box img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .cart-product-details {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .cart-product-title {
+      font-size: 15px;
+      font-weight: 700;
+      color: #1E2519;
+      padding-right: 28px;
+    }
+
+    .cart-product-unit {
+      font-size: 12px;
+      color: #7A8C73;
+      margin-top: 1px;
+    }
+
+    .cart-product-bottom {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-top: 8px;
+    }
+
+    .cart-product-price {
+      font-size: 16px;
+      font-weight: 800;
+      color: #1E2519;
+    }
+
+    .cart-delete-icon-btn {
+      position: absolute;
+      top: 14px;
+      right: 14px;
+      background: none;
+      border: none;
+      color: #A0B09A;
+      font-size: 18px;
+      cursor: pointer;
+      transition: color 0.15s ease;
+    }
+
+    .cart-delete-icon-btn:hover {
+      color: #DC2626;
+    }
+
+    /* Stepper Pill */
+    .cart-pill-stepper {
+      display: flex;
+      align-items: center;
+      background: #F0F4EC;
+      border-radius: 999px;
+      padding: 2px 6px;
+      gap: 8px;
+    }
+
+    .pill-step-btn {
+      background: none;
+      border: none;
+      font-size: 16px;
+      font-weight: 800;
+      color: #1E2519;
+      cursor: pointer;
+      width: 24px;
+      height: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .pill-step-count {
+      font-size: 13.5px;
+      font-weight: 700;
+      color: #1E2519;
+      min-width: 14px;
+      text-align: center;
+    }
+
+    /* Order Summary Card */
+    .order-summary-card {
+      background: #FFFFFF;
+      border-radius: 20px;
+      padding: 20px;
+      box-shadow: 0 2px 12px rgba(0, 0, 0, 0.03);
+      margin-top: 6px;
+    }
+
+    .summary-card-title {
+      font-size: 16px;
+      font-weight: 800;
+      color: #1E2519;
+      margin-bottom: 16px;
+    }
+
+    .summary-line-row {
+      display: flex;
+      justify-content: space-between;
+      font-size: 14px;
+      color: #4A5B45;
+      margin-bottom: 10px;
+    }
+
+    .eco-discount-text {
+      color: #386618;
+      font-weight: 700;
+    }
+
+    .summary-divider {
+      height: 1px;
+      background: #F0F2EC;
+      margin: 14px 0;
+    }
+
+    .summary-total-row {
+      display: flex;
+      justify-content: space-between;
+      font-size: 18px;
+      font-weight: 800;
+      color: #1E2519;
+    }
+
+    /* Checkout & Continue Shopping Buttons */
+    .btn-green-proceed {
+      width: 100%;
+      background: #2D5C14;
+      color: #FFFFFF;
+      border: none;
+      border-radius: 999px;
+      padding: 15px;
+      font-size: 15.5px;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      margin-top: 20px;
+      box-shadow: 0 4px 16px rgba(45, 92, 20, 0.25);
+      transition: all 0.2s ease;
+      text-decoration: none;
+    }
+
+    .btn-green-proceed:hover {
+      background: #23480F;
+    }
+
+    .btn-continue-shopping-link {
+      display: block;
+      text-align: center;
+      font-size: 14px;
+      font-weight: 700;
+      color: #6C534E;
+      text-decoration: none;
+      margin-top: 14px;
+      cursor: pointer;
+    }
+
+    .btn-continue-shopping-link:hover {
+      color: #3B6B1D;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Plain Clean Header with Go Back Navigation (100% Width) -->
+  <header class="plain-sub-header">
+    <a href="index.html" class="sub-back-btn" aria-label="Go Back">
+      <i class="ri-arrow-left-line"></i>
+    </a>
+    <h1 class="sub-page-title">Cart</h1>
+    <div class="sub-header-spacer"></div>
+  </header>
+
+  <!-- Main Cart Container -->
+  <main class="cart-screen-container">
+    
+    <!-- Free Shipping Progress -->
+    <div class="free-shipping-card">
+      <div class="free-shipping-title" id="free-ship-title">Add ₹123 more for Free Shipping!</div>
+      <div class="free-shipping-track">
+        <div class="free-shipping-fill" id="free-ship-bar" style="width: 88%;"></div>
+      </div>
+      <div class="free-shipping-sub">Free shipping on orders above ₹1,000</div>
+    </div>
+
+    <!-- Left: Cart Items List -->
+    <div id="cart-products-list">
+      
+      <!-- Item 1: Raw Organic Honey (Verified Food Image) -->
+      <div class="cart-product-card" id="card-item-h1">
+        <div class="cart-thumb-box">
+          <img src="https://images.unsplash.com/photo-1587049352846-4a222e784d38?w=500&auto=format&fit=crop&q=80" alt="Raw Organic Honey">
+        </div>
+        <div class="cart-product-details">
+          <div>
+            <div class="cart-product-title">Raw Organic Honey</div>
+            <div class="cart-product-unit">500g Glass Jar</div>
+          </div>
+          <div class="cart-product-bottom">
+            <div class="cart-product-price">₹499</div>
+            <div class="cart-pill-stepper">
+              <button class="pill-step-btn" onclick="updateItemQty('h1', -1)">-</button>
+              <span class="pill-step-count" id="count-h1">1</span>
+              <button class="pill-step-btn" onclick="updateItemQty('h1', 1)">+</button>
+            </div>
+          </div>
+        </div>
+        <button class="cart-delete-icon-btn" onclick="removeItem('h1')" aria-label="Remove">
+          <i class="ri-delete-bin-line"></i>
+        </button>
+      </div>
+
+      <!-- Item 2: Foxtail Millet Rava -->
+      <div class="cart-product-card" id="card-item-r1">
+        <div class="cart-thumb-box">
+          <img src="https://images.unsplash.com/photo-1586201375761-83865001e31c?w=500&auto=format&fit=crop&q=80" alt="Foxtail Millet">
+        </div>
+        <div class="cart-product-details">
+          <div>
+            <div class="cart-product-title">Foxtail Millet Rava</div>
+            <div class="cart-product-unit">500g Eco Pack</div>
+          </div>
+          <div class="cart-product-bottom">
+            <div class="cart-product-price">₹189</div>
+            <div class="cart-pill-stepper">
+              <button class="pill-step-btn" onclick="updateItemQty('r1', -1)">-</button>
+              <span class="pill-step-count" id="count-r1">2</span>
+              <button class="pill-step-btn" onclick="updateItemQty('r1', 1)">+</button>
+            </div>
+          </div>
+        </div>
+        <button class="cart-delete-icon-btn" onclick="removeItem('r1')" aria-label="Remove">
+          <i class="ri-delete-bin-line"></i>
+        </button>
+      </div>
+
+    </div>
+
+    <!-- Right: Order Summary -->
+    <div class="order-summary-card">
+      <h2 class="summary-card-title">Order Summary</h2>
+
+      <div class="summary-line-row">
+        <span>Subtotal</span>
+        <span id="sum-subtotal">₹877</span>
+      </div>
+
+      <div class="summary-line-row">
+        <span>Delivery Charge</span>
+        <span id="sum-delivery">₹40</span>
+      </div>
+
+      <div class="summary-line-row eco-discount-text">
+        <span>🌱 Eco-Packaging Discount</span>
+        <span>-₹20</span>
+      </div>
+
+      <div class="summary-divider"></div>
+
+      <div class="summary-total-row">
+        <span>Total</span>
+        <span id="sum-grand-total">₹897</span>
+      </div>
+
+      <!-- Action Buttons -->
+      <a href="checkout.html" class="btn-green-proceed">
+        <span>Proceed to Checkout</span>
+        <i class="ri-arrow-right-line"></i>
+      </a>
+
+      <a href="categories.html" class="btn-continue-shopping-link">
+        Continue Shopping
+      </a>
+
+    </div>
+
+  </main>
+
+  <!-- Mobile Bottom Navigation Dock (100% Width Fixed) -->
+  <nav class="mobile-bottom-dock">
+    <a href="index.html" class="mobile-dock-btn">
+      <i class="ri-home-5-line"></i>
+      <span>Home</span>
+    </a>
+    <a href="categories.html" class="mobile-dock-btn">
+      <i class="ri-grid-line"></i>
+      <span>Categories</span>
+    </a>
+    <a href="cart.html" class="mobile-dock-btn active">
+      <i class="ri-shopping-bag-3-fill"></i>
+      <span>Cart</span>
+    </a>
+    <a href="account.html" class="mobile-dock-btn">
+      <i class="ri-user-3-line"></i>
+      <span>Account</span>
+    </a>
+  </nav>
+
+  <script src="config/store.config.js"></script>
+  <script>
+    let cartItems = {
+      'h1': { price: 499, qty: 1 },
+      'r1': { price: 189, qty: 2 }
+    };
+
+    function updateItemQty(id, delta) {
+      if (!cartItems[id]) return;
+      cartItems[id].qty = Math.max(1, cartItems[id].qty + delta);
+      document.getElementById(`count-${id}`).textContent = cartItems[id].qty;
+      recalculate();
+    }
+
+    function removeItem(id) {
+      const el = document.getElementById(`card-item-${id}`);
+      if (el) el.remove();
+      delete cartItems[id];
+      recalculate();
+    }
+
+    function recalculate() {
+      let subtotal = 0;
+      for (const k in cartItems) {
+        subtotal += (cartItems[k].price * cartItems[k].qty);
+      }
+
+      const freeThreshold = 1000;
+      const isFree = subtotal >= freeThreshold;
+      const delivery = (subtotal === 0 || isFree) ? 0 : 40;
+      const ecoDiscount = subtotal > 0 ? 20 : 0;
+      const total = Math.max(0, subtotal + delivery - ecoDiscount);
+
+      const fill = document.getElementById('free-ship-bar');
+      const title = document.getElementById('free-ship-title');
+
+      if (isFree) {
+        title.innerHTML = `🎉 <strong>Congratulations!</strong> You unlocked Free Shipping!`;
+        fill.style.width = '100%';
+      } else {
+        const needed = freeThreshold - subtotal;
+        title.innerHTML = `Add <strong>₹${needed}</strong> more for Free Shipping!`;
+        fill.style.width = `${Math.min(100, Math.round((subtotal / freeThreshold) * 100))}%`;
+      }
+
+      document.getElementById('sum-subtotal').textContent = `₹${subtotal}`;
+      document.getElementById('sum-delivery').textContent = delivery === 0 ? 'FREE' : `₹${delivery}`;
+      document.getElementById('sum-grand-total').textContent = `₹${total}`;
+    }
+
+    window.addEventListener('DOMContentLoaded', recalculate);
+  </script>
+</body>
+</html>

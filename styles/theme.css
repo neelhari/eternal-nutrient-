@@ -1,0 +1,52 @@
+/* ==========================================================================
+   ETERNAL NUTRICARE — EXACT BRAND DESIGN TOKENS
+   ========================================================================== */
+
+:root {
+  /* Brand Leaf Greens */
+  --primary: #4A7A25;          /* Nature Leaf Green */
+  --primary-dark: #375C1A;
+  --primary-light: #EBF4E5;     /* Soft Light Green background */
+  --primary-glow: rgba(74, 122, 37, 0.15);
+
+  /* Brand Earth Browns */
+  --accent-brown: #553518;     /* Earth Seed Core Brown */
+  --accent-brown-dark: #3B240F;
+  --accent-brown-text: #482B14;
+
+  /* Honey & Warm Accents */
+  --honey-gold: #E59500;
+  --honey-amber: #D97706;
+  --honey-light: #FEF7EA;
+
+  /* Backgrounds & Surfaces */
+  --bg-page: #FBFDF9;          /* Fresh Organic Ivory */
+  --bg-card: #FFFFFF;
+  --bg-pill: #F3F6EF;
+  --bg-badges-bar: #EFF5E9;
+
+  /* Text Typography */
+  --text-main: #1C2417;        /* Crisp Charcoal */
+  --text-secondary: #586950;
+  --text-muted: #85967E;
+
+  /* Borders & Dividers */
+  --border-card: #E5EDE0;
+  --border-light: #EEF3E9;
+  --border-btn: #A5C989;
+
+  /* Shadows */
+  --shadow-card: 0 4px 16px rgba(28, 36, 23, 0.05);
+  --shadow-card-hover: 0 8px 24px rgba(28, 36, 23, 0.1);
+  --shadow-btn: 0 4px 12px rgba(74, 122, 37, 0.25);
+
+  /* Radiuses */
+  --radius-pill: 9999px;
+  --radius-card: 16px;
+  --radius-hero: 22px;
+  --radius-btn: 8px;
+
+  /* Fonts */
+  --font-sans: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+  --font-serif: Georgia, 'Playfair Display', serif;
+}

@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Delivery Agent Portal - Eternal Nutricare</title>
+  
+  <!-- Remix Icons -->
+  <link href="https://cdn.jsdelivr.net/npm/remixicon@4.2.0/fonts/remixicon.css" rel="stylesheet">
+  
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+      background: #F4F7F2;
+      color: #1E2519;
+      padding: 14px;
+      max-width: 500px;
+      margin: 0 auto;
+    }
+    .header-card {
+      background: #4B7322;
+      color: #FFFFFF;
+      padding: 16px;
+      border-radius: 16px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+      box-shadow: 0 4px 14px rgba(75, 115, 34, 0.25);
+    }
+    .header-title { font-size: 16px; font-weight: 800; }
+    .header-sub { font-size: 11.5px; opacity: 0.9; }
+    .badge-count {
+      background: #FFFFFF;
+      color: #4B7322;
+      font-weight: 800;
+      padding: 4px 10px;
+      border-radius: 999px;
+      font-size: 12px;
+    }
+    .order-card {
+      background: #FFFFFF;
+      border: 1px solid #E2EAD8;
+      border-radius: 16px;
+      padding: 16px;
+      margin-bottom: 12px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+    }
+    .order-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px dashed #E2EAD8;
+      padding-bottom: 10px;
+      margin-bottom: 10px;
+    }
+    .order-id { font-size: 14px; font-weight: 800; color: #553518; }
+    .order-amount { font-size: 16px; font-weight: 800; color: #4B7322; }
+    .customer-name { font-size: 15px; font-weight: 700; margin-bottom: 4px; }
+    .customer-address { font-size: 13px; color: #52604D; line-height: 1.4; margin-bottom: 12px; }
+    .action-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      margin-bottom: 10px;
+    }
+    .btn-action {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      padding: 10px;
+      border-radius: 10px;
+      text-decoration: none;
+      font-size: 13px;
+      font-weight: 700;
+      border: 1px solid #CBD8BE;
+      background: #F8FAF6;
+      color: #1E2519;
+    }
+    .btn-action.maps { background: #E8F0FE; color: #1A73E8; border-color: #D2E3FC; }
+    .btn-action.call { background: #E6F4EA; color: #137333; border-color: #CEEAD6; }
+    .btn-deliver {
+      width: 100%;
+      background: #4B7322;
+      color: #FFFFFF;
+      border: none;
+      padding: 12px;
+      border-radius: 10px;
+      font-size: 14px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      cursor: pointer;
+    }
+    .btn-deliver.done {
+      background: #CBD8BE;
+      color: #52604D;
+      cursor: default;
+    }
+  </style>
+
+  <!-- Supabase CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body>
+
+  <!-- Header -->
+  <div class="header-card">
+    <div>
+      <div class="header-title">🚚 Delivery Portal</div>
+      <div class="header-sub">Eternal Nutricare Delivery Agent</div>
+    </div>
+    <span id="pending-count" class="badge-count">0 Active</span>
+  </div>
+
+  <!-- Orders Container -->
+  <div id="delivery-orders-list">
+    <div style="text-align: center; padding: 40px; color: #72836D;">Loading deliveries...</div>
+  </div>
+
+  <script src="config/store.config.js"></script>
+  <script src="core/cloud-db.js"></script>
+  <script>
+    async function initDelivery() {
+      CloudDB.init();
+      loadOrders();
+    }
+
+    async function loadOrders() {
+      const orders = await CloudDB.getOrders();
+      const container = document.getElementById('delivery-orders-list');
+      const countBadge = document.getElementById('pending-count');
+
+      const activeOrders = orders.filter(o => o.order_status !== 'delivered');
+      countBadge.textContent = `${activeOrders.length} Active`;
+
+      if (orders.length === 0) {
+        container.innerHTML = `<div style="text-align: center; padding: 40px; color: #72836D;">No deliveries assigned yet.</div>`;
+        return;
+      }
+
+      container.innerHTML = orders.map(o => {
+        const isDelivered = o.order_status === 'delivered';
+        const address = o.customer_address || 'Address not provided';
+        const phone = (o.customer_phone || '').replace(/[^0-9]/g, '');
+
+        return `
+          <div class="order-card">
+            <div class="order-top">
+              <span class="order-id">#${o.order_number}</span>
+              <span class="order-amount">₹${o.total_amount} <small style="font-size:11px; color:#52604D;">(${o.payment_method || 'COD'})</small></span>
+            </div>
+
+            <div class="customer-name">${o.customer_name}</div>
+            <div class="customer-address">📍 ${address}</div>
+
+            <div class="action-grid">
+              <a href="https://maps.google.com/?q=${encodeURIComponent(address)}" target="_blank" class="btn-action maps">
+                <i class="ri-map-pin-2-fill"></i> Google Maps
+              </a>
+              <a href="tel:${phone}" class="btn-action call">
+                <i class="ri-phone-fill"></i> Call Client
+              </a>
+            </div>
+
+            <button 
+              class="btn-deliver ${isDelivered ? 'done' : ''}" 
+              onclick="${isDelivered ? '' : `markDelivered('${o.id}')`}">
+              <i class="${isDelivered ? 'ri-checkbox-circle-fill' : 'ri-truck-line'}"></i>
+              ${isDelivered ? 'Delivered Successfully' : 'Mark as Delivered'}
+            </button>
+          </div>
+        `;
+      }).join('');
+    }
+
+    async function markDelivered(orderId) {
+      if (!confirm('Confirm this order has been delivered to the customer?')) return;
+      await CloudDB.updateOrderStatus(orderId, 'delivered');
+      loadOrders();
+    }
+
+    window.addEventListener('DOMContentLoaded', initDelivery);
+  </script>
+</body>
+</html>

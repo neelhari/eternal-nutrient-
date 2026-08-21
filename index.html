@@ -1,0 +1,980 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Eternal Nutricare - Pure. Natural. Eternal.</title>
+  
+  <!-- Remix Icons Font -->
+  <link href="https://cdn.jsdelivr.net/npm/remixicon@4.2.0/fonts/remixicon.css" rel="stylesheet">
+  
+  <!-- Google Fonts: Plus Jakarta Sans -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <!-- Core Layout & Theme Styles -->
+  <link rel="stylesheet" href="styles/theme.css">
+  <link rel="stylesheet" href="styles/storefront.css">
+
+  <style>
+    /* 4 Tabs in bottom dock */
+    .mobile-bottom-dock {
+      grid-template-columns: repeat(4, 1fr) !important;
+    }
+
+    /* Footer Business Details Styling */
+    .footer-business-box {
+      max-width: 900px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1.5fr 1fr 1fr;
+      gap: 24px;
+      text-align: left;
+      margin-bottom: 20px;
+    }
+    @media (max-width: 768px) {
+      .footer-business-box {
+        grid-template-columns: 1fr;
+        gap: 16px;
+      }
+    }
+    .footer-col-title {
+      font-size: 14px;
+      font-weight: 800;
+      color: #1E2519;
+      margin-bottom: 8px;
+    }
+    .footer-col-text {
+      font-size: 12.5px;
+      color: #56694E;
+      line-height: 1.5;
+    }
+    .footer-col-text a {
+      color: #4A7A25;
+      text-decoration: none;
+      font-weight: 600;
+    }
+    .gst-badge {
+      display: inline-block;
+      background: #EBF4E5;
+      color: #386618;
+      font-size: 11px;
+      font-weight: 800;
+      padding: 3px 8px;
+      border-radius: 4px;
+      margin-top: 6px;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Main Responsive Site Wrapper -->
+  <div class="site-wrapper">
+    
+    <!-- 1. Top Header (Ultra-Clean: Left Logo + Right Minimalist Cart) -->
+    <header class="main-header">
+      
+      <!-- Official PDF Brand Logo (Emblem + Name Beside) -->
+      <a href="index.html" class="brand-link-left">
+        <img src="assets/brand_emblem.png" alt="Eternal Nutricare Logo" class="brand-emblem-img">
+        <div class="brand-text-block">
+          <span class="brand-name-eternal">ETERNAL</span>
+          <span class="brand-name-nutricare">NUTRICARE</span>
+        </div>
+      </a>
+
+      <!-- Desktop Center Search Bar (Hidden on Mobile) -->
+      <div class="header-search-wrap">
+        <div class="search-input-pill">
+          <i class="ri-search-2-line"></i>
+          <input type="text" id="desktop-search-input" placeholder="Search for honey, pickles, millets, laddus, chikkis..." oninput="handleSearch(this.value)">
+        </div>
+      </div>
+
+      <!-- Right Minimalist Cart Button -->
+      <div class="header-actions-right">
+        <button class="minimal-cart-icon-btn" onclick="openCartDrawer()" aria-label="Shopping Cart">
+          <i class="ri-shopping-cart-2-line"></i>
+          <span class="minimal-cart-badge">2</span>
+        </button>
+      </div>
+
+    </header>
+
+    <!-- Mobile Secondary Search Bar -->
+    <div class="mobile-search-bar">
+      <div class="search-input-pill">
+        <i class="ri-search-2-line"></i>
+        <input type="text" id="mobile-search-input" placeholder="Search honey, pickles, millets, laddus..." oninput="handleSearch(this.value)">
+      </div>
+    </div>
+
+    <!-- 2. Hero Promo Banner (Responsive) -->
+    <section class="hero-section-wrap">
+      <div class="hero-banner-card">
+        <img class="hero-banner-bg-img" src="https://images.unsplash.com/photo-1587049352846-4a222e784d38?w=1000&auto=format&fit=crop&q=80" alt="Pure Organic Honey">
+        <div class="hero-banner-overlay"></div>
+        <div class="hero-banner-text">
+          <span class="hero-sub-tag">Pure. Natural. Eternal.</span>
+          <h1 class="hero-title-main">Goodness from nature for a healthier you.</h1>
+          <button class="hero-cta-btn" onclick="scrollToProducts()">
+            <span>Shop Now</span>
+            <i class="ri-arrow-right-line"></i>
+          </button>
+        </div>
+      </div>
+      <div class="hero-dots-row">
+        <span class="hero-dot"></span>
+        <span class="hero-dot active"></span>
+        <span class="hero-dot"></span>
+      </div>
+    </section>
+
+    <!-- 3. Shop by Category -->
+    <section class="content-section">
+      <div class="section-header-bar">
+        <h2 class="section-main-title">Shop by Category</h2>
+        <a href="categories.html" class="section-view-link">View all</a>
+      </div>
+      <div class="category-row-container">
+        
+        <!-- Category 1: Organic Honey -->
+        <a href="categories.html?cat=Honey" class="cat-circle-card">
+          <div class="cat-circle-frame">
+            <img src="https://images.pexels.com/photos/33260/honey-sweet-syrup-organic.jpg?auto=compress&cs=tinysrgb&w=300" alt="Organic Honey">
+          </div>
+          <span class="cat-circle-title">Honey</span>
+        </a>
+
+        <!-- Category 2: Pickles -->
+        <a href="categories.html?cat=Pickles" class="cat-circle-card">
+          <div class="cat-circle-frame">
+            <img src="https://images.pexels.com/photos/4198139/pexels-photo-4198139.jpeg?auto=compress&cs=tinysrgb&w=300" alt="Pickles">
+          </div>
+          <span class="cat-circle-title">Pickles</span>
+        </a>
+
+        <!-- Category 3: Millet Biscuits -->
+        <a href="categories.html?cat=Millet%20Biscuits" class="cat-circle-card">
+          <div class="cat-circle-frame">
+            <img src="https://images.pexels.com/photos/230325/pexels-photo-230325.jpeg?auto=compress&cs=tinysrgb&w=300" alt="Millet Biscuits">
+          </div>
+          <span class="cat-circle-title">Millet Biscuits</span>
+        </a>
+
+        <!-- Category 4: Dates Laddu's -->
+        <a href="categories.html?cat=Dates%20Laddu%27s" class="cat-circle-card">
+          <div class="cat-circle-frame">
+            <img src="https://images.pexels.com/photos/7449104/pexels-photo-7449104.jpeg?auto=compress&cs=tinysrgb&w=300" alt="Dates Laddu's">
+          </div>
+          <span class="cat-circle-title">Dates Laddu</span>
+        </a>
+
+        <!-- Category 5: Moringa Chikki -->
+        <a href="categories.html?cat=Moringa%20Chikki" class="cat-circle-card">
+          <div class="cat-circle-frame">
+            <img src="https://images.pexels.com/photos/6157052/pexels-photo-6157052.jpeg?auto=compress&cs=tinysrgb&w=300" alt="Moringa Chikki">
+          </div>
+          <span class="cat-circle-title">Moringa Chikki</span>
+        </a>
+
+        <!-- Category 6: Millet Rava -->
+        <a href="categories.html?cat=Millet%20Rava" class="cat-circle-card">
+          <div class="cat-circle-frame">
+            <img src="https://images.pexels.com/photos/4110255/pexels-photo-4110255.jpeg?auto=compress&cs=tinysrgb&w=300" alt="Millet Rava">
+          </div>
+          <span class="cat-circle-title">Millet Rava</span>
+        </a>
+
+      </div>
+    </section>
+
+    <!-- 4. Best Sellers (Zepto-Style Horizontal Rail) -->
+    <section class="content-section" style="padding-bottom: 4px;">
+      <div class="section-header-bar">
+        <h2 class="section-main-title">Best Sellers</h2>
+        <a href="categories.html" class="section-view-link">View all</a>
+      </div>
+
+      <!-- Horizontal Best Sellers Rail (Compact Primary Card Style) -->
+      <div class="zepto-rail-container" id="bestsellers-rail">
+        
+        <!-- Rail Item 1: Organic Honey -->
+        <div class="zepto-item-card" onclick="openProductDetail('prod_1')">
+          <div class="zepto-img-box">
+            <img src="assets/showcase_honey.png" alt="Organic Honey">
+          </div>
+          <div class="zepto-details-wrap">
+            <h3 class="zepto-card-title">Organic Honey</h3>
+            <div class="zepto-card-badge">Raw & Unfiltered • 500g</div>
+            <div class="zepto-rating-mini">
+              <span class="star">★</span>
+              <span>4.8 (245)</span>
+            </div>
+            <div class="zepto-price-row">
+              <span class="zepto-price-num">₹499</span>
+              <span class="zepto-strike-num">₹599</span>
+            </div>
+            <div class="zepto-dual-actions" id="bs-actions-prod_1">
+              <button class="zepto-btn-buynow" onclick="event.stopPropagation(); buyNowDirect('prod_1')">
+                <i class="ri-flashlight-fill"></i> Buy
+              </button>
+              <button class="zepto-btn-cart-icon" onclick="event.stopPropagation(); addToCart('prod_1')" aria-label="Add to cart">
+                <i class="ri-shopping-cart-2-line"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Rail Item 2: Lemon Pickle -->
+        <div class="zepto-item-card" onclick="openProductDetail('prod_2')">
+          <div class="zepto-img-box">
+            <img src="assets/showcase_pickle.png" alt="Lemon Pickle">
+          </div>
+          <div class="zepto-details-wrap">
+            <h3 class="zepto-card-title">Lemon Pickle</h3>
+            <div class="zepto-card-badge">Handmade • 300g</div>
+            <div class="zepto-rating-mini">
+              <span class="star">★</span>
+              <span>4.7 (189)</span>
+            </div>
+            <div class="zepto-price-row">
+              <span class="zepto-price-num">₹249</span>
+              <span class="zepto-strike-num">₹299</span>
+            </div>
+            <div class="zepto-dual-actions" id="bs-actions-prod_2">
+              <button class="zepto-btn-buynow" onclick="event.stopPropagation(); buyNowDirect('prod_2')">
+                <i class="ri-flashlight-fill"></i> Buy
+              </button>
+              <button class="zepto-btn-cart-icon" onclick="event.stopPropagation(); addToCart('prod_2')" aria-label="Add to cart">
+                <i class="ri-shopping-cart-2-line"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Rail Item 3: Foxtail Millet Rava -->
+        <div class="zepto-item-card" onclick="openProductDetail('prod_3')">
+          <div class="zepto-img-box">
+            <img src="https://images.unsplash.com/photo-1586201375761-83865001e31c?w=400&auto=format&fit=crop&q=80" alt="Foxtail Millet Rava">
+          </div>
+          <div class="zepto-details-wrap">
+            <h3 class="zepto-card-title">Foxtail Rava</h3>
+            <div class="zepto-card-badge">100% Organic • 500g</div>
+            <div class="zepto-rating-mini">
+              <span class="star">★</span>
+              <span>4.9 (112)</span>
+            </div>
+            <div class="zepto-price-row">
+              <span class="zepto-price-num">₹189</span>
+              <span class="zepto-strike-num">₹220</span>
+            </div>
+            <div class="zepto-dual-actions" id="bs-actions-prod_3">
+              <button class="zepto-btn-buynow" onclick="event.stopPropagation(); buyNowDirect('prod_3')">
+                <i class="ri-flashlight-fill"></i> Buy
+              </button>
+              <button class="zepto-btn-cart-icon" onclick="event.stopPropagation(); addToCart('prod_3')" aria-label="Add to cart">
+                <i class="ri-shopping-cart-2-line"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Rail Item 4: Millet Biscuits -->
+        <div class="zepto-item-card" onclick="openProductDetail('prod_4')">
+          <div class="zepto-img-box">
+            <img src="https://images.unsplash.com/photo-1558961363-fa8fdf82db35?w=400&auto=format&fit=crop&q=80" alt="Millet Biscuits">
+          </div>
+          <div class="zepto-details-wrap">
+            <h3 class="zepto-card-title">Millet Cookies</h3>
+            <div class="zepto-card-badge">Zero Maida • 200g</div>
+            <div class="zepto-rating-mini">
+              <span class="star">★</span>
+              <span>4.8 (98)</span>
+            </div>
+            <div class="zepto-price-row">
+              <span class="zepto-price-num">₹149</span>
+              <span class="zepto-strike-num">₹180</span>
+            </div>
+            <div class="zepto-dual-actions" id="bs-actions-prod_4">
+              <button class="zepto-btn-buynow" onclick="event.stopPropagation(); buyNowDirect('prod_4')">
+                <i class="ri-flashlight-fill"></i> Buy
+              </button>
+              <button class="zepto-btn-cart-icon" onclick="event.stopPropagation(); addToCart('prod_4')" aria-label="Add to cart">
+                <i class="ri-shopping-cart-2-line"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Rail Item 5: Dates Laddu's -->
+        <div class="zepto-item-card" onclick="openProductDetail('prod_5')">
+          <div class="zepto-img-box">
+            <img src="assets/dates_laddu.jpg" alt="Dates Laddu's">
+          </div>
+          <div class="zepto-details-wrap">
+            <h3 class="zepto-card-title">Dates Laddu</h3>
+            <div class="zepto-card-badge">Desi Ghee • 250g</div>
+            <div class="zepto-rating-mini">
+              <span class="star">★</span>
+              <span>4.9 (140)</span>
+            </div>
+            <div class="zepto-price-row">
+              <span class="zepto-price-num">₹349</span>
+              <span class="zepto-strike-num">₹399</span>
+            </div>
+            <div class="zepto-dual-actions" id="bs-actions-prod_5">
+              <button class="zepto-btn-buynow" onclick="event.stopPropagation(); buyNowDirect('prod_5')">
+                <i class="ri-flashlight-fill"></i> Buy
+              </button>
+              <button class="zepto-btn-cart-icon" onclick="event.stopPropagation(); addToCart('prod_5')" aria-label="Add to cart">
+                <i class="ri-shopping-cart-2-line"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+    </section>
+
+    <!-- 5. All Products Showcase Grid (6 Core Products) -->
+    <section id="bestsellers-section" class="content-section">
+      <div class="section-header-bar">
+        <h2 id="catalog-heading-title" class="section-main-title">Our Organic Range</h2>
+        <a href="categories.html" class="section-view-link">View all</a>
+      </div>
+
+      <!-- Responsive Product Grid (Exact Reference Specification) -->
+      <div id="products-grid-container" class="showcase-grid-responsive">
+        
+        <!-- Product 1: Organic Honey -->
+        <div class="product-showcase-card" onclick="openProductDetail('prod_1')">
+          <div class="product-photo-wrap">
+            <img src="assets/showcase_honey.png" alt="Organic Honey">
+          </div>
+          <div class="product-text-details">
+            <h3 class="card-item-title">Organic Honey</h3>
+            <div class="card-item-badge">Raw & Unfiltered • 500g</div>
+            <div class="card-rating-row">
+              <span class="card-rating-star">★</span>
+              <span>4.8 (245 reviews)</span>
+            </div>
+            <div class="card-item-pricing">
+              <span class="card-price-current">₹499</span>
+              <span class="card-price-mrp">₹599</span>
+            </div>
+            <div class="card-dual-actions" id="sc-actions-prod_1">
+              <button class="btn-buy-light-green" onclick="event.stopPropagation(); buyNowDirect('prod_1')">
+                <i class="ri-flashlight-fill"></i> Buy Now
+              </button>
+              <button class="btn-add-cart-outline" onclick="event.stopPropagation(); addToCart('prod_1')" aria-label="Add to cart">
+                <i class="ri-shopping-cart-2-line"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Product 2: Lemon Pickle -->
+        <div class="product-showcase-card" onclick="openProductDetail('prod_2')">
+          <div class="product-photo-wrap">
+            <img src="assets/showcase_pickle.png" alt="Lemon Pickle">
+          </div>
+          <div class="product-text-details">
+            <h3 class="card-item-title">Lemon Pickle</h3>
+            <div class="card-item-badge">Handmade | No Preservatives • 300g</div>
+            <div class="card-rating-row">
+              <span class="card-rating-star">★</span>
+              <span>4.7 (189 reviews)</span>
+            </div>
+            <div class="card-item-pricing">
+              <span class="card-price-current">₹249</span>
+              <span class="card-price-mrp">₹299</span>
+            </div>
+            <div class="card-dual-actions" id="sc-actions-prod_2">
+              <button class="btn-buy-light-green" onclick="event.stopPropagation(); buyNowDirect('prod_2')">
+                <i class="ri-flashlight-fill"></i> Buy Now
+              </button>
+              <button class="btn-add-cart-outline" onclick="event.stopPropagation(); addToCart('prod_2')" aria-label="Add to cart">
+                <i class="ri-shopping-cart-2-line"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Product 3: Millet Rava -->
+        <div class="product-showcase-card" onclick="openProductDetail('prod_3')">
+          <div class="product-photo-wrap">
+            <img src="https://images.unsplash.com/photo-1586201375761-83865001e31c?w=500&auto=format&fit=crop&q=80" alt="Foxtail Millet Rava">
+          </div>
+          <div class="product-text-details">
+            <h3 class="card-item-title">Foxtail Millet Rava</h3>
+            <div class="card-item-badge">100% Organic • 500g</div>
+            <div class="card-rating-row">
+              <span class="card-rating-star">★</span>
+              <span>4.9 (112 reviews)</span>
+            </div>
+            <div class="card-item-pricing">
+              <span class="card-price-current">₹189</span>
+              <span class="card-price-mrp">₹220</span>
+            </div>
+            <div class="card-dual-actions" id="sc-actions-prod_3">
+              <button class="btn-buy-light-green" onclick="event.stopPropagation(); buyNowDirect('prod_3')">
+                <i class="ri-flashlight-fill"></i> Buy Now
+              </button>
+              <button class="btn-add-cart-outline" onclick="event.stopPropagation(); addToCart('prod_3')" aria-label="Add to cart">
+                <i class="ri-shopping-cart-2-line"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Product 4: Millet Biscuits -->
+        <div class="product-showcase-card" onclick="openProductDetail('prod_4')">
+          <div class="product-photo-wrap">
+            <img src="https://images.unsplash.com/photo-1558961363-fa8fdf82db35?w=500&auto=format&fit=crop&q=80" alt="Millet Biscuits">
+          </div>
+          <div class="product-text-details">
+            <h3 class="card-item-title">Millet Biscuits</h3>
+            <div class="card-item-badge">No Maida • No Preservatives • 200g</div>
+            <div class="card-rating-row">
+              <span class="card-rating-star">★</span>
+              <span>4.8 (98 reviews)</span>
+            </div>
+            <div class="card-item-pricing">
+              <span class="card-price-current">₹149</span>
+              <span class="card-price-mrp">₹180</span>
+            </div>
+            <div class="card-dual-actions" id="sc-actions-prod_4">
+              <button class="btn-buy-light-green" onclick="event.stopPropagation(); buyNowDirect('prod_4')">
+                <i class="ri-flashlight-fill"></i> Buy Now
+              </button>
+              <button class="btn-add-cart-outline" onclick="event.stopPropagation(); addToCart('prod_4')" aria-label="Add to cart">
+                <i class="ri-shopping-cart-2-line"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Product 5: Dates Laddu's -->
+        <div class="product-showcase-card" onclick="openProductDetail('prod_5')">
+          <div class="product-photo-wrap">
+            <img src="assets/dates_laddu.jpg" alt="Dates Laddu's">
+          </div>
+          <div class="product-text-details">
+            <h3 class="card-item-title">Dates Laddu's</h3>
+            <div class="card-item-badge">Sugar Free | Pure Desi Ghee • 250g</div>
+            <div class="card-rating-row">
+              <span class="card-rating-star">★</span>
+              <span>4.9 (140 reviews)</span>
+            </div>
+            <div class="card-item-pricing">
+              <span class="card-price-current">₹349</span>
+              <span class="card-price-mrp">₹399</span>
+            </div>
+            <div class="card-dual-actions" id="sc-actions-prod_5">
+              <button class="btn-buy-light-green" onclick="event.stopPropagation(); buyNowDirect('prod_5')">
+                <i class="ri-flashlight-fill"></i> Buy Now
+              </button>
+              <button class="btn-add-cart-outline" onclick="event.stopPropagation(); addToCart('prod_5')" aria-label="Add to cart">
+                <i class="ri-shopping-cart-2-line"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Product 6: Moringa Chikki -->
+        <div class="product-showcase-card" onclick="openProductDetail('prod_6')">
+          <div class="product-photo-wrap">
+            <img src="https://images.unsplash.com/photo-1590080875515-8a3a8dc5735e?w=500&auto=format&fit=crop&q=80" alt="Moringa Chikki">
+          </div>
+          <div class="product-text-details">
+            <h3 class="card-item-title">Moringa Chikki</h3>
+            <div class="card-item-badge">Immunity Superfood Snack • 150g</div>
+            <div class="card-rating-row">
+              <span class="card-rating-star">★</span>
+              <span>4.8 (75 reviews)</span>
+            </div>
+            <div class="card-item-pricing">
+              <span class="card-price-current">₹129</span>
+              <span class="card-price-mrp">₹150</span>
+            </div>
+            <div class="card-dual-actions" id="sc-actions-prod_6">
+              <button class="btn-buy-light-green" onclick="event.stopPropagation(); buyNowDirect('prod_6')">
+                <i class="ri-flashlight-fill"></i> Buy Now
+              </button>
+              <button class="btn-add-cart-outline" onclick="event.stopPropagation(); addToCart('prod_6')" aria-label="Add to cart">
+                <i class="ri-shopping-cart-2-line"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- 6. 4 Quality Pillars Strip -->
+    <section class="quality-pillars-section">
+      <div class="quality-pillars-grid">
+        <div class="pillar-item-col">
+          <i class="ri-leaf-line pillar-icon"></i>
+          <span class="pillar-label">100% Organic</span>
+        </div>
+        <div class="pillar-item-col">
+          <i class="ri-flask-line pillar-icon"></i>
+          <span class="pillar-label">No Preservatives</span>
+        </div>
+        <div class="pillar-item-col">
+          <i class="ri-plant-line pillar-icon"></i>
+          <span class="pillar-label">Sustainably Sourced</span>
+        </div>
+        <div class="pillar-item-col">
+          <i class="ri-heart-line pillar-icon"></i>
+          <span class="pillar-label">Good for You & Planet</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- 7. Luxury Interactive Deep-Forest Footer -->
+    <footer class="site-footer">
+      
+      <!-- Top Brand & Direct WhatsApp Bar -->
+      <div class="footer-top-brand-bar">
+        <div class="footer-brand-lockup">
+          <img src="assets/brand_emblem.png" alt="Eternal Nutricare Emblem" class="footer-emblem-img">
+          <div>
+            <div class="footer-brand-title">ETERNAL NUTRICARE</div>
+            <div class="footer-brand-tagline">Pure. Natural. Eternal. • 100% Organic Goodness</div>
+          </div>
+        </div>
+
+        <a href="https://wa.me/916302017482?text=Hello%20Eternal%20Nutricare,%20I%20would%20like%20to%20order" target="_blank" class="footer-wa-direct-btn">
+          <i class="ri-whatsapp-fill" style="font-size: 18px;"></i>
+          <span>Order on WhatsApp</span>
+        </a>
+      </div>
+
+      <!-- Main 4-Column Grid -->
+      <div class="footer-main-grid">
+        
+        <!-- Column 1: About Business & GST -->
+        <div>
+          <div class="footer-col-header">About Eternal</div>
+          <p class="footer-desc-text">
+            A venture by <strong>Eternal Sales</strong> (Proprietor: <strong>Siddaiah</strong>). Dedicated to delivering farm-fresh, chemical-free organic essentials directly to your home.
+          </p>
+          <div class="footer-gstin-chip">
+            <i class="ri-verified-badge-fill"></i>
+            <span>GSTIN: 29AIJPD5186H1ZZ</span>
+          </div>
+        </div>
+
+        <!-- Column 2: Quick Organic Categories -->
+        <div>
+          <div class="footer-col-header">Our Categories</div>
+          <ul class="footer-links-list">
+            <li class="footer-link-item"><a href="categories.html?cat=Honey">🍯 Raw Forest Honey</a></li>
+            <li class="footer-link-item"><a href="categories.html?cat=Pickles">🍋 Handmade Pickles</a></li>
+            <li class="footer-link-item"><a href="categories.html?cat=Millet%20Rava">🌾 Foxtail Millet Rava</a></li>
+            <li class="footer-link-item"><a href="categories.html?cat=Millet%20Biscuits">🍪 Millet Biscuits</a></li>
+            <li class="footer-link-item"><a href="categories.html?cat=Dates%20Laddu's">🌴 Dates Laddu's</a></li>
+            <li class="footer-link-item"><a href="categories.html?cat=Moringa%20Chikki">🌿 Moringa Chikki</a></li>
+          </ul>
+        </div>
+
+        <!-- Column 3: Customer Care & Address -->
+        <div>
+          <div class="footer-col-header">Customer Support</div>
+          
+          <div class="footer-contact-row">
+            <i class="ri-phone-fill"></i>
+            <div>
+              <div>Call Hotline</div>
+              <a href="tel:6302017482">+91 6302017482</a>
+            </div>
+          </div>
+
+          <div class="footer-contact-row">
+            <i class="ri-whatsapp-line"></i>
+            <div>
+              <div>WhatsApp Care</div>
+              <a href="https://wa.me/916302017482" target="_blank">+91 6302017482</a>, <a href="https://wa.me/919392235693" target="_blank">9392235693</a>
+            </div>
+          </div>
+
+          <div class="footer-contact-row">
+            <i class="ri-mail-line"></i>
+            <div>
+              <a href="mailto:eternalncdm@gmail.com">eternalncdm@gmail.com</a>
+            </div>
+          </div>
+
+          <div class="footer-contact-row">
+            <i class="ri-map-pin-2-line"></i>
+            <span style="font-size: 12px; color: #8CA880;">Flat No. A1, Eco Greens Layout, Hegondanahalli, Gunjur, Bangalore - 560087</span>
+          </div>
+        </div>
+
+        <!-- Column 4: Newsletter / VIP Perks -->
+        <div>
+          <div class="footer-col-header">Join the Health Club</div>
+          <p class="footer-desc-text">
+            Get 10% off your first organic purchase & receive weekly seasonal harvest updates.
+          </p>
+          <div class="footer-newsletter-wrap">
+            <div class="footer-news-input-box">
+              <input type="email" id="footer-email-input" placeholder="Enter your email...">
+              <button class="footer-news-btn" onclick="subscribeNewsletter()">Join</button>
+            </div>
+            <span style="font-size: 10.5px; color: #6C8264;">🔒 Zero spam. Unsubscribe anytime.</span>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Bottom Strip (Payments & Copyright) -->
+      <div class="footer-bottom-strip">
+        <div>
+          © 2026 <strong>Eternal Nutricare</strong> (Eternal Sales). All rights reserved.
+        </div>
+
+        <div class="footer-payments-row">
+          <span>100% Safe Payments:</span>
+          <i class="ri-bank-card-line" title="Debit & Credit Cards"></i>
+          <i class="ri-qr-code-line" title="UPI (GPay / PhonePe / Paytm)"></i>
+          <i class="ri-shield-check-line" title="256-Bit SSL Encrypted"></i>
+        </div>
+      </div>
+
+    </footer>
+
+    <!-- 8. Mobile Bottom Navigation Dock (4 Tabs: Home, Categories, Cart, Account at end) -->
+    <nav class="mobile-bottom-dock">
+      <a href="index.html" class="mobile-dock-btn active">
+        <i class="ri-home-5-fill"></i>
+        <span>Home</span>
+      </a>
+      <a href="categories.html" class="mobile-dock-btn">
+        <i class="ri-grid-fill"></i>
+        <span>Categories</span>
+      </a>
+      <a href="cart.html" class="mobile-dock-btn">
+        <i class="ri-shopping-bag-3-line"></i>
+        <span>Cart</span>
+      </a>
+      <a href="account.html" class="mobile-dock-btn">
+        <i class="ri-user-3-line"></i>
+        <span>Account</span>
+      </a>
+    </nav>
+
+  </div>
+
+  <!-- 9. Slide-Over Shopping Cart Drawer -->
+  <div id="cart-drawer-modal" class="cart-drawer-overlay" onclick="closeCartDrawer(event)">
+    <div class="cart-drawer-sheet" onclick="event.stopPropagation()">
+      <div class="drawer-head">
+        <h3 class="drawer-title-label">Shopping Cart</h3>
+        <button class="drawer-close-icon" onclick="closeCartDrawer()"><i class="ri-close-line"></i></button>
+      </div>
+
+      <div class="free-ship-banner">
+        <div id="free-ship-label" class="free-ship-label">Add ₹150 more for FREE Delivery!</div>
+        <div class="free-ship-track">
+          <div id="free-ship-fill" class="free-ship-fill" style="width: 70%;"></div>
+        </div>
+      </div>
+
+      <div id="cart-items-list" class="cart-items-scroll">
+        <!-- Dynamic items -->
+      </div>
+
+      <div class="drawer-foot-bar">
+        <div class="price-breakdown-row">
+          <span>Subtotal</span>
+          <span id="cart-subtotal-val">₹648</span>
+        </div>
+        <div class="price-breakdown-row">
+          <span>Delivery</span>
+          <span id="cart-delivery-val" style="color: #4A7A25; font-weight: 700;">FREE</span>
+        </div>
+        <div class="price-breakdown-row grand-total">
+          <span>Total Amount</span>
+          <span id="cart-total-val">₹648</span>
+        </div>
+
+        <button class="whatsapp-checkout-btn" onclick="proceedToWhatsAppCheckout()">
+          <i class="ri-whatsapp-line" style="font-size:20px;"></i>
+          <span>Order via WhatsApp</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Container -->
+  <div id="toast-wrapper" class="toast-floating-container"></div>
+
+  <!-- Store Config Script -->
+  <script src="config/store.config.js"></script>
+
+  <!-- Store Controller Logic -->
+  <script>
+    const PRODUCTS = {
+      'prod_1': { id: 'prod_1', title: 'Organic Honey', category: 'Organic Honey', price: 499, originalPrice: 599, badge: 'Raw & Unfiltered • 500g', unit: '500g', image: 'https://images.pexels.com/photos/33260/honey-sweet-syrup-organic.jpg?auto=compress&cs=tinysrgb&w=500' },
+      'prod_2': { id: 'prod_2', title: 'Lemon Pickle', category: 'Pickles', price: 249, originalPrice: 299, badge: 'Handmade | No Preservatives • 300g', unit: '300g', image: 'https://images.pexels.com/photos/4198139/pexels-photo-4198139.jpeg?auto=compress&cs=tinysrgb&w=500' },
+      'prod_3': { id: 'prod_3', title: 'Foxtail Millet Rava', category: 'Millet Rava', price: 189, originalPrice: 220, badge: '100% Organic • 500g', unit: '500g', image: 'https://images.pexels.com/photos/4110255/pexels-photo-4110255.jpeg?auto=compress&cs=tinysrgb&w=500' },
+      'prod_4': { id: 'prod_4', title: 'Millet Biscuits', category: 'Millet Biscuits', price: 149, originalPrice: 180, badge: 'No Maida • No Preservatives • 200g', unit: '200g', image: 'https://images.pexels.com/photos/230325/pexels-photo-230325.jpeg?auto=compress&cs=tinysrgb&w=500' },
+      'prod_5': { id: 'prod_5', title: "Dates Laddu's", category: "Dates Laddu's", price: 349, originalPrice: 399, badge: 'Sugar Free | Pure Desi Ghee • 250g', unit: '250g', image: 'assets/dates_laddu.jpg' },
+      'prod_6': { id: 'prod_6', title: 'Moringa Chikki', category: 'Moringa Chikki', price: 129, originalPrice: 150, badge: 'Immunity Superfood Snack • 150g', unit: '150g', image: 'https://images.pexels.com/photos/6157052/pexels-photo-6157052.jpeg?auto=compress&cs=tinysrgb&w=500' }
+    };
+
+    let cart = [
+      { id: 'prod_1', qty: 1 },
+      { id: 'prod_4', qty: 1 }
+    ];
+
+    function renderCart() {
+      const container = document.getElementById('cart-items-list');
+      const badges = document.querySelectorAll('.minimal-cart-badge');
+      
+      let subtotal = 0;
+      let totalQty = 0;
+
+      cart.forEach(item => {
+        const p = PRODUCTS[item.id];
+        if (p) {
+          subtotal += (p.price * item.qty);
+          totalQty += item.qty;
+        }
+      });
+
+      badges.forEach(badge => {
+        badge.textContent = totalQty;
+        badge.style.display = totalQty > 0 ? 'flex' : 'none';
+      });
+
+      updateCardSteppersUI();
+
+      const freeThreshold = 499;
+      const isFree = subtotal >= freeThreshold;
+      const deliveryFee = isFree || subtotal === 0 ? 0 : 40;
+      const grandTotal = subtotal + deliveryFee;
+
+      const fill = document.getElementById('free-ship-fill');
+      const label = document.getElementById('free-ship-label');
+
+      if (isFree) {
+        label.innerHTML = `🎉 <strong>Congratulations!</strong> You unlocked FREE Delivery!`;
+        fill.style.width = '100%';
+      } else {
+        const needed = freeThreshold - subtotal;
+        label.innerHTML = `Add <strong>₹${needed}</strong> more for <strong>FREE Delivery!</strong>`;
+        fill.style.width = `${Math.min(100, Math.round((subtotal / freeThreshold) * 100))}%`;
+      }
+
+      document.getElementById('cart-subtotal-val').textContent = `₹${subtotal}`;
+      document.getElementById('cart-delivery-val').textContent = isFree ? 'FREE' : `₹${deliveryFee}`;
+      document.getElementById('cart-total-val').textContent = `₹${grandTotal}`;
+
+      if (cart.length === 0) {
+        list.innerHTML = `<div style="text-align:center; padding:30px; color:#6C7D66;">Your cart is empty.</div>`;
+        return;
+      }
+
+      container.innerHTML = cart.map(item => {
+        const p = PRODUCTS[item.id];
+        return `
+          <div class="cart-product-row">
+            <img class="cart-thumb-img" src="${p.image}" alt="${p.title}">
+            <div class="cart-row-info">
+              <div class="cart-row-title">${p.title}</div>
+              <div class="cart-row-price">₹${p.price}</div>
+            </div>
+            <div class="cart-stepper-ctrl">
+              <button class="stepper-btn" onclick="updateQty('${item.id}', -1)">-</button>
+              <span class="stepper-num">${item.qty}</span>
+              <button class="stepper-btn" onclick="updateQty('${item.id}', 1)">+</button>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function subscribeNewsletter() {
+      const input = document.getElementById('footer-email-input');
+      if (input && input.value.trim().length > 4) {
+        showToast('🎉 Welcome to the Eternal VIP Health Club! 10% coupon emailed.');
+        input.value = '';
+      } else {
+        showToast('Please enter a valid email address.');
+      }
+    }
+
+    function openProductDetail(id) {
+      window.location.href = 'product.html?id=' + id;
+    }
+
+    function updateCardSteppersUI() {
+      ['prod_1', 'prod_2', 'prod_3', 'prod_4', 'prod_5', 'prod_6'].forEach(id => {
+        const item = cart.find(i => i.id === id);
+        const qty = item ? item.qty : 0;
+        
+        // Update Best Sellers action area
+        const bsEl = document.getElementById(`bs-actions-${id}`);
+        if (bsEl) {
+          if (qty > 0) {
+            bsEl.innerHTML = `
+              <div class="card-stepper-active" onclick="event.stopPropagation()">
+                <button onclick="updateQty('${id}', -1)">-</button>
+                <span>${qty}</span>
+                <button onclick="updateQty('${id}', 1)">+</button>
+              </div>
+            `;
+          } else {
+            bsEl.innerHTML = `
+              <button class="zepto-btn-buynow" onclick="event.stopPropagation(); buyNowDirect('${id}')">
+                <i class="ri-flashlight-fill"></i> Buy
+              </button>
+              <button class="zepto-btn-cart-icon" onclick="event.stopPropagation(); addToCart('${id}')" aria-label="Add to cart">
+                <i class="ri-shopping-cart-2-line"></i>
+              </button>
+            `;
+          }
+        }
+
+        // Update Showcase grid action area
+        const scEl = document.getElementById(`sc-actions-${id}`);
+        if (scEl) {
+          if (qty > 0) {
+            scEl.innerHTML = `
+              <div class="card-stepper-active" onclick="event.stopPropagation()">
+                <button onclick="updateQty('${id}', -1)">-</button>
+                <span>${qty}</span>
+                <button onclick="updateQty('${id}', 1)">+</button>
+              </div>
+            `;
+          } else {
+            scEl.innerHTML = `
+              <button class="btn-buy-light-green" onclick="event.stopPropagation(); buyNowDirect('${id}')">
+                <i class="ri-flashlight-fill"></i> Buy Now
+              </button>
+              <button class="btn-add-cart-outline" onclick="event.stopPropagation(); addToCart('${id}')" aria-label="Add to cart">
+                <i class="ri-shopping-cart-2-line"></i>
+              </button>
+            `;
+          }
+        }
+      });
+    }
+
+    function addToCart(id) {
+      const existing = cart.find(i => i.id === id);
+      if (existing) {
+        existing.qty += 1;
+      } else {
+        cart.push({ id, qty: 1 });
+      }
+      renderCart();
+      showToast(`Added ${PRODUCTS[id].title} to cart!`);
+    }
+
+    function buyNowDirect(id) {
+      const existing = cart.find(i => i.id === id);
+      if (!existing) {
+        cart.push({ id, qty: 1 });
+      }
+      renderCart();
+      window.location.href = 'checkout.html';
+    }
+
+    function updateQty(id, delta) {
+      const item = cart.find(i => i.id === id);
+      if (!item) return;
+      item.qty += delta;
+      if (item.qty <= 0) {
+        cart = cart.filter(i => i.id !== id);
+      }
+      renderCart();
+    }
+
+    function openCartDrawer() {
+      document.getElementById('cart-drawer-modal').classList.add('open');
+      renderCart();
+    }
+
+    function closeCartDrawer() {
+      document.getElementById('cart-drawer-modal').classList.remove('open');
+    }
+
+    function showToast(msg) {
+      const wrap = document.getElementById('toast-wrapper');
+      const toast = document.createElement('div');
+      toast.className = 'toast-bubble';
+      toast.innerHTML = `<i class="ri-checkbox-circle-fill"></i> <span>${msg}</span>`;
+      wrap.appendChild(toast);
+      setTimeout(() => toast.remove(), 2500);
+    }
+
+    function handleSearch(q) {
+      const query = q.trim().toLowerCase();
+      const container = document.getElementById('products-grid-container');
+      const filtered = Object.values(PRODUCTS).filter(p => 
+        p.title.toLowerCase().includes(query) || 
+        p.category.toLowerCase().includes(query) || 
+        p.badge.toLowerCase().includes(query)
+      );
+
+      container.innerHTML = filtered.map(p => `
+        <div class="product-showcase-card" onclick="openProductDetail('${p.id}')">
+          <div class="product-photo-wrap">
+            <img src="${p.image}" alt="${p.title}">
+          </div>
+          <div class="product-text-details">
+            <h3 class="card-item-title">${p.title}</h3>
+            <div class="card-item-badge">${p.badge.replace('\n', '<br>')}</div>
+            <div class="card-item-pricing">
+              <div>
+                <span class="card-price-current">₹${p.price}</span>
+                <span class="card-price-mrp">₹${p.originalPrice || ''}</span>
+              </div>
+            </div>
+            <div class="card-dual-actions">
+              <button class="btn-buy-light-green" onclick="event.stopPropagation(); buyNowDirect('${p.id}')">
+                <i class="ri-flashlight-fill"></i> Buy Now
+              </button>
+              <button class="btn-add-cart-outline" onclick="event.stopPropagation(); addToCart('${p.id}')">
+                <i class="ri-shopping-cart-2-line"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function proceedToWhatsAppCheckout() {
+      if (cart.length === 0) return alert('Cart is empty');
+      const storeName = window.STORE_CONFIG ? window.STORE_CONFIG.brandName : 'Eternal Nutricare';
+      const waNumber = window.STORE_CONFIG ? window.STORE_CONFIG.whatsAppNumber : '916302017482';
+      
+      let msg = `🛍️ *NEW ORDER - ${storeName.toUpperCase()}*\n----------------------------------\n`;
+      let total = 0;
+      cart.forEach((i, idx) => {
+        const p = PRODUCTS[i.id];
+        msg += `${idx + 1}. *${p.title}* (${p.unit}) × ${i.qty} = ₹${p.price * i.qty}\n`;
+        total += (p.price * i.qty);
+      });
+      msg += `----------------------------------\n`;
+      msg += `*Total Amount:* ₹${total}\n\n`;
+      msg += `Please confirm my order and share delivery estimate. Thank you!`;
+
+      window.open(`https://wa.me/${waNumber}?text=${encodeURIComponent(msg)}`, '_blank');
+    }
+
+    function scrollToProducts() {
+      document.getElementById('bestsellers-section').scrollIntoView({ behavior: 'smooth' });
+    }
+
+    window.addEventListener('DOMContentLoaded', renderCart);
+  </script>
+</body>
+</html>

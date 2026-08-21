@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Categories - Eternal Nutricare</title>
+  
+  <!-- Remix Icons -->
+  <link href="https://cdn.jsdelivr.net/npm/remixicon@4.2.0/fonts/remixicon.css" rel="stylesheet">
+  
+  <!-- Google Fonts: Plus Jakarta Sans -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <!-- Core Layout Styles -->
+  <link rel="stylesheet" href="styles/theme.css">
+  <link rel="stylesheet" href="styles/storefront.css">
+  <link rel="stylesheet" href="styles/categories.css">
+</head>
+<body>
+
+  <!-- Zepto Top Header -->
+  <header class="zepto-top-nav">
+    <div class="zepto-header-left">
+      <a href="index.html" class="zepto-back-arrow" aria-label="Back">
+        <i class="ri-arrow-left-s-line"></i>
+      </a>
+      <h1 class="zepto-page-heading" id="top-cat-header-title">All Organic Products</h1>
+    </div>
+
+    <div class="zepto-header-actions">
+      <button class="zepto-head-icon" onclick="showToast('Added to Wishlist!')" aria-label="Wishlist">
+        <i class="ri-heart-3-line"></i>
+      </button>
+      <button class="zepto-head-icon" onclick="focusSearch()" aria-label="Search">
+        <i class="ri-search-2-line"></i>
+      </button>
+    </div>
+  </header>
+
+  <!-- Zepto-Style Split Viewport -->
+  <div class="zepto-split-viewport">
+    
+    <!-- 1. Left Sidebar Rail (Compact Zepto Style) -->
+    <aside class="zepto-sidebar-rail" id="categories-sidebar-nav">
+      
+      <div class="zepto-cat-tab active" onclick="selectCategory('All', this)">
+        <div class="zepto-tab-avatar">
+          <img src="https://images.unsplash.com/photo-1542838132-92c53300491e?w=150&auto=format&fit=crop&q=80" alt="All">
+        </div>
+        <span class="zepto-tab-name">All</span>
+      </div>
+
+      <div class="zepto-cat-tab" onclick="selectCategory('Honey', this)">
+        <div class="zepto-tab-avatar">
+          <img src="https://images.unsplash.com/photo-1587049352846-4a222e784d38?w=150&auto=format&fit=crop&q=80" alt="Honey">
+        </div>
+        <span class="zepto-tab-name">Honey</span>
+      </div>
+
+      <div class="zepto-cat-tab" onclick="selectCategory('Pickles', this)">
+        <div class="zepto-tab-avatar">
+          <img src="https://images.unsplash.com/photo-1599488615731-7e5c2823ff28?w=150&auto=format&fit=crop&q=80" alt="Pickles">
+        </div>
+        <span class="zepto-tab-name">Pickles</span>
+      </div>
+
+      <div class="zepto-cat-tab" onclick="selectCategory('Millet Biscuits', this)">
+        <div class="zepto-tab-avatar">
+          <img src="https://images.unsplash.com/photo-1558961363-fa8fdf82db35?w=150&auto=format&fit=crop&q=80" alt="Millet Biscuits">
+        </div>
+        <span class="zepto-tab-name">Biscuits</span>
+      </div>
+
+      <div class="zepto-cat-tab" onclick="selectCategory('Dates Laddu\'s', this)">
+        <div class="zepto-tab-avatar">
+          <img src="assets/dates_laddu.jpg" alt="Dates Laddu's">
+        </div>
+        <span class="zepto-tab-name">Laddus</span>
+      </div>
+
+      <div class="zepto-cat-tab" onclick="selectCategory('Moringa Chikki', this)">
+        <div class="zepto-tab-avatar">
+          <img src="https://images.unsplash.com/photo-1590080875515-8a3a8dc5735e?w=150&auto=format&fit=crop&q=80" alt="Moringa Chikki">
+        </div>
+        <span class="zepto-tab-name">Chikki</span>
+      </div>
+
+      <div class="zepto-cat-tab" onclick="selectCategory('Millet Rava', this)">
+        <div class="zepto-tab-avatar">
+          <img src="https://images.unsplash.com/photo-1586201375761-83865001e31c?w=150&auto=format&fit=crop&q=80" alt="Millet Rava">
+        </div>
+        <span class="zepto-tab-name">Rava</span>
+      </div>
+
+    </aside>
+
+    <!-- 2. Right Products Catalog Area -->
+    <main class="zepto-content-area">
+      
+      <!-- Top Promo Banner -->
+      <div class="zepto-cat-promo-card">
+        <div>
+          <span class="zepto-promo-tag">Up to 20% Off</span>
+          <div class="zepto-promo-title">100% Pure & Organic Food</div>
+        </div>
+        <button class="zepto-promo-btn" onclick="showToast('Special discount applied!')">Explore</button>
+      </div>
+
+      <!-- Zepto 2-Column Product Grid (Strict Uniform Sizing) -->
+      <div class="zepto-products-grid" id="zepto-products-grid">
+        <!-- Rendered dynamically -->
+      </div>
+    </main>
+
+  </div>
+
+  <!-- Zepto Floating Bottom Cart Bar -->
+  <div class="zepto-floating-cart-bar" id="zepto-floating-bar" onclick="openCartDrawer()">
+    <div class="zepto-cart-bar-left">
+      <div class="zepto-discount-icon">
+        <i class="ri-percent-fill"></i>
+      </div>
+      <div class="zepto-cart-bar-text">
+        <span class="zepto-bar-title" id="zepto-bar-msg">Free Delivery on Orders ₹499+</span>
+        <span class="zepto-bar-sub" id="zepto-bar-subtotal">Subtotal: ₹648</span>
+      </div>
+    </div>
+
+    <button class="zepto-cart-pink-pill" onclick="event.stopPropagation(); openCartDrawer()">
+      <span>Cart</span>
+      <span class="zepto-cart-count-badge" id="zepto-cart-qty">2</span>
+      <i class="ri-arrow-right-s-line" style="font-size:16px;"></i>
+    </button>
+  </div>
+
+  <!-- Slide-Over Shopping Cart Drawer -->
+  <div id="cart-drawer-modal" class="cart-drawer-overlay" onclick="closeCartDrawer(event)">
+    <div class="cart-drawer-sheet" onclick="event.stopPropagation()">
+      <div class="drawer-head">
+        <h3 class="drawer-title-label">Shopping Cart</h3>
+        <button class="drawer-close-icon" onclick="closeCartDrawer()"><i class="ri-close-line"></i></button>
+      </div>
+
+      <div class="free-ship-banner">
+        <div id="free-ship-label" class="free-ship-label">Add ₹150 more for FREE Delivery!</div>
+        <div class="free-ship-track">
+          <div id="free-ship-fill" class="free-ship-fill" style="width: 70%;"></div>
+        </div>
+      </div>
+
+      <div id="cart-items-list" class="cart-items-scroll">
+        <!-- Items -->
+      </div>
+
+      <div class="drawer-foot-bar">
+        <div class="price-breakdown-row">
+          <span>Subtotal</span>
+          <span id="cart-subtotal-val">₹648</span>
+        </div>
+        <div class="price-breakdown-row">
+          <span>Delivery</span>
+          <span id="cart-delivery-val" style="color: #4A7A25; font-weight: 700;">FREE</span>
+        </div>
+        <div class="price-breakdown-row grand-total">
+          <span>Total Amount</span>
+          <span id="cart-total-val">₹648</span>
+        </div>
+
+        <button class="whatsapp-checkout-btn" onclick="proceedToWhatsAppCheckout()">
+          <i class="ri-whatsapp-line" style="font-size:20px;"></i>
+          <span>Order via WhatsApp</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Notification -->
+  <div id="toast-wrapper" class="toast-floating-container"></div>
+
+  <script src="config/store.config.js"></script>
+  <script>
+    const CATALOG = {
+      'Honey': [
+        { id: 'prod_1', title: 'Raw Organic Honey', price: 499, mrp: 599, discount: '₹100 OFF', unit: '500 g', badge: 'Pure & Unfiltered', image: 'assets/showcase_honey.png' },
+        { id: 'h2', title: 'Wild Forest Honey', price: 549, mrp: 650, discount: '₹101 OFF', unit: '500 g', badge: '100% Forest Pure', image: 'https://images.unsplash.com/photo-1587049352846-4a222e784d38?w=500&auto=format&fit=crop&q=80' },
+        { id: 'h3', title: 'Acacia Blossom Honey', price: 599, mrp: 699, discount: '₹100 OFF', unit: '500 g', badge: 'Single Origin', image: 'https://images.unsplash.com/photo-1558642452-9d2a7deb7f62?w=500&auto=format&fit=crop&q=80' }
+      ],
+      'Pickles': [
+        { id: 'prod_2', title: 'Handmade Lemon Pickle', price: 249, mrp: 299, discount: '₹50 OFF', unit: '300 g', badge: 'No Preservatives', image: 'assets/showcase_pickle.png' },
+        { id: 'p2', title: 'Traditional Mango Pickle', price: 269, mrp: 320, discount: '₹51 OFF', unit: '350 g', badge: 'Cold Pressed Oil', image: 'https://images.unsplash.com/photo-1599488615731-7e5c2823ff28?w=500&auto=format&fit=crop&q=80' },
+        { id: 'p3', title: 'Spicy Garlic Pickle', price: 289, mrp: 340, discount: '₹51 OFF', unit: '300 g', badge: 'Country Garlic', image: 'https://images.unsplash.com/photo-1599488615731-7e5c2823ff28?w=500&auto=format&fit=crop&q=80' }
+      ],
+      'Millet Biscuits': [
+        { id: 'prod_4', title: 'Millet Digestive Biscuits', price: 149, mrp: 180, discount: '₹31 OFF', unit: '200 g', badge: 'Zero Maida', image: 'https://images.unsplash.com/photo-1558961363-fa8fdf82db35?w=500&auto=format&fit=crop&q=80' },
+        { id: 'b2', title: 'Ragi Crunch Cookies', price: 159, mrp: 190, discount: '₹31 OFF', unit: '200 g', badge: 'Finger Millet', image: 'https://images.unsplash.com/photo-1558961363-fa8fdf82db35?w=500&auto=format&fit=crop&q=80' },
+        { id: 'b3', title: 'Jowar Butter Biscuits', price: 169, mrp: 200, discount: '₹31 OFF', unit: '200 g', badge: 'Desi Butter', image: 'https://images.unsplash.com/photo-1558961363-fa8fdf82db35?w=500&auto=format&fit=crop&q=80' }
+      ],
+      "Dates Laddu's": [
+        { id: 'prod_5', title: 'Classic Dates Laddu', price: 349, mrp: 399, discount: '₹50 OFF', unit: '250 g', badge: 'Pure Desi Ghee', image: 'assets/dates_laddu.jpg' },
+        { id: 'd2', title: 'Dry Fruit Dates Laddu', price: 399, mrp: 450, discount: '₹51 OFF', unit: '250 g', badge: 'Almonds & Pista', image: 'assets/dates_laddu.jpg' }
+      ],
+      'Moringa Chikki': [
+        { id: 'prod_6', title: 'Moringa Peanut Chikki', price: 129, mrp: 150, discount: '₹21 OFF', unit: '150 g', badge: 'Organic Jaggery', image: 'https://images.unsplash.com/photo-1590080875515-8a3a8dc5735e?w=500&auto=format&fit=crop&q=80' },
+        { id: 'c2', title: 'Moringa Sesame Chikki', price: 139, mrp: 160, discount: '₹21 OFF', unit: '150 g', badge: 'Calcium Rich', image: 'https://images.unsplash.com/photo-1590080875515-8a3a8dc5735e?w=500&auto=format&fit=crop&q=80' }
+      ],
+      'Millet Rava': [
+        { id: 'prod_3', title: 'Foxtail Millet Rava', price: 189, mrp: 220, discount: '₹31 OFF', unit: '500 g', badge: '100% Unpolished', image: 'https://images.unsplash.com/photo-1586201375761-83865001e31c?w=500&auto=format&fit=crop&q=80' },
+        { id: 'r2', title: 'Little Millet Rava', price: 199, mrp: 230, discount: '₹31 OFF', unit: '500 g', badge: 'Dietary Fiber', image: 'https://images.unsplash.com/photo-1586201375761-83865001e31c?w=500&auto=format&fit=crop&q=80' }
+      ]
+    };
+
+    let activeCategory = 'All';
+    let cart = []; 
+
+    function openProductDetail(id) {
+      window.location.href = 'product.html?id=' + id;
+    }
+
+    function selectCategory(catName, el) {
+      activeCategory = catName;
+      document.querySelectorAll('.zepto-cat-tab').forEach(i => i.classList.remove('active'));
+      if (el) el.classList.add('active');
+      document.getElementById('top-cat-header-title').textContent = catName === 'All' ? 'All Organic Products' : catName;
+      renderProducts();
+    }
+
+    function renderProducts() {
+      let items = [];
+      if (activeCategory === 'All') {
+        items = Object.values(CATALOG).flat();
+      } else {
+        items = CATALOG[activeCategory] || [];
+      }
+      const grid = document.getElementById('zepto-products-grid');
+      grid.innerHTML = items.map(p => {
+        const inCart = cart.find(c => c.id === p.id);
+        const qty = inCart ? inCart.qty : 0;
+        return `
+          <div class="zepto-item-box" onclick="openProductDetail('${p.id}')">
+            <div class="zepto-img-container">
+              <img src="${p.image}" alt="${p.title}" loading="lazy">
+              ${qty === 0 ? `
+                <button class="zepto-add-pill-btn" onclick="event.stopPropagation(); addToCartItem('${p.id}', '${p.title}', ${p.price}, '${p.image}')">
+                  ADD
+                </button>
+              ` : `
+                <div class="zepto-stepper-pill-active" onclick="event.stopPropagation()">
+                  <button class="zepto-step-btn" onclick="updateItemQty('${p.id}', -1)">-</button>
+                  <span class="zepto-step-val">${qty}</span>
+                  <button class="zepto-step-btn" onclick="updateItemQty('${p.id}', 1)">+</button>
+                </div>
+              `}
+            </div>
+            <div class="zepto-details-col">
+              <div class="zepto-price-row">
+                <span class="zepto-price-badge">₹${p.price}</span>
+                <span class="zepto-mrp-strike">₹${p.mrp}</span>
+              </div>
+              <span class="zepto-discount-tag">${p.discount}</span>
+              <h3 class="zepto-product-name" title="${p.title}">${p.title}</h3>
+              <div class="zepto-unit-text">${p.unit}</div>
+              <span class="zepto-brand-badge">${p.badge}</span>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function addToCartItem(id, title, price, image) {
+      const existing = cart.find(i => i.id === id);
+      if (existing) {
+        existing.qty += 1;
+      } else {
+        cart.push({ id, title, price, image, qty: 1 });
+      }
+      renderProducts();
+      renderCartUI();
+      showToast(`Added ${title} to cart!`);
+    }
+
+    function updateItemQty(id, delta) {
+      const item = cart.find(i => i.id === id);
+      if (!item) return;
+      item.qty += delta;
+      if (item.qty <= 0) {
+        cart = cart.filter(i => i.id !== id);
+      }
+      renderProducts();
+      renderCartUI();
+    }
+
+    function renderCartUI() {
+      const list = document.getElementById('cart-items-list');
+      const floatBar = document.getElementById('zepto-floating-bar');
+      const totalQty = cart.reduce((sum, i) => sum + i.qty, 0);
+      const subtotal = cart.reduce((sum, i) => sum + (i.price * i.qty), 0);
+
+      if (totalQty > 0) {
+        floatBar.classList.add('visible');
+        document.getElementById('zepto-cart-qty').textContent = totalQty;
+        document.getElementById('zepto-bar-subtotal').textContent = `Subtotal: ₹${subtotal}`;
+        
+        const freeThreshold = 499;
+        const isFree = subtotal >= freeThreshold;
+        const msgEl = document.getElementById('zepto-bar-msg');
+        if (isFree) {
+          msgEl.innerHTML = `🎉 <strong>FREE Delivery Unlocked!</strong>`;
+        } else {
+          msgEl.textContent = `Add ₹${freeThreshold - subtotal} more for Free Delivery`;
+        }
+      } else {
+        floatBar.classList.remove('visible');
+      }
+
+      const freeThreshold = 499;
+      const isFree = subtotal >= freeThreshold;
+      const deliveryFee = isFree || subtotal === 0 ? 0 : 40;
+      const grandTotal = subtotal + deliveryFee;
+
+      const fill = document.getElementById('free-ship-fill');
+      const label = document.getElementById('free-ship-label');
+
+      if (isFree) {
+        label.innerHTML = `🎉 <strong>Congratulations!</strong> You unlocked FREE Delivery!`;
+        fill.style.width = '100%';
+      } else {
+        const needed = freeThreshold - subtotal;
+        label.innerHTML = `Add <strong>₹${needed}</strong> more for <strong>FREE Delivery!</strong>`;
+        fill.style.width = `${Math.min(100, Math.round((subtotal / freeThreshold) * 100))}%`;
+      }
+
+      document.getElementById('cart-subtotal-val').textContent = `₹${subtotal}`;
+      document.getElementById('cart-delivery-val').textContent = isFree ? 'FREE' : `₹${deliveryFee}`;
+      document.getElementById('cart-total-val').textContent = `₹${grandTotal}`;
+
+      if (cart.length === 0) {
+        list.innerHTML = `<div style="text-align:center; padding:30px; color:#6C7D66;">Your cart is empty.</div>`;
+        return;
+      }
+
+      list.innerHTML = cart.map(item => `
+        <div class="cart-product-row">
+          <img class="cart-thumb-img" src="${item.image}" alt="${item.title}">
+          <div class="cart-row-info">
+            <div class="cart-row-title">${item.title}</div>
+            <div class="cart-row-price">₹${item.price}</div>
+          </div>
+          <div class="cart-stepper-ctrl">
+            <button class="stepper-btn" onclick="updateItemQty('${item.id}', -1)">-</button>
+            <span class="stepper-num">${item.qty}</span>
+            <button class="stepper-btn" onclick="updateItemQty('${item.id}', 1)">+</button>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function openCartDrawer() {
+      document.getElementById('cart-drawer-modal').classList.add('open');
+      renderCartUI();
+    }
+
+    function closeCartDrawer(e) {
+      document.getElementById('cart-drawer-modal').classList.remove('open');
+    }
+
+    function showToast(msg) {
+      const wrap = document.getElementById('toast-wrapper');
+      const toast = document.createElement('div');
+      toast.className = 'toast-bubble';
+      toast.innerHTML = `<i class="ri-checkbox-circle-fill"></i> <span>${msg}</span>`;
+      wrap.appendChild(toast);
+      setTimeout(() => toast.remove(), 2500);
+    }
+
+    function proceedToWhatsAppCheckout() {
+      if (cart.length === 0) return alert('Cart is empty');
+      const storeName = window.STORE_CONFIG ? window.STORE_CONFIG.brandName : 'Eternal Nutricare';
+      const waNumber = window.STORE_CONFIG ? window.STORE_CONFIG.whatsAppNumber : '916302017482';
+      
+      let msg = `🛍️ *NEW ORDER - ${storeName.toUpperCase()}*\n----------------------------------\n`;
+      let total = 0;
+      cart.forEach((i, idx) => {
+        msg += `${idx + 1}. *${i.title}* × ${i.qty} = ₹${i.price * i.qty}\n`;
+        total += (i.price * i.qty);
+      });
+      msg += `----------------------------------\n`;
+      msg += `*Total Amount:* ₹${total}\n\n`;
+      msg += `Please confirm my order and share delivery estimate. Thank you!`;
+
+      window.open(`https://wa.me/${waNumber}?text=${encodeURIComponent(msg)}`, '_blank');
+    }
+
+    window.addEventListener('DOMContentLoaded', () => {
+      const params = new URLSearchParams(window.location.search);
+      const catParam = params.get('cat');
+      if (catParam && CATALOG[catParam]) {
+        const matchingSidebarItem = Array.from(document.querySelectorAll('.zepto-cat-tab')).find(item => item.textContent.trim().includes(catParam));
+        selectCategory(catParam, matchingSidebarItem);
+      } else {
+        renderProducts();
+      }
+      renderCartUI();
+    });
+  </script>
+</body>
+</html>

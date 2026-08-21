@@ -1,0 +1,519 @@
+/* ==========================================================================
+   ETERNAL NUTRICARE — EXACT ZEPTO QUICK-COMMERCE CATEGORIES CSS (UNIFORM ALIGNMENT)
+   ========================================================================== */
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  -webkit-tap-highlight-color: transparent;
+}
+
+body {
+  font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+  background-color: #FFFFFF;
+  color: #1E2519;
+  line-height: 1.3;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+/* Header */
+.zepto-top-nav {
+  background: #FFFFFF;
+  border-bottom: 1px solid #F0F2EC;
+  padding: 10px 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-shrink: 0;
+  z-index: 50;
+}
+
+.zepto-header-left {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.zepto-back-arrow {
+  background: none;
+  border: none;
+  font-size: 24px;
+  color: #1E2519;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+}
+
+.zepto-page-heading {
+  font-size: 16px;
+  font-weight: 800;
+  color: #1E2519;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.zepto-header-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.zepto-head-icon {
+  font-size: 20px;
+  color: #1E2519;
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+/* Split Main Container */
+.zepto-split-viewport {
+  flex: 1;
+  display: flex;
+  overflow: hidden;
+  max-width: 1240px;
+  width: 100%;
+  margin: 0 auto;
+}
+
+/* Left Sidebar (Compact Zepto Style ~68px) */
+.zepto-sidebar-rail {
+  width: 70px;
+  background: #F8FAF6;
+  border-right: 1px solid #EAEFE6;
+  overflow-y: auto;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  scrollbar-width: none;
+}
+
+@media (min-width: 768px) {
+  .zepto-sidebar-rail {
+    width: 200px;
+  }
+}
+
+.zepto-sidebar-rail::-webkit-scrollbar {
+  display: none;
+}
+
+.zepto-cat-tab {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 10px 4px;
+  cursor: pointer;
+  text-align: center;
+  border-left: 3px solid transparent;
+  transition: all 0.15s ease;
+  position: relative;
+  text-decoration: none;
+  gap: 3px;
+}
+
+@media (min-width: 768px) {
+  .zepto-cat-tab {
+    flex-direction: row;
+    padding: 12px 16px;
+    gap: 10px;
+    text-align: left;
+  }
+}
+
+.zepto-cat-tab.active {
+  background: #EFF7EA;
+  border-left-color: #4A7A25;
+}
+
+.zepto-tab-avatar {
+  width: 42px;
+  height: 42px;
+  border-radius: 12px;
+  overflow: hidden;
+  background: #FFFFFF;
+  border: 1px solid #E2EAD8;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.zepto-tab-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.zepto-cat-tab.active .zepto-tab-avatar {
+  border-color: #4A7A25;
+}
+
+.zepto-tab-name {
+  font-size: 10px;
+  font-weight: 700;
+  color: #55664F;
+  line-height: 1.15;
+}
+
+@media (min-width: 768px) {
+  .zepto-tab-avatar {
+    width: 36px;
+    height: 36px;
+  }
+  .zepto-tab-name {
+    font-size: 13px;
+    color: #1E2519;
+  }
+}
+
+.zepto-cat-tab.active .zepto-tab-name {
+  color: #386618;
+  font-weight: 800;
+}
+
+/* Right Content Area (Zepto Product Grid) */
+.zepto-content-area {
+  flex: 1;
+  background: #FFFFFF;
+  overflow-y: auto;
+  padding: 10px 10px 100px;
+  display: flex;
+  flex-direction: column;
+}
+
+@media (min-width: 768px) {
+  .zepto-content-area {
+    padding: 16px 20px 80px;
+  }
+}
+
+/* Top Promo Banner inside categories */
+.zepto-cat-promo-card {
+  background: linear-gradient(90deg, #FBF8EE 0%, #F5EFE0 100%);
+  border: 1px solid #EAE2CF;
+  border-radius: 12px;
+  padding: 8px 12px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+.zepto-promo-tag {
+  font-size: 9.5px;
+  font-weight: 800;
+  color: #B45309;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+}
+
+.zepto-promo-title {
+  font-size: 12.5px;
+  font-weight: 800;
+  color: #451A03;
+}
+
+.zepto-promo-btn {
+  background: #FFFFFF;
+  border: 1px solid #D97706;
+  color: #B45309;
+  font-size: 10.5px;
+  font-weight: 800;
+  padding: 3px 10px;
+  border-radius: 999px;
+  cursor: pointer;
+}
+
+/* ==========================================================================
+   STRICT UNIFORM 2-COLUMN ZEPTO GRID (ZERO UNEVEN SIZES)
+   ========================================================================== */
+.zepto-products-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px 10px;
+  align-items: start;
+}
+
+@media (min-width: 1024px) {
+  .zepto-products-grid {
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+  }
+}
+
+/* Single Zepto Product Card (Uniform Structure) */
+.zepto-item-box {
+  display: flex;
+  flex-direction: column;
+  background: #FFFFFF;
+  position: relative;
+  cursor: pointer;
+  height: 100%;
+}
+
+/* Image Container (Strict Fixed Square) */
+.zepto-img-container {
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  height: 112px;
+  background: #F8FAF6;
+  border: 1px solid #EAEFE6;
+  border-radius: 12px;
+  position: relative;
+  overflow: visible;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 14px;
+}
+
+@media (min-width: 768px) {
+  .zepto-img-container {
+    height: 140px;
+  }
+}
+
+.zepto-img-container img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 11px;
+}
+
+/* Floating ADD Button */
+.zepto-add-pill-btn {
+  position: absolute;
+  bottom: -11px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #FFFFFF;
+  color: #4A7A25;
+  border: 1.5px solid #4A7A25;
+  border-radius: 6px;
+  font-size: 11px;
+  font-weight: 800;
+  padding: 3px 14px;
+  letter-spacing: 0.5px;
+  cursor: pointer;
+  box-shadow: 0 2px 6px rgba(74, 122, 37, 0.12);
+  transition: all 0.15s ease;
+  white-space: nowrap;
+  z-index: 5;
+}
+
+.zepto-add-pill-btn:hover {
+  background: #4A7A25;
+  color: #FFFFFF;
+}
+
+/* Floating Exact Zepto Stepper Pill (Replaces ADD button in the exact same spot!) */
+.zepto-stepper-pill-active {
+  position: absolute !important;
+  bottom: -11px !important;
+  left: 50% !important;
+  transform: translateX(-50%) !important;
+  background: #2D5C14 !important;
+  color: #FFFFFF !important;
+  border-radius: 6px !important;
+  width: 78px !important;
+  height: 26px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  padding: 0 4px !important;
+  box-shadow: 0 3px 10px rgba(45, 92, 20, 0.35) !important;
+  z-index: 10 !important;
+}
+
+.zepto-step-btn {
+  background: none !important;
+  border: none !important;
+  color: #FFFFFF !important;
+  font-size: 15px !important;
+  font-weight: 800 !important;
+  cursor: pointer !important;
+  width: 22px !important;
+  height: 22px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  line-height: 1 !important;
+  border-radius: 4px !important;
+}
+
+.zepto-step-btn:hover {
+  background: rgba(255, 255, 255, 0.2) !important;
+}
+
+.zepto-step-val {
+  font-size: 12.5px !important;
+  font-weight: 800 !important;
+  color: #FFFFFF !important;
+  min-width: 14px !important;
+  text-align: center !important;
+  line-height: 1 !important;
+}
+
+/* Product Meta Info */
+.zepto-details-col {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.zepto-price-row {
+  display: flex;
+  align-items: baseline;
+  gap: 5px;
+}
+
+.zepto-price-badge {
+  background: #E8F5E1;
+  color: #2D6112;
+  font-size: 13px;
+  font-weight: 800;
+  padding: 1px 5px;
+  border-radius: 4px;
+}
+
+.zepto-mrp-strike {
+  font-size: 11px;
+  color: #8C9C87;
+  text-decoration: line-through;
+}
+
+.zepto-discount-tag {
+  font-size: 10px;
+  font-weight: 800;
+  color: #386618;
+}
+
+.zepto-product-name {
+  font-size: 12.5px;
+  font-weight: 700;
+  color: #1E2519;
+  line-height: 1.25;
+  min-height: 31px;
+  max-height: 31px;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  margin-top: 1px;
+}
+
+.zepto-unit-text {
+  font-size: 10.5px;
+  color: #6C7E64;
+  font-weight: 500;
+}
+
+.zepto-brand-badge {
+  display: inline-block;
+  background: #F0F4EC;
+  color: #4A7A25;
+  font-size: 9px;
+  font-weight: 700;
+  padding: 2px 5px;
+  border-radius: 4px;
+  margin-top: 2px;
+  align-self: flex-start;
+}
+
+/* Floating Bottom Zepto Cart Pill Bar */
+.zepto-floating-cart-bar {
+  position: fixed;
+  bottom: 72px;
+  left: 50%;
+  transform: translate(-50%, 150%);
+  opacity: 0;
+  pointer-events: none;
+  width: calc(100% - 24px);
+  max-width: 440px;
+  background: #1E2519;
+  border-radius: 16px;
+  padding: 6px 8px 6px 14px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.3);
+  z-index: 120;
+  color: #FFFFFF;
+  transition: transform 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.25s ease;
+}
+
+.zepto-floating-cart-bar.visible {
+  transform: translate(-50%, 0);
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.zepto-cart-bar-left {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.zepto-discount-icon {
+  background: #36442F;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #A3E635;
+  font-size: 15px;
+}
+
+.zepto-cart-bar-text {
+  display: flex;
+  flex-direction: column;
+}
+
+.zepto-bar-title {
+  font-size: 12px;
+  font-weight: 800;
+  color: #FFFFFF;
+}
+
+.zepto-bar-sub {
+  font-size: 10px;
+  color: #CBD8BE;
+}
+
+.zepto-cart-pink-pill {
+  background: #4A7A25;
+  color: #FFFFFF;
+  border: none;
+  border-radius: 12px;
+  padding: 8px 14px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 800;
+  box-shadow: 0 4px 12px rgba(74, 122, 37, 0.35);
+  transition: all 0.2s ease;
+}
+
+.zepto-cart-pink-pill:hover {
+  background: #375C1A;
+}
+
+.zepto-cart-count-badge {
+  background: rgba(255, 255, 255, 0.25);
+  font-size: 11px;
+  font-weight: 800;
+  padding: 2px 7px;
+  border-radius: 999px;
+}
