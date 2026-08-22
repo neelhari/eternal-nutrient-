@@ -92,11 +92,12 @@ body {
 }
 
 .brand-emblem-img {
-  width: 36px;
-  height: 36px;
+  width: 48px;
+  height: 48px;
   object-fit: contain;
   display: block;
   flex-shrink: 0;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.04));
 }
 
 .brand-text-block {
@@ -105,6 +106,7 @@ body {
   align-items: center;
   text-align: center;
   line-height: 1.08;
+  margin-top: 1px;
 }
 
 .brand-name-eternal {
@@ -127,8 +129,8 @@ body {
 
 @media (max-width: 768px) {
   .brand-emblem-img {
-    width: 30px;
-    height: 30px;
+    width: 42px;
+    height: 42px;
   }
   .brand-name-eternal {
     font-size: 11.5px;
