@@ -56,13 +56,13 @@
           <form id="form-login" onsubmit="handleLogin(event)">
             <div class="plantland-form-group">
               
-              <!-- Email / Mobile -->
+              <!-- Email -->
               <div>
                 <div class="plantland-input-pill-wrap">
                   <i class="ri-mail-line plantland-input-icon"></i>
-                  <input type="text" id="login-ident" class="plantland-input-pill" placeholder="Email or Mobile" required autocomplete="username">
+                  <input type="email" id="login-ident" class="plantland-input-pill" placeholder="Email" required autocomplete="email">
                 </div>
-                <div id="login-ident-err" class="plantland-error-tip">Please enter valid email or phone.</div>
+                <div id="login-ident-err" class="plantland-error-tip">Please enter a valid email.</div>
               </div>
 
               <!-- Password -->
@@ -116,7 +116,7 @@
 
 
       <!-- =========================================================================
-           VIEW 2: SIGN UP (EXACT REFERENCE DESIGN)
+           VIEW 2: SIGN UP (EXACT REFERENCE DESIGN - EMAIL ONLY)
            ========================================================================= -->
       <div id="screen-signup" class="auth-screen-tab">
         
@@ -171,15 +171,6 @@
                   <input type="password" id="reg-pass-confirm" class="plantland-input-pill" placeholder="Confirm Password" required minlength="6" autocomplete="new-password">
                 </div>
                 <div id="reg-pass-confirm-err" class="plantland-error-tip">Passwords do not match.</div>
-              </div>
-
-              <!-- Phone -->
-              <div>
-                <div class="plantland-input-pill-wrap">
-                  <i class="ri-smartphone-line plantland-input-icon"></i>
-                  <input type="tel" id="reg-phone" class="plantland-input-pill" placeholder="Phone (10-digit)" required autocomplete="tel">
-                </div>
-                <div id="reg-phone-err" class="plantland-error-tip">Please enter valid 10-digit number.</div>
               </div>
 
             </div>
@@ -330,7 +321,6 @@
       const email = document.getElementById('reg-email').value;
       const pass = document.getElementById('reg-pass').value;
       const passConfirm = document.getElementById('reg-pass-confirm').value;
-      const phone = document.getElementById('reg-phone').value;
       const btn = document.getElementById('btn-signup-submit');
 
       if (pass !== passConfirm) {
@@ -342,7 +332,7 @@
       btn.innerHTML = `<span>Signing up...</span>`;
 
       const name = email.split('@')[0].replace(/[._]/g, ' ');
-      const result = await AuthEngine.signup({ fullName: name, email, phone, password: pass });
+      const result = await AuthEngine.signup({ fullName: name, email, phone: '', password: pass });
 
       btn.disabled = false;
       btn.innerHTML = `<span>Sign Up</span>`;

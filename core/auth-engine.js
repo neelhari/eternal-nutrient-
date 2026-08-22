@@ -267,14 +267,12 @@
      * Create Account
      */
     async signup({ fullName, email, phone, password }) {
-      const name = (fullName || '').trim();
+      const name = (fullName || em.split('@')[0]).trim();
       const em = (email || '').trim();
       const ph = (phone || '').trim();
       const pass = (password || '').trim();
 
-      if (!name) return { success: false, error: 'Please enter your full name.' };
       if (!em || !em.includes('@')) return { success: false, error: 'Please enter a valid email address.' };
-      if (!ph || ph.replace(/\D/g, '').length < 10) return { success: false, error: 'Please enter a valid 10-digit mobile number.' };
       if (!pass || pass.length < 6) return { success: false, error: 'Password must be at least 6 characters long.' };
 
       // Supabase Signup
@@ -507,6 +505,7 @@
      * Global Auth Modal Dialogs
      */
     injectGlobalModals() {
+      if (window.location.pathname.endsWith('login.html') || window.location.href.includes('login.html')) return;
       if (document.getElementById('en-global-auth-modal-root')) return;
 
       const modalRoot = document.createElement('div');
