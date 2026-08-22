@@ -8,9 +8,10 @@
   <!-- Remix Icons -->
   <link href="https://cdn.jsdelivr.net/npm/remixicon@4.2.0/fonts/remixicon.css" rel="stylesheet">
   
-  <!-- Google Fonts: Plus Jakarta Sans -->
+  <!-- Google Fonts: Plus Jakarta Sans & Noto Serif -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif:ital,wght@0,400;0,700;1,400;1,700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
   <!-- Core Layout Styles -->
   <link rel="stylesheet" href="styles/theme.css">
@@ -98,13 +99,47 @@
     <!-- 2. Right Products Catalog Area -->
     <main class="zepto-content-area">
       
-      <!-- Top Promo Banner -->
-      <div class="zepto-cat-promo-card">
-        <div>
-          <span class="zepto-promo-tag">Up to 20% Off</span>
-          <div class="zepto-promo-title">100% Pure & Organic Food</div>
+      <!-- Premium Dark Brown Festive / Rakhi Specials Banner (Onam Style Showcase) -->
+      <div class="festive-showcase-banner">
+        <div class="festive-banner-head">
+          <div class="festive-head-text">
+            <span class="festive-eyebrow">✨ Pure Organic Celebrations</span>
+            <div class="festive-main-title">Rakhi & Festive Specials</div>
+          </div>
+          <div class="festive-badge-chip">
+            <i class="ri-sparkling-fill" style="color: #E2C095;"></i>
+            <span>Curated</span>
+          </div>
         </div>
-        <button class="zepto-promo-btn" onclick="showToast('Special discount applied!')">Explore</button>
+
+        <div class="festive-spotlight-cards-row">
+          <!-- Card 1: Rakhi Specials (Dates Laddus) -->
+          <div class="festive-mini-card" onclick="selectCategory('Dates Laddu\'s')">
+            <div class="festive-mini-thumb">
+              <img src="assets/dates_laddu.jpg" alt="Dates Laddus">
+            </div>
+            <div class="festive-mini-title">Rakhi Specials</div>
+            <div class="festive-mini-sub">Dates Laddus</div>
+          </div>
+
+          <!-- Card 2: Raw Honey -->
+          <div class="festive-mini-card" onclick="selectCategory('Honey')">
+            <div class="festive-mini-thumb">
+              <img src="assets/showcase_honey.png" alt="Raw Forest Honey">
+            </div>
+            <div class="festive-mini-title">Forest Pure</div>
+            <div class="festive-mini-sub">Raw Honey</div>
+          </div>
+
+          <!-- Card 3: Healthy Cookies & Snacks -->
+          <div class="festive-mini-card" onclick="selectCategory('Millet Biscuits')">
+            <div class="festive-mini-thumb">
+              <img src="https://images.unsplash.com/photo-1558961363-fa8fdf82db35?w=200&auto=format&fit=crop&q=80" alt="Millet Cookies">
+            </div>
+            <div class="festive-mini-title">Immunity Bites</div>
+            <div class="festive-mini-sub">Millet Cookies</div>
+          </div>
+        </div>
       </div>
 
       <!-- Zepto 2-Column Product Grid (Strict Uniform Sizing) -->
@@ -182,31 +217,31 @@
   <script>
     const CATALOG = {
       'Honey': [
-        { id: 'prod_1', title: 'Raw Organic Honey', price: 499, mrp: 599, discount: '₹100 OFF', unit: '500 g', badge: 'Pure & Unfiltered', image: 'assets/showcase_honey.png' },
-        { id: 'h2', title: 'Wild Forest Honey', price: 549, mrp: 650, discount: '₹101 OFF', unit: '500 g', badge: '100% Forest Pure', image: 'https://images.unsplash.com/photo-1587049352846-4a222e784d38?w=500&auto=format&fit=crop&q=80' },
-        { id: 'h3', title: 'Acacia Blossom Honey', price: 599, mrp: 699, discount: '₹100 OFF', unit: '500 g', badge: 'Single Origin', image: 'https://images.unsplash.com/photo-1558642452-9d2a7deb7f62?w=500&auto=format&fit=crop&q=80' }
+        { id: 'prod_1', title: 'Raw Organic Honey', price: 499, mrp: 599, discount: '₹100 OFF', unit: '500 g', badge: 'Pure & Unfiltered', image: 'assets/prod_honey_studio.jpg' },
+        { id: 'h2', title: 'Wild Forest Honey', price: 549, mrp: 650, discount: '₹101 OFF', unit: '500 g', badge: '100% Forest Pure', image: 'assets/prod_honey_studio.jpg' },
+        { id: 'h3', title: 'Acacia Blossom Honey', price: 599, mrp: 699, discount: '₹100 OFF', unit: '500 g', badge: 'Single Origin', image: 'assets/header_honey_float.jpg' }
       ],
       'Pickles': [
-        { id: 'prod_2', title: 'Handmade Lemon Pickle', price: 249, mrp: 299, discount: '₹50 OFF', unit: '300 g', badge: 'No Preservatives', image: 'assets/showcase_pickle.png' },
-        { id: 'p2', title: 'Traditional Mango Pickle', price: 269, mrp: 320, discount: '₹51 OFF', unit: '350 g', badge: 'Cold Pressed Oil', image: 'https://images.unsplash.com/photo-1599488615731-7e5c2823ff28?w=500&auto=format&fit=crop&q=80' },
-        { id: 'p3', title: 'Spicy Garlic Pickle', price: 289, mrp: 340, discount: '₹51 OFF', unit: '300 g', badge: 'Country Garlic', image: 'https://images.unsplash.com/photo-1599488615731-7e5c2823ff28?w=500&auto=format&fit=crop&q=80' }
+        { id: 'prod_2', title: 'Handmade Lemon Pickle', price: 249, mrp: 299, discount: '₹50 OFF', unit: '300 g', badge: 'No Preservatives', image: 'assets/prod_pickle_studio.jpg' },
+        { id: 'p2', title: 'Traditional Mango Pickle', price: 269, mrp: 320, discount: '₹51 OFF', unit: '350 g', badge: 'Cold Pressed Oil', image: 'assets/prod_pickle_studio.jpg' },
+        { id: 'p3', title: 'Spicy Garlic Pickle', price: 289, mrp: 340, discount: '₹51 OFF', unit: '300 g', badge: 'Country Garlic', image: 'assets/prod_pickle_studio.jpg' }
       ],
       'Millet Biscuits': [
-        { id: 'prod_4', title: 'Millet Digestive Biscuits', price: 149, mrp: 180, discount: '₹31 OFF', unit: '200 g', badge: 'Zero Maida', image: 'https://images.unsplash.com/photo-1558961363-fa8fdf82db35?w=500&auto=format&fit=crop&q=80' },
-        { id: 'b2', title: 'Ragi Crunch Cookies', price: 159, mrp: 190, discount: '₹31 OFF', unit: '200 g', badge: 'Finger Millet', image: 'https://images.unsplash.com/photo-1558961363-fa8fdf82db35?w=500&auto=format&fit=crop&q=80' },
-        { id: 'b3', title: 'Jowar Butter Biscuits', price: 169, mrp: 200, discount: '₹31 OFF', unit: '200 g', badge: 'Desi Butter', image: 'https://images.unsplash.com/photo-1558961363-fa8fdf82db35?w=500&auto=format&fit=crop&q=80' }
+        { id: 'prod_4', title: 'Millet Digestive Biscuits', price: 149, mrp: 180, discount: '₹31 OFF', unit: '200 g', badge: 'Zero Maida', image: 'assets/prod_cookie_studio.jpg' },
+        { id: 'b2', title: 'Ragi Crunch Cookies', price: 159, mrp: 190, discount: '₹31 OFF', unit: '200 g', badge: 'Finger Millet', image: 'assets/prod_cookie_studio.jpg' },
+        { id: 'b3', title: 'Jowar Butter Biscuits', price: 169, mrp: 200, discount: '₹31 OFF', unit: '200 g', badge: 'Desi Butter', image: 'assets/prod_cookie_studio.jpg' }
       ],
       "Dates Laddu's": [
-        { id: 'prod_5', title: 'Classic Dates Laddu', price: 349, mrp: 399, discount: '₹50 OFF', unit: '250 g', badge: 'Pure Desi Ghee', image: 'assets/dates_laddu.jpg' },
-        { id: 'd2', title: 'Dry Fruit Dates Laddu', price: 399, mrp: 450, discount: '₹51 OFF', unit: '250 g', badge: 'Almonds & Pista', image: 'assets/dates_laddu.jpg' }
+        { id: 'prod_5', title: 'Classic Dates Laddu', price: 349, mrp: 399, discount: '₹50 OFF', unit: '250 g', badge: 'Pure Desi Ghee', image: 'assets/prod_laddu_studio.jpg' },
+        { id: 'd2', title: 'Dry Fruit Dates Laddu', price: 399, mrp: 450, discount: '₹51 OFF', unit: '250 g', badge: 'Almonds & Pista', image: 'assets/prod_laddu_studio.jpg' }
       ],
       'Moringa Chikki': [
-        { id: 'prod_6', title: 'Moringa Peanut Chikki', price: 129, mrp: 150, discount: '₹21 OFF', unit: '150 g', badge: 'Organic Jaggery', image: 'https://images.unsplash.com/photo-1590080875515-8a3a8dc5735e?w=500&auto=format&fit=crop&q=80' },
-        { id: 'c2', title: 'Moringa Sesame Chikki', price: 139, mrp: 160, discount: '₹21 OFF', unit: '150 g', badge: 'Calcium Rich', image: 'https://images.unsplash.com/photo-1590080875515-8a3a8dc5735e?w=500&auto=format&fit=crop&q=80' }
+        { id: 'prod_6', title: 'Moringa Peanut Chikki', price: 129, mrp: 150, discount: '₹21 OFF', unit: '150 g', badge: 'Organic Jaggery', image: 'assets/prod_chikki_studio.jpg' },
+        { id: 'c2', title: 'Moringa Sesame Chikki', price: 139, mrp: 160, discount: '₹21 OFF', unit: '150 g', badge: 'Calcium Rich', image: 'assets/prod_chikki_studio.jpg' }
       ],
       'Millet Rava': [
-        { id: 'prod_3', title: 'Foxtail Millet Rava', price: 189, mrp: 220, discount: '₹31 OFF', unit: '500 g', badge: '100% Unpolished', image: 'https://images.unsplash.com/photo-1586201375761-83865001e31c?w=500&auto=format&fit=crop&q=80' },
-        { id: 'r2', title: 'Little Millet Rava', price: 199, mrp: 230, discount: '₹31 OFF', unit: '500 g', badge: 'Dietary Fiber', image: 'https://images.unsplash.com/photo-1586201375761-83865001e31c?w=500&auto=format&fit=crop&q=80' }
+        { id: 'prod_3', title: 'Foxtail Millet Rava', price: 189, mrp: 220, discount: '₹31 OFF', unit: '500 g', badge: '100% Unpolished', image: 'assets/prod_rava_studio.jpg' },
+        { id: 'r2', title: 'Little Millet Rava', price: 199, mrp: 230, discount: '₹31 OFF', unit: '500 g', badge: 'Dietary Fiber', image: 'assets/prod_rava_studio.jpg' }
       ]
     };
 
@@ -219,7 +254,16 @@
 
     function selectCategory(catName, el) {
       activeCategory = catName;
-      document.querySelectorAll('.zepto-cat-tab').forEach(i => i.classList.remove('active'));
+      document.querySelectorAll('.zepto-cat-tab').forEach(i => {
+        i.classList.remove('active');
+        const nameEl = i.querySelector('.zepto-tab-name');
+        if (nameEl) {
+          const txt = nameEl.textContent.trim().toLowerCase();
+          if (catName.toLowerCase().includes(txt) || txt.includes(catName.toLowerCase())) {
+            i.classList.add('active');
+          }
+        }
+      });
       if (el) el.classList.add('active');
       document.getElementById('top-cat-header-title').textContent = catName === 'All' ? 'All Organic Products' : catName;
       renderProducts();
@@ -241,7 +285,7 @@
             <div class="zepto-img-container">
               <img src="${p.image}" alt="${p.title}" loading="lazy">
               ${qty === 0 ? `
-                <button class="zepto-add-pill-btn" onclick="event.stopPropagation(); addToCartItem('${p.id}', '${p.title}', ${p.price}, '${p.image}')">
+                <button class="zepto-add-pill-btn" onclick="event.stopPropagation(); addToCartItem('${p.id}', '${p.title.replace(/'/g, "\\'")}', ${p.price}, '${p.image}')">
                   ADD
                 </button>
               ` : `
@@ -276,7 +320,16 @@
       }
       renderProducts();
       renderCartUI();
-      showToast(`Added ${title} to cart!`);
+      showToast(`Added ${title} to bag!`);
+    }
+
+    function buyNowDirectItem(id, title, price, image) {
+      const existing = cart.find(i => i.id === id);
+      if (!existing) {
+        cart.push({ id, title, price, image, qty: 1 });
+      }
+      renderCartUI();
+      window.location.href = 'checkout.html';
     }
 
     function updateItemQty(id, delta) {

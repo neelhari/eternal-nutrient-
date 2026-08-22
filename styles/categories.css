@@ -195,45 +195,137 @@ body {
   }
 }
 
-/* Top Promo Banner inside categories */
-.zepto-cat-promo-card {
-  background: linear-gradient(90deg, #FBF8EE 0%, #F5EFE0 100%);
-  border: 1px solid #EAE2CF;
-  border-radius: 12px;
-  padding: 8px 12px;
+/* Premium Festive / Rakhi Specials Banner (Onam Showcase Style) */
+.festive-showcase-banner {
+  flex-shrink: 0;
+  width: 100%;
+  background: linear-gradient(135deg, #241410 0%, #3D221A 55%, #1C0E0A 100%);
+  border-radius: 14px;
+  padding: 10px 10px 10px;
+  margin-bottom: 14px;
+  box-shadow: 0 4px 14px rgba(40, 22, 18, 0.15);
+  position: relative;
+  overflow: hidden;
+  border: 1px solid rgba(214, 180, 140, 0.25);
+  box-sizing: border-box;
+}
+
+.festive-banner-head {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 12px;
+  margin-bottom: 8px;
+  padding: 0 2px;
 }
 
-.zepto-promo-tag {
-  font-size: 9.5px;
+.festive-head-text {
+  display: flex;
+  flex-direction: column;
+}
+
+.festive-eyebrow {
+  font-size: 8.5px;
   font-weight: 800;
-  color: #B45309;
-  letter-spacing: 0.5px;
+  color: #E2C095;
+  letter-spacing: 0.8px;
   text-transform: uppercase;
 }
 
-.zepto-promo-title {
-  font-size: 12.5px;
-  font-weight: 800;
-  color: #451A03;
+.festive-main-title {
+  font-family: 'Noto Serif', Georgia, serif;
+  font-style: italic;
+  font-size: 14.5px;
+  font-weight: 700;
+  color: #FFFDF9;
+  line-height: 1.2;
 }
 
-.zepto-promo-btn {
-  background: #FFFFFF;
-  border: 1px solid #D97706;
-  color: #B45309;
-  font-size: 10.5px;
+.festive-badge-chip {
+  background: rgba(226, 192, 149, 0.18);
+  color: #F8E2C2;
+  font-size: 9px;
   font-weight: 800;
-  padding: 3px 10px;
+  padding: 2px 8px;
   border-radius: 999px;
+  border: 1px solid rgba(226, 192, 149, 0.35);
+  display: flex;
+  align-items: center;
+  gap: 3px;
+}
+
+.festive-spotlight-cards-row {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 6px;
+  width: 100%;
+}
+
+.festive-mini-card {
+  background: #FFFDF9;
+  border-radius: 10px;
+  padding: 6px 4px 6px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   cursor: pointer;
+  transition: transform 0.18s ease, box-shadow 0.18s ease;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.12);
+  text-decoration: none;
+}
+
+.festive-mini-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+.festive-mini-card:active {
+  transform: scale(0.96);
+}
+
+.festive-mini-thumb {
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  max-height: 52px;
+  border-radius: 6px;
+  overflow: hidden;
+  background: #F8F5F0;
+  margin-bottom: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.festive-mini-thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.festive-mini-title {
+  font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+  font-size: 9.5px;
+  font-weight: 800;
+  color: #281612;
+  line-height: 1.15;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  width: 100%;
+}
+
+.festive-mini-sub {
+  font-size: 8px;
+  font-weight: 600;
+  color: #7A6965;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  width: 100%;
 }
 
 /* ==========================================================================
-   STRICT UNIFORM 2-COLUMN ZEPTO GRID (ZERO UNEVEN SIZES)
+   STRICT UNIFORM 2-COLUMN ZEPTO GRID (EXACT REFERENCE 2ND IMAGE)
    ========================================================================== */
 .zepto-products-grid {
   display: grid;
@@ -249,7 +341,7 @@ body {
   }
 }
 
-/* Single Zepto Product Card (Uniform Structure) */
+/* Single Zepto Product Card (Exact Match to 2nd Image) */
 .zepto-item-box {
   display: flex;
   flex-direction: column;
@@ -259,7 +351,7 @@ body {
   height: 100%;
 }
 
-/* Image Container (Strict Fixed Square) */
+/* Image Container (Strict Fixed Square with Overlapping Button) */
 .zepto-img-container {
   width: 100%;
   aspect-ratio: 1 / 1;
@@ -288,48 +380,62 @@ body {
   border-radius: 11px;
 }
 
-/* Floating ADD Button */
+/* Floating ADD Button (Sleek Refined Dark Brown Pill) */
 .zepto-add-pill-btn {
   position: absolute;
-  bottom: -11px;
+  bottom: -10px;
   left: 50%;
   transform: translateX(-50%);
-  background: #FFFFFF;
-  color: #4A7A25;
-  border: 1.5px solid #4A7A25;
-  border-radius: 6px;
-  font-size: 11px;
-  font-weight: 800;
-  padding: 3px 14px;
-  letter-spacing: 0.5px;
+  background: #281612;
+  color: #FFFFFF;
+  border: 1px solid #281612;
+  border-radius: 5px;
+  font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+  font-size: 9.5px;
+  font-weight: 700;
+  padding: 2px 11px;
+  letter-spacing: 0.6px;
+  height: 21px;
+  line-height: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   cursor: pointer;
-  box-shadow: 0 2px 6px rgba(74, 122, 37, 0.12);
+  box-shadow: 0 2px 5px rgba(40, 22, 18, 0.22);
   transition: all 0.15s ease;
   white-space: nowrap;
   z-index: 5;
+  user-select: none;
+  -webkit-font-smoothing: antialiased;
 }
 
 .zepto-add-pill-btn:hover {
-  background: #4A7A25;
-  color: #FFFFFF;
+  background: #3E241E;
+  border-color: #3E241E;
+  transform: translateX(-50%) translateY(-1px);
 }
 
-/* Floating Exact Zepto Stepper Pill (Replaces ADD button in the exact same spot!) */
+.zepto-add-pill-btn:active {
+  transform: translateX(-50%) scale(0.95);
+  background: #1C0F0C;
+}
+
+/* Floating Exact Zepto Stepper Pill (Transitions into place when ADD clicked) */
 .zepto-stepper-pill-active {
   position: absolute !important;
-  bottom: -11px !important;
+  bottom: -10px !important;
   left: 50% !important;
   transform: translateX(-50%) !important;
-  background: #553518 !important;
+  background: #281612 !important;
   color: #FFFFFF !important;
-  border-radius: 6px !important;
-  width: 78px !important;
-  height: 26px !important;
+  border-radius: 5px !important;
+  width: 70px !important;
+  height: 21px !important;
   display: flex !important;
   align-items: center !important;
   justify-content: space-between !important;
   padding: 0 4px !important;
-  box-shadow: 0 3px 10px rgba(85, 53, 24, 0.35) !important;
+  box-shadow: 0 2px 6px rgba(40, 22, 18, 0.25) !important;
   z-index: 10 !important;
 }
 
@@ -337,16 +443,16 @@ body {
   background: none !important;
   border: none !important;
   color: #FFFFFF !important;
-  font-size: 15px !important;
+  font-size: 13.5px !important;
   font-weight: 800 !important;
   cursor: pointer !important;
-  width: 22px !important;
-  height: 22px !important;
+  width: 18px !important;
+  height: 18px !important;
   display: flex !important;
   align-items: center !important;
   justify-content: center !important;
   line-height: 1 !important;
-  border-radius: 4px !important;
+  border-radius: 3px !important;
 }
 
 .zepto-step-btn:hover {
@@ -354,10 +460,11 @@ body {
 }
 
 .zepto-step-val {
-  font-size: 12.5px !important;
+  font-family: 'Plus Jakarta Sans', sans-serif !important;
+  font-size: 11px !important;
   font-weight: 800 !important;
   color: #FFFFFF !important;
-  min-width: 14px !important;
+  min-width: 12px !important;
   text-align: center !important;
   line-height: 1 !important;
 }

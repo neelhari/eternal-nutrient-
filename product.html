@@ -303,7 +303,7 @@
       display: none;
     }
 
-    /* Sticky Bottom Purchase Bar (Mobile Sticky / Desktop Inline) */
+    /* Sticky Bottom Purchase Bar (No Price - Dual Dark Chocolate Buttons) */
     .p-sticky-bottom-bar {
       position: fixed;
       bottom: 0;
@@ -311,99 +311,130 @@
       right: 0;
       width: 100%;
       background: #FFFFFF;
-      border-top: 1px solid #EAEFE6;
+      border-top: 1px solid #ECE7DF;
       padding: 12px 16px;
       display: flex;
       align-items: center;
-      justify-content: space-between;
-      gap: 12px;
+      justify-content: center;
+      gap: 10px;
       z-index: 200;
-      box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.08);
+      box-shadow: 0 -4px 20px rgba(40, 22, 18, 0.08);
     }
 
     @media (min-width: 900px) {
       .p-sticky-bottom-bar {
         position: static;
-        border: 1px solid #EAEFE6;
+        border: 1px solid #ECE7DF;
         border-radius: 16px;
-        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.03);
+        box-shadow: 0 4px 16px rgba(40, 22, 18, 0.04);
         padding: 16px 20px;
-        margin-top: 20px;
+        margin-top: 24px;
       }
     }
 
-    .p-bottom-price-box {
-      display: flex;
-      flex-direction: column;
-      flex-shrink: 0;
-    }
-
-    .p-bottom-price-label {
-      font-size: 10.5px;
-      color: #7A8C73;
-      font-weight: 600;
-    }
-
-    .p-bottom-price-val {
-      font-size: 19px;
+    .p-btn-daksha-action {
+      flex: 1;
+      height: 48px;
+      background: #281612;
+      color: #FFFFFF;
+      border: none;
+      border-radius: 8px;
+      font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+      font-size: 13.5px;
       font-weight: 800;
-      color: #1E2519;
+      letter-spacing: 0.8px;
+      text-transform: uppercase;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      box-shadow: 0 3px 10px rgba(40, 22, 18, 0.22);
+      user-select: none;
+      text-decoration: none;
+    }
+
+    @media (max-width: 480px) {
+      .p-btn-daksha-action {
+        height: 44px;
+        font-size: 12.5px;
+        letter-spacing: 0.5px;
+        gap: 6px;
+      }
+    }
+
+    .p-btn-daksha-action:hover {
+      background: #3E241E;
+      transform: translateY(-2px);
+      box-shadow: 0 6px 16px rgba(40, 22, 18, 0.32);
+    }
+
+    .p-btn-daksha-action:active {
+      transform: scale(0.97);
+      background: #1C0F0C;
+    }
+
+    .p-btn-daksha-action.added {
+      background: #386618;
+    }
+
+    /* Quantity Stepper Row on Page */
+    .p-qty-inline-sec {
+      margin: 14px 0 18px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: #FFFFFF;
+      border: 1px solid #ECE7DF;
+      border-radius: 12px;
+      padding: 10px 14px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.02);
+    }
+
+    .p-qty-inline-label {
+      font-size: 13.5px;
+      font-weight: 700;
+      color: #1E1A17;
     }
 
     .p-stepper-pill-box {
       display: flex;
       align-items: center;
-      background: #EFF3EC;
-      border-radius: 999px;
-      padding: 3px 8px;
-      gap: 8px;
-      flex-shrink: 0;
+      background: #F8F5F0;
+      border: 1px solid #E5DFD5;
+      border-radius: 8px;
+      padding: 2px 6px;
+      gap: 10px;
     }
 
     .p-stepper-btn {
       background: none;
       border: none;
-      font-size: 16px;
+      font-size: 18px;
       font-weight: 800;
-      color: #1E2519;
+      color: #1E1A17;
       cursor: pointer;
-      width: 26px;
-      height: 26px;
+      width: 28px;
+      height: 28px;
       display: flex;
       align-items: center;
       justify-content: center;
+      transition: transform 0.15s ease;
+      line-height: 1;
+    }
+
+    .p-stepper-btn:active {
+      transform: scale(0.88);
     }
 
     .p-stepper-qty {
-      font-size: 14px;
-      font-weight: 700;
-      color: #1E2519;
-      min-width: 14px;
-      text-align: center;
-    }
-
-    .p-btn-buynow-green {
-      flex: 1;
-      background: #553518;
-      color: #FFFFFF;
-      border: none;
-      border-radius: 999px;
-      padding: 13px 16px;
-      font-size: 14.5px;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 15px;
       font-weight: 800;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 6px;
-      box-shadow: 0 4px 14px rgba(85, 53, 24, 0.25);
-      transition: all 0.2s ease;
-      white-space: nowrap;
-      text-decoration: none;
-    }
-
-    .p-btn-buynow-green:hover {
-      background: #3B240F;
+      color: #1E1A17;
+      min-width: 20px;
+      text-align: center;
     }
   </style>
 </head>
@@ -455,13 +486,23 @@
         </div>
       </div>
 
-      <!-- Select Quantity / Pack Size -->
+      <!-- Select Pack Size -->
       <div class="p-pack-select-sec">
-        <span class="p-pack-label">Select Quantity</span>
+        <span class="p-pack-label">Select Pack Size</span>
         <div class="p-pack-pills-row">
           <button class="p-pack-pill" onclick="selectPack(this, 250, 0.6)">250g</button>
           <button class="p-pack-pill active" onclick="selectPack(this, 500, 1.0)">500g</button>
           <button class="p-pack-pill" onclick="selectPack(this, 1000, 1.85)">1kg</button>
+        </div>
+      </div>
+
+      <!-- Inline Quantity Stepper Below Image / Packs -->
+      <div class="p-qty-inline-sec">
+        <span class="p-qty-inline-label">Quantity</span>
+        <div class="p-stepper-pill-box">
+          <button class="p-stepper-btn" onclick="adjustQty(-1)" aria-label="Decrease quantity">−</button>
+          <span class="p-stepper-qty" id="qty-val">1</span>
+          <button class="p-stepper-btn" onclick="adjustQty(1)" aria-label="Increase quantity">+</button>
         </div>
       </div>
 
@@ -500,22 +541,15 @@
         </div>
       </div>
 
-      <!-- Purchase Bar -->
+      <!-- Sticky Purchase Bar (ADD TO CART & BUY NOW ONLY) -->
       <div class="p-sticky-bottom-bar">
-        <div class="p-bottom-price-box">
-          <span class="p-bottom-price-label">Total Price</span>
-          <span class="p-bottom-price-val" id="bottom-total-price">₹499</span>
-        </div>
-
-        <div class="p-stepper-pill-box">
-          <button class="p-stepper-btn" onclick="adjustQty(-1)">-</button>
-          <span class="p-stepper-qty" id="qty-val">1</span>
-          <button class="p-stepper-btn" onclick="adjustQty(1)">+</button>
-        </div>
-
-        <button class="p-btn-buynow-green" onclick="handleBuyNow()">
-          <i class="ri-shopping-bag-3-fill"></i>
-          <span>Buy Now</span>
+        <button class="p-btn-daksha-action" onclick="handleAddToCart(event)">
+          <i class="ri-shopping-cart-2-line"></i>
+          <span>ADD TO CART</span>
+        </button>
+        <button class="p-btn-daksha-action" onclick="handleBuyNow()">
+          <i class="ri-flashlight-fill"></i>
+          <span>BUY NOW</span>
         </button>
       </div>
 
@@ -616,14 +650,15 @@
       'prod_6': { title: 'Moringa Chikki', sub: 'Immunity Superfood Snack • 150g', price: 129, mrp: 150, img: 'https://images.unsplash.com/photo-1590080875515-8a3a8dc5735e?w=600&auto=format&fit=crop&q=80', desc: 'Superfood nutrition bar blending roasted peanuts, organic moringa leaf powder, and iron-rich jaggery.' }
     };
 
+    let currentId = 'prod_1';
     let basePrice = 499;
     let packMultiplier = 1.0;
     let qty = 1;
 
     window.addEventListener('DOMContentLoaded', () => {
       const params = new URLSearchParams(window.location.search);
-      const id = params.get('id');
-      const item = CATALOG[id] || CATALOG['prod_1'];
+      currentId = params.get('id') || 'prod_1';
+      const item = CATALOG[currentId] || CATALOG['prod_1'];
 
       document.getElementById('p-title').textContent = item.title;
       document.getElementById('p-subtitle').textContent = item.sub;
@@ -638,6 +673,7 @@
       document.getElementById('p-discount').textContent = `${discount}% OFF`;
 
       updatePricingUI();
+      updateCartBadge();
     });
 
     function selectPack(el, weight, mult) {
@@ -655,9 +691,68 @@
 
     function updatePricingUI() {
       const unitPrice = Math.round(basePrice * packMultiplier);
-      const total = unitPrice * qty;
       document.getElementById('p-price').textContent = `₹${unitPrice}`;
-      document.getElementById('bottom-total-price').textContent = `₹${total}`;
+    }
+
+    function updateCartBadge() {
+      try {
+        const currentCart = JSON.parse(localStorage.getItem('em_cart_items') || '[]');
+        const totalItems = currentCart.reduce((sum, i) => sum + i.qty, 0);
+        document.querySelectorAll('.sub-cart-badge').forEach(b => {
+          b.textContent = totalItems;
+          b.style.display = totalItems > 0 ? 'flex' : 'none';
+        });
+      } catch(e) {}
+    }
+
+    function handleAddToCart(event) {
+      const item = CATALOG[currentId] || CATALOG['prod_1'];
+      const unitPrice = Math.round(basePrice * packMultiplier);
+      
+      let currentCart = [];
+      try {
+        currentCart = JSON.parse(localStorage.getItem('em_cart_items') || '[]');
+      } catch(e) {
+        currentCart = [];
+      }
+
+      const existing = currentCart.find(i => i.id === currentId);
+      if (existing) {
+        existing.qty += qty;
+      } else {
+        currentCart.push({
+          id: currentId,
+          title: item.title,
+          price: unitPrice,
+          image: item.img,
+          qty: qty
+        });
+      }
+
+      try {
+        localStorage.setItem('em_cart_items', JSON.stringify(currentCart));
+      } catch(e) {}
+
+      updateCartBadge();
+
+      if (event) {
+        const btn = event.currentTarget;
+        if (btn) {
+          const origHtml = btn.innerHTML;
+          btn.innerHTML = `<i class="ri-checkbox-circle-fill"></i> <span>ADDED</span>`;
+          btn.classList.add('added');
+          setTimeout(() => {
+            btn.innerHTML = origHtml;
+            btn.classList.remove('added');
+          }, 1200);
+        }
+      }
+      showToast(`Added ${qty} × ${item.title} to bag!`);
+    }
+
+    function handleBuyNow() {
+      handleAddToCart();
+      window.location.href = 'checkout.html';
     }
 
     function toggleAcc(id, el) {
@@ -670,10 +765,6 @@
         body.classList.add('hidden');
         icon.className = 'ri-arrow-down-s-line';
       }
-    }
-
-    function handleBuyNow() {
-      window.location.href = 'checkout.html';
     }
 
     function showToast(msg) {

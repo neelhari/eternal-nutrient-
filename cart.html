@@ -92,7 +92,8 @@
 
     /* Free Shipping Progress Card */
     .free-shipping-card {
-      background: #EFF7EA;
+      background: #F8F5F0;
+      border: 1px solid #ECE7DF;
       border-radius: 16px;
       padding: 16px;
       margin-bottom: 16px;
@@ -102,13 +103,13 @@
     .free-shipping-title {
       font-size: 14.5px;
       font-weight: 700;
-      color: #274D14;
+      color: #281612;
       margin-bottom: 8px;
     }
 
     .free-shipping-track {
       height: 6px;
-      background: #DCE8D4;
+      background: #EAE3D9;
       border-radius: 999px;
       overflow: hidden;
       margin-bottom: 8px;
@@ -116,35 +117,36 @@
 
     .free-shipping-fill {
       height: 100%;
-      background: #3B6B1D;
+      background: #553518;
       border-radius: 999px;
       transition: width 0.3s ease;
     }
 
     .free-shipping-sub {
       font-size: 12px;
-      color: #556B4E;
+      color: #7A6965;
     }
 
     /* Cart Item Card (Reference Style) */
     .cart-product-card {
       background: #FFFFFF;
-      border-radius: 20px;
+      border: 1px solid #ECE7DF;
+      border-radius: 18px;
       padding: 14px;
       display: flex;
       gap: 14px;
       position: relative;
       margin-bottom: 12px;
-      box-shadow: 0 2px 12px rgba(0, 0, 0, 0.03);
+      box-shadow: 0 2px 10px rgba(40, 22, 18, 0.04);
     }
 
     .cart-thumb-box {
       width: 80px;
       height: 80px;
-      border-radius: 14px;
+      border-radius: 12px;
       overflow: hidden;
-      background: #F8FAF6;
-      border: 1px solid #EEF3E9;
+      background: #F8F5F0;
+      border: 1px solid #ECE7DF;
       flex-shrink: 0;
     }
 
@@ -162,55 +164,67 @@
     }
 
     .cart-product-title {
+      font-family: 'Noto Serif', Georgia, serif;
+      font-style: italic;
       font-size: 15px;
       font-weight: 700;
-      color: #1E2519;
+      color: #1E1A17;
       padding-right: 28px;
+      line-height: 1.25;
     }
 
     .cart-product-unit {
       font-size: 12px;
-      color: #7A8C73;
-      margin-top: 1px;
+      color: #7A6965;
+      margin-top: 2px;
     }
 
     .cart-product-bottom {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      margin-top: 8px;
+      margin-top: 10px;
     }
 
     .cart-product-price {
+      font-family: 'Plus Jakarta Sans', sans-serif;
       font-size: 16px;
       font-weight: 800;
-      color: #1E2519;
+      color: #1E1A17;
     }
 
     .cart-delete-icon-btn {
       position: absolute;
-      top: 14px;
-      right: 14px;
+      top: 12px;
+      right: 12px;
       background: none;
       border: none;
-      color: #A0B09A;
-      font-size: 18px;
+      color: #7A6965;
+      font-size: 19px;
       cursor: pointer;
-      transition: color 0.15s ease;
+      padding: 4px;
+      border-radius: 6px;
+      transition: all 0.15s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
 
     .cart-delete-icon-btn:hover {
       color: #DC2626;
+      background: #FEE2E2;
+      transform: scale(1.08);
     }
 
-    /* Stepper Pill */
+    /* Stepper Pill in Brown Color (Exact Reference) */
     .cart-pill-stepper {
       display: flex;
       align-items: center;
-      background: #F0F4EC;
+      background: #281612;
       border-radius: 999px;
-      padding: 2px 6px;
+      padding: 3px 8px;
       gap: 8px;
+      box-shadow: 0 2px 6px rgba(40, 22, 18, 0.22);
     }
 
     .pill-step-btn {
@@ -218,36 +232,49 @@
       border: none;
       font-size: 16px;
       font-weight: 800;
-      color: #1E2519;
+      color: #FFFFFF;
       cursor: pointer;
       width: 24px;
       height: 24px;
       display: flex;
       align-items: center;
       justify-content: center;
+      line-height: 1;
+      border-radius: 50%;
+      transition: background 0.15s ease, transform 0.1s ease;
+    }
+
+    .pill-step-btn:hover {
+      background: rgba(255, 255, 255, 0.2);
+    }
+
+    .pill-step-btn:active {
+      transform: scale(0.88);
     }
 
     .pill-step-count {
+      font-family: 'Plus Jakarta Sans', sans-serif;
       font-size: 13.5px;
-      font-weight: 700;
-      color: #1E2519;
-      min-width: 14px;
+      font-weight: 800;
+      color: #FFFFFF;
+      min-width: 16px;
       text-align: center;
     }
 
     /* Order Summary Card */
     .order-summary-card {
       background: #FFFFFF;
-      border-radius: 20px;
+      border: 1px solid #ECE7DF;
+      border-radius: 18px;
       padding: 20px;
-      box-shadow: 0 2px 12px rgba(0, 0, 0, 0.03);
+      box-shadow: 0 2px 10px rgba(40, 22, 18, 0.04);
       margin-top: 6px;
     }
 
     .summary-card-title {
       font-size: 16px;
       font-weight: 800;
-      color: #1E2519;
+      color: #1E1A17;
       margin-bottom: 16px;
     }
 
@@ -255,18 +282,18 @@
       display: flex;
       justify-content: space-between;
       font-size: 14px;
-      color: #4A5B45;
+      color: #554844;
       margin-bottom: 10px;
     }
 
     .eco-discount-text {
-      color: #386618;
+      color: #553518;
       font-weight: 700;
     }
 
     .summary-divider {
       height: 1px;
-      background: #F0F2EC;
+      background: #ECE7DF;
       margin: 14px 0;
     }
 
@@ -275,32 +302,37 @@
       justify-content: space-between;
       font-size: 18px;
       font-weight: 800;
-      color: #1E2519;
+      color: #1E1A17;
     }
 
     /* Checkout & Continue Shopping Buttons */
     .btn-green-proceed {
       width: 100%;
-      background: #2D5C14;
+      background: #281612;
       color: #FFFFFF;
       border: none;
       border-radius: 999px;
       padding: 15px;
-      font-size: 15.5px;
-      font-weight: 700;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 14.5px;
+      font-weight: 800;
+      letter-spacing: 0.6px;
+      text-transform: uppercase;
       cursor: pointer;
       display: flex;
       align-items: center;
       justify-content: center;
       gap: 8px;
       margin-top: 20px;
-      box-shadow: 0 4px 16px rgba(45, 92, 20, 0.25);
+      box-shadow: 0 4px 14px rgba(40, 22, 18, 0.25);
       transition: all 0.2s ease;
       text-decoration: none;
     }
 
     .btn-green-proceed:hover {
-      background: #23480F;
+      background: #3E241E;
+      transform: translateY(-1px);
+      box-shadow: 0 6px 18px rgba(40, 22, 18, 0.35);
     }
 
     .btn-continue-shopping-link {
@@ -308,14 +340,14 @@
       text-align: center;
       font-size: 14px;
       font-weight: 700;
-      color: #6C534E;
+      color: #553518;
       text-decoration: none;
       margin-top: 14px;
       cursor: pointer;
     }
 
     .btn-continue-shopping-link:hover {
-      color: #3B6B1D;
+      color: #281612;
     }
   </style>
 </head>
@@ -343,57 +375,7 @@
     </div>
 
     <!-- Left: Cart Items List -->
-    <div id="cart-products-list">
-      
-      <!-- Item 1: Raw Organic Honey (Verified Food Image) -->
-      <div class="cart-product-card" id="card-item-h1">
-        <div class="cart-thumb-box">
-          <img src="https://images.unsplash.com/photo-1587049352846-4a222e784d38?w=500&auto=format&fit=crop&q=80" alt="Raw Organic Honey">
-        </div>
-        <div class="cart-product-details">
-          <div>
-            <div class="cart-product-title">Raw Organic Honey</div>
-            <div class="cart-product-unit">500g Glass Jar</div>
-          </div>
-          <div class="cart-product-bottom">
-            <div class="cart-product-price">₹499</div>
-            <div class="cart-pill-stepper">
-              <button class="pill-step-btn" onclick="updateItemQty('h1', -1)">-</button>
-              <span class="pill-step-count" id="count-h1">1</span>
-              <button class="pill-step-btn" onclick="updateItemQty('h1', 1)">+</button>
-            </div>
-          </div>
-        </div>
-        <button class="cart-delete-icon-btn" onclick="removeItem('h1')" aria-label="Remove">
-          <i class="ri-delete-bin-line"></i>
-        </button>
-      </div>
-
-      <!-- Item 2: Foxtail Millet Rava -->
-      <div class="cart-product-card" id="card-item-r1">
-        <div class="cart-thumb-box">
-          <img src="https://images.unsplash.com/photo-1586201375761-83865001e31c?w=500&auto=format&fit=crop&q=80" alt="Foxtail Millet">
-        </div>
-        <div class="cart-product-details">
-          <div>
-            <div class="cart-product-title">Foxtail Millet Rava</div>
-            <div class="cart-product-unit">500g Eco Pack</div>
-          </div>
-          <div class="cart-product-bottom">
-            <div class="cart-product-price">₹189</div>
-            <div class="cart-pill-stepper">
-              <button class="pill-step-btn" onclick="updateItemQty('r1', -1)">-</button>
-              <span class="pill-step-count" id="count-r1">2</span>
-              <button class="pill-step-btn" onclick="updateItemQty('r1', 1)">+</button>
-            </div>
-          </div>
-        </div>
-        <button class="cart-delete-icon-btn" onclick="removeItem('r1')" aria-label="Remove">
-          <i class="ri-delete-bin-line"></i>
-        </button>
-      </div>
-
-    </div>
+    <div id="cart-products-list"></div>
 
     <!-- Right: Order Summary -->
     <div class="order-summary-card">
@@ -401,7 +383,7 @@
 
       <div class="summary-line-row">
         <span>Subtotal</span>
-        <span id="sum-subtotal">₹877</span>
+        <span id="sum-subtotal">₹0</span>
       </div>
 
       <div class="summary-line-row">
@@ -411,14 +393,14 @@
 
       <div class="summary-line-row eco-discount-text">
         <span>🌱 Eco-Packaging Discount</span>
-        <span>-₹20</span>
+        <span id="sum-eco-discount">-₹20</span>
       </div>
 
       <div class="summary-divider"></div>
 
       <div class="summary-total-row">
         <span>Total</span>
-        <span id="sum-grand-total">₹897</span>
+        <span id="sum-grand-total">₹0</span>
       </div>
 
       <!-- Action Buttons -->
@@ -457,30 +439,118 @@
 
   <script src="config/store.config.js"></script>
   <script>
-    let cartItems = {
-      'h1': { price: 499, qty: 1 },
-      'r1': { price: 189, qty: 2 }
+    const DEFAULT_CATALOG = {
+      'prod_1': { title: 'Raw Organic Honey', unit: '500g Glass Jar', price: 499, image: 'assets/prod_honey_studio.jpg' },
+      'prod_2': { title: 'Handmade Lemon Pickle', unit: '300g Eco Pack', price: 249, image: 'assets/prod_pickle_studio.jpg' },
+      'prod_3': { title: 'Foxtail Millet Rava', unit: '500g Eco Pack', price: 189, image: 'assets/prod_rava_studio.jpg' },
+      'prod_4': { title: 'Millet Biscuits', unit: '200g Fresh Pack', price: 149, image: 'assets/prod_cookie_studio.jpg' },
+      'prod_5': { title: "Dates Laddu's", unit: '250g Box', price: 349, image: 'assets/prod_laddu_studio.jpg' },
+      'prod_6': { title: 'Moringa Chikki', unit: '150g Bar', price: 129, image: 'assets/prod_chikki_studio.jpg' }
     };
 
+    let cartList = [];
+
+    function loadCartData() {
+      try {
+        const saved = localStorage.getItem('em_cart_items');
+        if (saved) {
+          cartList = JSON.parse(saved);
+        }
+      } catch (e) {
+        cartList = [];
+      }
+
+      if (!cartList || cartList.length === 0) {
+        // Fallback default sample items if first visit
+        cartList = [
+          { id: 'prod_1', title: 'Raw Organic Honey', unit: '500g Glass Jar', price: 499, qty: 1, image: 'assets/showcase_honey.png' },
+          { id: 'prod_3', title: 'Foxtail Millet Rava', unit: '500g Eco Pack', price: 189, qty: 2, image: 'https://images.unsplash.com/photo-1586201375761-83865001e31c?w=500&auto=format&fit=crop&q=80' }
+        ];
+        saveCartData();
+      }
+      renderCartView();
+    }
+
+    function saveCartData() {
+      try {
+        localStorage.setItem('em_cart_items', JSON.stringify(cartList));
+      } catch(e) {}
+    }
+
+    function renderCartView() {
+      const container = document.getElementById('cart-products-list');
+      if (cartList.length === 0) {
+        container.innerHTML = `
+          <div style="text-align:center; padding: 48px 16px; background: #FFFFFF; border-radius: 18px; border: 1px solid #ECE7DF;">
+            <i class="ri-shopping-bag-3-line" style="font-size: 48px; color: #D6CAB8; margin-bottom: 12px; display: block;"></i>
+            <h3 style="font-size: 16px; font-weight: 800; color: #1E1A17; margin-bottom: 6px;">Your cart is empty</h3>
+            <p style="font-size: 13px; color: #7A6965; margin-bottom: 18px;">Add some farm-fresh organic essentials.</p>
+            <a href="categories.html" class="btn-green-proceed" style="max-width: 220px; margin: 0 auto; padding: 11px 20px; font-size: 13px;">Browse Products</a>
+          </div>
+        `;
+        recalculateSummary();
+        return;
+      }
+
+      container.innerHTML = cartList.map(item => {
+        const cat = DEFAULT_CATALOG[item.id] || {};
+        const title = item.title || cat.title || 'Organic Product';
+        const unit = item.unit || cat.unit || 'Standard Pack';
+        const img = item.image || cat.image || 'assets/showcase_honey.png';
+        const price = item.price || cat.price || 0;
+
+        return `
+          <div class="cart-product-card" id="card-item-${item.id}">
+            <div class="cart-thumb-box">
+              <img src="${img}" alt="${title}" loading="lazy">
+            </div>
+            <div class="cart-product-details">
+              <div>
+                <div class="cart-product-title">${title}</div>
+                <div class="cart-product-unit">${unit}</div>
+              </div>
+              <div class="cart-product-bottom">
+                <div class="cart-product-price">₹${price}</div>
+                <div class="cart-pill-stepper">
+                  <button class="pill-step-btn" onclick="updateItemQty('${item.id}', -1)" aria-label="Decrease">−</button>
+                  <span class="pill-step-count" id="count-${item.id}">${item.qty}</span>
+                  <button class="pill-step-btn" onclick="updateItemQty('${item.id}', 1)" aria-label="Increase">+</button>
+                </div>
+              </div>
+            </div>
+            <button class="cart-delete-icon-btn" onclick="removeItem('${item.id}')" aria-label="Remove item">
+              <i class="ri-delete-bin-line"></i>
+            </button>
+          </div>
+        `;
+      }).join('');
+
+      recalculateSummary();
+    }
+
     function updateItemQty(id, delta) {
-      if (!cartItems[id]) return;
-      cartItems[id].qty = Math.max(1, cartItems[id].qty + delta);
-      document.getElementById(`count-${id}`).textContent = cartItems[id].qty;
-      recalculate();
+      const item = cartList.find(i => i.id === id);
+      if (!item) return;
+      item.qty += delta;
+      if (item.qty <= 0) {
+        removeItem(id);
+      } else {
+        saveCartData();
+        renderCartView();
+      }
     }
 
     function removeItem(id) {
-      const el = document.getElementById(`card-item-${id}`);
-      if (el) el.remove();
-      delete cartItems[id];
-      recalculate();
+      cartList = cartList.filter(i => i.id !== id);
+      saveCartData();
+      renderCartView();
     }
 
-    function recalculate() {
+    function recalculateSummary() {
       let subtotal = 0;
-      for (const k in cartItems) {
-        subtotal += (cartItems[k].price * cartItems[k].qty);
-      }
+      cartList.forEach(item => {
+        subtotal += (item.price * item.qty);
+      });
 
       const freeThreshold = 1000;
       const isFree = subtotal >= freeThreshold;
@@ -491,13 +561,15 @@
       const fill = document.getElementById('free-ship-bar');
       const title = document.getElementById('free-ship-title');
 
-      if (isFree) {
-        title.innerHTML = `🎉 <strong>Congratulations!</strong> You unlocked Free Shipping!`;
-        fill.style.width = '100%';
-      } else {
-        const needed = freeThreshold - subtotal;
-        title.innerHTML = `Add <strong>₹${needed}</strong> more for Free Shipping!`;
-        fill.style.width = `${Math.min(100, Math.round((subtotal / freeThreshold) * 100))}%`;
+      if (title && fill) {
+        if (isFree) {
+          title.innerHTML = `🎉 <strong>Congratulations!</strong> You unlocked Free Shipping!`;
+          fill.style.width = '100%';
+        } else {
+          const needed = freeThreshold - subtotal;
+          title.innerHTML = `Add <strong>₹${needed}</strong> more for Free Shipping!`;
+          fill.style.width = `${Math.min(100, Math.round((subtotal / freeThreshold) * 100))}%`;
+        }
       }
 
       document.getElementById('sum-subtotal').textContent = `₹${subtotal}`;
@@ -505,7 +577,7 @@
       document.getElementById('sum-grand-total').textContent = `₹${total}`;
     }
 
-    window.addEventListener('DOMContentLoaded', recalculate);
+    window.addEventListener('DOMContentLoaded', loadCartData);
   </script>
 </body>
 </html>

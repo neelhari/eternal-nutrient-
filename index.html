@@ -8,9 +8,10 @@
   <!-- Remix Icons Font -->
   <link href="https://cdn.jsdelivr.net/npm/remixicon@4.2.0/fonts/remixicon.css" rel="stylesheet">
   
-  <!-- Google Fonts: Plus Jakarta Sans -->
+  <!-- Google Fonts: Plus Jakarta Sans & Noto Serif -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif:ital,wght@0,400;0,700;1,400;1,700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
   <!-- Core Layout & Theme Styles -->
   <link rel="stylesheet" href="styles/theme.css">
@@ -196,188 +197,171 @@
       </div>
     </section>
 
-    <!-- 4. Best Sellers (Zepto-Style Horizontal Rail) -->
-    <section class="content-section" style="padding-bottom: 4px;" data-aos="fade-up">
-      <div class="section-header-bar">
-        <h2 class="section-main-title">Best Sellers</h2>
-        <a href="categories.html" class="section-view-link">View all</a>
+    <!-- 4. Best Sellers (Exact Reference Curated Rail) -->
+    <section class="editorial-curated-section theme-bestsellers" data-aos="fade-up">
+      <div class="exact-mockup-header">
+        <div class="mockup-header-left">
+          <div class="mockup-title-row">
+            <span class="mockup-header-icon"><i class="ri-star-fill"></i></span>
+            <h2 class="mockup-main-title">Best Sellers</h2>
+          </div>
+          <span class="mockup-sub-title">Loved by Our Customers</span>
+        </div>
+        <a href="categories.html" class="mockup-top-pill-btn">
+          <span>See all</span>
+          <i class="ri-arrow-right-line"></i>
+        </a>
       </div>
 
-      <!-- Horizontal Best Sellers Rail (Compact Primary Card Style) -->
-      <div class="zepto-rail-container" id="bestsellers-rail">
+      <!-- Horizontal Curated Rail Track -->
+      <div class="exact-mockup-track" id="bestsellers-rail">
         
-        <!-- Rail Item 1: Organic Honey -->
-        <div class="zepto-item-card" onclick="openProductDetail('prod_1')">
-          <div class="zepto-img-box">
-            <img src="assets/showcase_honey.png" alt="Organic Honey">
+        <!-- Rail Item 1: Raw Organic Honey -->
+        <div class="mockup-product-card" onclick="openProductDetail('prod_1')">
+          <div class="mockup-card-img-wrap">
+            <img src="assets/prod_honey_studio.jpg" alt="Raw Organic Honey" loading="lazy">
           </div>
-          <div class="zepto-details-wrap">
-            <h3 class="zepto-card-title">Organic Honey</h3>
-            <div class="zepto-card-badge">Raw & Unfiltered • 500g</div>
-            <div class="zepto-rating-mini">
-              <span class="star">★</span>
-              <span>4.8 (245)</span>
+          <h3 class="mockup-card-title">Raw Organic Honey</h3>
+          <div class="mockup-card-unit">500 g</div>
+          <div class="mockup-card-bottom-row">
+            <div class="mockup-price-col">
+              <div class="mockup-price-line">
+                <span class="mockup-current-price">₹499</span>
+                <span class="mockup-mrp-struck">₹599</span>
+              </div>
+              <div class="mockup-discount-text">₹100 OFF</div>
             </div>
-            <div class="zepto-price-row">
-              <span class="zepto-price-num">₹499</span>
-              <span class="zepto-strike-num">₹599</span>
-            </div>
-            <div class="zepto-dual-actions" id="bs-actions-prod_1">
-              <button class="zepto-btn-buynow" onclick="event.stopPropagation(); buyNowDirect('prod_1')">
-                Buy
-              </button>
-              <button class="zepto-btn-cart-icon" onclick="event.stopPropagation(); addToCart('prod_1')" aria-label="Add to cart">
+            <div id="bs-actions-prod_1">
+              <button class="mockup-add-pill-btn" onclick="event.stopPropagation(); addToCart('prod_1', event)">
                 <i class="ri-shopping-cart-2-line"></i>
+                <span>Add</span>
               </button>
             </div>
           </div>
         </div>
 
         <!-- Rail Item 2: Lemon Pickle -->
-        <div class="zepto-item-card" onclick="openProductDetail('prod_2')">
-          <div class="zepto-img-box">
-            <img src="assets/showcase_pickle.png" alt="Lemon Pickle">
+        <div class="mockup-product-card" onclick="openProductDetail('prod_2')">
+          <div class="mockup-card-img-wrap">
+            <img src="assets/prod_pickle_studio.jpg" alt="Handmade Lemon Pickle" loading="lazy">
           </div>
-          <div class="zepto-details-wrap">
-            <h3 class="zepto-card-title">Lemon Pickle</h3>
-            <div class="zepto-card-badge">Handmade • 300g</div>
-            <div class="zepto-rating-mini">
-              <span class="star">★</span>
-              <span>4.7 (189)</span>
+          <h3 class="mockup-card-title">Handmade Lemon Pickle</h3>
+          <div class="mockup-card-unit">300 g</div>
+          <div class="mockup-card-bottom-row">
+            <div class="mockup-price-col">
+              <div class="mockup-price-line">
+                <span class="mockup-current-price">₹249</span>
+                <span class="mockup-mrp-struck">₹299</span>
+              </div>
+              <div class="mockup-discount-text">₹50 OFF</div>
             </div>
-            <div class="zepto-price-row">
-              <span class="zepto-price-num">₹249</span>
-              <span class="zepto-strike-num">₹299</span>
-            </div>
-            <div class="zepto-dual-actions" id="bs-actions-prod_2">
-              <button class="zepto-btn-buynow" onclick="event.stopPropagation(); buyNowDirect('prod_2')">
-                Buy
-              </button>
-              <button class="zepto-btn-cart-icon" onclick="event.stopPropagation(); addToCart('prod_2')" aria-label="Add to cart">
+            <div id="bs-actions-prod_2">
+              <button class="mockup-add-pill-btn" onclick="event.stopPropagation(); addToCart('prod_2', event)">
                 <i class="ri-shopping-cart-2-line"></i>
+                <span>Add</span>
               </button>
             </div>
           </div>
         </div>
 
-        <!-- Rail Item 3: Foxtail Millet Rava -->
-        <div class="zepto-item-card" onclick="openProductDetail('prod_3')">
-          <div class="zepto-img-box">
-            <img src="https://images.unsplash.com/photo-1586201375761-83865001e31c?w=400&auto=format&fit=crop&q=80" alt="Foxtail Millet Rava">
+        <!-- Rail Item 3: Dates Laddu -->
+        <div class="mockup-product-card" onclick="openProductDetail('prod_5')">
+          <div class="mockup-card-img-wrap">
+            <img src="assets/prod_laddu_studio.jpg" alt="Classic Dates Laddu" loading="lazy">
           </div>
-          <div class="zepto-details-wrap">
-            <h3 class="zepto-card-title">Foxtail Rava</h3>
-            <div class="zepto-card-badge">100% Organic • 500g</div>
-            <div class="zepto-rating-mini">
-              <span class="star">★</span>
-              <span>4.9 (112)</span>
+          <h3 class="mockup-card-title">Classic Dates Laddu</h3>
+          <div class="mockup-card-unit">250 g</div>
+          <div class="mockup-card-bottom-row">
+            <div class="mockup-price-col">
+              <div class="mockup-price-line">
+                <span class="mockup-current-price">₹349</span>
+                <span class="mockup-mrp-struck">₹399</span>
+              </div>
+              <div class="mockup-discount-text">₹50 OFF</div>
             </div>
-            <div class="zepto-price-row">
-              <span class="zepto-price-num">₹189</span>
-              <span class="zepto-strike-num">₹220</span>
-            </div>
-            <div class="zepto-dual-actions" id="bs-actions-prod_3">
-              <button class="zepto-btn-buynow" onclick="event.stopPropagation(); buyNowDirect('prod_3')">
-                Buy
-              </button>
-              <button class="zepto-btn-cart-icon" onclick="event.stopPropagation(); addToCart('prod_3')" aria-label="Add to cart">
+            <div id="bs-actions-prod_5">
+              <button class="mockup-add-pill-btn" onclick="event.stopPropagation(); addToCart('prod_5', event)">
                 <i class="ri-shopping-cart-2-line"></i>
+                <span>Add</span>
               </button>
             </div>
           </div>
         </div>
 
         <!-- Rail Item 4: Millet Biscuits -->
-        <div class="zepto-item-card" onclick="openProductDetail('prod_4')">
-          <div class="zepto-img-box">
-            <img src="https://images.unsplash.com/photo-1558961363-fa8fdf82db35?w=400&auto=format&fit=crop&q=80" alt="Millet Biscuits">
+        <div class="mockup-product-card" onclick="openProductDetail('prod_4')">
+          <div class="mockup-card-img-wrap">
+            <img src="assets/prod_cookie_studio.jpg" alt="Millet Biscuits" loading="lazy">
           </div>
-          <div class="zepto-details-wrap">
-            <h3 class="zepto-card-title">Millet Cookies</h3>
-            <div class="zepto-card-badge">Zero Maida • 200g</div>
-            <div class="zepto-rating-mini">
-              <span class="star">★</span>
-              <span>4.8 (98)</span>
+          <h3 class="mockup-card-title">Millet Biscuits</h3>
+          <div class="mockup-card-unit">200 g</div>
+          <div class="mockup-card-bottom-row">
+            <div class="mockup-price-col">
+              <div class="mockup-price-line">
+                <span class="mockup-current-price">₹149</span>
+                <span class="mockup-mrp-struck">₹180</span>
+              </div>
+              <div class="mockup-discount-text">₹31 OFF</div>
             </div>
-            <div class="zepto-price-row">
-              <span class="zepto-price-num">₹149</span>
-              <span class="zepto-strike-num">₹180</span>
-            </div>
-            <div class="zepto-dual-actions" id="bs-actions-prod_4">
-              <button class="zepto-btn-buynow" onclick="event.stopPropagation(); buyNowDirect('prod_4')">
-                Buy
-              </button>
-              <button class="zepto-btn-cart-icon" onclick="event.stopPropagation(); addToCart('prod_4')" aria-label="Add to cart">
+            <div id="bs-actions-prod_4">
+              <button class="mockup-add-pill-btn" onclick="event.stopPropagation(); addToCart('prod_4', event)">
                 <i class="ri-shopping-cart-2-line"></i>
+                <span>Add</span>
               </button>
             </div>
           </div>
         </div>
 
-        <!-- Rail Item 5: Dates Laddu's -->
-        <div class="zepto-item-card" onclick="openProductDetail('prod_5')">
-          <div class="zepto-img-box">
-            <img src="assets/dates_laddu.jpg" alt="Dates Laddu's">
+        <!-- Rail Item 5: Foxtail Millet Rava -->
+        <div class="mockup-product-card" onclick="openProductDetail('prod_3')">
+          <div class="mockup-card-img-wrap">
+            <img src="assets/prod_rava_studio.jpg" alt="Foxtail Millet Rava" loading="lazy">
           </div>
-          <div class="zepto-details-wrap">
-            <h3 class="zepto-card-title">Dates Laddu</h3>
-            <div class="zepto-card-badge">Desi Ghee • 250g</div>
-            <div class="zepto-rating-mini">
-              <span class="star">★</span>
-              <span>4.9 (140)</span>
+          <h3 class="mockup-card-title">Foxtail Millet Rava</h3>
+          <div class="mockup-card-unit">500 g</div>
+          <div class="mockup-card-bottom-row">
+            <div class="mockup-price-col">
+              <div class="mockup-price-line">
+                <span class="mockup-current-price">₹189</span>
+                <span class="mockup-mrp-struck">₹220</span>
+              </div>
+              <div class="mockup-discount-text">₹31 OFF</div>
             </div>
-            <div class="zepto-price-row">
-              <span class="zepto-price-num">₹349</span>
-              <span class="zepto-strike-num">₹399</span>
-            </div>
-            <div class="zepto-dual-actions" id="bs-actions-prod_5">
-              <button class="zepto-btn-buynow" onclick="event.stopPropagation(); buyNowDirect('prod_5')">
-                Buy
-              </button>
-              <button class="zepto-btn-cart-icon" onclick="event.stopPropagation(); addToCart('prod_5')" aria-label="Add to cart">
+            <div id="bs-actions-prod_3">
+              <button class="mockup-add-pill-btn" onclick="event.stopPropagation(); addToCart('prod_3', event)">
                 <i class="ri-shopping-cart-2-line"></i>
+                <span>Add</span>
               </button>
             </div>
           </div>
         </div>
 
       </div>
-
     </section>
 
-    <!-- 5. All Products Showcase Grid (6 Core Products) -->
+    <!-- 5. All Products Showcase Grid (Our Organic Range) -->
     <section id="bestsellers-section" class="content-section">
       <div class="section-header-bar">
         <h2 id="catalog-heading-title" class="section-main-title">Our Organic Range</h2>
         <a href="categories.html" class="section-view-link">View all</a>
       </div>
 
-      <!-- Responsive Product Grid (Exact Reference Specification) -->
+      <!-- Responsive Product Grid -->
       <div id="products-grid-container" class="showcase-grid-responsive">
         
         <!-- Product 1: Organic Honey -->
         <div class="product-showcase-card" onclick="openProductDetail('prod_1')">
           <div class="product-photo-wrap">
-            <img src="assets/showcase_honey.png" alt="Organic Honey">
+            <img src="assets/prod_honey_studio.jpg" alt="Organic Honey" loading="lazy">
           </div>
           <div class="product-text-details">
             <h3 class="card-item-title">Organic Honey</h3>
-            <div class="card-item-badge">Raw & Unfiltered • 500g</div>
-            <div class="card-rating-row">
-              <span class="card-rating-star">★</span>
-              <span>4.8 (245 reviews)</span>
-            </div>
             <div class="card-item-pricing">
               <span class="card-price-current">₹499</span>
-              <span class="card-price-mrp">₹599</span>
             </div>
             <div class="card-dual-actions" id="sc-actions-prod_1">
-              <button class="btn-buy-light-green" onclick="event.stopPropagation(); buyNowDirect('prod_1')">
-                Buy Now
-              </button>
-              <button class="btn-add-cart-outline" onclick="event.stopPropagation(); addToCart('prod_1')" aria-label="Add to cart">
-                <i class="ri-shopping-cart-2-line"></i>
-              </button>
+              <button class="btn-daksha-add" onclick="event.stopPropagation(); addToCart('prod_1', event)">ADD</button>
+              <button class="btn-daksha-buy" onclick="event.stopPropagation(); buyNowDirect('prod_1')">BUY</button>
             </div>
           </div>
         </div>
@@ -385,26 +369,16 @@
         <!-- Product 2: Lemon Pickle -->
         <div class="product-showcase-card" onclick="openProductDetail('prod_2')">
           <div class="product-photo-wrap">
-            <img src="assets/showcase_pickle.png" alt="Lemon Pickle">
+            <img src="assets/prod_pickle_studio.jpg" alt="Lemon Pickle" loading="lazy">
           </div>
           <div class="product-text-details">
             <h3 class="card-item-title">Lemon Pickle</h3>
-            <div class="card-item-badge">Handmade | No Preservatives • 300g</div>
-            <div class="card-rating-row">
-              <span class="card-rating-star">★</span>
-              <span>4.7 (189 reviews)</span>
-            </div>
             <div class="card-item-pricing">
               <span class="card-price-current">₹249</span>
-              <span class="card-price-mrp">₹299</span>
             </div>
             <div class="card-dual-actions" id="sc-actions-prod_2">
-              <button class="btn-buy-light-green" onclick="event.stopPropagation(); buyNowDirect('prod_2')">
-                Buy Now
-              </button>
-              <button class="btn-add-cart-outline" onclick="event.stopPropagation(); addToCart('prod_2')" aria-label="Add to cart">
-                <i class="ri-shopping-cart-2-line"></i>
-              </button>
+              <button class="btn-daksha-add" onclick="event.stopPropagation(); addToCart('prod_2', event)">ADD</button>
+              <button class="btn-daksha-buy" onclick="event.stopPropagation(); buyNowDirect('prod_2')">BUY</button>
             </div>
           </div>
         </div>
@@ -412,26 +386,16 @@
         <!-- Product 3: Millet Rava -->
         <div class="product-showcase-card" onclick="openProductDetail('prod_3')">
           <div class="product-photo-wrap">
-            <img src="https://images.unsplash.com/photo-1586201375761-83865001e31c?w=500&auto=format&fit=crop&q=80" alt="Foxtail Millet Rava">
+            <img src="assets/prod_rava_studio.jpg" alt="Foxtail Millet Rava" loading="lazy">
           </div>
           <div class="product-text-details">
             <h3 class="card-item-title">Foxtail Millet Rava</h3>
-            <div class="card-item-badge">100% Organic • 500g</div>
-            <div class="card-rating-row">
-              <span class="card-rating-star">★</span>
-              <span>4.9 (112 reviews)</span>
-            </div>
             <div class="card-item-pricing">
               <span class="card-price-current">₹189</span>
-              <span class="card-price-mrp">₹220</span>
             </div>
             <div class="card-dual-actions" id="sc-actions-prod_3">
-              <button class="btn-buy-light-green" onclick="event.stopPropagation(); buyNowDirect('prod_3')">
-                Buy Now
-              </button>
-              <button class="btn-add-cart-outline" onclick="event.stopPropagation(); addToCart('prod_3')" aria-label="Add to cart">
-                <i class="ri-shopping-cart-2-line"></i>
-              </button>
+              <button class="btn-daksha-add" onclick="event.stopPropagation(); addToCart('prod_3', event)">ADD</button>
+              <button class="btn-daksha-buy" onclick="event.stopPropagation(); buyNowDirect('prod_3')">BUY</button>
             </div>
           </div>
         </div>
@@ -439,26 +403,16 @@
         <!-- Product 4: Millet Biscuits -->
         <div class="product-showcase-card" onclick="openProductDetail('prod_4')">
           <div class="product-photo-wrap">
-            <img src="https://images.unsplash.com/photo-1558961363-fa8fdf82db35?w=500&auto=format&fit=crop&q=80" alt="Millet Biscuits">
+            <img src="assets/prod_cookie_studio.jpg" alt="Millet Biscuits" loading="lazy">
           </div>
           <div class="product-text-details">
             <h3 class="card-item-title">Millet Biscuits</h3>
-            <div class="card-item-badge">No Maida • No Preservatives • 200g</div>
-            <div class="card-rating-row">
-              <span class="card-rating-star">★</span>
-              <span>4.8 (98 reviews)</span>
-            </div>
             <div class="card-item-pricing">
               <span class="card-price-current">₹149</span>
-              <span class="card-price-mrp">₹180</span>
             </div>
             <div class="card-dual-actions" id="sc-actions-prod_4">
-              <button class="btn-buy-light-green" onclick="event.stopPropagation(); buyNowDirect('prod_4')">
-                Buy Now
-              </button>
-              <button class="btn-add-cart-outline" onclick="event.stopPropagation(); addToCart('prod_4')" aria-label="Add to cart">
-                <i class="ri-shopping-cart-2-line"></i>
-              </button>
+              <button class="btn-daksha-add" onclick="event.stopPropagation(); addToCart('prod_4', event)">ADD</button>
+              <button class="btn-daksha-buy" onclick="event.stopPropagation(); buyNowDirect('prod_4')">BUY</button>
             </div>
           </div>
         </div>
@@ -466,26 +420,16 @@
         <!-- Product 5: Dates Laddu's -->
         <div class="product-showcase-card" onclick="openProductDetail('prod_5')">
           <div class="product-photo-wrap">
-            <img src="assets/dates_laddu.jpg" alt="Dates Laddu's">
+            <img src="assets/prod_laddu_studio.jpg" alt="Dates Laddu's" loading="lazy">
           </div>
           <div class="product-text-details">
             <h3 class="card-item-title">Dates Laddu's</h3>
-            <div class="card-item-badge">Sugar Free | Pure Desi Ghee • 250g</div>
-            <div class="card-rating-row">
-              <span class="card-rating-star">★</span>
-              <span>4.9 (140 reviews)</span>
-            </div>
             <div class="card-item-pricing">
               <span class="card-price-current">₹349</span>
-              <span class="card-price-mrp">₹399</span>
             </div>
             <div class="card-dual-actions" id="sc-actions-prod_5">
-              <button class="btn-buy-light-green" onclick="event.stopPropagation(); buyNowDirect('prod_5')">
-                Buy Now
-              </button>
-              <button class="btn-add-cart-outline" onclick="event.stopPropagation(); addToCart('prod_5')" aria-label="Add to cart">
-                <i class="ri-shopping-cart-2-line"></i>
-              </button>
+              <button class="btn-daksha-add" onclick="event.stopPropagation(); addToCart('prod_5', event)">ADD</button>
+              <button class="btn-daksha-buy" onclick="event.stopPropagation(); buyNowDirect('prod_5')">BUY</button>
             </div>
           </div>
         </div>
@@ -493,25 +437,157 @@
         <!-- Product 6: Moringa Chikki -->
         <div class="product-showcase-card" onclick="openProductDetail('prod_6')">
           <div class="product-photo-wrap">
-            <img src="https://images.unsplash.com/photo-1590080875515-8a3a8dc5735e?w=500&auto=format&fit=crop&q=80" alt="Moringa Chikki">
+            <img src="assets/prod_chikki_studio.jpg" alt="Moringa Chikki" loading="lazy">
           </div>
           <div class="product-text-details">
             <h3 class="card-item-title">Moringa Chikki</h3>
-            <div class="card-item-badge">Immunity Superfood Snack • 150g</div>
-            <div class="card-rating-row">
-              <span class="card-rating-star">★</span>
-              <span>4.8 (75 reviews)</span>
-            </div>
             <div class="card-item-pricing">
               <span class="card-price-current">₹129</span>
-              <span class="card-price-mrp">₹150</span>
             </div>
             <div class="card-dual-actions" id="sc-actions-prod_6">
-              <button class="btn-buy-light-green" onclick="event.stopPropagation(); buyNowDirect('prod_6')">
-                Buy Now
-              </button>
-              <button class="btn-add-cart-outline" onclick="event.stopPropagation(); addToCart('prod_6')" aria-label="Add to cart">
+              <button class="btn-daksha-add" onclick="event.stopPropagation(); addToCart('prod_6', event)">ADD</button>
+              <button class="btn-daksha-buy" onclick="event.stopPropagation(); buyNowDirect('prod_6')">BUY</button>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- 6. New Arrivals (Exact Reference Curated Rail) -->
+    <section class="editorial-curated-section theme-newarrivals" data-aos="fade-up">
+      <div class="exact-mockup-header">
+        <div class="mockup-header-left">
+          <div class="mockup-title-row">
+            <span class="mockup-header-icon"><i class="ri-leaf-fill"></i></span>
+            <h2 class="mockup-main-title">New Arrivals</h2>
+          </div>
+          <span class="mockup-sub-title">Freshly Added</span>
+        </div>
+        <a href="categories.html" class="mockup-top-pill-btn">
+          <span>Explore all</span>
+          <i class="ri-arrow-right-line"></i>
+        </a>
+      </div>
+
+      <!-- Horizontal Curated Rail Track -->
+      <div class="exact-mockup-track" id="newarrivals-rail">
+        
+        <!-- Item 1: Moringa Chikki / Powder -->
+        <div class="mockup-product-card" onclick="openProductDetail('prod_6')">
+          <div class="mockup-card-img-wrap">
+            <img src="assets/prod_chikki_studio.jpg" alt="Moringa Chikki" loading="lazy">
+          </div>
+          <h3 class="mockup-card-title">Moringa Peanut Chikki</h3>
+          <div class="mockup-card-unit">150 g</div>
+          <div class="mockup-card-bottom-row">
+            <div class="mockup-price-col">
+              <div class="mockup-price-line">
+                <span class="mockup-current-price">₹129</span>
+                <span class="mockup-mrp-struck">₹150</span>
+              </div>
+              <div class="mockup-discount-text">₹21 OFF</div>
+            </div>
+            <div id="na-actions-prod_6">
+              <button class="mockup-add-pill-btn btn-green-theme" onclick="event.stopPropagation(); addToCart('prod_6', event)">
                 <i class="ri-shopping-cart-2-line"></i>
+                <span>Add</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Item 2: Ragi Cookies -->
+        <div class="mockup-product-card" onclick="openProductDetail('na_1')">
+          <div class="mockup-card-img-wrap">
+            <img src="assets/prod_cookie_studio.jpg" alt="Ragi Cookies" loading="lazy">
+          </div>
+          <h3 class="mockup-card-title">Ragi Cookies</h3>
+          <div class="mockup-card-unit">200 g</div>
+          <div class="mockup-card-bottom-row">
+            <div class="mockup-price-col">
+              <div class="mockup-price-line">
+                <span class="mockup-current-price">₹159</span>
+                <span class="mockup-mrp-struck">₹190</span>
+              </div>
+              <div class="mockup-discount-text">₹31 OFF</div>
+            </div>
+            <div id="na-actions-na_1">
+              <button class="mockup-add-pill-btn btn-green-theme" onclick="event.stopPropagation(); addToCart('na_1', event)">
+                <i class="ri-shopping-cart-2-line"></i>
+                <span>Add</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Item 3: Wild Forest Honey -->
+        <div class="mockup-product-card" onclick="openProductDetail('na_2')">
+          <div class="mockup-card-img-wrap">
+            <img src="assets/prod_honey_studio.jpg" alt="Wild Forest Honey" loading="lazy">
+          </div>
+          <h3 class="mockup-card-title">Wild Forest Honey</h3>
+          <div class="mockup-card-unit">500 g</div>
+          <div class="mockup-card-bottom-row">
+            <div class="mockup-price-col">
+              <div class="mockup-price-line">
+                <span class="mockup-current-price">₹549</span>
+                <span class="mockup-mrp-struck">₹650</span>
+              </div>
+              <div class="mockup-discount-text">₹101 OFF</div>
+            </div>
+            <div id="na-actions-na_2">
+              <button class="mockup-add-pill-btn btn-green-theme" onclick="event.stopPropagation(); addToCart('na_2', event)">
+                <i class="ri-shopping-cart-2-line"></i>
+                <span>Add</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Item 4: Acacia Blossom Honey -->
+        <div class="mockup-product-card" onclick="openProductDetail('na_3')">
+          <div class="mockup-card-img-wrap">
+            <img src="assets/header_honey_float.jpg" alt="Acacia Honey" loading="lazy">
+          </div>
+          <h3 class="mockup-card-title">Acacia Blossom Honey</h3>
+          <div class="mockup-card-unit">500 g</div>
+          <div class="mockup-card-bottom-row">
+            <div class="mockup-price-col">
+              <div class="mockup-price-line">
+                <span class="mockup-current-price">₹599</span>
+                <span class="mockup-mrp-struck">₹699</span>
+              </div>
+              <div class="mockup-discount-text">₹100 OFF</div>
+            </div>
+            <div id="na-actions-na_3">
+              <button class="mockup-add-pill-btn btn-green-theme" onclick="event.stopPropagation(); addToCart('na_3', event)">
+                <i class="ri-shopping-cart-2-line"></i>
+                <span>Add</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Item 5: Little Millet Rava -->
+        <div class="mockup-product-card" onclick="openProductDetail('na_4')">
+          <div class="mockup-card-img-wrap">
+            <img src="assets/prod_rava_studio.jpg" alt="Little Millet Rava" loading="lazy">
+          </div>
+          <h3 class="mockup-card-title">Little Millet Rava</h3>
+          <div class="mockup-card-unit">500 g</div>
+          <div class="mockup-card-bottom-row">
+            <div class="mockup-price-col">
+              <div class="mockup-price-line">
+                <span class="mockup-current-price">₹199</span>
+                <span class="mockup-mrp-struck">₹230</span>
+              </div>
+              <div class="mockup-discount-text">₹31 OFF</div>
+            </div>
+            <div id="na-actions-na_4">
+              <button class="mockup-add-pill-btn btn-green-theme" onclick="event.stopPropagation(); addToCart('na_4', event)">
+                <i class="ri-shopping-cart-2-line"></i>
+                <span>Add</span>
               </button>
             </div>
           </div>
@@ -766,18 +842,28 @@
   <!-- Store Controller Logic -->
   <script>
     const PRODUCTS = {
-      'prod_1': { id: 'prod_1', title: 'Organic Honey', category: 'Organic Honey', price: 499, originalPrice: 599, badge: 'Raw & Unfiltered • 500g', unit: '500g', image: 'https://images.pexels.com/photos/33260/honey-sweet-syrup-organic.jpg?auto=compress&cs=tinysrgb&w=500' },
-      'prod_2': { id: 'prod_2', title: 'Lemon Pickle', category: 'Pickles', price: 249, originalPrice: 299, badge: 'Handmade | No Preservatives • 300g', unit: '300g', image: 'https://images.pexels.com/photos/4198139/pexels-photo-4198139.jpeg?auto=compress&cs=tinysrgb&w=500' },
-      'prod_3': { id: 'prod_3', title: 'Foxtail Millet Rava', category: 'Millet Rava', price: 189, originalPrice: 220, badge: '100% Organic • 500g', unit: '500g', image: 'https://images.pexels.com/photos/4110255/pexels-photo-4110255.jpeg?auto=compress&cs=tinysrgb&w=500' },
-      'prod_4': { id: 'prod_4', title: 'Millet Biscuits', category: 'Millet Biscuits', price: 149, originalPrice: 180, badge: 'No Maida • No Preservatives • 200g', unit: '200g', image: 'https://images.pexels.com/photos/230325/pexels-photo-230325.jpeg?auto=compress&cs=tinysrgb&w=500' },
-      'prod_5': { id: 'prod_5', title: "Dates Laddu's", category: "Dates Laddu's", price: 349, originalPrice: 399, badge: 'Sugar Free | Pure Desi Ghee • 250g', unit: '250g', image: 'assets/dates_laddu.jpg' },
-      'prod_6': { id: 'prod_6', title: 'Moringa Chikki', category: 'Moringa Chikki', price: 129, originalPrice: 150, badge: 'Immunity Superfood Snack • 150g', unit: '150g', image: 'https://images.pexels.com/photos/6157052/pexels-photo-6157052.jpeg?auto=compress&cs=tinysrgb&w=500' }
+      'prod_1': { id: 'prod_1', title: 'Organic Honey', category: 'Organic Honey', price: 499, originalPrice: 599, badge: 'Raw & Unfiltered • 500g', unit: '500g', image: 'assets/prod_honey_studio.jpg' },
+      'prod_2': { id: 'prod_2', title: 'Lemon Pickle', category: 'Pickles', price: 249, originalPrice: 299, badge: 'Handmade | No Preservatives • 300g', unit: '300g', image: 'assets/prod_pickle_studio.jpg' },
+      'prod_3': { id: 'prod_3', title: 'Foxtail Millet Rava', category: 'Millet Rava', price: 189, originalPrice: 220, badge: '100% Organic • 500g', unit: '500g', image: 'assets/prod_rava_studio.jpg' },
+      'prod_4': { id: 'prod_4', title: 'Millet Biscuits', category: 'Millet Biscuits', price: 149, originalPrice: 180, badge: 'No Maida • No Preservatives • 200g', unit: '200g', image: 'assets/prod_cookie_studio.jpg' },
+      'prod_5': { id: 'prod_5', title: "Dates Laddu's", category: "Dates Laddu's", price: 349, originalPrice: 399, badge: 'Sugar Free | Pure Desi Ghee • 250g', unit: '250g', image: 'assets/prod_laddu_studio.jpg' },
+      'prod_6': { id: 'prod_6', title: 'Moringa Chikki', category: 'Moringa Chikki', price: 129, originalPrice: 150, badge: 'Immunity Superfood Snack • 150g', unit: '150g', image: 'assets/prod_chikki_studio.jpg' },
+      'na_1': { id: 'na_1', title: 'Ragi Crunch Cookies', category: 'Millet Biscuits', price: 159, originalPrice: 190, badge: 'Finger Millet • 200g', unit: '200g', image: 'assets/prod_cookie_studio.jpg' },
+      'na_2': { id: 'na_2', title: 'Wild Forest Honey', category: 'Organic Honey', price: 549, originalPrice: 650, badge: '100% Forest Pure • 500g', unit: '500g', image: 'assets/prod_honey_studio.jpg' },
+      'na_3': { id: 'na_3', title: 'Acacia Blossom Honey', category: 'Organic Honey', price: 599, originalPrice: 699, badge: 'Single Origin • 500g', unit: '500g', image: 'assets/header_honey_float.jpg' },
+      'na_4': { id: 'na_4', title: 'Little Millet Rava', category: 'Millet Rava', price: 199, originalPrice: 230, badge: 'Dietary Fiber • 500g', unit: '500g', image: 'assets/prod_rava_studio.jpg' }
     };
 
-    let cart = [
-      { id: 'prod_1', qty: 1 },
-      { id: 'prod_4', qty: 1 }
-    ];
+    let cart = [];
+    try {
+      const saved = localStorage.getItem('em_cart_items');
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        cart = parsed.map(i => ({ id: i.id, qty: i.qty }));
+      }
+    } catch (e) {
+      cart = [];
+    }
 
     function renderCart() {
       const container = document.getElementById('cart-items-list');
@@ -794,6 +880,20 @@
         }
       });
 
+      try {
+        const cartToSave = cart.map(i => {
+          const p = PRODUCTS[i.id];
+          return {
+            id: i.id,
+            title: p ? p.title : '',
+            price: p ? p.price : 0,
+            image: p ? p.image : '',
+            qty: i.qty
+          };
+        });
+        localStorage.setItem('em_cart_items', JSON.stringify(cartToSave));
+      } catch(e) {}
+
       badges.forEach(badge => {
         badge.textContent = totalQty;
         badge.style.display = totalQty > 0 ? 'flex' : 'none';
@@ -809,26 +909,33 @@
       const fill = document.getElementById('free-ship-fill');
       const label = document.getElementById('free-ship-label');
 
-      if (isFree) {
-        label.innerHTML = `🎉 <strong>Congratulations!</strong> You unlocked FREE Delivery!`;
-        fill.style.width = '100%';
-      } else {
-        const needed = freeThreshold - subtotal;
-        label.innerHTML = `Add <strong>₹${needed}</strong> more for <strong>FREE Delivery!</strong>`;
-        fill.style.width = `${Math.min(100, Math.round((subtotal / freeThreshold) * 100))}%`;
+      if (label && fill) {
+        if (isFree) {
+          label.innerHTML = `🎉 <strong>Congratulations!</strong> You unlocked FREE Delivery!`;
+          fill.style.width = '100%';
+        } else {
+          const needed = freeThreshold - subtotal;
+          label.innerHTML = `Add <strong>₹${needed}</strong> more for <strong>FREE Delivery!</strong>`;
+          fill.style.width = `${Math.min(100, Math.round((subtotal / freeThreshold) * 100))}%`;
+        }
       }
 
-      document.getElementById('cart-subtotal-val').textContent = `₹${subtotal}`;
-      document.getElementById('cart-delivery-val').textContent = isFree ? 'FREE' : `₹${deliveryFee}`;
-      document.getElementById('cart-total-val').textContent = `₹${grandTotal}`;
+      if (document.getElementById('cart-subtotal-val')) {
+        document.getElementById('cart-subtotal-val').textContent = `₹${subtotal}`;
+        document.getElementById('cart-delivery-val').textContent = isFree ? 'FREE' : `₹${deliveryFee}`;
+        document.getElementById('cart-total-val').textContent = `₹${grandTotal}`;
+      }
+
+      if (!container) return;
 
       if (cart.length === 0) {
-        list.innerHTML = `<div style="text-align:center; padding:30px; color:#6C7D66;">Your cart is empty.</div>`;
+        container.innerHTML = `<div style="text-align:center; padding:30px; color:#6C7D66;">Your cart is empty.</div>`;
         return;
       }
 
       container.innerHTML = cart.map(item => {
         const p = PRODUCTS[item.id];
+        if (!p) return '';
         return `
           <div class="cart-product-row">
             <img class="cart-thumb-img" src="${p.image}" alt="${p.title}">
@@ -837,9 +944,9 @@
               <div class="cart-row-price">₹${p.price}</div>
             </div>
             <div class="cart-stepper-ctrl">
-              <button class="stepper-btn" onclick="updateQty('${item.id}', -1)">-</button>
+              <button class="stepper-btn" onclick="updateQty('${item.id}', -1, event)">-</button>
               <span class="stepper-num">${item.qty}</span>
-              <button class="stepper-btn" onclick="updateQty('${item.id}', 1)">+</button>
+              <button class="stepper-btn" onclick="updateQty('${item.id}', 1, event)">+</button>
             </div>
           </div>
         `;
@@ -889,51 +996,66 @@
     }
 
     function updateCardSteppersUI() {
-      ['prod_1', 'prod_2', 'prod_3', 'prod_4', 'prod_5', 'prod_6'].forEach(id => {
+      Object.keys(PRODUCTS).forEach(id => {
         const item = cart.find(i => i.id === id);
         const qty = item ? item.qty : 0;
         
-        // Update Best Sellers action area
+        // Update Best Sellers action area (Exact Mockup button/stepper)
         const bsEl = document.getElementById(`bs-actions-${id}`);
         if (bsEl) {
           if (qty > 0) {
             bsEl.innerHTML = `
-              <div class="card-stepper-active" onclick="event.stopPropagation()">
-                <button onclick="updateQty('${id}', -1, event)">-</button>
-                <span class="num-bump">${qty}</span>
-                <button onclick="updateQty('${id}', 1, event)">+</button>
+              <div class="mockup-stepper-active" onclick="event.stopPropagation()">
+                <button class="mockup-step-btn" onclick="updateQty('${id}', -1, event)" aria-label="Decrease">−</button>
+                <span class="mockup-step-val">${qty}</span>
+                <button class="mockup-step-btn" onclick="updateQty('${id}', 1, event)" aria-label="Increase">+</button>
               </div>
             `;
           } else {
             bsEl.innerHTML = `
-              <button class="zepto-btn-buynow" onclick="event.stopPropagation(); buyNowDirect('${id}')">
-                Buy
-              </button>
-              <button class="zepto-btn-cart-icon" onclick="event.stopPropagation(); addToCart('${id}', event)" aria-label="Add to cart">
+              <button class="mockup-add-pill-btn" onclick="event.stopPropagation(); addToCart('${id}', event)">
                 <i class="ri-shopping-cart-2-line"></i>
+                <span>Add</span>
               </button>
             `;
           }
         }
 
-        // Update Showcase grid action area
+        // Update Showcase grid action area (Daksha dual buttons or stepper)
         const scEl = document.getElementById(`sc-actions-${id}`);
         if (scEl) {
           if (qty > 0) {
             scEl.innerHTML = `
               <div class="card-stepper-active" onclick="event.stopPropagation()">
-                <button onclick="updateQty('${id}', -1, event)">-</button>
-                <span class="num-bump">${qty}</span>
-                <button onclick="updateQty('${id}', 1, event)">+</button>
+                <button onclick="updateQty('${id}', -1, event)" aria-label="Decrease">−</button>
+                <span>${qty}</span>
+                <button onclick="updateQty('${id}', 1, event)" aria-label="Increase">+</button>
               </div>
             `;
           } else {
             scEl.innerHTML = `
-              <button class="btn-buy-light-green" onclick="event.stopPropagation(); buyNowDirect('${id}')">
-                Buy Now
-              </button>
-              <button class="btn-add-cart-outline" onclick="event.stopPropagation(); addToCart('${id}', event)" aria-label="Add to cart">
+              <button class="btn-daksha-add" onclick="event.stopPropagation(); addToCart('${id}', event)">ADD</button>
+              <button class="btn-daksha-buy" onclick="event.stopPropagation(); buyNowDirect('${id}')">BUY</button>
+            `;
+          }
+        }
+
+        // Update New Arrivals action area (Exact Mockup green button/stepper)
+        const naEl = document.getElementById(`na-actions-${id}`);
+        if (naEl) {
+          if (qty > 0) {
+            naEl.innerHTML = `
+              <div class="mockup-stepper-active stepper-green-theme" onclick="event.stopPropagation()">
+                <button class="mockup-step-btn" onclick="updateQty('${id}', -1, event)" aria-label="Decrease">−</button>
+                <span class="mockup-step-val">${qty}</span>
+                <button class="mockup-step-btn" onclick="updateQty('${id}', 1, event)" aria-label="Increase">+</button>
+              </div>
+            `;
+          } else {
+            naEl.innerHTML = `
+              <button class="mockup-add-pill-btn btn-green-theme" onclick="event.stopPropagation(); addToCart('${id}', event)">
                 <i class="ri-shopping-cart-2-line"></i>
+                <span>Add</span>
               </button>
             `;
           }
@@ -950,7 +1072,7 @@
         cart.push({ id, qty: 1 });
       }
       renderCart();
-      showToast(`Added ${PRODUCTS[id].title} to cart!`);
+      showToast(`Added ${PRODUCTS[id] ? PRODUCTS[id].title : 'item'} to bag!`);
     }
 
     function buyNowDirect(id) {
@@ -996,35 +1118,43 @@
       const container = document.getElementById('products-grid-container');
       const filtered = Object.values(PRODUCTS).filter(p => 
         p.title.toLowerCase().includes(query) || 
-        p.category.toLowerCase().includes(query) || 
-        p.badge.toLowerCase().includes(query)
+        p.category.toLowerCase().includes(query)
       );
 
-      container.innerHTML = filtered.map(p => `
-        <div class="product-showcase-card" onclick="openProductDetail('${p.id}')">
-          <div class="product-photo-wrap">
-            <img src="${p.image}" alt="${p.title}">
-          </div>
-          <div class="product-text-details">
-            <h3 class="card-item-title">${p.title}</h3>
-            <div class="card-item-badge">${p.badge.replace('\n', '<br>')}</div>
-            <div class="card-item-pricing">
-              <div>
+      if (filtered.length === 0) {
+        container.innerHTML = `<div style="grid-column: 1 / -1; text-align:center; padding: 40px 10px; color: #6C7D66;">No products found for "${q}".</div>`;
+        return;
+      }
+
+      container.innerHTML = filtered.map(p => {
+        const item = cart.find(i => i.id === p.id);
+        const qty = item ? item.qty : 0;
+        return `
+          <div class="product-showcase-card" onclick="openProductDetail('${p.id}')">
+            <div class="product-photo-wrap">
+              <img src="${p.image}" alt="${p.title}" loading="lazy">
+            </div>
+            <div class="product-text-details">
+              <h3 class="card-item-title">${p.title}</h3>
+              <div class="card-item-pricing">
                 <span class="card-price-current">₹${p.price}</span>
-                <span class="card-price-mrp">₹${p.originalPrice || ''}</span>
+              </div>
+              <div class="card-dual-actions" id="sc-actions-${p.id}">
+                ${qty > 0 ? `
+                  <div class="card-stepper-active" onclick="event.stopPropagation()">
+                    <button onclick="updateQty('${p.id}', -1, event)" aria-label="Decrease">−</button>
+                    <span>${qty}</span>
+                    <button onclick="updateQty('${p.id}', 1, event)" aria-label="Increase">+</button>
+                  </div>
+                ` : `
+                  <button class="btn-daksha-add" onclick="event.stopPropagation(); addToCart('${p.id}', event)">ADD</button>
+                  <button class="btn-daksha-buy" onclick="event.stopPropagation(); buyNowDirect('${p.id}')">BUY</button>
+                `}
               </div>
             </div>
-            <div class="card-dual-actions">
-              <button class="btn-buy-light-green" onclick="event.stopPropagation(); buyNowDirect('${p.id}')">
-                Buy Now
-              </button>
-              <button class="btn-add-cart-outline" onclick="event.stopPropagation(); addToCart('${p.id}')">
-                <i class="ri-shopping-cart-2-line"></i>
-              </button>
-            </div>
           </div>
-        </div>
-      `).join('');
+        `;
+      }).join('');
     }
 
     function proceedToWhatsAppCheckout() {

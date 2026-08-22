@@ -127,19 +127,19 @@
     }
 
     .step-node.completed {
-      color: #386618;
+      color: #281612;
     }
 
     .step-node.active {
-      color: #2D5C14;
+      color: #281612;
     }
 
     .step-circle {
       width: 22px;
       height: 22px;
       border-radius: 50%;
-      background: #EFF3EC;
-      color: #55664F;
+      background: #F0ECE7;
+      color: #6C5D55;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -148,17 +148,17 @@
     }
 
     .step-node.active .step-circle {
-      background: #2D5C14;
+      background: #281612;
       color: #FFFFFF;
     }
 
     .step-node.completed .step-circle {
-      background: #EEF7E8;
-      color: #386618;
+      background: #FAF6F0;
+      color: #281612;
     }
 
     .step-arrow {
-      color: #CBD8BE;
+      color: #D6C2B0;
       font-size: 12px;
     }
 
@@ -189,7 +189,7 @@
     }
 
     .card-sec-title i {
-      color: #2D5C14;
+      color: #281612;
       font-size: 18px;
     }
 
@@ -215,9 +215,9 @@
     }
 
     .addr-chip.active {
-      background: #EEF7E8;
-      border-color: #BDDE9F;
-      color: #2D5C14;
+      background: #FAF6F0;
+      border-color: #D6C2B0;
+      color: #281612;
     }
 
     /* Floating / Clean Input Fields */
@@ -261,9 +261,9 @@
     }
 
     .form-input:focus {
-      border-color: #2D5C14;
+      border-color: #281612;
       background: #FFFFFF;
-      box-shadow: 0 0 0 3px rgba(45, 92, 20, 0.1);
+      box-shadow: 0 0 0 3px rgba(40, 22, 18, 0.08);
     }
 
     /* Payment Radio Cards */
@@ -281,9 +281,9 @@
     }
 
     .payment-option-card.selected {
-      border-color: #2D5C14;
-      background: #F4F8F0;
-      box-shadow: 0 2px 8px rgba(45, 92, 20, 0.08);
+      border-color: #281612;
+      background: #FAF6F0;
+      box-shadow: 0 2px 8px rgba(40, 22, 18, 0.08);
     }
 
     .pay-radio-circle {
@@ -298,7 +298,7 @@
     }
 
     .payment-option-card.selected .pay-radio-circle {
-      border-color: #2D5C14;
+      border-color: #281612;
     }
 
     .payment-option-card.selected .pay-radio-circle::after {
@@ -306,7 +306,7 @@
       width: 8px;
       height: 8px;
       border-radius: 50%;
-      background: #2D5C14;
+      background: #281612;
     }
 
     /* Order Summary Column */
@@ -367,26 +367,31 @@
     .coupon-input {
       flex: 1;
       padding: 9px 12px;
-      border: 1.5px dashed #BDDE9F;
+      border: 1.5px dashed #D6C2B0;
       border-radius: 10px;
       font-size: 12.5px;
       font-family: inherit;
       outline: none;
-      background: #F8FAF5;
+      background: #FAF6F0;
       text-transform: uppercase;
       font-weight: 700;
-      color: #2D5C14;
+      color: #281612;
     }
 
     .coupon-btn {
-      background: #2D5C14;
+      background: #281612;
       color: #FFFFFF;
       border: none;
       border-radius: 10px;
-      padding: 9px 14px;
+      padding: 9px 16px;
       font-size: 12.5px;
       font-weight: 800;
       cursor: pointer;
+      transition: background 0.15s ease;
+    }
+
+    .coupon-btn:hover {
+      background: #3E241E;
     }
 
     /* Price Breakdown Rows */
@@ -407,9 +412,9 @@
       margin-top: 10px;
     }
 
-    .btn-place-order-green {
+    .btn-place-order-brown {
       width: 100%;
-      background: #2D5C14;
+      background: #281612;
       color: #FFFFFF;
       border: none;
       border-radius: 999px;
@@ -422,12 +427,18 @@
       justify-content: center;
       gap: 8px;
       margin-top: 16px;
-      box-shadow: 0 4px 16px rgba(45, 92, 20, 0.25);
+      box-shadow: 0 4px 16px rgba(40, 22, 18, 0.28);
       transition: all 0.2s ease;
     }
 
-    .btn-place-order-green:hover {
-      background: #22470F;
+    .btn-place-order-brown:hover {
+      background: #3E241E;
+      transform: translateY(-1px);
+    }
+
+    .btn-place-order-brown:active {
+      transform: scale(0.98);
+      background: #1C0F0C;
     }
 
     .secure-badge-foot {
@@ -451,7 +462,7 @@
     </a>
     <h1 class="sub-page-title">Checkout</h1>
     <div class="sub-header-spacer">
-      <i class="ri-shield-check-fill" title="256-Bit SSL Encrypted"></i>
+      <i class="ri-shield-check-fill" style="color:#281612;" title="256-Bit SSL Encrypted"></i>
     </div>
   </header>
 
@@ -486,7 +497,7 @@
             <i class="ri-map-pin-2-line"></i>
             <span>1. Delivery Address</span>
           </h2>
-          <button onclick="fillBangaloreDemo()" style="background:none; border:none; color:#2D5C14; font-size:12px; font-weight:700; cursor:pointer;">
+          <button onclick="fillBangaloreDemo()" style="background:none; border:none; color:#281612; font-size:12px; font-weight:700; cursor:pointer;">
             📍 Auto-fill
           </button>
         </div>
@@ -550,7 +561,7 @@
             <div style="font-size:14px; font-weight:800; color:#1E2519;">Instant UPI (GPay, PhonePe, Paytm)</div>
             <div style="font-size:11.5px; color:#556B4E;">UPI ID: 6302017482@ybl (Scan & Pay)</div>
           </div>
-          <i class="ri-qr-code-line" style="color:#2D5C14; font-size:22px;"></i>
+          <i class="ri-qr-code-line" style="color:#281612; font-size:22px;"></i>
         </div>
 
         <!-- Option C: Card / NetBanking -->
@@ -560,7 +571,7 @@
             <div style="font-size:14px; font-weight:800; color:#1E2519;">Credit / Debit Card & NetBanking</div>
             <div style="font-size:11.5px; color:#556B4E;">All major Indian banks supported</div>
           </div>
-          <i class="ri-bank-card-line" style="color:#2D5C14; font-size:22px;"></i>
+          <i class="ri-bank-card-line" style="color:#281612; font-size:22px;"></i>
         </div>
 
       </div>
@@ -580,7 +591,7 @@
         <div class="order-items-preview-sec">
           
           <div class="checkout-item-row">
-            <img src="assets/showcase_honey.png" alt="Organic Honey" class="checkout-thumb">
+            <img src="assets/prod_honey_studio.jpg" alt="Organic Honey" class="checkout-thumb">
             <div class="checkout-item-info">
               <div class="checkout-item-name">Raw Organic Honey</div>
               <div class="checkout-item-qty">500g Jar • Qty: 1</div>
@@ -589,7 +600,7 @@
           </div>
 
           <div class="checkout-item-row">
-            <img src="https://images.unsplash.com/photo-1586201375761-83865001e31c?w=300&auto=format&fit=crop&q=80" alt="Foxtail Millet Rava" class="checkout-thumb">
+            <img src="assets/prod_rava_studio.jpg" alt="Foxtail Millet Rava" class="checkout-thumb">
             <div class="checkout-item-info">
               <div class="checkout-item-name">Foxtail Millet Rava</div>
               <div class="checkout-item-qty">500g Pack • Qty: 2</div>
@@ -613,15 +624,15 @@
 
         <div class="price-line-row">
           <span>Delivery Fee</span>
-          <span style="color:#2D5C14; font-weight:700;">FREE</span>
+          <span style="color:#281612; font-weight:700;">FREE</span>
         </div>
 
-        <div class="price-line-row" id="discount-row" style="color:#2D5C14; font-weight:700;">
+        <div class="price-line-row" id="discount-row" style="color:#2B6618; font-weight:700;">
           <span>🎉 VIP Club Discount (10%)</span>
           <span id="co-discount">-₹88</span>
         </div>
 
-        <div class="price-line-row" style="color:#2D5C14; font-weight:700;">
+        <div class="price-line-row" style="color:#2B6618; font-weight:700;">
           <span>🌱 Eco-Packaging Discount</span>
           <span>-₹20</span>
         </div>
@@ -631,8 +642,8 @@
           <span id="co-grand-total">₹769</span>
         </div>
 
-        <!-- Place Order CTA Button -->
-        <button class="btn-place-order-green" onclick="placeOrderFinal()">
+        <!-- Place Order CTA Button (Solid Brand Brown) -->
+        <button class="btn-place-order-brown" onclick="placeOrderFinal()">
           <span>Place Order (₹769)</span>
           <i class="ri-arrow-right-line"></i>
         </button>

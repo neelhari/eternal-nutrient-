@@ -484,13 +484,13 @@ body {
 }
 
 /* ==========================================================================
-   4. BESTSELLERS HORIZONTAL RAIL (COMPACT PRIMARY CARD STYLE)
+   4. BESTSELLERS HORIZONTAL RAIL & GRID CARDS (DAKSHA MINIMALIST STYLE)
    ========================================================================== */
 .zepto-rail-container {
   display: flex;
   gap: 12px;
   overflow-x: auto;
-  padding: 4px 2px 10px;
+  padding: 4px 2px 12px;
   scrollbar-width: none;
   scroll-snap-type: x mandatory;
 }
@@ -499,195 +499,384 @@ body {
   display: none;
 }
 
-.zepto-item-card {
-  width: 142px;
-  flex-shrink: 0;
-  scroll-snap-align: start;
-  background: #FFFFFF;
-  border: 1px solid #EAEFE6;
-  border-radius: 14px;
-  padding: 8px;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.03);
-  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
-  cursor: pointer;
+/* ==========================================================================
+   EXACT MOCKUP CURATED RAILS (BEST SELLERS & NEW ARRIVALS)
+   ========================================================================== */
+.editorial-curated-section {
+  width: 100%;
+  border-radius: 22px;
+  padding: 18px 16px 20px;
+  margin-bottom: 24px;
+  position: relative;
+  overflow: hidden;
+  box-sizing: border-box;
 }
 
-@media (min-width: 768px) {
-  .zepto-item-card {
-    width: 156px;
-    padding: 10px;
+/* Best Sellers Container: Warm Almond Cream */
+.editorial-curated-section.theme-bestsellers {
+  background: #FAF3E7;
+  border: 1px solid #EFE4D3;
+}
+
+/* New Arrivals Container: Soft Fresh Sage */
+.editorial-curated-section.theme-newarrivals {
+  background: #F1F7EE;
+  border: 1px solid #E1ECE0;
+}
+
+/* Authentic watercolor pencil botanical branch sketch watermark in background */
+.editorial-curated-section::after {
+  content: '';
+  position: absolute;
+  top: 10px;
+  right: 16%;
+  width: 220px;
+  height: 220px;
+  background-image: url('../assets/botanical_branch.jpg');
+  background-repeat: no-repeat;
+  background-size: contain;
+  mix-blend-mode: multiply;
+  opacity: 0.32;
+  pointer-events: none;
+  z-index: 1;
+}
+
+@media (max-width: 768px) {
+  .editorial-curated-section::after {
+    top: 5px;
+    right: 20px;
+    width: 180px;
+    height: 180px;
+    opacity: 0.28;
   }
 }
 
-.zepto-item-card:hover {
-  transform: translateY(-2px);
-  border-color: #BDDE9F;
-  box-shadow: 0 6px 16px rgba(74, 122, 37, 0.1);
-}
-
-.zepto-img-box {
-  width: 100%;
-  aspect-ratio: 1.05 / 1;
-  background: #F8FAF6;
-  border-radius: 10px;
-  overflow: hidden;
+/* Rail Header (Title + Subtitle on Left, Pill Button on Right) */
+.exact-mockup-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 14px;
   position: relative;
-  margin-bottom: 6px;
+  z-index: 2;
 }
 
-.zepto-img-box img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  transition: transform 0.3s ease;
-}
-
-.zepto-item-card:hover .zepto-img-box img {
-  transform: scale(1.05);
-}
-
-.zepto-details-wrap {
+.mockup-header-left {
   display: flex;
   flex-direction: column;
-  gap: 2px;
 }
 
-.zepto-card-title {
-  font-family: 'DM Serif Display', Georgia, serif;
-  font-size: 14px;
+.mockup-title-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.mockup-header-icon {
+  font-size: 16px;
+  display: inline-flex;
+  align-items: center;
+}
+
+.theme-bestsellers .mockup-header-icon {
+  color: #E27D18;
+}
+
+.theme-newarrivals .mockup-header-icon {
+  color: #2F7D26;
+}
+
+.mockup-main-title {
+  font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+  font-size: 18px;
+  font-weight: 800;
+  color: #2D1810;
+  letter-spacing: -0.3px;
+  line-height: 1.2;
+  margin: 0;
+}
+
+.theme-newarrivals .mockup-main-title {
+  color: #173814;
+}
+
+.mockup-sub-title {
+  font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+  font-size: 12.5px;
+  font-weight: 500;
+  color: #7A6960;
+  margin-top: 2px;
+}
+
+.theme-newarrivals .mockup-sub-title {
+  color: #5D7957;
+}
+
+/* Top Right Link (See all ➔ / Explore all ➔) - Clean Transparent Style */
+.mockup-top-pill-btn {
+  background: transparent;
+  border: none;
+  box-shadow: none;
+  padding: 4px 0;
+  font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+  font-size: 13px;
   font-weight: 700;
-  color: #1E2519;
-  line-height: 1.2;
+  color: #2D1810;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  transition: all 0.15s ease;
+  white-space: nowrap;
+  position: relative;
+  z-index: 5;
+}
+
+.mockup-top-pill-btn:hover {
+  color: #8C4A15;
+  transform: translateX(2px);
+}
+
+.theme-newarrivals .mockup-top-pill-btn {
+  color: #173814;
+}
+
+.theme-newarrivals .mockup-top-pill-btn:hover {
+  color: #2F7D26;
+}
+
+/* Horizontal Track for Exact Mockup Cards */
+.exact-mockup-track {
+  display: flex;
+  gap: 12px;
+  overflow-x: auto;
+  padding: 4px 2px 8px;
+  margin: 0;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  position: relative;
+  z-index: 2;
+}
+
+.exact-mockup-track::-webkit-scrollbar {
+  display: none;
+}
+
+/* Exact Mockup Product Card (Pure White with Crisp Bottom Row) */
+.mockup-product-card {
+  width: 164px;
+  background: #FFFFFF;
+  border-radius: 16px;
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
+  scroll-snap-align: start;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.04);
+  border: 1px solid rgba(0, 0, 0, 0.03);
+  position: relative;
+  cursor: pointer;
+  box-sizing: border-box;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+@media (min-width: 768px) {
+  .mockup-product-card {
+    width: 180px;
+    padding: 14px;
+  }
+}
+
+.mockup-product-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+}
+
+/* Product Image Box inside Mockup Card */
+.mockup-card-img-wrap {
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  height: 120px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 8px;
+  overflow: hidden;
+  border-radius: 8px;
+}
+
+.mockup-card-img-wrap img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  transition: transform 0.2s ease;
+}
+
+.mockup-product-card:hover .mockup-card-img-wrap img {
+  transform: scale(1.04);
+}
+
+/* Product Title & Unit */
+.mockup-card-title {
+  font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  color: #1E1A17;
+  line-height: 1.25;
+  margin: 0 0 2px 0;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
 
-.zepto-card-badge {
-  font-size: 10px;
-  color: #386618;
-  font-weight: 600;
-  line-height: 1.2;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+.mockup-card-unit {
+  font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+  font-size: 11px;
+  font-weight: 500;
+  color: #8A7E78;
+  margin-bottom: 10px;
 }
 
-.zepto-price-row {
+/* Bottom Row: Price Column on Left + Add Button on Right */
+.mockup-card-bottom-row {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  margin-top: auto;
+  gap: 6px;
+}
+
+.mockup-price-col {
+  display: flex;
+  flex-direction: column;
+}
+
+.mockup-price-line {
   display: flex;
   align-items: baseline;
   gap: 4px;
-  margin-bottom: 6px;
+  line-height: 1;
 }
 
-.zepto-price-num {
+.mockup-current-price {
+  font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
   font-size: 14.5px;
   font-weight: 800;
-  color: #1E2519;
+  color: #1E1A17;
 }
 
-.zepto-strike-num {
+.mockup-mrp-struck {
+  font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
   font-size: 11px;
-  color: #8C9C87;
+  font-weight: 500;
+  color: #9C918B;
   text-decoration: line-through;
 }
 
-.zepto-dual-actions {
-  display: flex !important;
-  align-items: center !important;
-  gap: 5px !important;
-  margin-top: auto !important;
-  width: 100% !important;
+.mockup-discount-text {
+  font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+  font-size: 10.5px;
+  font-weight: 700;
+  color: #2F7D26;
+  margin-top: 3px;
+  line-height: 1;
 }
 
-.zepto-btn-buynow {
-  flex: 1 !important;
-  background: #553518 !important;
-  color: #FFFFFF !important;
-  border: 1.5px solid #553518 !important;
-  border-radius: 8px !important;
-  font-size: 11.5px !important;
-  font-weight: 800 !important;
-  padding: 6px 4px !important;
-  display: flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-  gap: 4px !important;
-  cursor: pointer !important;
-  transition: all 0.2s ease !important;
-  line-height: 1 !important;
-  box-shadow: 0 2px 6px rgba(85, 53, 24, 0.2) !important;
+/* Add Button Pill (Brown for Best Sellers, Green for New Arrivals) */
+.mockup-add-pill-btn {
+  background: #281612;
+  color: #FFFFFF;
+  border: none;
+  border-radius: 8px;
+  padding: 6px 12px;
+  font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+  font-size: 11.5px;
+  font-weight: 700;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  box-shadow: 0 2px 6px rgba(40, 22, 18, 0.2);
+  transition: all 0.15s ease;
+  white-space: nowrap;
+  height: 28px;
+  box-sizing: border-box;
 }
 
-.zepto-btn-buynow:hover {
-  background: #3B240F !important;
-  border-color: #3B240F !important;
-  color: #FFFFFF !important;
-  box-shadow: 0 4px 12px rgba(85, 53, 24, 0.3) !important;
+.mockup-add-pill-btn i {
+  font-size: 13px;
 }
 
-.zepto-btn-cart-icon {
-  width: 30px !important;
-  height: 30px !important;
-  border-radius: 8px !important;
-  border: 1.5px solid #BDDE9F !important;
-  background: #FFFFFF !important;
-  color: #386618 !important;
-  display: flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-  font-size: 15px !important;
-  cursor: pointer !important;
-  transition: all 0.2s ease !important;
-  flex-shrink: 0 !important;
+.mockup-add-pill-btn:hover {
+  background: #3E241E;
+  transform: translateY(-1px);
 }
 
-.zepto-btn-cart-icon:hover {
-  background: #4A7A25 !important;
-  color: #FFFFFF !important;
+.mockup-add-pill-btn:active {
+  transform: scale(0.95);
 }
 
-/* Live Dynamic Stepper for Product Cards */
-.card-stepper-active {
-  width: 100% !important;
-  background: #553518 !important;
-  color: #FFFFFF !important;
-  border-radius: 8px !important;
-  display: flex !important;
-  align-items: center !important;
-  justify-content: space-between !important;
-  padding: 5px 8px !important;
-  box-shadow: 0 3px 10px rgba(85, 53, 24, 0.25) !important;
+/* Green Variant for New Arrivals Add Button */
+.mockup-add-pill-btn.btn-green-theme {
+  background: #173814;
+  box-shadow: 0 2px 6px rgba(23, 56, 20, 0.2);
 }
 
-.card-stepper-active button {
-  background: none !important;
-  border: none !important;
-  color: #FFFFFF !important;
-  font-size: 14px !important;
-  font-weight: 800 !important;
-  cursor: pointer !important;
-  width: 22px !important;
-  height: 22px !important;
-  display: flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-  line-height: 1 !important;
+.mockup-add-pill-btn.btn-green-theme:hover {
+  background: #23541E;
 }
 
-.card-stepper-active span {
-  font-size: 12.5px !important;
-  font-weight: 800 !important;
-  color: #FFFFFF !important;
-  min-width: 16px !important;
-  text-align: center !important;
+/* Interactive Stepper inside Mockup Card */
+.mockup-stepper-active {
+  display: inline-flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #281612;
+  color: #FFFFFF;
+  border-radius: 8px;
+  height: 28px;
+  padding: 0 4px;
+  width: 68px;
+  box-shadow: 0 2px 6px rgba(40, 22, 18, 0.2);
+  box-sizing: border-box;
+}
+
+.mockup-stepper-active.stepper-green-theme {
+  background: #173814;
+  box-shadow: 0 2px 6px rgba(23, 56, 20, 0.2);
+}
+
+.mockup-step-btn {
+  background: none;
+  border: none;
+  color: #FFFFFF;
+  font-size: 14px;
+  font-weight: 800;
+  cursor: pointer;
+  width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+}
+
+.mockup-step-btn:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.mockup-step-val {
+  font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+  font-size: 11.5px;
+  font-weight: 800;
+  color: #FFFFFF;
+  min-width: 14px;
+  text-align: center;
 }
 
 /* ==========================================================================
-   5. ALL PRODUCTS SHOWCASE (RESPONSIVE GRID)
+   5. ALL PRODUCTS SHOWCASE & RAIL PRODUCT CARD (DAKSHA DESIGN REFERENCE)
    ========================================================================== */
 .showcase-grid-responsive {
   display: grid;
@@ -698,6 +887,7 @@ body {
 @media (max-width: 1024px) {
   .showcase-grid-responsive {
     grid-template-columns: repeat(3, 1fr);
+    gap: 14px;
   }
 }
 
@@ -708,97 +898,127 @@ body {
   }
 }
 
+/* Unified Daksha Product Card */
 .product-showcase-card {
   background: #FFFFFF;
-  border: 1px solid #E2EAD8;
+  border: 1px solid #ECE7DF;
   border-radius: 16px;
-  padding: 12px;
+  padding: 10px 10px 12px 10px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  box-shadow: 0 4px 14px rgba(28, 36, 23, 0.04);
-  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
-  cursor: pointer;
-}
-
-@media (max-width: 768px) {
-  .product-showcase-card {
-    padding: 10px;
-  }
-  border: 1px solid #EAEFE6;
-  border-radius: 18px;
-  padding: 10px;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.03);
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  box-shadow: 0 2px 10px rgba(45, 30, 20, 0.04);
+  transition: transform 0.22s ease, box-shadow 0.22s ease, border-color 0.22s ease;
   cursor: pointer;
   position: relative;
+  height: 100%;
+}
+
+.product-showcase-card.rail-card {
+  width: 156px;
+  flex-shrink: 0;
+  scroll-snap-align: start;
+}
+
+@media (min-width: 768px) {
+  .product-showcase-card.rail-card {
+    width: 185px;
+    padding: 12px 12px 14px 12px;
+  }
+  .product-showcase-card {
+    padding: 12px 12px 14px 12px;
+    border-radius: 18px;
+  }
 }
 
 .product-showcase-card:hover {
   transform: translateY(-3px);
-  border-color: #BDDE9F;
-  box-shadow: 0 8px 24px rgba(74, 122, 37, 0.1);
+  border-color: #D6CAB8;
+  box-shadow: 0 8px 24px rgba(45, 30, 20, 0.09);
 }
 
 .product-photo-wrap {
   width: 100%;
-  aspect-ratio: 1.05 / 1;
+  aspect-ratio: 1 / 1;
   border-radius: 12px;
   overflow: hidden;
   position: relative;
-  background: #F8FAF6;
-  margin-bottom: 10px;
+  background: #F8F5F0;
+  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .product-photo-wrap img {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  transition: transform 0.3s ease;
+  transition: transform 0.35s ease;
 }
 
 .product-showcase-card:hover .product-photo-wrap img {
-  transform: scale(1.05);
+  transform: scale(1.04);
+}
+
+/* Section Header Bar */
+.section-header-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+.section-main-title {
+  font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+  font-size: 18px;
+  font-weight: 800;
+  color: #1E1A17;
+  letter-spacing: -0.2px;
+  margin: 0;
+}
+
+@media (min-width: 768px) {
+  .section-main-title {
+    font-size: 22px;
+  }
+}
+
+.section-view-link {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 12px;
+  font-weight: 700;
+  color: #4A7A25;
+  text-decoration: none;
+}
+
+.section-view-link:hover {
+  text-decoration: underline;
 }
 
 .product-text-details {
   display: flex;
   flex-direction: column;
-  gap: 3px;
+  flex: 1;
 }
 
 .card-item-title {
-  font-family: 'DM Serif Display', Georgia, serif;
-  font-size: 18px;
+  font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+  font-style: normal;
+  font-size: 12.5px;
   font-weight: 700;
-  color: #1E2519;
-  line-height: 1.2;
+  color: #1E1A17;
+  line-height: 1.25;
+  margin-bottom: 3px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
-.card-item-badge {
-  font-size: 11.5px;
-  font-weight: 600;
-  color: #386618;
-  line-height: 1.2;
-  margin-bottom: 2px;
-}
-
-.card-rating-row {
-  display: flex;
-  align-items: center;
-  gap: 4px;
-  font-size: 11.5px;
-  font-weight: 700;
-  color: #4A5B45;
-  margin-bottom: 4px;
-}
-
-.card-rating-star {
-  color: #386618;
-  font-size: 12px;
+@media (min-width: 768px) {
+  .card-item-title {
+    font-size: 13.5px;
+  }
 }
 
 .card-item-pricing {
@@ -809,68 +1029,219 @@ body {
 }
 
 .card-price-current {
-  font-size: 17px;
+  font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+  font-size: 14.5px;
   font-weight: 800;
-  color: #1E2519;
+  color: #1E1A17;
+  line-height: 1.2;
 }
 
-.card-price-mrp {
-  font-size: 12px;
-  color: #8C9C87;
-  text-decoration: line-through;
+@media (min-width: 768px) {
+  .card-price-current {
+    font-size: 16px;
+  }
 }
 
+/* Floating Exact Zepto Stepper Pill for Rail Cards */
+.zepto-stepper-pill-active {
+  position: absolute !important;
+  bottom: -10px !important;
+  left: 50% !important;
+  transform: translateX(-50%) !important;
+  background: #281612 !important;
+  color: #FFFFFF !important;
+  border-radius: 5px !important;
+  width: 70px !important;
+  height: 21px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  padding: 0 4px !important;
+  box-shadow: 0 2px 6px rgba(40, 22, 18, 0.25) !important;
+  z-index: 10 !important;
+}
+
+.zepto-step-btn {
+  background: none !important;
+  border: none !important;
+  color: #FFFFFF !important;
+  font-size: 13.5px !important;
+  font-weight: 800 !important;
+  cursor: pointer !important;
+  width: 18px !important;
+  height: 18px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  line-height: 1 !important;
+  border-radius: 3px !important;
+}
+
+.zepto-step-btn:hover {
+  background: rgba(255, 255, 255, 0.2) !important;
+}
+
+.zepto-step-val {
+  font-family: 'Plus Jakarta Sans', system-ui, sans-serif !important;
+  font-size: 11px !important;
+  font-weight: 800 !important;
+  color: #FFFFFF !important;
+  min-width: 12px !important;
+  text-align: center !important;
+  line-height: 1 !important;
+}
+
+/* Daksha Exact Dual Action Buttons: ADD and BUY (Sleek Modern Mobile Sizing) */
 .card-dual-actions {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 5px;
+  width: 100%;
   margin-top: auto;
 }
 
-.btn-buy-light-green {
+.btn-daksha-add,
+.btn-daksha-buy {
   flex: 1;
-  background: #553518;
+  min-width: 0;
+  height: 28px;
+  background: #281612;
   color: #FFFFFF;
-  border: 1.5px solid #553518;
-  border-radius: 8px;
-  font-size: 12.5px;
+  border: none;
+  border-radius: 6px;
+  font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+  font-size: 9.5px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  box-shadow: 0 2px 5px rgba(40, 22, 18, 0.16);
+  padding: 0 2px;
+  line-height: 1;
+  user-select: none;
+  -webkit-font-smoothing: antialiased;
+}
+
+.btn-daksha-add:hover,
+.btn-daksha-buy:hover {
+  background: #3E241E;
+  transform: translateY(-1px);
+  box-shadow: 0 3px 8px rgba(40, 22, 18, 0.25);
+}
+
+.btn-daksha-add:active,
+.btn-daksha-buy:active {
+  transform: scale(0.96);
+  background: #1C0F0C;
+}
+
+.btn-daksha-add.added {
+  background: #386618;
+}
+
+/* Smooth Transition Stepper for Home Page Product Cards */
+.card-stepper-active {
+  width: 100%;
+  height: 28px;
+  background: #281612;
+  color: #FFFFFF;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 5px;
+  box-shadow: 0 2px 6px rgba(40, 22, 18, 0.22);
+}
+
+.card-stepper-active button {
+  background: none;
+  border: none;
+  color: #FFFFFF;
+  font-size: 14px;
   font-weight: 800;
-  padding: 8px 6px;
+  cursor: pointer;
+  width: 20px;
+  height: 20px;
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 5px;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  box-shadow: 0 2px 8px rgba(85, 53, 24, 0.2);
+  border-radius: 4px;
+  line-height: 1;
+  padding: 0;
 }
 
-.btn-buy-light-green:hover {
-  background: #3B240F;
-  border-color: #3B240F;
+.card-stepper-active button:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.card-stepper-active span {
+  font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+  font-size: 11.5px;
+  font-weight: 800;
   color: #FFFFFF;
-  box-shadow: 0 4px 12px rgba(85, 53, 24, 0.3);
+  min-width: 14px;
+  text-align: center;
+  line-height: 1;
+}
+  animation: cardFadeIn 0.22s ease-out;
 }
 
-.btn-add-cart-outline {
-  width: 36px;
-  height: 36px;
-  border-radius: 8px;
-  border: 1.5px solid #BDDE9F;
-  background: #FFFFFF;
-  color: #386618;
+@media (max-width: 768px) {
+  .card-stepper-active {
+    height: 33px;
+    border-radius: 7px;
+    padding: 0 6px;
+  }
+}
+
+.card-stepper-active button {
+  background: none;
+  border: none;
+  color: #FFFFFF;
+  font-size: 16px;
+  font-weight: 800;
+  cursor: pointer;
+  width: 26px;
+  height: 26px;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 17px;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  flex-shrink: 0;
+  line-height: 1;
+  border-radius: 4px;
+  transition: background 0.15s ease, transform 0.1s ease;
 }
 
-.btn-add-cart-outline:hover {
-  background: #4A7A25;
+.card-stepper-active button:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.card-stepper-active button:active {
+  transform: scale(0.88);
+}
+
+.card-stepper-active span {
+  font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+  font-size: 13px;
+  font-weight: 800;
   color: #FFFFFF;
+  min-width: 18px;
+  text-align: center;
+  line-height: 1;
+}
+
+@keyframes cardFadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
 }
 
 /* ==========================================================================
@@ -1136,24 +1507,37 @@ body {
   display: flex;
   align-items: center;
   gap: 6px;
-  background: #FFFFFF;
-  border: 1px solid #CBD8BE;
+  background: #281612;
   border-radius: 999px;
   padding: 3px 8px;
+  box-shadow: 0 2px 6px rgba(40, 22, 18, 0.2);
 }
 
 .stepper-btn {
   background: none;
   border: none;
-  font-size: 14px;
+  font-size: 15px;
   font-weight: 800;
-  color: #1E2519;
+  color: #FFFFFF;
   cursor: pointer;
+  width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  transition: background 0.15s ease;
+}
+
+.stepper-btn:hover {
+  background: rgba(255, 255, 255, 0.2);
 }
 
 .stepper-num {
-  font-size: 12.5px;
-  font-weight: 700;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 13px;
+  font-weight: 800;
+  color: #FFFFFF;
   min-width: 14px;
   text-align: center;
 }
