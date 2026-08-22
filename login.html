@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Sign In & Account - Eternal Nutricare</title>
+  <title>Login & Sign Up - Eternal Nutricare</title>
   
   <!-- Remix Icons -->
   <link href="https://cdn.jsdelivr.net/npm/remixicon@4.2.0/fonts/remixicon.css" rel="stylesheet">
@@ -13,345 +13,247 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
-  <!-- Core Styles -->
-  <link rel="stylesheet" href="styles/theme.css">
-  <link rel="stylesheet" href="styles/storefront.css">
+  <!-- Core App Stylesheet -->
   <link rel="stylesheet" href="styles/auth.css">
 
   <!-- Supabase CDN (Optional Cloud Sync) -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
-<body class="auth-page-body">
+<body class="plantland-auth-body">
 
-  <!-- Top Minimalist Brand Header -->
-  <header class="auth-top-header">
-    <a href="index.html" class="auth-header-brand">
-      <img src="assets/brand_emblem.png" alt="Eternal Nutricare Emblem" class="auth-header-emblem">
-      <div class="auth-brand-wordmark">
-        <span class="auth-brand-eternal">ETERNAL</span>
-        <span class="auth-brand-nutricare">NUTRICARE</span>
-      </div>
-    </a>
+  <div class="plantland-app-canvas">
+    <div class="plantland-phone-frame">
+      
+      <!-- =========================================================================
+           VIEW 1: LOGIN (EXACT REFERENCE DESIGN)
+           ========================================================================= -->
+      <div id="screen-login" class="auth-screen-tab active">
+        
+        <!-- Top Green Visual Zone -->
+        <div class="auth-top-visual-zone">
+          <div class="auth-leaf-deco-left"></div>
+          <div class="auth-leaf-deco-sub"></div>
 
-    <a href="index.html" class="auth-header-back-btn">
-      <i class="ri-store-2-line"></i>
-      <span>Back to Store</span>
-    </a>
-  </header>
-
-  <!-- Main Split Authentication Container -->
-  <div class="auth-split-wrapper">
-    
-    <!-- LEFT PANEL: Interactive Authentication Forms -->
-    <div class="auth-form-panel">
-      <div class="auth-watermark-botanical"></div>
-
-      <!-- VIEW 1: SIGN IN FORM -->
-      <div id="view-signin" class="auth-view-screen active">
-        <div class="auth-eyebrow-chip">
-          <i class="ri-sparkling-fill" style="color:#D97706;"></i>
-          <span>Welcome Back</span>
-        </div>
-
-        <h1 class="auth-main-title">Good to see you again.</h1>
-        <p class="auth-sub-desc">Sign in to continue shopping your favourite natural products and track your orders.</p>
-
-        <!-- Mode Switcher Tabs -->
-        <div class="auth-nav-pill-group">
-          <button type="button" class="auth-pill-btn active" onclick="switchAuthView('signin')">Sign In</button>
-          <button type="button" class="auth-pill-btn" onclick="switchAuthView('signup')">Create Account</button>
-        </div>
-
-        <form id="signin-form" class="auth-form-body" onsubmit="handleSignInSubmit(event)">
-          <!-- Email / Mobile -->
-          <div class="auth-input-group">
-            <label class="auth-label" for="signin-ident">Mobile Number or Email</label>
-            <div class="auth-input-wrapper">
-              <i class="ri-user-line auth-leading-icon"></i>
-              <input type="text" id="signin-ident" class="auth-field-input" placeholder="e.g. 9876543210 or your@email.com" required autocomplete="username">
+          <!-- Potted Organic Plant Illustration on top right -->
+          <div class="auth-plant-pot-artwork">
+            <div class="plant-leaves-cluster">
+              <div class="leaf-stalk-left"></div>
+              <div class="leaf-stalk-center"></div>
+              <div class="leaf-stalk-right"></div>
             </div>
-            <div id="signin-ident-err" class="auth-field-error-msg"><i class="ri-error-warning-fill"></i> <span></span></div>
+            <div class="plant-white-pot"></div>
+            <div class="plant-pot-shadow"></div>
           </div>
 
-          <!-- Password -->
-          <div class="auth-input-group">
-            <div class="auth-label">
-              <label for="signin-pass">Password</label>
-              <a href="javascript:void(0)" class="auth-link-text" onclick="switchAuthView('forgot')" style="font-size: 11.5px;">Forgot Password?</a>
+          <h1 class="auth-hero-greeting">Hello!</h1>
+          <p class="auth-hero-subtext">Welcome to Eternal Nutricare</p>
+        </div>
+
+        <!-- Curved White Bottom Sheet -->
+        <div class="auth-bottom-sheet-card">
+          <h2 class="auth-sheet-title">Login</h2>
+
+          <form id="form-login" onsubmit="handleLogin(event)">
+            <div class="plantland-form-group">
+              
+              <!-- Email / Mobile -->
+              <div>
+                <div class="plantland-input-pill-wrap">
+                  <i class="ri-mail-line plantland-input-icon"></i>
+                  <input type="text" id="login-ident" class="plantland-input-pill" placeholder="Email or Mobile" required autocomplete="username">
+                </div>
+                <div id="login-ident-err" class="plantland-error-tip">Please enter valid email or phone.</div>
+              </div>
+
+              <!-- Password -->
+              <div>
+                <div class="plantland-input-pill-wrap">
+                  <i class="ri-lock-line plantland-input-icon"></i>
+                  <input type="password" id="login-pass" class="plantland-input-pill" placeholder="Password" required autocomplete="current-password">
+                  <button type="button" class="plantland-pass-toggle" onclick="togglePass('login-pass', this)" aria-label="Toggle password">
+                    <i class="ri-eye-line"></i>
+                  </button>
+                </div>
+                <div id="login-pass-err" class="plantland-error-tip">Incorrect password.</div>
+              </div>
+
             </div>
-            <div class="auth-input-wrapper">
-              <i class="ri-lock-line auth-leading-icon"></i>
-              <input type="password" id="signin-pass" class="auth-field-input" placeholder="Enter your password" required autocomplete="current-password">
-              <button type="button" class="auth-toggle-pass-btn" onclick="togglePassVisibility('signin-pass', this)" aria-label="Toggle password visibility">
-                <i class="ri-eye-line"></i>
+
+            <!-- Forgot Password Link -->
+            <div class="plantland-forgot-row">
+              <a href="javascript:void(0)" class="plantland-forgot-link" onclick="switchScreen('forgot')">Forgot Password</a>
+            </div>
+
+            <!-- Primary Login Button -->
+            <button type="submit" id="btn-login-submit" class="btn-plantland-submit">
+              <span>Login</span>
+            </button>
+
+            <!-- Divider -->
+            <div class="plantland-or-divider">Or login with</div>
+
+            <!-- Social / Quick 1-Click Icons -->
+            <div class="plantland-social-row">
+              <button type="button" class="plantland-social-btn facebook" onclick="quickDemoLogin('Facebook')" aria-label="Facebook">
+                <i class="ri-facebook-fill"></i>
+              </button>
+              <button type="button" class="plantland-social-btn google" onclick="quickDemoLogin('Google')" aria-label="Google">
+                <i class="ri-google-fill"></i>
+              </button>
+              <button type="button" class="plantland-social-btn apple" onclick="quickDemoLogin('Apple')" aria-label="Apple">
+                <i class="ri-apple-fill"></i>
               </button>
             </div>
-            <div id="signin-pass-err" class="auth-field-error-msg"><i class="ri-error-warning-fill"></i> <span></span></div>
-          </div>
 
-          <!-- Options Row -->
-          <div class="auth-options-row">
-            <label class="auth-checkbox-label">
-              <input type="checkbox" id="signin-remember" checked>
-              <span>Keep me signed in</span>
-            </label>
-          </div>
-
-          <!-- Submit Button -->
-          <button type="submit" id="btn-signin-submit" class="btn-auth-submit">
-            <span>Sign In</span>
-            <i class="ri-arrow-right-line"></i>
-          </button>
-
-          <div class="auth-or-divider">OR</div>
-
-          <!-- 1-Click Demo Login Button for instant seamless evaluation -->
-          <button type="button" class="btn-auth-secondary" onclick="handleDemoQuickLogin()">
-            <i class="ri-flashlight-fill" style="color: #E59500;"></i>
-            <span>Quick Demo Sign In (Anita Sharma)</span>
-          </button>
-        </form>
-
-        <div class="auth-foot-switch">
-          <span>New to Eternal Nutricare?</span>
-          <a href="javascript:void(0)" class="auth-link-text" onclick="switchAuthView('signup')"> Create an account</a>
+            <!-- Bottom Switch Link -->
+            <div class="plantland-foot-switch">
+              Don't have account? <a href="javascript:void(0)" onclick="switchScreen('signup')">Sign Up</a>
+            </div>
+          </form>
         </div>
+
       </div>
 
-      <!-- VIEW 2: CREATE ACCOUNT FORM -->
-      <div id="view-signup" class="auth-view-screen">
-        <div class="auth-eyebrow-chip">
-          <i class="ri-plant-fill" style="color:#4A7A25;"></i>
-          <span>Join EternalNutricare</span>
-        </div>
 
-        <h1 class="auth-main-title">Create your account</h1>
-        <p class="auth-sub-desc">Save your favourites, track orders and enjoy a faster, personalized organic checkout.</p>
+      <!-- =========================================================================
+           VIEW 2: SIGN UP (EXACT REFERENCE DESIGN)
+           ========================================================================= -->
+      <div id="screen-signup" class="auth-screen-tab">
+        
+        <!-- Top Green Visual Zone -->
+        <div class="auth-top-visual-zone" style="min-height: 170px;">
+          <div class="auth-leaf-deco-left"></div>
 
-        <!-- Mode Switcher Tabs -->
-        <div class="auth-nav-pill-group">
-          <button type="button" class="auth-pill-btn" onclick="switchAuthView('signin')">Sign In</button>
-          <button type="button" class="auth-pill-btn active" onclick="switchAuthView('signup')">Create Account</button>
-        </div>
-
-        <form id="signup-form" class="auth-form-body" onsubmit="handleSignUpSubmit(event)">
-          <!-- Full Name -->
-          <div class="auth-input-group">
-            <label class="auth-label" for="signup-name">Full Name</label>
-            <div class="auth-input-wrapper">
-              <i class="ri-user-smile-line auth-leading-icon"></i>
-              <input type="text" id="signup-name" class="auth-field-input" placeholder="e.g. Anita Sharma" required autocomplete="name">
-            </div>
-            <div id="signup-name-err" class="auth-field-error-msg"><i class="ri-error-warning-fill"></i> <span></span></div>
-          </div>
-
-          <!-- Mobile Number -->
-          <div class="auth-input-group">
-            <label class="auth-label" for="signup-phone">10-Digit Mobile Number</label>
-            <div class="auth-input-wrapper">
-              <i class="ri-phone-line auth-leading-icon"></i>
-              <input type="tel" id="signup-phone" class="auth-field-input" placeholder="e.g. 9876543210" required autocomplete="tel">
-            </div>
-            <div id="signup-phone-err" class="auth-field-error-msg"><i class="ri-error-warning-fill"></i> <span></span></div>
-          </div>
-
-          <!-- Email Address -->
-          <div class="auth-input-group">
-            <label class="auth-label" for="signup-email">Email Address</label>
-            <div class="auth-input-wrapper">
-              <i class="ri-mail-line auth-leading-icon"></i>
-              <input type="email" id="signup-email" class="auth-field-input" placeholder="e.g. anita@example.com" required autocomplete="email">
-            </div>
-            <div id="signup-email-err" class="auth-field-error-msg"><i class="ri-error-warning-fill"></i> <span></span></div>
-          </div>
-
-          <!-- Password -->
-          <div class="auth-input-group">
-            <label class="auth-label" for="signup-pass">Create Password (Min 6 Characters)</label>
-            <div class="auth-input-wrapper">
-              <i class="ri-lock-2-line auth-leading-icon"></i>
-              <input type="password" id="signup-pass" class="auth-field-input" placeholder="Create a secure password" required minlength="6" autocomplete="new-password">
-              <button type="button" class="auth-toggle-pass-btn" onclick="togglePassVisibility('signup-pass', this)" aria-label="Toggle password visibility">
-                <i class="ri-eye-line"></i>
-              </button>
-            </div>
-            <div id="signup-pass-err" class="auth-field-error-msg"><i class="ri-error-warning-fill"></i> <span></span></div>
-          </div>
-
-          <!-- Confirm Password -->
-          <div class="auth-input-group">
-            <label class="auth-label" for="signup-pass-confirm">Confirm Password</label>
-            <div class="auth-input-wrapper">
-              <i class="ri-lock-check-line auth-leading-icon"></i>
-              <input type="password" id="signup-pass-confirm" class="auth-field-input" placeholder="Re-type your password" required minlength="6" autocomplete="new-password">
-            </div>
-            <div id="signup-pass-confirm-err" class="auth-field-error-msg"><i class="ri-error-warning-fill"></i> <span></span></div>
-          </div>
-
-          <!-- Terms -->
-          <div style="font-size: 11.5px; color: #726259; line-height: 1.4; margin-top: 4px;">
-            By creating an account, you agree to Eternal Nutricare's <a href="javascript:void(0)" class="auth-link-text">Terms & Privacy Policy</a>.
-          </div>
-
-          <!-- Submit Button -->
-          <button type="submit" id="btn-signup-submit" class="btn-auth-submit">
-            <span>Create Account</span>
-            <i class="ri-arrow-right-line"></i>
-          </button>
-        </form>
-
-        <div class="auth-foot-switch">
-          <span>Already have an account?</span>
-          <a href="javascript:void(0)" class="auth-link-text" onclick="switchAuthView('signin')"> Sign In</a>
-        </div>
-      </div>
-
-      <!-- VIEW 3: FORGOT PASSWORD -->
-      <div id="view-forgot" class="auth-view-screen">
-        <div class="auth-eyebrow-chip">
-          <i class="ri-key-2-fill" style="color:#D97706;"></i>
-          <span>Account Recovery</span>
-        </div>
-
-        <h1 class="auth-main-title">Forgot your password?</h1>
-        <p class="auth-sub-desc">Enter your registered email or mobile number and we'll help you get back into your account safely.</p>
-
-        <form id="forgot-form" class="auth-form-body" onsubmit="handleForgotSubmit(event)">
-          <div class="auth-input-group">
-            <label class="auth-label" for="forgot-ident">Email or Mobile Number</label>
-            <div class="auth-input-wrapper">
-              <i class="ri-mail-send-line auth-leading-icon"></i>
-              <input type="text" id="forgot-ident" class="auth-field-input" placeholder="Enter your email or phone" required>
-            </div>
-            <div id="forgot-err" class="auth-field-error-msg"><i class="ri-error-warning-fill"></i> <span></span></div>
-          </div>
-
-          <button type="submit" id="btn-forgot-submit" class="btn-auth-submit">
-            <span>Send Reset Instructions</span>
-            <i class="ri-mail-check-line"></i>
-          </button>
-
-          <button type="button" class="btn-auth-secondary" onclick="switchAuthView('signin')">
-            <i class="ri-arrow-left-line"></i>
-            <span>Back to Sign In</span>
-          </button>
-        </form>
-      </div>
-
-      <!-- VIEW 4: RESET PASSWORD -->
-      <div id="view-reset" class="auth-view-screen">
-        <div class="auth-eyebrow-chip">
-          <i class="ri-shield-keyhole-fill" style="color:#4A7A25;"></i>
-          <span>New Password</span>
-        </div>
-
-        <h1 class="auth-main-title">Create a new password</h1>
-        <p class="auth-sub-desc">Please choose a secure password with at least 6 characters.</p>
-
-        <form id="reset-form" class="auth-form-body" onsubmit="handleResetSubmit(event)">
-          <div class="auth-input-group">
-            <label class="auth-label" for="reset-pass">New Password</label>
-            <div class="auth-input-wrapper">
-              <i class="ri-lock-password-line auth-leading-icon"></i>
-              <input type="password" id="reset-pass" class="auth-field-input" placeholder="Enter new password" required minlength="6">
-            </div>
-          </div>
-
-          <div class="auth-input-group">
-            <label class="auth-label" for="reset-pass-confirm">Confirm New Password</label>
-            <div class="auth-input-wrapper">
-              <i class="ri-lock-check-line auth-leading-icon"></i>
-              <input type="password" id="reset-pass-confirm" class="auth-field-input" placeholder="Confirm new password" required minlength="6">
-            </div>
-            <div id="reset-err" class="auth-field-error-msg"><i class="ri-error-warning-fill"></i> <span></span></div>
-          </div>
-
-          <button type="submit" id="btn-reset-submit" class="btn-auth-submit">
-            <span>Update Password</span>
-            <i class="ri-check-line"></i>
-          </button>
-        </form>
-      </div>
-
-      <!-- VIEW 5: WELCOME / SUCCESS SCREEN -->
-      <div id="view-welcome" class="auth-view-screen">
-        <div class="auth-success-box">
-          <div class="auth-success-icon-wrap">
-            <i class="ri-checkbox-circle-fill"></i>
-          </div>
-          <h2 class="auth-success-heading" id="welcome-user-heading">Welcome to EternalNutricare</h2>
-          <p class="auth-success-subtext" id="welcome-user-subtext">Your account is ready! Let's find something nourishing, pure, and wholesome for you.</p>
-
-          <div style="display: flex; flex-direction: column; gap: 10px;">
-            <button type="button" class="btn-auth-submit" onclick="proceedAfterAuth()">
-              <span>Start Shopping</span>
-              <i class="ri-shopping-bag-3-line"></i>
-            </button>
-            <button type="button" class="btn-auth-secondary" onclick="window.location.href='account.html'">
-              <i class="ri-user-3-line"></i>
-              <span>Go to My Account</span>
+          <!-- Top Back Link -->
+          <div class="auth-top-nav-row">
+            <button type="button" class="auth-back-link-pill" onclick="switchScreen('login')">
+              <i class="ri-arrow-left-line"></i>
+              <span>Back to login</span>
             </button>
           </div>
+
+          <h1 class="auth-hero-greeting" style="font-size: 30px;">Create Account</h1>
+          <p class="auth-hero-subtext">Join Eternal Nutricare today</p>
         </div>
+
+        <!-- Curved White Bottom Sheet -->
+        <div class="auth-bottom-sheet-card">
+          <h2 class="auth-sheet-title">Sign Up</h2>
+
+          <form id="form-signup" onsubmit="handleSignUp(event)">
+            <div class="plantland-form-group">
+              
+              <!-- Email -->
+              <div>
+                <div class="plantland-input-pill-wrap">
+                  <i class="ri-mail-line plantland-input-icon"></i>
+                  <input type="email" id="reg-email" class="plantland-input-pill" placeholder="Email" required autocomplete="email">
+                </div>
+                <div id="reg-email-err" class="plantland-error-tip">Please enter a valid email.</div>
+              </div>
+
+              <!-- Password -->
+              <div>
+                <div class="plantland-input-pill-wrap">
+                  <i class="ri-lock-line plantland-input-icon"></i>
+                  <input type="password" id="reg-pass" class="plantland-input-pill" placeholder="Password" required minlength="6" autocomplete="new-password">
+                  <button type="button" class="plantland-pass-toggle" onclick="togglePass('reg-pass', this)" aria-label="Toggle password">
+                    <i class="ri-eye-line"></i>
+                  </button>
+                </div>
+                <div id="reg-pass-err" class="plantland-error-tip">Must be at least 6 characters.</div>
+              </div>
+
+              <!-- Confirm Password -->
+              <div>
+                <div class="plantland-input-pill-wrap">
+                  <i class="ri-lock-check-line plantland-input-icon"></i>
+                  <input type="password" id="reg-pass-confirm" class="plantland-input-pill" placeholder="Confirm Password" required minlength="6" autocomplete="new-password">
+                </div>
+                <div id="reg-pass-confirm-err" class="plantland-error-tip">Passwords do not match.</div>
+              </div>
+
+              <!-- Phone -->
+              <div>
+                <div class="plantland-input-pill-wrap">
+                  <i class="ri-smartphone-line plantland-input-icon"></i>
+                  <input type="tel" id="reg-phone" class="plantland-input-pill" placeholder="Phone (10-digit)" required autocomplete="tel">
+                </div>
+                <div id="reg-phone-err" class="plantland-error-tip">Please enter valid 10-digit number.</div>
+              </div>
+
+            </div>
+
+            <!-- Primary Sign Up Button -->
+            <button type="submit" id="btn-signup-submit" class="btn-plantland-submit">
+              <span>Sign Up</span>
+            </button>
+
+            <!-- Bottom Switch Link -->
+            <div class="plantland-foot-switch" style="margin-top: 18px;">
+              Already have an account? <a href="javascript:void(0)" onclick="switchScreen('login')">Login</a>
+            </div>
+          </form>
+        </div>
+
+      </div>
+
+
+      <!-- =========================================================================
+           VIEW 3: FORGOT PASSWORD
+           ========================================================================= -->
+      <div id="screen-forgot" class="auth-screen-tab">
+        
+        <!-- Top Green Visual Zone -->
+        <div class="auth-top-visual-zone" style="min-height: 180px;">
+          <div class="auth-leaf-deco-left"></div>
+
+          <div class="auth-top-nav-row">
+            <button type="button" class="auth-back-link-pill" onclick="switchScreen('login')">
+              <i class="ri-arrow-left-line"></i>
+              <span>Back to login</span>
+            </button>
+          </div>
+
+          <h1 class="auth-hero-greeting" style="font-size: 28px;">Password Reset</h1>
+          <p class="auth-hero-subtext">We'll help you get back in</p>
+        </div>
+
+        <!-- Curved White Bottom Sheet -->
+        <div class="auth-bottom-sheet-card">
+          <h2 class="auth-sheet-title">Forgot Password</h2>
+
+          <form id="form-forgot" onsubmit="handleForgot(event)">
+            <p style="font-size: 13.5px; color: #6C7D65; line-height: 1.5; margin-bottom: 20px;">
+              Enter your registered email or phone and we'll send you recovery instructions.
+            </p>
+
+            <div class="plantland-form-group">
+              <div class="plantland-input-pill-wrap">
+                <i class="ri-mail-send-line plantland-input-icon"></i>
+                <input type="text" id="forgot-ident" class="plantland-input-pill" placeholder="Email or Phone" required>
+              </div>
+            </div>
+
+            <button type="submit" id="btn-forgot-submit" class="btn-plantland-submit">
+              <span>Send Reset Instructions</span>
+            </button>
+
+            <div class="plantland-foot-switch" style="margin-top: 24px;">
+              Remember your password? <a href="javascript:void(0)" onclick="switchScreen('login')">Login</a>
+            </div>
+          </form>
+        </div>
+
       </div>
 
     </div>
-
-    <!-- RIGHT PANEL: Luxury Editorial Campaign Banner (Desktop) -->
-    <div class="auth-campaign-panel">
-      <div class="auth-campaign-bg-glow"></div>
-
-      <!-- Top Badge -->
-      <div class="auth-campaign-top-badge">
-        <i class="ri-sparkling-fill"></i>
-        <span>100% Certified Organic Promise</span>
-      </div>
-
-      <!-- Center Campaign Message -->
-      <div class="auth-campaign-center-content">
-        <h2 class="auth-campaign-headline">Goodness from nature, made for everyday living.</h2>
-        <p class="auth-campaign-subtext">Discover thoughtfully made food products crafted for a healthier, more conscious lifestyle. Free from preservatives, chemicals, and maida.</p>
-
-        <!-- Mini Product Highlights -->
-        <div class="auth-campaign-cards-row">
-          <div class="auth-campaign-mini-card">
-            <img src="assets/prod_honey_studio.jpg" alt="Organic Honey" class="auth-campaign-mini-img">
-            <div class="auth-campaign-mini-name">Raw Honey</div>
-          </div>
-          <div class="auth-campaign-mini-card">
-            <img src="assets/prod_laddu_studio.jpg" alt="Dates Laddu" class="auth-campaign-mini-img">
-            <div class="auth-campaign-mini-name">Dates Laddu</div>
-          </div>
-          <div class="auth-campaign-mini-card">
-            <img src="assets/prod_cookie_studio.jpg" alt="Millet Biscuits" class="auth-campaign-mini-img">
-            <div class="auth-campaign-mini-name">Millet Biscuits</div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Footer Trust Points -->
-      <div class="auth-campaign-foot">
-        <div class="auth-campaign-foot-item">
-          <i class="ri-shield-check-fill"></i>
-          <span>Safe UPI & COD</span>
-        </div>
-        <div class="auth-campaign-foot-item">
-          <i class="ri-truck-fill"></i>
-          <span>Free Delivery ₹999+</span>
-        </div>
-        <div class="auth-campaign-foot-item">
-          <i class="ri-leaf-fill"></i>
-          <span>Direct Farm Purity</span>
-        </div>
-      </div>
-    </div>
-
   </div>
 
   <!-- Global Toast -->
   <div id="toast-wrapper" class="toast-floating-container"></div>
 
-  <!-- Scripts -->
+  <!-- Core Scripts -->
   <script src="config/store.config.js"></script>
   <script src="core/auth-engine.js"></script>
   <script>
@@ -364,13 +266,13 @@
       setTimeout(() => toast.remove(), 2500);
     }
 
-    function switchAuthView(viewName) {
-      document.querySelectorAll('.auth-view-screen').forEach(v => v.classList.remove('active'));
-      const target = document.getElementById(`view-${viewName}`);
+    function switchScreen(screenName) {
+      document.querySelectorAll('.auth-screen-tab').forEach(s => s.classList.remove('active'));
+      const target = document.getElementById(`screen-${screenName}`);
       if (target) target.classList.add('active');
     }
 
-    function togglePassVisibility(inputId, btn) {
+    function togglePass(inputId, btn) {
       const input = document.getElementById(inputId);
       const icon = btn.querySelector('i');
       if (input.type === 'password') {
@@ -383,82 +285,77 @@
     }
 
     function clearErrors() {
-      document.querySelectorAll('.auth-field-error-msg').forEach(el => {
-        el.classList.remove('visible');
-        el.querySelector('span').textContent = '';
-      });
-      document.querySelectorAll('.auth-field-input').forEach(i => i.classList.remove('has-error'));
+      document.querySelectorAll('.plantland-error-tip').forEach(e => e.classList.remove('visible'));
+      document.querySelectorAll('.plantland-input-pill').forEach(i => i.classList.remove('has-error'));
     }
 
     function showError(errId, inputId, msg) {
       const errEl = document.getElementById(errId);
       const inputEl = document.getElementById(inputId);
       if (errEl) {
-        errEl.querySelector('span').textContent = msg;
+        if (msg) errEl.textContent = msg;
         errEl.classList.add('visible');
       }
-      if (inputEl) {
-        inputEl.classList.add('has-error');
-      }
+      if (inputEl) inputEl.classList.add('has-error');
     }
 
-    async function handleSignInSubmit(e) {
+    async function handleLogin(e) {
       e.preventDefault();
       clearErrors();
 
-      const ident = document.getElementById('signin-ident').value;
-      const pass = document.getElementById('signin-pass').value;
-      const btn = document.getElementById('btn-signin-submit');
+      const ident = document.getElementById('login-ident').value;
+      const pass = document.getElementById('login-pass').value;
+      const btn = document.getElementById('btn-login-submit');
 
       btn.disabled = true;
-      btn.innerHTML = `<span>Signing in...</span>`;
+      btn.innerHTML = `<span>Logging in...</span>`;
 
       const result = await AuthEngine.login(ident, pass);
 
       btn.disabled = false;
-      btn.innerHTML = `<span>Sign In</span> <i class="ri-arrow-right-line"></i>`;
+      btn.innerHTML = `<span>Login</span>`;
 
       if (result.success) {
         showToast(`Welcome back, ${result.user.fullName}!`);
-        setTimeout(() => proceedAfterAuth(), 600);
+        setTimeout(redirectSuccess, 600);
       } else {
-        showError('signin-pass-err', 'signin-pass', result.error);
+        showError('login-pass-err', 'login-pass', result.error);
       }
     }
 
-    async function handleSignUpSubmit(e) {
+    async function handleSignUp(e) {
       e.preventDefault();
       clearErrors();
 
-      const name = document.getElementById('signup-name').value;
-      const phone = document.getElementById('signup-phone').value;
-      const email = document.getElementById('signup-email').value;
-      const pass = document.getElementById('signup-pass').value;
-      const passConfirm = document.getElementById('signup-pass-confirm').value;
+      const email = document.getElementById('reg-email').value;
+      const pass = document.getElementById('reg-pass').value;
+      const passConfirm = document.getElementById('reg-pass-confirm').value;
+      const phone = document.getElementById('reg-phone').value;
       const btn = document.getElementById('btn-signup-submit');
 
       if (pass !== passConfirm) {
-        showError('signup-pass-confirm-err', 'signup-pass-confirm', 'Passwords do not match.');
+        showError('reg-pass-confirm-err', 'reg-pass-confirm', 'Passwords do not match.');
         return;
       }
 
       btn.disabled = true;
-      btn.innerHTML = `<span>Creating account...</span>`;
+      btn.innerHTML = `<span>Signing up...</span>`;
 
+      const name = email.split('@')[0].replace(/[._]/g, ' ');
       const result = await AuthEngine.signup({ fullName: name, email, phone, password: pass });
 
       btn.disabled = false;
-      btn.innerHTML = `<span>Create Account</span> <i class="ri-arrow-right-line"></i>`;
+      btn.innerHTML = `<span>Sign Up</span>`;
 
       if (result.success) {
-        document.getElementById('welcome-user-heading').textContent = `Welcome, ${result.user.fullName}!`;
-        switchAuthView('welcome');
+        showToast(`Account created! Welcome to Eternal Nutricare`);
+        setTimeout(redirectSuccess, 700);
       } else {
-        showError('signup-name-err', 'signup-name', result.error);
+        showError('reg-email-err', 'reg-email', result.error);
       }
     }
 
-    function handleDemoQuickLogin() {
+    function quickDemoLogin(provider) {
       AuthEngine.setCurrentUser({
         id: 'usr_sample_8842',
         fullName: 'Anita Sharma',
@@ -468,42 +365,21 @@
         memberSince: 'Member 2025',
         avatarInitials: 'AS'
       });
-      showToast('Logged in as Anita Sharma!');
-      setTimeout(() => proceedAfterAuth(), 600);
+      showToast(`Signed in via ${provider} as Anita Sharma!`);
+      setTimeout(redirectSuccess, 600);
     }
 
-    async function handleForgotSubmit(e) {
+    async function handleForgot(e) {
       e.preventDefault();
-      clearErrors();
       const ident = document.getElementById('forgot-ident').value;
       const res = await AuthEngine.forgotPassword(ident);
       if (res.success) {
         showToast(res.message);
-        setTimeout(() => switchAuthView('reset'), 1000);
-      } else {
-        showError('forgot-err', 'forgot-ident', res.error);
+        setTimeout(() => switchScreen('login'), 1200);
       }
     }
 
-    async function handleResetSubmit(e) {
-      e.preventDefault();
-      clearErrors();
-      const p1 = document.getElementById('reset-pass').value;
-      const p2 = document.getElementById('reset-pass-confirm').value;
-      if (p1 !== p2) {
-        showError('reset-err', 'reset-pass-confirm', 'Passwords do not match.');
-        return;
-      }
-      const res = await AuthEngine.resetPassword(p1);
-      if (res.success) {
-        showToast('Password updated! Please sign in.');
-        setTimeout(() => switchAuthView('signin'), 1000);
-      } else {
-        showError('reset-err', 'reset-pass', res.error);
-      }
-    }
-
-    function proceedAfterAuth() {
+    function redirectSuccess() {
       const params = new URLSearchParams(window.location.search);
       const redirect = params.get('redirect');
       const wishlistId = params.get('wishlist');
@@ -523,11 +399,9 @@
       const params = new URLSearchParams(window.location.search);
       const mode = params.get('mode');
       if (mode === 'signup') {
-        switchAuthView('signup');
+        switchScreen('signup');
       } else if (mode === 'forgot') {
-        switchAuthView('forgot');
-      } else if (mode === 'reset') {
-        switchAuthView('reset');
+        switchScreen('forgot');
       }
     });
   </script>
