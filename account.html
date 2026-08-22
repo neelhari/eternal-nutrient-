@@ -250,52 +250,46 @@
       }
     }
 
-    /* Interactive Section Tabs (2x2 Grid on Mobile, 4 Columns on Desktop) */
+    /* Interactive Section Tabs */
     .account-section-tabs {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 10px;
-      margin-bottom: 20px;
-      width: 100%;
-      box-sizing: border-box;
+      display: flex;
+      gap: 8px;
+      overflow-x: auto;
+      padding-bottom: 8px;
+      margin-bottom: 18px;
+      scrollbar-width: none;
     }
 
-    @media (min-width: 600px) {
-      .account-section-tabs {
-        grid-template-columns: repeat(4, 1fr);
-      }
+    .account-section-tabs::-webkit-scrollbar {
+      display: none;
     }
 
     .acc-tab-chip {
       background: #FFFDF9;
-      border: 1.5px solid #E6DCD0;
-      border-radius: 12px;
-      padding: 10px 10px;
-      font-size: 12px;
+      border: 1px solid #E6DCD0;
+      border-radius: 999px;
+      padding: 8px 16px;
+      font-size: 12.5px;
       font-weight: 700;
       color: #6C5D55;
       cursor: pointer;
-      display: flex;
+      white-space: nowrap;
+      display: inline-flex;
       align-items: center;
-      justify-content: center;
       gap: 6px;
       transition: all 0.15s ease;
-      width: 100%;
-      box-sizing: border-box;
-      text-align: center;
     }
 
     .acc-tab-chip:hover {
       background: #F5EADB;
       color: #281612;
-      border-color: #281612;
     }
 
     .acc-tab-chip.active {
       background: #281612;
       color: #FFFFFF;
       border-color: #281612;
-      box-shadow: 0 4px 14px rgba(40, 22, 18, 0.2);
+      box-shadow: 0 4px 12px rgba(40, 22, 18, 0.2);
     }
 
     /* Content Cards Group */
