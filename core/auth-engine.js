@@ -429,7 +429,7 @@
     },
 
     /**
-     * Wishlist API
+     * Wishlist API (Non-blocking, no login popup)
      */
     getWishlist() {
       try {
@@ -444,10 +444,6 @@
     },
 
     toggleWishlist(productId) {
-      if (!this.isAuthenticated()) {
-        this.showWishlistModal(productId);
-        return { isAuthRequired: true };
-      }
       const list = this.getWishlist();
       const idx = list.indexOf(productId);
       let added = false;
@@ -459,7 +455,7 @@
       }
       localStorage.setItem(STORAGE_KEYS.WISHLIST, JSON.stringify(list));
       if (window.showToast) {
-        window.showToast(added ? 'Added to Saved Items ❤️' : 'Removed from Saved Items');
+        window.showToast(added ? 'Saved to Wishlist ❤️' : 'Removed from Wishlist');
       }
       return { success: true, added, list };
     },
@@ -502,7 +498,7 @@
     },
 
     /**
-     * Global Auth Modal Dialogs
+     * Global Auth Modal Dialogs (Buy Now Login & Logout)
      */
     injectGlobalModals() {
       if (window.location.pathname.endsWith('login.html') || window.location.href.includes('login.html')) return;
@@ -511,23 +507,23 @@
       const modalRoot = document.createElement('div');
       modalRoot.id = 'en-global-auth-modal-root';
       modalRoot.innerHTML = `
-        <!-- Wishlist / Save for Later Modal -->
-        <div id="en-wishlist-modal" class="en-auth-modal-overlay" onclick="AuthEngine.closeAuthModal(event)">
+        <!-- Buy Now Login Modal -->
+        <div id="en-buynow-modal" class="en-auth-modal-overlay" onclick="AuthEngine.closeAuthModal(event)">
           <div class="en-auth-modal-sheet" onclick="event.stopPropagation()">
             <button class="en-modal-close-btn" onclick="AuthEngine.closeAuthModal()"><i class="ri-close-line"></i></button>
             <div class="en-modal-icon-header">
-              <div class="en-modal-heart-avatar">
-                <i class="ri-heart-3-fill"></i>
+              <div class="en-modal-heart-avatar" style="background: #EAF3E6; color: #386618;">
+                <i class="ri-shopping-bag-3-fill"></i>
               </div>
             </div>
-            <h3 class="en-modal-heading">Save this for later?</h3>
-            <p class="en-modal-body-text">Sign in to save products to your favourites, sync across your devices, and enjoy a faster checkout.</p>
+            <h3 class="en-modal-heading">Sign In to Continue</h3>
+            <p class="en-modal-body-text">Sign in to confirm your delivery address and complete your order smoothly.</p>
             <div class="en-modal-actions-col">
-              <button class="btn-en-auth-primary" id="en-wishlist-signin-btn">
-                <span>Sign In / Create Account</span>
+              <button class="btn-en-auth-primary" id="en-buynow-signin-btn">
+                <span>Sign In / Sign Up with Email</span>
                 <i class="ri-arrow-right-line"></i>
               </button>
-              <button class="btn-en-auth-subtle" onclick="AuthEngine.closeAuthModal()">Maybe Later</button>
+              <button class="btn-en-auth-subtle" id="en-buynow-guest-btn">Continue as Guest</button>
             </div>
           </div>
         </div>
@@ -542,7 +538,7 @@
               </div>
             </div>
             <h3 class="en-modal-heading">Log out of your account?</h3>
-            <p class="en-modal-body-text">You will need to sign in again to access your saved addresses, past orders, and wishlist.</p>
+            <p class="en-modal-body-text">You will need to sign in again to access your saved addresses, past orders, and profile.</p>
             <div class="en-modal-actions-col">
               <button class="btn-en-auth-danger" id="en-confirm-logout-btn">Log Out</button>
               <button class="btn-en-auth-subtle" onclick="AuthEngine.closeAuthModal()">Cancel</button>
@@ -553,20 +549,42 @@
       document.body.appendChild(modalRoot);
     },
 
-    showWishlistModal(productId, redirectUrl) {
-      const modal = document.getElementById('en-wishlist-modal');
+    showBuyNowModal(productId, onGuestProceed) {
+      if (this.isAuthenticated()) {
+        if (onGuestProceed) onGuestProceed();
+        return;
+      }
+
+      this.injectGlobalModals();
+      const modal = document.getElementById('en-buynow-modal');
       if (!modal) return;
-      const targetUrl = redirectUrl || window.location.href;
-      const btn = document.getElementById('en-wishlist-signin-btn');
-      if (btn) {
-        btn.onclick = () => {
-          window.location.href = `login.html?redirect=${encodeURIComponent(targetUrl)}&wishlist=${productId || ''}`;
+
+      const signinBtn = document.getElementById('en-buynow-signin-btn');
+      const guestBtn = document.getElementById('en-buynow-guest-btn');
+
+      if (signinBtn) {
+        signinBtn.onclick = () => {
+          window.location.href = `login.html?redirect=checkout.html`;
         };
       }
+
+      if (guestBtn) {
+        guestBtn.onclick = () => {
+          AuthEngine.closeAuthModal();
+          if (onGuestProceed) onGuestProceed();
+          else window.location.href = 'checkout.html';
+        };
+      }
+
       modal.classList.add('open');
     },
 
+    showWishlistModal(productId, redirectUrl) {
+      // Non-blocking, no-op
+    },
+
     showLogoutConfirm(onConfirm) {
+      this.injectGlobalModals();
       const modal = document.getElementById('en-logout-modal');
       if (!modal) return;
       const btn = document.getElementById('en-confirm-logout-btn');

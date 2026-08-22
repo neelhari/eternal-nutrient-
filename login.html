@@ -25,9 +25,9 @@
     <div class="plantland-phone-frame">
       
       <!-- =========================================================================
-           VIEW 1: LOGIN (EXACT REFERENCE DESIGN)
+           UNIFIED LOGIN & SIGN UP CARD (WITH DUAL SIDE-BY-SIDE HEADER)
            ========================================================================= -->
-      <div id="screen-login" class="auth-screen-tab active">
+      <div id="screen-main" class="auth-screen-tab active">
         
         <!-- Top Green Visual Zone -->
         <div class="auth-top-visual-zone">
@@ -51,140 +51,102 @@
 
         <!-- Curved White Bottom Sheet -->
         <div class="auth-bottom-sheet-card">
-          <h2 class="auth-sheet-title">Login</h2>
-
-          <form id="form-login" onsubmit="handleLogin(event)">
-            <div class="plantland-form-group">
-              
-              <!-- Email -->
-              <div>
-                <div class="plantland-input-pill-wrap">
-                  <i class="ri-mail-line plantland-input-icon"></i>
-                  <input type="email" id="login-ident" class="plantland-input-pill" placeholder="Email" required autocomplete="email">
-                </div>
-                <div id="login-ident-err" class="plantland-error-tip">Please enter a valid email.</div>
-              </div>
-
-              <!-- Password -->
-              <div>
-                <div class="plantland-input-pill-wrap">
-                  <i class="ri-lock-line plantland-input-icon"></i>
-                  <input type="password" id="login-pass" class="plantland-input-pill" placeholder="Password" required autocomplete="current-password">
-                  <button type="button" class="plantland-pass-toggle" onclick="togglePass('login-pass', this)" aria-label="Toggle password">
-                    <i class="ri-eye-line"></i>
-                  </button>
-                </div>
-                <div id="login-pass-err" class="plantland-error-tip">Incorrect password.</div>
-              </div>
-
-            </div>
-
-            <!-- Forgot Password Link -->
-            <div class="plantland-forgot-row">
-              <a href="javascript:void(0)" class="plantland-forgot-link" onclick="switchScreen('forgot')">Forgot Password</a>
-            </div>
-
-            <!-- Primary Login Button -->
-            <button type="submit" id="btn-login-submit" class="btn-plantland-submit">
-              <span>Login</span>
-            </button>
-
-            <!-- Divider -->
-            <div class="plantland-or-divider">Or login with</div>
-
-            <!-- Social / Quick 1-Click Icons -->
-            <div class="plantland-social-row">
-              <button type="button" class="plantland-social-btn facebook" onclick="quickDemoLogin('Facebook')" aria-label="Facebook">
-                <i class="ri-facebook-fill"></i>
-              </button>
-              <button type="button" class="plantland-social-btn google" onclick="quickDemoLogin('Google')" aria-label="Google">
-                <i class="ri-google-fill"></i>
-              </button>
-              <button type="button" class="plantland-social-btn apple" onclick="quickDemoLogin('Apple')" aria-label="Apple">
-                <i class="ri-apple-fill"></i>
-              </button>
-            </div>
-
-            <!-- Bottom Switch Link -->
-            <div class="plantland-foot-switch">
-              Don't have account? <a href="javascript:void(0)" onclick="switchScreen('signup')">Sign Up</a>
-            </div>
-          </form>
-        </div>
-
-      </div>
-
-
-      <!-- =========================================================================
-           VIEW 2: SIGN UP (EXACT REFERENCE DESIGN - EMAIL ONLY)
-           ========================================================================= -->
-      <div id="screen-signup" class="auth-screen-tab">
-        
-        <!-- Top Green Visual Zone -->
-        <div class="auth-top-visual-zone" style="min-height: 170px;">
-          <div class="auth-leaf-deco-left"></div>
-
-          <!-- Top Back Link -->
-          <div class="auth-top-nav-row">
-            <button type="button" class="auth-back-link-pill" onclick="switchScreen('login')">
-              <i class="ri-arrow-left-line"></i>
-              <span>Back to login</span>
-            </button>
+          
+          <!-- Side-by-Side Dual Header Divided by Perpendicular Line -->
+          <div class="auth-dual-header-tabs">
+            <button type="button" id="tab-btn-login" class="auth-dual-tab-btn active" onclick="switchAuthMode('login')">Login</button>
+            <span class="auth-dual-tab-pipe">|</span>
+            <button type="button" id="tab-btn-signup" class="auth-dual-tab-btn" onclick="switchAuthMode('signup')">Sign Up</button>
           </div>
 
-          <h1 class="auth-hero-greeting" style="font-size: 30px;">Create Account</h1>
-          <p class="auth-hero-subtext">Join Eternal Nutricare today</p>
-        </div>
-
-        <!-- Curved White Bottom Sheet -->
-        <div class="auth-bottom-sheet-card">
-          <h2 class="auth-sheet-title">Sign Up</h2>
-
-          <form id="form-signup" onsubmit="handleSignUp(event)">
-            <div class="plantland-form-group">
-              
-              <!-- Email -->
-              <div>
-                <div class="plantland-input-pill-wrap">
-                  <i class="ri-mail-line plantland-input-icon"></i>
-                  <input type="email" id="reg-email" class="plantland-input-pill" placeholder="Email" required autocomplete="email">
+          <!-- 1. LOGIN FIELDS BLOCK -->
+          <div id="fields-login" class="auth-fields-block active">
+            <form id="form-login" onsubmit="handleLogin(event)">
+              <div class="plantland-form-group">
+                <!-- Email -->
+                <div>
+                  <div class="plantland-input-pill-wrap">
+                    <i class="ri-mail-line plantland-input-icon"></i>
+                    <input type="email" id="login-ident" class="plantland-input-pill" placeholder="Email" required autocomplete="email">
+                  </div>
+                  <div id="login-ident-err" class="plantland-error-tip">Please enter a valid email.</div>
                 </div>
-                <div id="reg-email-err" class="plantland-error-tip">Please enter a valid email.</div>
+
+                <!-- Password -->
+                <div>
+                  <div class="plantland-input-pill-wrap">
+                    <i class="ri-lock-line plantland-input-icon"></i>
+                    <input type="password" id="login-pass" class="plantland-input-pill" placeholder="Password" required autocomplete="current-password">
+                    <button type="button" class="plantland-pass-toggle" onclick="togglePass('login-pass', this)" aria-label="Toggle password">
+                      <i class="ri-eye-line"></i>
+                    </button>
+                  </div>
+                  <div id="login-pass-err" class="plantland-error-tip">Incorrect password.</div>
+                </div>
               </div>
 
-              <!-- Password -->
-              <div>
-                <div class="plantland-input-pill-wrap">
-                  <i class="ri-lock-line plantland-input-icon"></i>
-                  <input type="password" id="reg-pass" class="plantland-input-pill" placeholder="Password" required minlength="6" autocomplete="new-password">
-                  <button type="button" class="plantland-pass-toggle" onclick="togglePass('reg-pass', this)" aria-label="Toggle password">
-                    <i class="ri-eye-line"></i>
-                  </button>
-                </div>
-                <div id="reg-pass-err" class="plantland-error-tip">Must be at least 6 characters.</div>
+              <!-- Forgot Password Link -->
+              <div class="plantland-forgot-row">
+                <a href="javascript:void(0)" class="plantland-forgot-link" onclick="switchScreen('forgot')">Forgot Password</a>
               </div>
 
-              <!-- Confirm Password -->
-              <div>
-                <div class="plantland-input-pill-wrap">
-                  <i class="ri-lock-check-line plantland-input-icon"></i>
-                  <input type="password" id="reg-pass-confirm" class="plantland-input-pill" placeholder="Confirm Password" required minlength="6" autocomplete="new-password">
+              <!-- Primary Login Button -->
+              <button type="submit" id="btn-login-submit" class="btn-plantland-submit">
+                <span>Login</span>
+              </button>
+
+              <div class="plantland-foot-switch" style="margin-top: 24px;">
+                Don't have account? <a href="javascript:void(0)" onclick="switchAuthMode('signup')">Sign Up</a>
+              </div>
+            </form>
+          </div>
+
+          <!-- 2. SIGN UP FIELDS BLOCK (In-Place Toggle) -->
+          <div id="fields-signup" class="auth-fields-block">
+            <form id="form-signup" onsubmit="handleSignUp(event)">
+              <div class="plantland-form-group">
+                <!-- Email -->
+                <div>
+                  <div class="plantland-input-pill-wrap">
+                    <i class="ri-mail-line plantland-input-icon"></i>
+                    <input type="email" id="reg-email" class="plantland-input-pill" placeholder="Email" required autocomplete="email">
+                  </div>
+                  <div id="reg-email-err" class="plantland-error-tip">Please enter a valid email.</div>
                 </div>
-                <div id="reg-pass-confirm-err" class="plantland-error-tip">Passwords do not match.</div>
+
+                <!-- Password -->
+                <div>
+                  <div class="plantland-input-pill-wrap">
+                    <i class="ri-lock-line plantland-input-icon"></i>
+                    <input type="password" id="reg-pass" class="plantland-input-pill" placeholder="Password" required minlength="6" autocomplete="new-password">
+                    <button type="button" class="plantland-pass-toggle" onclick="togglePass('reg-pass', this)" aria-label="Toggle password">
+                      <i class="ri-eye-line"></i>
+                    </button>
+                  </div>
+                  <div id="reg-pass-err" class="plantland-error-tip">Must be at least 6 characters.</div>
+                </div>
+
+                <!-- Confirm Password -->
+                <div>
+                  <div class="plantland-input-pill-wrap">
+                    <i class="ri-lock-check-line plantland-input-icon"></i>
+                    <input type="password" id="reg-pass-confirm" class="plantland-input-pill" placeholder="Confirm Password" required minlength="6" autocomplete="new-password">
+                  </div>
+                  <div id="reg-pass-confirm-err" class="plantland-error-tip">Passwords do not match.</div>
+                </div>
               </div>
 
-            </div>
+              <!-- Primary Sign Up Button -->
+              <button type="submit" id="btn-signup-submit" class="btn-plantland-submit">
+                <span>Sign Up</span>
+              </button>
 
-            <!-- Primary Sign Up Button -->
-            <button type="submit" id="btn-signup-submit" class="btn-plantland-submit">
-              <span>Sign Up</span>
-            </button>
+              <div class="plantland-foot-switch" style="margin-top: 24px;">
+                Already have an account? <a href="javascript:void(0)" onclick="switchAuthMode('login')">Login</a>
+              </div>
+            </form>
+          </div>
 
-            <!-- Bottom Switch Link -->
-            <div class="plantland-foot-switch" style="margin-top: 18px;">
-              Already have an account? <a href="javascript:void(0)" onclick="switchScreen('login')">Login</a>
-            </div>
-          </form>
         </div>
 
       </div>
@@ -261,6 +223,28 @@
       document.querySelectorAll('.auth-screen-tab').forEach(s => s.classList.remove('active'));
       const target = document.getElementById(`screen-${screenName}`);
       if (target) target.classList.add('active');
+    }
+
+    function switchAuthMode(mode) {
+      clearErrors();
+      switchScreen('main');
+
+      const loginTab = document.getElementById('tab-btn-login');
+      const signupTab = document.getElementById('tab-btn-signup');
+      const loginFields = document.getElementById('fields-login');
+      const signupFields = document.getElementById('fields-signup');
+
+      if (mode === 'signup') {
+        loginTab.classList.remove('active');
+        signupTab.classList.add('active');
+        loginFields.classList.remove('active');
+        signupFields.classList.add('active');
+      } else {
+        signupTab.classList.remove('active');
+        loginTab.classList.add('active');
+        signupFields.classList.remove('active');
+        loginFields.classList.add('active');
+      }
     }
 
     function togglePass(inputId, btn) {
@@ -345,27 +329,13 @@
       }
     }
 
-    function quickDemoLogin(provider) {
-      AuthEngine.setCurrentUser({
-        id: 'usr_sample_8842',
-        fullName: 'Anita Sharma',
-        email: 'anita.sharma@example.com',
-        phone: '+91 98765 43210',
-        memberTier: 'Gold Member',
-        memberSince: 'Member 2025',
-        avatarInitials: 'AS'
-      });
-      showToast(`Signed in via ${provider} as Anita Sharma!`);
-      setTimeout(redirectSuccess, 600);
-    }
-
     async function handleForgot(e) {
       e.preventDefault();
       const ident = document.getElementById('forgot-ident').value;
       const res = await AuthEngine.forgotPassword(ident);
       if (res.success) {
         showToast(res.message);
-        setTimeout(() => switchScreen('login'), 1200);
+        setTimeout(() => switchAuthMode('login'), 1200);
       }
     }
 
@@ -389,7 +359,7 @@
       const params = new URLSearchParams(window.location.search);
       const mode = params.get('mode');
       if (mode === 'signup') {
-        switchScreen('signup');
+        switchAuthMode('signup');
       } else if (mode === 'forgot') {
         switchScreen('forgot');
       }

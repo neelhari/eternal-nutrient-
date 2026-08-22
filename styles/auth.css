@@ -258,6 +258,47 @@ body.plantland-auth-body {
   letter-spacing: -0.3px;
 }
 
+/* Dual Header Tabs Side-by-Side Divided by Vertical Pipe Line */
+.auth-dual-header-tabs {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 22px;
+}
+
+.auth-dual-tab-btn {
+  background: none;
+  border: none;
+  font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+  font-size: 24px;
+  font-weight: 800;
+  color: #9AAFA0;
+  cursor: pointer;
+  padding: 0;
+  line-height: 1;
+  transition: all 0.2s ease;
+}
+
+.auth-dual-tab-btn.active {
+  color: var(--auth-bg-green);
+  transform: scale(1.03);
+}
+
+.auth-dual-tab-pipe {
+  font-size: 22px;
+  font-weight: 300;
+  color: #CBD8CE;
+  user-select: none;
+}
+
+.auth-fields-block {
+  display: none;
+}
+
+.auth-fields-block.active {
+  display: block;
+}
+
 /* --------------------------------------------------------------------------
    3. Pill Shaped Form Inputs
    -------------------------------------------------------------------------- */
