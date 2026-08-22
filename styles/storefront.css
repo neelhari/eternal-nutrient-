@@ -417,11 +417,27 @@ body {
 .category-row-container {
   display: flex;
   align-items: flex-start;
-  justify-content: space-between;
-  gap: 10px;
+  justify-content: flex-start;
+  gap: 14px;
   overflow-x: auto;
-  padding-bottom: 4px;
+  overflow-y: hidden;
+  padding: 4px 16px 12px;
+  margin-left: -16px;
+  margin-right: -16px;
   scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+  scroll-snap-type: x mandatory;
+  box-sizing: border-box;
+}
+
+@media (min-width: 900px) {
+  .category-row-container {
+    justify-content: space-between;
+    padding: 4px 0 12px;
+    margin-left: 0;
+    margin-right: 0;
+    gap: 16px;
+  }
 }
 
 .category-row-container::-webkit-scrollbar {
@@ -434,30 +450,40 @@ body {
   align-items: center;
   text-decoration: none;
   cursor: pointer;
-  transition: all 0.2s ease;
-  flex: 1;
-  min-width: 68px;
-  max-width: 82px;
+  flex: 0 0 72px;
+  width: 72px;
+  scroll-snap-align: start;
+  box-sizing: border-box;
+  transform: none !important;
+  transition: transform 0.15s ease;
+}
+
+.cat-circle-card:hover {
+  transform: translateY(-2px) !important;
 }
 
 .cat-circle-frame {
-  width: 68px;
-  height: 68px;
+  width: 64px;
+  height: 64px;
   border-radius: 50%;
   overflow: hidden;
   background: #FDFBF7;
   border: 1.5px solid #F0ECE1;
-  box-shadow: 0 3px 10px rgba(56, 36, 15, 0.06);
+  box-shadow: 0 2px 8px rgba(56, 36, 15, 0.06);
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: all 0.2s ease;
+  flex-shrink: 0;
 }
 
 @media (min-width: 600px) {
   .cat-circle-frame {
-    width: 78px;
-    height: 78px;
+    width: 76px;
+    height: 76px;
+  }
+  .cat-circle-card {
+    flex: 0 0 84px;
+    width: 84px;
   }
 }
 
@@ -469,18 +495,19 @@ body {
 }
 
 .cat-circle-title {
-  font-size: 12px;
+  font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+  font-size: 11px;
   font-weight: 700;
   color: #1E2519;
   text-align: center;
   margin-top: 6px;
   line-height: 1.2;
-}
-
-@media (max-width: 768px) {
-  .cat-circle-title {
-    font-size: 11px;
-  }
+  height: 26px;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  word-break: break-word;
+  overflow: hidden;
 }
 
 /* ==========================================================================
