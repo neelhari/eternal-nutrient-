@@ -39,116 +39,112 @@
     </div>
   </header>
 
-  <!-- Zepto-Style Split Viewport -->
-  <div class="zepto-split-viewport">
+  <!-- Unified Main Container (Banner First ➔ Horizontal Categories ➔ Product Grid) -->
+  <main class="categories-unified-page">
     
-    <!-- 1. Left Sidebar Rail (Compact Zepto Style) -->
-    <aside class="zepto-sidebar-rail" id="categories-sidebar-nav">
+    <!-- 1. Festive Specials Showcase Banner (Top) -->
+    <div class="festive-showcase-banner">
+      <div class="festive-banner-head">
+        <div class="festive-head-text">
+          <span class="festive-eyebrow">✨ Pure Organic Celebrations</span>
+          <div class="festive-main-title">Rakhi & Festive Specials</div>
+        </div>
+        <div class="festive-badge-chip">
+          <i class="ri-sparkling-fill" style="color: #E2C095;"></i>
+          <span>Curated</span>
+        </div>
+      </div>
+
+      <div class="festive-spotlight-cards-row">
+        <!-- Card 1: Rakhi Specials (Dates Laddus) -->
+        <div class="festive-mini-card" onclick="selectCategory('Dates Laddu\'s')">
+          <div class="festive-mini-thumb">
+            <img src="assets/prod_laddu_studio.jpg" alt="Dates Laddus">
+          </div>
+          <div class="festive-mini-title">Rakhi Specials</div>
+          <div class="festive-mini-sub">Dates Laddus</div>
+        </div>
+
+        <!-- Card 2: Raw Honey -->
+        <div class="festive-mini-card" onclick="selectCategory('Honey')">
+          <div class="festive-mini-thumb">
+            <img src="assets/prod_honey_studio.jpg" alt="Raw Forest Honey">
+          </div>
+          <div class="festive-mini-title">Forest Pure</div>
+          <div class="festive-mini-sub">Raw Honey</div>
+        </div>
+
+        <!-- Card 3: Healthy Cookies & Snacks -->
+        <div class="festive-mini-card" onclick="selectCategory('Millet Biscuits')">
+          <div class="festive-mini-thumb">
+            <img src="assets/prod_cookie_studio.jpg" alt="Millet Cookies">
+          </div>
+          <div class="festive-mini-title">Immunity Bites</div>
+          <div class="festive-mini-sub">Millet Cookies</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 2. Horizontal Scrolling Categories Strip (Middle) -->
+    <div class="cat-horizontal-scroll-bar" id="categories-nav-strip">
       
-      <div class="zepto-cat-tab active" onclick="selectCategory('All', this)">
-        <div class="zepto-tab-avatar">
+      <div class="cat-chip-tab active" onclick="selectCategory('All', this)">
+        <div class="cat-chip-avatar">
           <img src="https://images.unsplash.com/photo-1542838132-92c53300491e?w=150&auto=format&fit=crop&q=80" alt="All">
         </div>
-        <span class="zepto-tab-name">All</span>
+        <span class="cat-chip-name">All</span>
       </div>
 
-      <div class="zepto-cat-tab" onclick="selectCategory('Honey', this)">
-        <div class="zepto-tab-avatar">
-          <img src="https://images.unsplash.com/photo-1587049352846-4a222e784d38?w=150&auto=format&fit=crop&q=80" alt="Honey">
+      <div class="cat-chip-tab" onclick="selectCategory('Honey', this)">
+        <div class="cat-chip-avatar">
+          <img src="assets/prod_honey_studio.jpg" alt="Honey">
         </div>
-        <span class="zepto-tab-name">Honey</span>
+        <span class="cat-chip-name">Honey</span>
       </div>
 
-      <div class="zepto-cat-tab" onclick="selectCategory('Pickles', this)">
-        <div class="zepto-tab-avatar">
-          <img src="https://images.unsplash.com/photo-1599488615731-7e5c2823ff28?w=150&auto=format&fit=crop&q=80" alt="Pickles">
+      <div class="cat-chip-tab" onclick="selectCategory('Pickles', this)">
+        <div class="cat-chip-avatar">
+          <img src="assets/prod_pickle_studio.jpg" alt="Pickles">
         </div>
-        <span class="zepto-tab-name">Pickles</span>
+        <span class="cat-chip-name">Pickles</span>
       </div>
 
-      <div class="zepto-cat-tab" onclick="selectCategory('Millet Biscuits', this)">
-        <div class="zepto-tab-avatar">
-          <img src="https://images.unsplash.com/photo-1558961363-fa8fdf82db35?w=150&auto=format&fit=crop&q=80" alt="Millet Biscuits">
+      <div class="cat-chip-tab" onclick="selectCategory('Millet Biscuits', this)">
+        <div class="cat-chip-avatar">
+          <img src="assets/prod_cookie_studio.jpg" alt="Millet Biscuits">
         </div>
-        <span class="zepto-tab-name">Biscuits</span>
+        <span class="cat-chip-name">Biscuits</span>
       </div>
 
-      <div class="zepto-cat-tab" onclick="selectCategory('Dates Laddu\'s', this)">
-        <div class="zepto-tab-avatar">
-          <img src="assets/dates_laddu.jpg" alt="Dates Laddu's">
+      <div class="cat-chip-tab" onclick="selectCategory('Dates Laddu\'s', this)">
+        <div class="cat-chip-avatar">
+          <img src="assets/prod_laddu_studio.jpg" alt="Dates Laddu's">
         </div>
-        <span class="zepto-tab-name">Laddus</span>
+        <span class="cat-chip-name">Laddus</span>
       </div>
 
-      <div class="zepto-cat-tab" onclick="selectCategory('Moringa Chikki', this)">
-        <div class="zepto-tab-avatar">
-          <img src="https://images.unsplash.com/photo-1590080875515-8a3a8dc5735e?w=150&auto=format&fit=crop&q=80" alt="Moringa Chikki">
+      <div class="cat-chip-tab" onclick="selectCategory('Moringa Chikki', this)">
+        <div class="cat-chip-avatar">
+          <img src="assets/prod_chikki_studio.jpg" alt="Moringa Chikki">
         </div>
-        <span class="zepto-tab-name">Chikki</span>
+        <span class="cat-chip-name">Chikki</span>
       </div>
 
-      <div class="zepto-cat-tab" onclick="selectCategory('Millet Rava', this)">
-        <div class="zepto-tab-avatar">
-          <img src="https://images.unsplash.com/photo-1586201375761-83865001e31c?w=150&auto=format&fit=crop&q=80" alt="Millet Rava">
+      <div class="cat-chip-tab" onclick="selectCategory('Millet Rava', this)">
+        <div class="cat-chip-avatar">
+          <img src="assets/prod_rava_studio.jpg" alt="Millet Rava">
         </div>
-        <span class="zepto-tab-name">Rava</span>
+        <span class="cat-chip-name">Rava</span>
       </div>
 
-    </aside>
+    </div>
 
-    <!-- 2. Right Products Catalog Area -->
-    <main class="zepto-content-area">
-      
-      <!-- Premium Dark Brown Festive / Rakhi Specials Banner (Onam Style Showcase) -->
-      <div class="festive-showcase-banner">
-        <div class="festive-banner-head">
-          <div class="festive-head-text">
-            <span class="festive-eyebrow">✨ Pure Organic Celebrations</span>
-            <div class="festive-main-title">Rakhi & Festive Specials</div>
-          </div>
-          <div class="festive-badge-chip">
-            <i class="ri-sparkling-fill" style="color: #E2C095;"></i>
-            <span>Curated</span>
-          </div>
-        </div>
+    <!-- 3. Zepto 2-Column Product Grid (Bottom) -->
+    <div class="zepto-products-grid" id="zepto-products-grid">
+      <!-- Rendered dynamically -->
+    </div>
 
-        <div class="festive-spotlight-cards-row">
-          <!-- Card 1: Rakhi Specials (Dates Laddus) -->
-          <div class="festive-mini-card" onclick="selectCategory('Dates Laddu\'s')">
-            <div class="festive-mini-thumb">
-              <img src="assets/dates_laddu.jpg" alt="Dates Laddus">
-            </div>
-            <div class="festive-mini-title">Rakhi Specials</div>
-            <div class="festive-mini-sub">Dates Laddus</div>
-          </div>
-
-          <!-- Card 2: Raw Honey -->
-          <div class="festive-mini-card" onclick="selectCategory('Honey')">
-            <div class="festive-mini-thumb">
-              <img src="assets/showcase_honey.png" alt="Raw Forest Honey">
-            </div>
-            <div class="festive-mini-title">Forest Pure</div>
-            <div class="festive-mini-sub">Raw Honey</div>
-          </div>
-
-          <!-- Card 3: Healthy Cookies & Snacks -->
-          <div class="festive-mini-card" onclick="selectCategory('Millet Biscuits')">
-            <div class="festive-mini-thumb">
-              <img src="https://images.unsplash.com/photo-1558961363-fa8fdf82db35?w=200&auto=format&fit=crop&q=80" alt="Millet Cookies">
-            </div>
-            <div class="festive-mini-title">Immunity Bites</div>
-            <div class="festive-mini-sub">Millet Cookies</div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Zepto 2-Column Product Grid (Strict Uniform Sizing) -->
-      <div class="zepto-products-grid" id="zepto-products-grid">
-        <!-- Rendered dynamically -->
-      </div>
-    </main>
-
-  </div>
+  </main>
 
   <!-- Zepto Floating Bottom Cart Bar -->
   <div class="zepto-floating-cart-bar" id="zepto-floating-bar" onclick="openCartDrawer()">
@@ -254,9 +250,9 @@
 
     function selectCategory(catName, el) {
       activeCategory = catName;
-      document.querySelectorAll('.zepto-cat-tab').forEach(i => {
+      document.querySelectorAll('.cat-chip-tab').forEach(i => {
         i.classList.remove('active');
-        const nameEl = i.querySelector('.zepto-tab-name');
+        const nameEl = i.querySelector('.cat-chip-name');
         if (nameEl) {
           const txt = nameEl.textContent.trim().toLowerCase();
           if (catName.toLowerCase().includes(txt) || txt.includes(catName.toLowerCase())) {

@@ -11,26 +11,30 @@
 
 body {
   font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
-  background-color: #FFFFFF;
+  background-color: #FAFBF9;
   color: #1E2519;
   line-height: 1.3;
-  height: 100vh;
+  min-height: 100vh;
   display: flex;
   flex-direction: column;
-  overflow: hidden;
+  overflow-x: hidden;
+  overflow-y: auto;
 }
 
 /* Header */
 .zepto-top-nav {
+  position: sticky;
+  top: 0;
   background: #FFFFFF;
   border-bottom: 1px solid #F0F2EC;
-  padding: 10px 16px;
+  padding: 12px 16px;
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 12px;
   flex-shrink: 0;
-  z-index: 50;
+  z-index: 100;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.02);
 }
 
 .zepto-header-left {
@@ -73,110 +77,221 @@ body {
   cursor: pointer;
 }
 
-/* Split Main Container */
-.zepto-split-viewport {
-  flex: 1;
-  display: flex;
-  overflow: hidden;
-  max-width: 1240px;
+/* Unified Main Container */
+.categories-unified-page {
   width: 100%;
+  max-width: 800px;
   margin: 0 auto;
-}
-
-/* Left Sidebar (Compact Zepto Style ~68px) */
-.zepto-sidebar-rail {
-  width: 70px;
-  background: #F8FAF6;
-  border-right: 1px solid #EAEFE6;
-  overflow-y: auto;
-  flex-shrink: 0;
+  padding: 12px 14px 110px;
   display: flex;
   flex-direction: column;
+  box-sizing: border-box;
+}
+
+/* 1. Festive Showcase Banner (Top) */
+.festive-showcase-banner {
+  background: linear-gradient(135deg, #2D1A15 0%, #1A0D0A 100%);
+  border-radius: 18px;
+  padding: 14px 14px 16px;
+  margin-bottom: 14px;
+  color: #FFFFFF;
+  box-shadow: 0 6px 20px rgba(45, 26, 21, 0.15);
+  border: 1px solid rgba(226, 192, 149, 0.2);
+  width: 100%;
+}
+
+.festive-banner-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+.festive-eyebrow {
+  font-size: 10.5px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+  color: #E2C095;
+  display: block;
+  margin-bottom: 2px;
+}
+
+.festive-main-title {
+  font-family: 'DM Serif Display', Georgia, serif;
+  font-size: 17px;
+  font-weight: 700;
+  color: #FFFFFF;
+  line-height: 1.2;
+}
+
+.festive-badge-chip {
+  background: rgba(226, 192, 149, 0.15);
+  border: 1px solid rgba(226, 192, 149, 0.35);
+  border-radius: 999px;
+  padding: 3px 10px;
+  font-size: 10px;
+  font-weight: 700;
+  color: #F8ECD9;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.festive-spotlight-cards-row {
+  display: flex;
+  gap: 10px;
+  overflow-x: auto;
+  padding-bottom: 4px;
   scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
 }
 
-@media (min-width: 768px) {
-  .zepto-sidebar-rail {
-    width: 200px;
-  }
-}
-
-.zepto-sidebar-rail::-webkit-scrollbar {
+.festive-spotlight-cards-row::-webkit-scrollbar {
   display: none;
 }
 
-.zepto-cat-tab {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 10px 4px;
-  cursor: pointer;
-  text-align: center;
-  border-left: 3px solid transparent;
-  transition: all 0.15s ease;
-  position: relative;
-  text-decoration: none;
-  gap: 3px;
-}
-
-@media (min-width: 768px) {
-  .zepto-cat-tab {
-    flex-direction: row;
-    padding: 12px 16px;
-    gap: 10px;
-    text-align: left;
-  }
-}
-
-.zepto-cat-tab.active {
-  background: #EFF7EA;
-  border-left-color: #4A7A25;
-}
-
-.zepto-tab-avatar {
-  width: 42px;
-  height: 42px;
+.festive-mini-card {
+  flex: 0 0 100px;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.12);
   border-radius: 12px;
-  overflow: hidden;
-  background: #FFFFFF;
-  border: 1px solid #E2EAD8;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
+  padding: 8px 6px 10px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  backdrop-filter: blur(4px);
 }
 
-.zepto-tab-avatar img {
+.festive-mini-card:hover {
+  background: rgba(255, 255, 255, 0.15);
+  transform: translateY(-2px);
+}
+
+.festive-mini-thumb {
+  width: 54px;
+  height: 54px;
+  border-radius: 50%;
+  overflow: hidden;
+  margin: 0 auto 6px;
+  border: 1.5px solid #E2C095;
+  background: #FFFFFF;
+}
+
+.festive-mini-thumb img {
   width: 100%;
   height: 100%;
   object-fit: cover;
 }
 
-.zepto-cat-tab.active .zepto-tab-avatar {
-  border-color: #4A7A25;
-}
-
-.zepto-tab-name {
-  font-size: 10px;
+.festive-mini-title {
+  font-size: 11px;
   font-weight: 700;
-  color: #55664F;
-  line-height: 1.15;
+  color: #FFFFFF;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
-@media (min-width: 768px) {
-  .zepto-tab-avatar {
-    width: 36px;
-    height: 36px;
-  }
-  .zepto-tab-name {
-    font-size: 13px;
-    color: #1E2519;
+.festive-mini-sub {
+  font-size: 9.5px;
+  color: #D8C7B8;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* 2. Horizontal Scrolling Categories Strip (Middle) */
+.cat-horizontal-scroll-bar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding: 4px 2px 14px;
+  margin-bottom: 6px;
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+  scroll-snap-type: x mandatory;
+}
+
+.cat-horizontal-scroll-bar::-webkit-scrollbar {
+  display: none;
+}
+
+.cat-chip-tab {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: #FFFFFF;
+  border: 1.5px solid #ECE7DF;
+  border-radius: 999px;
+  padding: 5px 14px 5px 6px;
+  cursor: pointer;
+  flex-shrink: 0;
+  scroll-snap-align: start;
+  box-shadow: 0 2px 6px rgba(40, 22, 18, 0.04);
+  transition: all 0.15s ease;
+  user-select: none;
+}
+
+.cat-chip-tab:hover {
+  border-color: #281612;
+  transform: translateY(-1px);
+}
+
+.cat-chip-tab.active {
+  background: #281612;
+  border-color: #281612;
+  box-shadow: 0 4px 12px rgba(40, 22, 18, 0.22);
+}
+
+.cat-chip-avatar {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  overflow: hidden;
+  background: #F8F5F0;
+  flex-shrink: 0;
+}
+
+.cat-chip-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.cat-chip-name {
+  font-size: 12px;
+  font-weight: 700;
+  color: #4A3E38;
+  white-space: nowrap;
+}
+
+.cat-chip-tab.active .cat-chip-name {
+  color: #FFFFFF;
+}
+
+/* 3. 2-Column Product Catalog Grid (Bottom) */
+.zepto-products-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+  width: 100%;
+}
+
+@media (min-width: 600px) {
+  .zepto-products-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 14px;
   }
 }
 
-.zepto-cat-tab.active .zepto-tab-name {
-  color: #386618;
-  font-weight: 800;
+@media (min-width: 800px) {
+  .zepto-products-grid {
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+  }
 }
 
 /* Right Content Area (Zepto Product Grid) */
