@@ -7,19 +7,21 @@ window.STORE_CONFIG = {
   // 1. Brand & Business Identity
   brandName: 'Eternal Nutricare',
   businessName: 'Eternal Sales',
-  ownerName: 'Siddaiah',
   tagline: 'Pure. Natural. Eternal.',
   description: 'Health conscious natural and organic food products directly sourced from nature.',
+  website: 'www.eternalnutricare.com',
 
   // 2. Contact & Official Communication
   primaryPhone: '+91 6302017482',
+  secondaryPhone: '+91 9392235693',
   whatsAppNumber: '916302017482', // Primary WhatsApp format for wa.me API
   secondaryWhatsApp: '919392235693',
   supportEmail: 'eternalncdm@gmail.com',
   
-  // 3. Registered Business Address & Tax
-  registeredAddress: 'Flat No. A1, Eco Greens Layout, Hegondanahalli, Gunjur, Bangalore - 560087',
+  // 3. Registered Business Address, Tax & Licensing
+  registeredAddress: '3g Crimson Layout, Channasandra, opp Krishnakuteer Phase 2, Bangalore East, Bangalore Urban, Karnataka - 560067',
   gstNumber: '29AIJPD5186H1ZZ',
+  fssaiNumber: '21226009001641',
 
   // 4. Currency & Shipping Rules
   currency: '₹',
