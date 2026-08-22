@@ -429,8 +429,8 @@ body {
 
 .category-grid-4x4 {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 16px 4px;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px 8px;
   justify-items: center;
   align-items: start;
   width: 100%;
@@ -438,15 +438,8 @@ body {
 
 @media (min-width: 600px) {
   .category-grid-4x4 {
-    grid-template-columns: repeat(4, 1fr);
-    gap: 18px 12px;
-  }
-}
-
-@media (min-width: 900px) {
-  .category-grid-4x4 {
-    grid-template-columns: repeat(8, 1fr);
-    gap: 20px 16px;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 20px 14px;
   }
 }
 
@@ -573,31 +566,8 @@ body {
   border-right: none;
 }
 
-/* Authentic watercolor pencil botanical branch sketch watermark in background */
 .editorial-curated-section::after {
-  content: '';
-  position: absolute;
-  top: 10px;
-  right: 16%;
-  width: 220px;
-  height: 220px;
-  background-image: url('../assets/botanical_branch.jpg');
-  background-repeat: no-repeat;
-  background-size: contain;
-  mix-blend-mode: multiply;
-  opacity: 0.32;
-  pointer-events: none;
-  z-index: 1;
-}
-
-@media (max-width: 768px) {
-  .editorial-curated-section::after {
-    top: 5px;
-    right: 20px;
-    width: 180px;
-    height: 180px;
-    opacity: 0.28;
-  }
+  display: none;
 }
 
 /* Rail Header (Title + Subtitle on Left, Pill Button on Right) */
