@@ -221,41 +221,54 @@ body {
   gap: 12px;
 }
 
-.minimal-cart-icon-btn {
+.minimal-cart-icon-btn,
+.minimal-wishlist-icon-btn {
   background: none;
   border: none;
-  color: #1E2519;
-  font-size: 24px;
+  color: #281612;
+  font-size: 23px;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 40px;
-  height: 40px;
+  width: 38px;
+  height: 38px;
   position: relative;
-  transition: transform 0.2s ease;
+  text-decoration: none;
+  transition: transform 0.2s ease, color 0.15s ease;
 }
 
-.minimal-cart-icon-btn:hover {
+.minimal-cart-icon-btn:hover,
+.minimal-wishlist-icon-btn:hover {
   transform: scale(1.08);
 }
 
-.minimal-cart-badge {
+.minimal-wishlist-icon-btn:hover {
+  color: #E11D48;
+}
+
+.minimal-cart-badge,
+.minimal-wishlist-badge {
   position: absolute;
-  top: 3px;
-  right: 2px;
+  top: 2px;
+  right: 1px;
   background: #553518;
   color: #FFFFFF;
-  font-size: 10.5px;
+  font-size: 10px;
   font-weight: 800;
-  width: 17px;
-  height: 17px;
+  min-width: 16px;
+  height: 16px;
+  padding: 0 3px;
   border-radius: 999px;
   display: flex;
   align-items: center;
   justify-content: center;
   border: 1.5px solid #FFFFFF;
   line-height: 1;
+}
+
+.minimal-wishlist-badge {
+  background: #E11D48;
 }
 
 @media (max-width: 768px) {

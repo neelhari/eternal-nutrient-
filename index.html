@@ -98,16 +98,15 @@
         </div>
       </div>
 
-      <!-- Right Minimalist Actions (Account + Cart) -->
-      <div class="header-actions-right" style="display: flex; align-items: center; gap: 12px;">
+      <!-- Right Minimalist Actions (Account + Wishlist) -->
+      <div class="header-actions-right" style="display: flex; align-items: center; gap: 10px;">
         <a href="account.html" class="auth-header-indicator" style="text-decoration: none; color: inherit; display: flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 700;">
           <i class="ri-user-3-line" style="font-size: 20px;"></i>
           <span class="header-auth-label">Sign In</span>
         </a>
-        <button class="minimal-cart-icon-btn" onclick="openCartDrawer()" aria-label="Shopping Cart">
-          <i class="ri-shopping-cart-2-line"></i>
-          <span class="minimal-cart-badge">2</span>
-        </button>
+        <a href="account.html" class="minimal-wishlist-icon-btn" aria-label="Saved Wishlist" title="Wishlist">
+          <i class="ri-heart-3-line"></i>
+        </a>
       </div>
 
     </header>
@@ -1013,7 +1012,7 @@
       dot.style.top = `${e.clientY - 9}px`;
       document.body.appendChild(dot);
 
-      const target = document.querySelector('.minimal-cart-icon-btn') || document.querySelector('.mobile-dock-btn[href="cart.html"]');
+      const target = document.querySelector('.mobile-dock-btn[href="cart.html"]') || document.querySelector('.minimal-wishlist-icon-btn');
       const targetRect = target ? target.getBoundingClientRect() : { left: window.innerWidth - 40, top: 20, width: 30, height: 30 };
 
       requestAnimationFrame(() => {
