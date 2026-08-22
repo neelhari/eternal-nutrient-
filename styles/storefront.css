@@ -875,14 +875,14 @@ body {
   transform: scale(0.95);
 }
 
-/* Green Variant for New Arrivals Add Button */
+/* Brand Brown for New Arrivals Add Button */
 .mockup-add-pill-btn.btn-green-theme {
-  background: #173814;
-  box-shadow: 0 2px 6px rgba(23, 56, 20, 0.2);
+  background: #281612;
+  box-shadow: 0 2px 6px rgba(40, 22, 18, 0.2);
 }
 
 .mockup-add-pill-btn.btn-green-theme:hover {
-  background: #23541E;
+  background: #3E241E;
 }
 
 /* Interactive Stepper inside Mockup Card */
@@ -1357,18 +1357,7 @@ body {
   .pillar-label { font-size: 9.5px; }
 }
 
-/* ==========================================================================
-   7. FOOTER
-   ========================================================================== */
-.site-footer {
-  background: #FFFFFF;
-  border-top: 1px solid #E5EDE0;
-  padding: 24px;
-  text-align: center;
-  color: #6C7E64;
-  font-size: 12.5px;
-  margin-top: auto;
-}
+/* Legacy Footer placeholder removed - see Section 7 below */
 
 /* ==========================================================================
    8. MOBILE BOTTOM DOCK (CLEAN 3 TABS: HOME, CATEGORIES, CART)
@@ -1647,15 +1636,17 @@ body {
 }
 
 /* ==========================================================================
-   7. LUXURY INTERACTIVE DEEP-FOREST FOOTER
+   7. LUXURY INTERACTIVE ESPRESSO BROWN FOOTER (STRICTLY LEFT ALIGNED)
    ========================================================================== */
 .site-footer {
-  background: #141C11;
-  color: #D3E0CC;
+  background: #1C0F0C;
+  color: #E6D7CD;
   padding: 44px 20px 100px;
-  border-top: 1px solid #23301E;
+  border-top: 1px solid #36221C;
   margin-top: 40px;
   width: 100%;
+  text-align: left;
+  box-sizing: border-box;
 }
 
 @media (min-width: 900px) {
@@ -1667,10 +1658,12 @@ body {
 .footer-top-brand-bar {
   display: flex;
   flex-direction: column;
+  align-items: flex-start;
   gap: 16px;
-  border-bottom: 1px solid #23301E;
+  border-bottom: 1px solid #36221C;
   padding-bottom: 28px;
   margin-bottom: 32px;
+  text-align: left;
 }
 
 @media (min-width: 768px) {
@@ -1685,6 +1678,7 @@ body {
   display: flex;
   align-items: center;
   gap: 12px;
+  text-align: left;
 }
 
 .footer-emblem-img {
@@ -1694,6 +1688,7 @@ body {
   background: #FFFFFF;
   border-radius: 50%;
   padding: 2px;
+  border: 1.5px solid #E2C095;
 }
 
 .footer-brand-title {
@@ -1702,33 +1697,14 @@ body {
   font-weight: 800;
   color: #FFFFFF;
   letter-spacing: 1px;
+  text-align: left;
 }
 
 .footer-brand-tagline {
   font-size: 11.5px;
-  color: #8CA880;
+  color: #CBB093;
   font-weight: 500;
-}
-
-.footer-wa-direct-btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  background: #25D366;
-  color: #FFFFFF;
-  text-decoration: none;
-  font-size: 13.5px;
-  font-weight: 700;
-  padding: 10px 18px;
-  border-radius: 999px;
-  box-shadow: 0 4px 14px rgba(37, 211, 102, 0.25);
-  transition: all 0.2s ease;
-  width: fit-content;
-}
-
-.footer-wa-direct-btn:hover {
-  background: #1EBE5D;
-  transform: translateY(-2px);
+  text-align: left;
 }
 
 .footer-main-grid {
@@ -1736,6 +1712,7 @@ body {
   grid-template-columns: 1fr;
   gap: 28px;
   margin-bottom: 36px;
+  text-align: left;
 }
 
 @media (min-width: 600px) {
@@ -1759,41 +1736,49 @@ body {
   letter-spacing: 0.5px;
   margin-bottom: 14px;
   text-transform: uppercase;
+  text-align: left;
 }
 
 .footer-desc-text {
   font-size: 13px;
   line-height: 1.6;
-  color: #A4B89D;
+  color: #C2B0A6;
   margin-bottom: 12px;
+  text-align: left;
 }
 
 .footer-gstin-chip {
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  background: rgba(74, 122, 37, 0.25);
-  border: 1px solid #3E5C27;
-  color: #A3E635;
+  background: rgba(226, 192, 149, 0.15);
+  border: 1px solid rgba(226, 192, 149, 0.35);
+  color: #E2C095;
   font-size: 11px;
   font-weight: 700;
   padding: 4px 10px;
   border-radius: 6px;
+  text-align: left;
 }
 
 .footer-links-list {
   list-style: none;
   display: flex;
   flex-direction: column;
+  align-items: flex-start;
   gap: 9px;
+  padding: 0;
+  margin: 0;
+  text-align: left;
 }
 
 .footer-link-item a {
-  color: #A4B89D;
+  color: #C2B0A6;
   text-decoration: none;
   font-size: 13px;
   transition: color 0.15s ease, padding-left 0.15s ease;
   display: inline-block;
+  text-align: left;
 }
 
 .footer-link-item a:hover {
@@ -1806,41 +1791,46 @@ body {
   align-items: flex-start;
   gap: 10px;
   font-size: 13px;
-  color: #A4B89D;
+  color: #C2B0A6;
   margin-bottom: 10px;
+  text-align: left;
 }
 
 .footer-contact-row i {
-  color: #A3E635;
+  color: #E2C095;
   font-size: 16px;
   margin-top: 1px;
   flex-shrink: 0;
 }
 
 .footer-contact-row a {
-  color: #D3E0CC;
+  color: #E6D7CD;
   text-decoration: none;
   font-weight: 600;
   transition: color 0.15s ease;
 }
 
 .footer-contact-row a:hover {
-  color: #A3E635;
+  color: #E2C095;
 }
 
 .footer-newsletter-wrap {
   display: flex;
   flex-direction: column;
+  align-items: flex-start;
   gap: 10px;
+  text-align: left;
 }
 
 .footer-news-input-box {
   display: flex;
   align-items: center;
-  background: #1D2819;
-  border: 1px solid #2F4028;
+  background: #2A1713;
+  border: 1px solid #482B24;
   border-radius: 999px;
   padding: 3px 4px 3px 14px;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .footer-news-input-box input {
@@ -1854,12 +1844,12 @@ body {
 }
 
 .footer-news-input-box input::placeholder {
-  color: #6C8264;
+  color: #8C756C;
 }
 
 .footer-news-btn {
-  background: #4A7A25;
-  color: #FFFFFF;
+  background: #E2C095;
+  color: #1C0F0C;
   border: none;
   font-size: 12px;
   font-weight: 800;
@@ -1867,6 +1857,10 @@ body {
   border-radius: 999px;
   cursor: pointer;
   transition: all 0.2s ease;
+}
+
+.footer-news-btn:hover {
+  background: #F8ECD9;
 }
 
 .footer-news-btn:hover {

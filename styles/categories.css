@@ -201,7 +201,72 @@ body {
   text-overflow: ellipsis;
 }
 
-/* 2. Horizontal Scrolling Categories Strip (Middle) */
+/* 2. Full Search Bar (Positioned Directly Below Banner) */
+.categories-search-wrap {
+  width: 100%;
+  margin-bottom: 12px;
+}
+
+.search-input-pill {
+  display: flex;
+  align-items: center;
+  background: #FFFFFF;
+  border: 1.5px solid #EAE5DE;
+  border-radius: 999px;
+  padding: 4px 6px 4px 14px;
+  box-shadow: 0 2px 8px rgba(40, 22, 18, 0.04);
+  transition: all 0.2s ease;
+}
+
+.search-input-pill:focus-within {
+  border-color: #281612;
+  box-shadow: 0 3px 12px rgba(40, 22, 18, 0.1);
+}
+
+.search-leading-icon {
+  font-size: 17px;
+  color: #8C7E77;
+  margin-right: 8px;
+  flex-shrink: 0;
+}
+
+.search-input-pill input {
+  flex: 1;
+  background: transparent;
+  border: none;
+  outline: none;
+  font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+  font-size: 13px;
+  font-weight: 500;
+  color: #1E1A17;
+  padding: 4px 0;
+}
+
+.search-input-pill input::placeholder {
+  color: #9C8F88;
+}
+
+.search-submit-btn {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: #281612;
+  color: #FFFFFF;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background 0.15s ease;
+  flex-shrink: 0;
+}
+
+.search-submit-btn:hover {
+  background: #3E241E;
+}
+
+/* 3. Horizontal Scrolling Categories Strip (Middle) */
 .cat-horizontal-scroll-bar {
   display: flex;
   align-items: center;

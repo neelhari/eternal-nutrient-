@@ -33,13 +33,10 @@
       <button class="zepto-head-icon" onclick="showToast('Added to Wishlist!')" aria-label="Wishlist">
         <i class="ri-heart-3-line"></i>
       </button>
-      <button class="zepto-head-icon" onclick="focusSearch()" aria-label="Search">
-        <i class="ri-search-2-line"></i>
-      </button>
     </div>
   </header>
 
-  <!-- Unified Main Container (Banner First ➔ Horizontal Categories ➔ Product Grid) -->
+  <!-- Unified Main Container (Banner First ➔ Search Field ➔ Horizontal Categories ➔ Product Grid) -->
   <main class="categories-unified-page">
     
     <!-- 1. Festive Specials Showcase Banner (Top) -->
@@ -85,7 +82,18 @@
       </div>
     </div>
 
-    <!-- 2. Horizontal Scrolling Categories Strip (Middle) -->
+    <!-- 2. Full Search Bar (Positioned Directly Below Banner) -->
+    <div class="categories-search-wrap">
+      <div class="search-input-pill">
+        <i class="ri-search-2-line search-leading-icon"></i>
+        <input type="text" id="categories-search-input" placeholder="Search organic honey, pickles, millets, laddus..." oninput="handleCategorySearch(this.value)">
+        <button class="search-submit-btn" onclick="handleCategorySearch(document.getElementById('categories-search-input').value)" aria-label="Search">
+          <i class="ri-search-2-line"></i>
+        </button>
+      </div>
+    </div>
+
+    <!-- 3. Horizontal Scrolling Categories Strip (Middle) -->
     <div class="cat-horizontal-scroll-bar" id="categories-nav-strip">
       
       <div class="cat-chip-tab active" onclick="selectCategory('All', this)">
@@ -260,9 +268,25 @@
           }
         }
       });
-      if (el) el.classList.add('active');
-      document.getElementById('top-cat-header-title').textContent = catName === 'All' ? 'All Organic Products' : catName;
-      renderProducts();
+    function handleCategorySearch(query) {
+      const q = (query || '').trim().toLowerCase();
+      let items = [];
+      if (q) {
+        items = Object.values(CATALOG).flat().filter(p => 
+          p.title.toLowerCase().includes(q) || 
+          (p.badge && p.badge.toLowerCase().includes(q)) ||
+          p.unit.toLowerCase().includes(q)
+        );
+        document.getElementById('top-cat-header-title').textContent = `Search: "${query}"`;
+      } else {
+        if (activeCategory === 'All') {
+          items = Object.values(CATALOG).flat();
+        } else {
+          items = CATALOG[activeCategory] || [];
+        }
+        document.getElementById('top-cat-header-title').textContent = activeCategory === 'All' ? 'All Organic Products' : activeCategory;
+      }
+      renderProductsWithItems(items);
     }
 
     function renderProducts() {
@@ -272,7 +296,15 @@
       } else {
         items = CATALOG[activeCategory] || [];
       }
+      renderProductsWithItems(items);
+    }
+
+    function renderProductsWithItems(items) {
       const grid = document.getElementById('zepto-products-grid');
+      if (items.length === 0) {
+        grid.innerHTML = `<div style="grid-column: 1 / -1; text-align: center; padding: 40px 20px; color: #8C7E77;">No products found matching your search.</div>`;
+        return;
+      }
       grid.innerHTML = items.map(p => {
         const inCart = cart.find(c => c.id === p.id);
         const qty = inCart ? inCart.qty : 0;
