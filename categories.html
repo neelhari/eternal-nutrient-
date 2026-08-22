@@ -280,27 +280,36 @@
           <div class="zepto-item-box" onclick="openProductDetail('${p.id}')">
             <div class="zepto-img-container">
               <img src="${p.image}" alt="${p.title}" loading="lazy">
-              ${qty === 0 ? `
-                <button class="zepto-add-pill-btn" onclick="event.stopPropagation(); addToCartItem('${p.id}', '${p.title.replace(/'/g, "\\'")}', ${p.price}, '${p.image}')">
-                  ADD
-                </button>
-              ` : `
-                <div class="zepto-stepper-pill-active" onclick="event.stopPropagation()">
-                  <button class="zepto-step-btn" onclick="updateItemQty('${p.id}', -1)">-</button>
-                  <span class="zepto-step-val">${qty}</span>
-                  <button class="zepto-step-btn" onclick="updateItemQty('${p.id}', 1)">+</button>
-                </div>
-              `}
             </div>
             <div class="zepto-details-col">
-              <div class="zepto-price-row">
-                <span class="zepto-price-badge">₹${p.price}</span>
-                <span class="zepto-mrp-strike">₹${p.mrp}</span>
+              <div class="zepto-item-title" title="${p.title}">${p.title}</div>
+              <div class="zepto-unit-info">${p.unit}</div>
+              <div class="zepto-badge-pill">${p.badge}</div>
+              
+              <div class="zepto-card-bottom-row">
+                <div class="zepto-price-col">
+                  <div class="zepto-price-row">
+                    <span class="zepto-selling-price">₹${p.price}</span>
+                    <span class="zepto-mrp-price">₹${p.mrp}</span>
+                  </div>
+                  <span class="zepto-discount-tag">${p.discount}</span>
+                </div>
+                
+                <div>
+                  ${qty === 0 ? `
+                    <button class="zepto-add-pill-btn" onclick="event.stopPropagation(); addToCartItem('${p.id}', '${p.title.replace(/'/g, "\\'")}', ${p.price}, '${p.image}')">
+                      <i class="ri-shopping-cart-2-line"></i>
+                      <span>Add</span>
+                    </button>
+                  ` : `
+                    <div class="zepto-stepper-pill-active" onclick="event.stopPropagation()">
+                      <button class="zepto-step-btn" onclick="updateItemQty('${p.id}', -1)">−</button>
+                      <span class="zepto-step-val">${qty}</span>
+                      <button class="zepto-step-btn" onclick="updateItemQty('${p.id}', 1)">+</button>
+                    </div>
+                  `}
+                </div>
               </div>
-              <span class="zepto-discount-tag">${p.discount}</span>
-              <h3 class="zepto-product-name" title="${p.title}">${p.title}</h3>
-              <div class="zepto-unit-text">${p.unit}</div>
-              <span class="zepto-brand-badge">${p.badge}</span>
             </div>
           </div>
         `;

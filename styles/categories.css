@@ -440,161 +440,231 @@ body {
 }
 
 /* ==========================================================================
-   STRICT UNIFORM 2-COLUMN ZEPTO GRID (EXACT REFERENCE 2ND IMAGE)
+   UNIFIED 2-COLUMN PRODUCT GRID & CARDS (BOTTOM-ALIGNED ADD BUTTON)
    ========================================================================== */
 .zepto-products-grid {
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 14px 10px;
-  align-items: start;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+  align-items: stretch;
+  width: 100%;
 }
 
-@media (min-width: 1024px) {
+@media (min-width: 600px) {
+  .zepto-products-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 14px;
+  }
+}
+
+@media (min-width: 850px) {
   .zepto-products-grid {
     grid-template-columns: repeat(4, 1fr);
     gap: 16px;
   }
 }
 
-/* Single Zepto Product Card (Exact Match to 2nd Image) */
+/* Single Product Card */
 .zepto-item-box {
   display: flex;
   flex-direction: column;
   background: #FFFFFF;
+  border-radius: 16px;
+  padding: 12px;
   position: relative;
   cursor: pointer;
-  height: 100%;
+  border: 1px solid rgba(0, 0, 0, 0.04);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  box-sizing: border-box;
 }
 
-/* Image Container (Strict Fixed Square with Overlapping Button) */
+.zepto-item-box:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
+}
+
+/* Image Container (Clean Studio Display, No Overlapping Button) */
 .zepto-img-container {
   width: 100%;
   aspect-ratio: 1 / 1;
-  height: 112px;
-  background: #F8FAF6;
-  border: 1px solid #EAEFE6;
-  border-radius: 12px;
-  position: relative;
-  overflow: visible;
+  height: 120px;
+  background: #FFFFFF;
+  border-radius: 10px;
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-bottom: 14px;
-}
-
-@media (min-width: 768px) {
-  .zepto-img-container {
-    height: 140px;
-  }
+  margin-bottom: 8px;
+  overflow: hidden;
 }
 
 .zepto-img-container img {
   width: 100%;
   height: 100%;
-  object-fit: cover;
-  border-radius: 11px;
+  object-fit: contain;
+  transition: transform 0.2s ease;
 }
 
-/* Floating ADD Button (Sleek Refined Dark Brown Pill) */
-.zepto-add-pill-btn {
-  position: absolute;
-  bottom: -10px;
-  left: 50%;
-  transform: translateX(-50%);
-  background: #281612;
-  color: #FFFFFF;
-  border: 1px solid #281612;
-  border-radius: 5px;
-  font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
-  font-size: 9.5px;
-  font-weight: 700;
-  padding: 2px 11px;
-  letter-spacing: 0.6px;
-  height: 21px;
-  line-height: 1;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  box-shadow: 0 2px 5px rgba(40, 22, 18, 0.22);
-  transition: all 0.15s ease;
-  white-space: nowrap;
-  z-index: 5;
-  user-select: none;
-  -webkit-font-smoothing: antialiased;
-}
-
-.zepto-add-pill-btn:hover {
-  background: #3E241E;
-  border-color: #3E241E;
-  transform: translateX(-50%) translateY(-1px);
-}
-
-.zepto-add-pill-btn:active {
-  transform: translateX(-50%) scale(0.95);
-  background: #1C0F0C;
-}
-
-/* Floating Exact Zepto Stepper Pill (Transitions into place when ADD clicked) */
-.zepto-stepper-pill-active {
-  position: absolute !important;
-  bottom: -10px !important;
-  left: 50% !important;
-  transform: translateX(-50%) !important;
-  background: #281612 !important;
-  color: #FFFFFF !important;
-  border-radius: 5px !important;
-  width: 70px !important;
-  height: 21px !important;
-  display: flex !important;
-  align-items: center !important;
-  justify-content: space-between !important;
-  padding: 0 4px !important;
-  box-shadow: 0 2px 6px rgba(40, 22, 18, 0.25) !important;
-  z-index: 10 !important;
-}
-
-.zepto-step-btn {
-  background: none !important;
-  border: none !important;
-  color: #FFFFFF !important;
-  font-size: 13.5px !important;
-  font-weight: 800 !important;
-  cursor: pointer !important;
-  width: 18px !important;
-  height: 18px !important;
-  display: flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-  line-height: 1 !important;
-  border-radius: 3px !important;
-}
-
-.zepto-step-btn:hover {
-  background: rgba(255, 255, 255, 0.2) !important;
-}
-
-.zepto-step-val {
-  font-family: 'Plus Jakarta Sans', sans-serif !important;
-  font-size: 11px !important;
-  font-weight: 800 !important;
-  color: #FFFFFF !important;
-  min-width: 12px !important;
-  text-align: center !important;
-  line-height: 1 !important;
+.zepto-item-box:hover .zepto-img-container img {
+  transform: scale(1.04);
 }
 
 /* Product Meta Info */
 .zepto-details-col {
   display: flex;
   flex-direction: column;
-  gap: 2px;
+  flex: 1;
+}
+
+.zepto-item-title {
+  font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  color: #1E1A17;
+  line-height: 1.25;
+  margin-bottom: 2px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.zepto-unit-info {
+  font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+  font-size: 11px;
+  font-weight: 500;
+  color: #8A7E78;
+  margin-bottom: 6px;
+}
+
+.zepto-badge-pill {
+  display: inline-block;
+  background: #F0F7EC;
+  color: #2F7D26;
+  font-size: 9.5px;
+  font-weight: 700;
+  padding: 1px 6px;
+  border-radius: 4px;
+  margin-bottom: 8px;
+  width: fit-content;
+}
+
+/* Bottom Split Row: Price on Left, Add Button on Right */
+.zepto-card-bottom-row {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  margin-top: auto;
+  gap: 6px;
+  padding-top: 4px;
+}
+
+.zepto-price-col {
+  display: flex;
+  flex-direction: column;
 }
 
 .zepto-price-row {
   display: flex;
   align-items: baseline;
-  gap: 5px;
+  gap: 4px;
+  line-height: 1;
+}
+
+.zepto-selling-price {
+  font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+  font-size: 14.5px;
+  font-weight: 800;
+  color: #1E1A17;
+}
+
+.zepto-mrp-price {
+  font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+  font-size: 11px;
+  font-weight: 500;
+  color: #9C918B;
+  text-decoration: line-through;
+}
+
+.zepto-discount-tag {
+  font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+  font-size: 10.5px;
+  font-weight: 700;
+  color: #2F7D26;
+  margin-top: 3px;
+  line-height: 1;
+}
+
+/* Add Button Settled at Bottom Right */
+.zepto-add-pill-btn {
+  background: #281612;
+  color: #FFFFFF;
+  border: none;
+  border-radius: 8px;
+  padding: 6px 12px;
+  font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+  font-size: 11.5px;
+  font-weight: 700;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  box-shadow: 0 2px 6px rgba(40, 22, 18, 0.2);
+  transition: all 0.15s ease;
+  white-space: nowrap;
+  height: 28px;
+  box-sizing: border-box;
+}
+
+.zepto-add-pill-btn:hover {
+  background: #3E241E;
+  transform: translateY(-1px);
+}
+
+.zepto-add-pill-btn:active {
+  transform: scale(0.95);
+}
+
+/* Stepper inside Card Bottom Row */
+.zepto-stepper-pill-active {
+  display: inline-flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #281612;
+  color: #FFFFFF;
+  border-radius: 8px;
+  height: 28px;
+  padding: 0 4px;
+  width: 68px;
+  box-shadow: 0 2px 6px rgba(40, 22, 18, 0.2);
+  box-sizing: border-box;
+}
+
+.zepto-step-btn {
+  background: none;
+  border: none;
+  color: #FFFFFF;
+  font-size: 14px;
+  font-weight: 800;
+  cursor: pointer;
+  width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+}
+
+.zepto-step-btn:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.zepto-step-val {
+  font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+  font-size: 11.5px;
+  font-weight: 800;
+  color: #FFFFFF;
+  min-width: 14px;
+  text-align: center;
 }
 
 .zepto-price-badge {
