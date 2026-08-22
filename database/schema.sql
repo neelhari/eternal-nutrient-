@@ -120,16 +120,16 @@ CREATE POLICY "Public Write Settings" ON store_settings FOR ALL USING (true) WIT
 INSERT INTO categories (id, name, description, icon, sort_order) VALUES
 ('cat_honey', 'Organic Honey', 'Pure, raw and unfiltered forest honey', 'ri-drop-line', 1),
 ('cat_pickles', 'Pickles', 'Traditional handmade homemade pickles', 'ri-goblet-line', 2),
-('cat_millets', 'Millets', 'Nutrient-rich ancient grains & rava', 'ri-plant-line', 3),
-('cat_biscuits', 'Organic Biscuits', 'Zero maida, zero preservative healthy cookies', 'ri-cake-3-line', 4),
+('cat_millets', 'Millet Breakfast Rava', 'Nutrient-rich ancient grains & breakfast rava', 'ri-plant-line', 3),
+('cat_biscuits', 'Millet Biscuits', 'Zero maida, zero preservative healthy cookies', 'ri-cake-3-line', 4),
 ('cat_snacks', 'Healthy Snacks', 'Moringa chikki, dates laddu & sweets', 'ri-heart-pulse-line', 5)
 ON CONFLICT (id) DO NOTHING;
 
 INSERT INTO products (id, title, category, image, price, original_price, discount, rating, reviews_count, description, badge, unit, in_stock, stock_qty, is_featured, is_bestseller) VALUES
-('prod_1', 'Raw Organic Honey', 'Organic Honey', 'https://images.unsplash.com/photo-1587049352846-4a222e784d38?w=600&auto=format&fit=crop&q=80', 499, 599, 17, 4.9, 48, '100% Raw & Unfiltered Forest Honey. NMR tested pure with natural immunity boosters.', 'Raw & Unfiltered', '500g', true, 35, true, true),
+('prod_1', 'Organic Honey', 'Organic Honey', 'https://images.unsplash.com/photo-1587049352846-4a222e784d38?w=600&auto=format&fit=crop&q=80', 499, 599, 17, 4.9, 48, '100% Raw & Unfiltered Organic Honey. NMR tested pure with natural immunity boosters.', 'Raw & Unfiltered', '500g', true, 35, true, true),
 ('prod_2', 'Lemon Pickle (Handmade)', 'Pickles', 'https://images.unsplash.com/photo-1599488615731-7e5c2823ff28?w=600&auto=format&fit=crop&q=80', 249, 299, 17, 4.8, 32, 'Handmade traditional recipe with zero preservatives and cold-pressed mustard oil.', 'No Preservatives', '300g', true, 40, true, true),
-('prod_3', 'Foxtail Millet Rava', 'Millets', 'https://images.unsplash.com/photo-1586201375761-83865001e31c?w=600&auto=format&fit=crop&q=80', 189, 220, 14, 4.7, 26, '100% Organic Foxtail Millet Rava. Low glycemic index, perfect for healthy upma and idli.', '100% Organic', '500g', true, 50, true, true),
-('prod_4', 'Millet Biscuits', 'Organic Biscuits', 'https://images.unsplash.com/photo-1558961363-fa8fdf82db35?w=600&auto=format&fit=crop&q=80', 149, 180, 17, 4.9, 65, 'Crunchy wholesome biscuits made with millets and jaggery. Zero maida, zero artificial flavor.', 'No Maida', '200g', true, 45, true, true),
+('prod_3', 'Millet Breakfast Rava', 'Millet Breakfast Rava', 'https://images.unsplash.com/photo-1586201375761-83865001e31c?w=600&auto=format&fit=crop&q=80', 189, 220, 14, 4.7, 26, '100% Organic Millet Breakfast Rava. Low glycemic index, perfect for healthy upma and idli.', '100% Organic', '500g', true, 50, true, true),
+('prod_4', 'Millet Biscuits', 'Millet Biscuits', 'https://images.unsplash.com/photo-1558961363-fa8fdf82db35?w=600&auto=format&fit=crop&q=80', 149, 180, 17, 4.9, 65, 'Crunchy wholesome biscuits made with millets and jaggery. Zero maida, zero artificial flavor.', 'No Maida', '200g', true, 45, true, true),
 ('prod_5', 'Dates Laddu (Sugar-Free)', 'Healthy Snacks', 'https://images.unsplash.com/photo-1601050690597-df0568f70950?w=600&auto=format&fit=crop&q=80', 349, 399, 13, 5.0, 19, 'Wholesome nutrition with Medjool dates, almonds, cashews and pure desi cow ghee. Zero added sugar.', 'Sugar Free', '250g', true, 25, true, false),
 ('prod_6', 'Moringa Chikki', 'Healthy Snacks', 'https://images.unsplash.com/photo-1590080875515-8a3a8dc5735e?w=600&auto=format&fit=crop&q=80', 129, 150, 14, 4.8, 14, 'Immunity boosting superfood snack combining organic moringa leaf extract with roasted peanuts and jaggery.', 'Superfood', '150g', true, 30, false, false)
 ON CONFLICT (id) DO NOTHING;

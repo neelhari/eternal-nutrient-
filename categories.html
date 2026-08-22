@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Categories - Eternal Nutricare</title>
+  <title>Shop - Eternal Nutricare</title>
   
   <!-- Remix Icons -->
   <link href="https://cdn.jsdelivr.net/npm/remixicon@4.2.0/fonts/remixicon.css" rel="stylesheet">
@@ -138,11 +138,11 @@
         <span class="cat-chip-name">Chikki</span>
       </div>
 
-      <div class="cat-chip-tab" onclick="selectCategory('Millet Rava', this)">
+      <div class="cat-chip-tab" onclick="selectCategory('Millet Breakfast Rava', this)">
         <div class="cat-chip-avatar">
-          <img src="assets/prod_rava_studio.jpg" alt="Millet Rava">
+          <img src="assets/prod_rava_studio.jpg" alt="Millet Breakfast Rava">
         </div>
-        <span class="cat-chip-name">Rava</span>
+        <span class="cat-chip-name">Breakfast Rava</span>
       </div>
 
     </div>
@@ -217,11 +217,31 @@
   <!-- Toast Notification -->
   <div id="toast-wrapper" class="toast-floating-container"></div>
 
+  <!-- Mobile Bottom Navigation Dock (4 Tabs: Home, Shop, Cart, Account) -->
+  <nav class="mobile-bottom-dock">
+    <a href="index.html" class="mobile-dock-btn">
+      <i class="ri-home-5-line"></i>
+      <span>Home</span>
+    </a>
+    <a href="categories.html" class="mobile-dock-btn active">
+      <i class="ri-store-2-fill"></i>
+      <span>Shop</span>
+    </a>
+    <a href="cart.html" class="mobile-dock-btn">
+      <i class="ri-shopping-bag-3-line"></i>
+      <span>Cart</span>
+    </a>
+    <a href="account.html" class="mobile-dock-btn">
+      <i class="ri-user-3-line"></i>
+      <span>Account</span>
+    </a>
+  </nav>
+
   <script src="config/store.config.js"></script>
   <script>
     const CATALOG = {
       'Honey': [
-        { id: 'prod_1', title: 'Raw Organic Honey', price: 499, mrp: 599, discount: '₹100 OFF', unit: '500 g', badge: 'Pure & Unfiltered', image: 'assets/prod_honey_studio.jpg' },
+        { id: 'prod_1', title: 'Organic Honey', price: 499, mrp: 599, discount: '₹100 OFF', unit: '500 g', badge: 'Pure & Unfiltered', image: 'assets/prod_honey_studio.jpg' },
         { id: 'h2', title: 'Wild Forest Honey', price: 549, mrp: 650, discount: '₹101 OFF', unit: '500 g', badge: '100% Forest Pure', image: 'assets/prod_honey_studio.jpg' },
         { id: 'h3', title: 'Acacia Blossom Honey', price: 599, mrp: 699, discount: '₹100 OFF', unit: '500 g', badge: 'Single Origin', image: 'assets/header_honey_float.jpg' }
       ],
@@ -243,8 +263,12 @@
         { id: 'prod_6', title: 'Moringa Peanut Chikki', price: 129, mrp: 150, discount: '₹21 OFF', unit: '150 g', badge: 'Organic Jaggery', image: 'assets/prod_chikki_studio.jpg' },
         { id: 'c2', title: 'Moringa Sesame Chikki', price: 139, mrp: 160, discount: '₹21 OFF', unit: '150 g', badge: 'Calcium Rich', image: 'assets/prod_chikki_studio.jpg' }
       ],
+      'Millet Breakfast Rava': [
+        { id: 'prod_3', title: 'Millet Breakfast Rava', price: 189, mrp: 220, discount: '₹31 OFF', unit: '500 g', badge: '100% Unpolished', image: 'assets/prod_rava_studio.jpg' },
+        { id: 'r2', title: 'Little Millet Rava', price: 199, mrp: 230, discount: '₹31 OFF', unit: '500 g', badge: 'Dietary Fiber', image: 'assets/prod_rava_studio.jpg' }
+      ],
       'Millet Rava': [
-        { id: 'prod_3', title: 'Foxtail Millet Rava', price: 189, mrp: 220, discount: '₹31 OFF', unit: '500 g', badge: '100% Unpolished', image: 'assets/prod_rava_studio.jpg' },
+        { id: 'prod_3', title: 'Millet Breakfast Rava', price: 189, mrp: 220, discount: '₹31 OFF', unit: '500 g', badge: '100% Unpolished', image: 'assets/prod_rava_studio.jpg' },
         { id: 'r2', title: 'Little Millet Rava', price: 199, mrp: 230, discount: '₹31 OFF', unit: '500 g', badge: 'Dietary Fiber', image: 'assets/prod_rava_studio.jpg' }
       ]
     };

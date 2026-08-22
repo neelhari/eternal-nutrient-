@@ -424,8 +424,8 @@
       <span>Home</span>
     </a>
     <a href="categories.html" class="mobile-dock-btn">
-      <i class="ri-grid-line"></i>
-      <span>Categories</span>
+      <i class="ri-store-2-line"></i>
+      <span>Shop</span>
     </a>
     <a href="cart.html" class="mobile-dock-btn active">
       <i class="ri-shopping-bag-3-fill"></i>
@@ -440,9 +440,9 @@
   <script src="config/store.config.js"></script>
   <script>
     const DEFAULT_CATALOG = {
-      'prod_1': { title: 'Raw Organic Honey', unit: '500g Glass Jar', price: 499, image: 'assets/prod_honey_studio.jpg' },
+      'prod_1': { title: 'Organic Honey', unit: '500g Glass Jar', price: 499, image: 'assets/prod_honey_studio.jpg' },
       'prod_2': { title: 'Handmade Lemon Pickle', unit: '300g Eco Pack', price: 249, image: 'assets/prod_pickle_studio.jpg' },
-      'prod_3': { title: 'Foxtail Millet Rava', unit: '500g Eco Pack', price: 189, image: 'assets/prod_rava_studio.jpg' },
+      'prod_3': { title: 'Millet Breakfast Rava', unit: '500g Eco Pack', price: 189, image: 'assets/prod_rava_studio.jpg' },
       'prod_4': { title: 'Millet Biscuits', unit: '200g Fresh Pack', price: 149, image: 'assets/prod_cookie_studio.jpg' },
       'prod_5': { title: "Dates Laddu's", unit: '250g Box', price: 349, image: 'assets/prod_laddu_studio.jpg' },
       'prod_6': { title: 'Moringa Chikki', unit: '150g Bar', price: 129, image: 'assets/prod_chikki_studio.jpg' }
@@ -463,8 +463,8 @@
       if (!cartList || cartList.length === 0) {
         // Fallback default sample items if first visit
         cartList = [
-          { id: 'prod_1', title: 'Raw Organic Honey', unit: '500g Glass Jar', price: 499, qty: 1, image: 'assets/showcase_honey.png' },
-          { id: 'prod_3', title: 'Foxtail Millet Rava', unit: '500g Eco Pack', price: 189, qty: 2, image: 'https://images.unsplash.com/photo-1586201375761-83865001e31c?w=500&auto=format&fit=crop&q=80' }
+          { id: 'prod_1', title: 'Organic Honey', unit: '500g Glass Jar', price: 499, qty: 1, image: 'assets/showcase_honey.png' },
+          { id: 'prod_3', title: 'Millet Breakfast Rava', unit: '500g Eco Pack', price: 189, qty: 2, image: 'assets/prod_rava_studio.jpg' }
         ];
         saveCartData();
       }

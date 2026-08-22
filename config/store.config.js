@@ -6,7 +6,7 @@
 window.STORE_CONFIG = {
   // 1. Brand & Business Identity
   brandName: 'Eternal Nutricare',
-  businessName: 'Eternal Sales',
+  businessName: 'Eternal Nutricare',
   tagline: 'Pure. Natural. Eternal.',
   description: 'Health conscious natural and organic food products directly sourced from nature.',
   website: 'www.eternalnutricare.com',
@@ -20,7 +20,7 @@ window.STORE_CONFIG = {
   
   // 3. Registered Business Address, Tax & Licensing
   registeredAddress: '3g Crimson Layout, Channasandra, opp Krishnakuteer Phase 2, Bangalore East, Bangalore Urban, Karnataka - 560067',
-  gstNumber: '29AIJPD5186H1ZZ',
+  udyamNumber: 'UDYAM-KR-03-0464297',
   fssaiNumber: '21226009001641',
 
   // 4. Currency & Shipping Rules
@@ -40,6 +40,6 @@ window.STORE_CONFIG = {
     'Millet Biscuits',
     "Dates Laddu's",
     'Moringa Chikki',
-    'Millet Rava'
+    'Millet Breakfast Rava'
   ]
 };

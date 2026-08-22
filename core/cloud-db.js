@@ -337,18 +337,18 @@ const CloudDB = {
     return [
       { id: 'cat_honey', name: 'Organic Honey', icon: 'ri-drop-line', sortOrder: 1 },
       { id: 'cat_pickles', name: 'Pickles', icon: 'ri-goblet-line', sortOrder: 2 },
-      { id: 'cat_millets', name: 'Millets', icon: 'ri-plant-line', sortOrder: 3 },
-      { id: 'cat_biscuits', name: 'Organic Biscuits', icon: 'ri-cake-3-line', sortOrder: 4 },
+      { id: 'cat_millets', name: 'Millet Breakfast Rava', icon: 'ri-plant-line', sortOrder: 3 },
+      { id: 'cat_biscuits', name: 'Millet Biscuits', icon: 'ri-cake-3-line', sortOrder: 4 },
       { id: 'cat_snacks', name: 'Healthy Snacks', icon: 'ri-heart-pulse-line', sortOrder: 5 }
     ];
   },
 
   getDefaultProducts() {
     return [
-      { id: 'prod_1', title: 'Raw Organic Honey', category: 'Organic Honey', image: 'https://images.unsplash.com/photo-1587049352846-4a222e784d38?w=600', price: 499, originalPrice: 599, discount: 17, rating: 4.9, reviewsCount: 48, badge: 'Raw & Unfiltered', unit: '500g', inStock: true, stockQty: 35, isFeatured: true, isBestseller: true, description: '100% Raw & Unfiltered Forest Honey. NMR tested pure with natural immunity boosters.' },
+      { id: 'prod_1', title: 'Organic Honey', category: 'Organic Honey', image: 'https://images.unsplash.com/photo-1587049352846-4a222e784d38?w=600', price: 499, originalPrice: 599, discount: 17, rating: 4.9, reviewsCount: 48, badge: 'Raw & Unfiltered', unit: '500g', inStock: true, stockQty: 35, isFeatured: true, isBestseller: true, description: '100% Raw & Unfiltered Organic Honey. NMR tested pure with natural immunity boosters.' },
       { id: 'prod_2', title: 'Lemon Pickle (Handmade)', category: 'Pickles', image: 'https://images.unsplash.com/photo-1599488615731-7e5c2823ff28?w=600', price: 249, originalPrice: 299, discount: 17, rating: 4.8, reviewsCount: 32, badge: 'No Preservatives', unit: '300g', inStock: true, stockQty: 40, isFeatured: true, isBestseller: true, description: 'Handmade traditional recipe with zero preservatives and cold-pressed mustard oil.' },
-      { id: 'prod_3', title: 'Foxtail Millet Rava', category: 'Millets', image: 'https://images.unsplash.com/photo-1586201375761-83865001e31c?w=600', price: 189, originalPrice: 220, discount: 14, rating: 4.7, reviewsCount: 26, badge: '100% Organic', unit: '500g', inStock: true, stockQty: 50, isFeatured: true, isBestseller: true, description: '100% Organic Foxtail Millet Rava. Low glycemic index, perfect for healthy upma and idli.' },
-      { id: 'prod_4', title: 'Millet Biscuits', category: 'Organic Biscuits', image: 'https://images.unsplash.com/photo-1558961363-fa8fdf82db35?w=600', price: 149, originalPrice: 180, discount: 17, rating: 4.9, reviewsCount: 65, badge: 'No Maida', unit: '200g', inStock: true, stockQty: 45, isFeatured: true, isBestseller: true, description: 'Crunchy wholesome biscuits made with millets and jaggery. Zero maida, zero artificial flavor.' },
+      { id: 'prod_3', title: 'Millet Breakfast Rava', category: 'Millet Breakfast Rava', image: 'https://images.unsplash.com/photo-1586201375761-83865001e31c?w=600', price: 189, originalPrice: 220, discount: 14, rating: 4.7, reviewsCount: 26, badge: '100% Organic', unit: '500g', inStock: true, stockQty: 50, isFeatured: true, isBestseller: true, description: '100% Organic Millet Breakfast Rava. Low glycemic index, perfect for healthy upma and idli.' },
+      { id: 'prod_4', title: 'Millet Biscuits', category: 'Millet Biscuits', image: 'https://images.unsplash.com/photo-1558961363-fa8fdf82db35?w=600', price: 149, originalPrice: 180, discount: 17, rating: 4.9, reviewsCount: 65, badge: 'No Maida', unit: '200g', inStock: true, stockQty: 45, isFeatured: true, isBestseller: true, description: 'Crunchy wholesome biscuits made with millets and jaggery. Zero maida, zero artificial flavor.' },
       { id: 'prod_5', title: 'Dates Laddu (Sugar-Free)', category: 'Healthy Snacks', image: 'https://images.unsplash.com/photo-1601050690597-df0568f70950?w=600', price: 349, originalPrice: 399, discount: 13, rating: 5.0, reviewsCount: 19, badge: 'Sugar Free', unit: '250g', inStock: true, stockQty: 25, isFeatured: true, isBestseller: false, description: 'Wholesome nutrition with Medjool dates, almonds, cashews and pure desi cow ghee. Zero added sugar.' },
       { id: 'prod_6', title: 'Moringa Chikki', category: 'Healthy Snacks', image: 'https://images.unsplash.com/photo-1590080875515-8a3a8dc5735e?w=600', price: 129, originalPrice: 150, discount: 14, rating: 4.8, reviewsCount: 14, badge: 'Superfood', unit: '150g', inStock: true, stockQty: 30, isFeatured: false, isBestseller: false, description: 'Immunity boosting superfood snack combining organic moringa leaf extract with roasted peanuts and jaggery.' }
     ];
