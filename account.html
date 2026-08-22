@@ -10,20 +10,35 @@
   
   <!-- Google Fonts: Plus Jakarta Sans -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
   <!-- Core Layout Styles -->
   <link rel="stylesheet" href="styles/theme.css">
   <link rel="stylesheet" href="styles/storefront.css">
+  <link rel="stylesheet" href="styles/auth.css">
+
+  <!-- Supabase CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
   <style>
-    /* Plain Clean Header with Go Back Navigation */
+    .account-page-body {
+      background: #FAF7F2;
+      min-height: 100vh;
+      color: #1E1A17;
+      font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+      margin: 0;
+      padding: 0;
+    }
+
+    /* Sub Header */
     .plain-sub-header {
       position: sticky;
       top: 0;
-      background: #FFFFFF;
-      border-bottom: 1px solid #F0F2EC;
-      height: 56px;
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid #ECE3D6;
+      height: 58px;
       padding: 0 16px;
       display: flex;
       align-items: center;
@@ -34,8 +49,8 @@
     .sub-back-btn {
       background: none;
       border: none;
-      font-size: 24px;
-      color: #1E2519;
+      font-size: 22px;
+      color: #281612;
       cursor: pointer;
       display: flex;
       align-items: center;
@@ -44,411 +59,855 @@
       height: 40px;
       text-decoration: none;
       border-radius: 50%;
-      margin-left: -8px;
     }
 
     .sub-page-title {
-      font-family: 'Plus Jakarta Sans', sans-serif;
-      font-size: 17px;
+      font-size: 16.5px;
+      font-weight: 800;
+      color: #281612;
+      margin: 0;
+      letter-spacing: -0.2px;
+    }
+
+    .sub-header-action {
+      font-size: 13px;
       font-weight: 700;
-      color: #1E2519;
-      text-align: center;
-    }
-
-    .sub-header-spacer {
-      width: 40px;
-    }
-
-    .account-page-wrap {
-      max-width: 800px;
-      margin: 0 auto;
-      padding: 16px 16px 100px;
-    }
-
-    /* Profile Header Card */
-    .profile-hero-card {
-      background: linear-gradient(135deg, #FAF3E7 0%, #F5EADB 100%);
-      border: 1px solid #EAD8C3;
-      border-radius: 20px;
-      padding: 20px;
+      color: #7A6960;
+      text-decoration: none;
+      cursor: pointer;
       display: flex;
       align-items: center;
+      gap: 4px;
+    }
+
+    .sub-header-action:hover {
+      color: #281612;
+    }
+
+    .account-main-wrap {
+      max-width: 820px;
+      margin: 0 auto;
+      padding: 18px 16px 110px;
+    }
+
+    /* Hero User Profile Card */
+    .profile-hero-card {
+      background: linear-gradient(135deg, #2D1A15 0%, #1A0D0A 100%);
+      border: 1px solid rgba(226, 192, 149, 0.25);
+      border-radius: 24px;
+      padding: 22px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
       gap: 16px;
-      margin-bottom: 20px;
-      box-shadow: 0 4px 16px rgba(40, 22, 18, 0.05);
+      margin-bottom: 22px;
+      color: #FFFFFF;
+      box-shadow: 0 10px 30px rgba(40, 22, 18, 0.12);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .profile-hero-glow {
+      position: absolute;
+      top: -40px;
+      right: -40px;
+      width: 160px;
+      height: 160px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(226, 192, 149, 0.25) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .profile-left-meta {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      z-index: 2;
     }
 
     .profile-avatar-circle {
-      width: 64px;
-      height: 64px;
+      width: 60px;
+      height: 60px;
       border-radius: 50%;
-      background: #281612;
-      color: #FFFFFF;
+      background: linear-gradient(135deg, #E2C095 0%, #C99E6B 100%);
+      color: #281612;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 24px;
+      font-size: 22px;
       font-weight: 800;
       border: 2px solid #FFFFFF;
-      box-shadow: 0 4px 12px rgba(40, 22, 18, 0.15);
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.2);
       flex-shrink: 0;
     }
 
-    .profile-user-meta {
+    .profile-meta-text {
       display: flex;
       flex-direction: column;
       gap: 2px;
     }
 
-    .profile-name {
-      font-size: 18px;
+    .profile-greeting-name {
+      font-size: 19px;
       font-weight: 800;
-      color: #1E1A17;
+      color: #FFFDF9;
+      line-height: 1.2;
     }
 
-    .profile-phone {
-      font-size: 13px;
-      font-weight: 600;
-      color: #554844 !important;
-      text-decoration: none !important;
+    .profile-tagline-sub {
+      font-size: 12px;
+      color: #D6C5B9;
+      margin-top: 1px;
+    }
+
+    .profile-tier-badge {
       display: inline-flex;
       align-items: center;
-      gap: 4px;
-    }
-
-    .profile-phone a, .profile-phone:visited {
-      color: #554844 !important;
-      text-decoration: none !important;
-    }
-
-    .profile-member-tag {
-      display: inline-flex;
-      align-items: center;
-      gap: 4px;
-      background: #FFFFFF;
-      border: 1px solid #D6C2B0;
-      color: #281612;
+      gap: 5px;
+      background: rgba(226, 192, 149, 0.18);
+      border: 1px solid rgba(226, 192, 149, 0.35);
+      color: #E2C095;
       font-size: 10.5px;
       font-weight: 800;
-      padding: 2px 10px;
+      padding: 2px 8px;
       border-radius: 999px;
-      margin-top: 4px;
       width: fit-content;
+      margin-top: 5px;
     }
 
-    /* Menu Cards Group */
-    .account-menu-card {
-      background: #FFFFFF;
-      border: 1px solid #EAEFE6;
-      border-radius: 16px;
-      overflow: hidden;
-      margin-bottom: 16px;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.02);
-    }
-
-    .menu-item-row {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 14px 16px;
-      text-decoration: none;
-      color: #1E2519;
-      border-bottom: 1px solid #F0F4EC;
-      transition: background 0.15s ease;
-      cursor: pointer;
-    }
-
-    .menu-item-row:last-child {
-      border-bottom: none;
-    }
-
-    .menu-item-row:hover {
-      background: #F8FAF6;
-    }
-
-    .menu-item-left {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
-
-    .menu-icon-wrap {
-      width: 36px;
-      height: 36px;
-      border-radius: 10px;
-      background: #FAF6F0;
-      color: #281612;
+    .btn-edit-profile-icon {
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      color: #FFFDF9;
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
       display: flex;
       align-items: center;
       justify-content: center;
       font-size: 17px;
+      cursor: pointer;
+      z-index: 2;
+      transition: all 0.2s ease;
     }
 
-    .menu-item-title {
-      font-size: 14px;
-      font-weight: 700;
-      color: #1E1A17;
-    }
-
-    /* Recent Orders Section */
-    .recent-orders-card {
+    .btn-edit-profile-icon:hover {
       background: #FFFFFF;
-      border: 1px solid #ECE7DF;
-      border-radius: 16px;
-      padding: 16px;
-      margin-bottom: 16px;
-      box-shadow: 0 2px 10px rgba(40, 22, 18, 0.03);
+      color: #281612;
     }
 
-    .recent-orders-head {
+    /* Guest Welcome Hero Card */
+    .guest-welcome-card {
+      background: #FFFDF9;
+      border: 1px solid #E8DFD3;
+      border-radius: 24px;
+      padding: 32px 24px;
+      text-align: center;
+      margin-bottom: 22px;
+      box-shadow: 0 4px 18px rgba(40, 22, 18, 0.04);
+    }
+
+    .guest-icon-badge {
+      width: 64px;
+      height: 64px;
+      border-radius: 50%;
+      background: #FAF3E7;
+      color: #281612;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 30px;
+      margin-bottom: 14px;
+      border: 2px solid #EEDFCE;
+    }
+
+    .guest-title {
+      font-size: 22px;
+      font-weight: 800;
+      color: #281612;
+      margin: 0 0 6px;
+    }
+
+    .guest-sub {
+      font-size: 13.5px;
+      color: #6C5D55;
+      line-height: 1.5;
+      max-width: 420px;
+      margin: 0 auto 22px;
+    }
+
+    .guest-btn-row {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      max-width: 320px;
+      margin: 0 auto;
+    }
+
+    @media (min-width: 480px) {
+      .guest-btn-row {
+        flex-direction: row;
+      }
+    }
+
+    /* Interactive Section Tabs */
+    .account-section-tabs {
+      display: flex;
+      gap: 8px;
+      overflow-x: auto;
+      padding-bottom: 8px;
+      margin-bottom: 18px;
+      scrollbar-width: none;
+    }
+
+    .account-section-tabs::-webkit-scrollbar {
+      display: none;
+    }
+
+    .acc-tab-chip {
+      background: #FFFDF9;
+      border: 1px solid #E6DCD0;
+      border-radius: 999px;
+      padding: 8px 16px;
+      font-size: 12.5px;
+      font-weight: 700;
+      color: #6C5D55;
+      cursor: pointer;
+      white-space: nowrap;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.15s ease;
+    }
+
+    .acc-tab-chip:hover {
+      background: #F5EADB;
+      color: #281612;
+    }
+
+    .acc-tab-chip.active {
+      background: #281612;
+      color: #FFFFFF;
+      border-color: #281612;
+      box-shadow: 0 4px 12px rgba(40, 22, 18, 0.2);
+    }
+
+    /* Content Cards Group */
+    .acc-content-card {
+      background: #FFFDF9;
+      border: 1px solid #EAE1D4;
+      border-radius: 20px;
+      padding: 20px;
+      margin-bottom: 20px;
+      box-shadow: 0 2px 12px rgba(40, 22, 18, 0.03);
+    }
+
+    .acc-card-head {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      margin-bottom: 14px;
+      margin-bottom: 16px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid #F0E8DD;
     }
 
-    .recent-orders-title {
-      font-size: 15px;
+    .acc-card-title {
+      font-size: 16px;
       font-weight: 800;
-      color: #1E1A17;
+      color: #281612;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin: 0;
+    }
+
+    /* Orders List */
+    .order-card-box {
+      border: 1px solid #ECE3D6;
+      border-radius: 14px;
+      padding: 14px;
+      margin-bottom: 12px;
+      background: #FAF7F2;
+      transition: border-color 0.2s ease;
+    }
+
+    .order-card-box:hover {
+      border-color: #281612;
+    }
+
+    .order-card-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 10px;
+    }
+
+    .order-badge-pill {
+      font-size: 11px;
+      font-weight: 700;
+      padding: 3px 8px;
+      border-radius: 999px;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .order-badge-pill.delivered {
+      background: #E8F5E1;
+      color: #2B6618;
+    }
+
+    .order-items-grid {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+
+    .order-img-thumb {
+      width: 44px;
+      height: 44px;
+      border-radius: 8px;
+      object-fit: cover;
+      background: #FFFFFF;
+      border: 1px solid #E5DBD0;
+    }
+
+    .order-info-details {
+      flex: 1;
+    }
+
+    .order-name-sum {
+      font-size: 13px;
+      font-weight: 700;
+      color: #281612;
+    }
+
+    .order-meta-sub {
+      font-size: 11.5px;
+      color: #726259;
+      margin-top: 2px;
+    }
+
+    .order-action-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-top: 1px dashed #E2D7CB;
+      padding-top: 10px;
+      margin-top: 6px;
+    }
+
+    .order-total-price {
+      font-size: 13.5px;
+      font-weight: 800;
+      color: #281612;
+    }
+
+    .btn-reorder-action {
+      background: #281612;
+      color: #FFFFFF;
+      border: none;
+      border-radius: 8px;
+      padding: 6px 14px;
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    /* Addresses List */
+    .addr-card-item {
+      border: 1px solid #ECE3D6;
+      border-radius: 14px;
+      padding: 14px;
+      margin-bottom: 12px;
+      background: #FAF7F2;
+      position: relative;
+    }
+
+    .addr-top-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 6px;
+    }
+
+    .addr-tag-name {
+      font-size: 13px;
+      font-weight: 800;
+      color: #281612;
       display: flex;
       align-items: center;
       gap: 6px;
     }
 
-    .recent-order-item {
-      border: 1px solid #F0ECE7;
-      border-radius: 12px;
-      padding: 12px;
+    .addr-default-chip {
+      background: #E8F5E1;
+      color: #2B6618;
+      font-size: 10.5px;
+      font-weight: 800;
+      padding: 2px 7px;
+      border-radius: 4px;
+    }
+
+    .addr-text-body {
+      font-size: 12.5px;
+      color: #55443C;
+      line-height: 1.45;
       margin-bottom: 10px;
-      background: #FAFBF9;
     }
 
-    .recent-order-item:last-child {
-      margin-bottom: 0;
-    }
-
-    .order-top-meta {
+    .addr-actions-row {
       display: flex;
       align-items: center;
-      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .btn-addr-del {
+      background: none;
+      border: none;
+      color: #B91C1C;
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+      padding: 0;
+    }
+
+    /* Wishlist Grid */
+    .wishlist-cards-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+    }
+
+    @media (min-width: 600px) {
+      .wishlist-cards-grid {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 14px;
+      }
+    }
+
+    .wish-product-card {
+      background: #FAF7F2;
+      border: 1px solid #ECE3D6;
+      border-radius: 14px;
+      padding: 10px;
+      text-align: center;
+      position: relative;
+    }
+
+    .wish-img-wrap {
+      width: 100%;
+      aspect-ratio: 1/1;
+      border-radius: 10px;
+      overflow: hidden;
+      margin-bottom: 8px;
+      background: #FFFFFF;
+    }
+
+    .wish-img-wrap img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .wish-title-name {
+      font-size: 12.5px;
+      font-weight: 800;
+      color: #281612;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      margin-bottom: 4px;
+    }
+
+    .wish-price-text {
+      font-size: 13px;
+      font-weight: 800;
+      color: #281612;
       margin-bottom: 8px;
     }
 
-    .order-id-label {
-      font-size: 12px;
-      font-weight: 800;
-      color: #281612;
-    }
-
-    .order-status-badge {
-      font-size: 10.5px;
-      font-weight: 700;
-      color: #2B6618;
-      background: #E8F5E1;
-      padding: 2px 8px;
-      border-radius: 999px;
-    }
-
-    .order-content-row {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-
-    .order-thumbs-cluster {
-      display: flex;
-      align-items: center;
-      gap: 4px;
-    }
-
-    .order-item-thumb {
-      width: 42px;
-      height: 42px;
-      border-radius: 8px;
-      object-fit: cover;
-      background: #FFFFFF;
-      border: 1px solid #EAEFE6;
-    }
-
-    .order-item-desc {
-      flex: 1;
-    }
-
-    .order-items-summary {
-      font-size: 12.5px;
-      font-weight: 700;
-      color: #1E1A17;
-      line-height: 1.2;
-    }
-
-    .order-date-total {
-      font-size: 11px;
-      color: #7A6E67;
-      margin-top: 2px;
-    }
-
-    .btn-reorder-pill {
+    .wish-btn-add {
+      width: 100%;
       background: #281612;
       color: #FFFFFF;
       border: none;
       border-radius: 8px;
-      padding: 6px 12px;
+      padding: 7px 0;
       font-size: 11.5px;
       font-weight: 700;
       cursor: pointer;
-      display: inline-flex;
+      display: flex;
       align-items: center;
+      justify-content: center;
       gap: 4px;
-      transition: all 0.15s ease;
-      white-space: nowrap;
     }
 
-    .btn-reorder-pill:hover {
-      background: #3E241E;
+    .wish-remove-icon {
+      position: absolute;
+      top: 6px;
+      right: 6px;
+      background: rgba(255, 255, 255, 0.9);
+      border: none;
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      color: #E11D48;
+      font-size: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+    }
+
+    /* Menu Navigation Rows */
+    .acc-menu-group {
+      background: #FFFDF9;
+      border: 1px solid #EAE1D4;
+      border-radius: 20px;
+      overflow: hidden;
+      margin-bottom: 20px;
+    }
+
+    .acc-menu-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 15px 18px;
+      text-decoration: none;
+      color: #281612;
+      border-bottom: 1px solid #F0E8DD;
+      cursor: pointer;
+      transition: background 0.15s ease;
+    }
+
+    .acc-menu-row:last-child {
+      border-bottom: none;
+    }
+
+    .acc-menu-row:hover {
+      background: #FAF6F0;
+    }
+
+    .acc-menu-left {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .acc-icon-square {
+      width: 38px;
+      height: 38px;
+      border-radius: 10px;
+      background: #FAF3E7;
+      color: #281612;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+    }
+
+    .acc-menu-title {
+      font-size: 14px;
+      font-weight: 700;
+      color: #281612;
+    }
+
+    .btn-logout-row {
+      color: #B91C1C !important;
+    }
+
+    .btn-logout-row .acc-icon-square {
+      background: #FEE2E2;
+      color: #B91C1C;
+    }
+
+    /* Modal Form Inputs */
+    .modal-input-field {
+      width: 100%;
+      height: 44px;
+      border: 1.5px solid #E2D7CB;
+      border-radius: 10px;
+      padding: 0 12px;
+      font-size: 13.5px;
+      font-weight: 600;
+      color: #281612;
+      box-sizing: border-box;
+      outline: none;
+      margin-bottom: 12px;
+      font-family: inherit;
+    }
+
+    .modal-input-field:focus {
+      border-color: #281612;
+      background: #FFFFFF;
     }
   </style>
 </head>
-<body>
+<body class="account-page-body">
 
-  <div class="site-wrapper">
+  <!-- Plain Clean Header -->
+  <header class="plain-sub-header">
+    <a href="index.html" class="sub-back-btn" aria-label="Back to Store">
+      <i class="ri-arrow-left-line"></i>
+    </a>
+    <h1 class="sub-page-title">My Account</h1>
+    <a href="index.html" class="sub-header-action">
+      <i class="ri-store-2-line"></i>
+      <span>Store</span>
+    </a>
+  </header>
+
+  <main class="account-main-wrap">
     
-    <!-- Plain Clean Header with Go Back Navigation -->
-    <header class="plain-sub-header">
-      <a href="index.html" class="sub-back-btn" aria-label="Go Back">
-        <i class="ri-arrow-left-line"></i>
-      </a>
-      <h1 class="sub-page-title">My Account</h1>
-      <div class="sub-header-spacer"></div>
-    </header>
+    <!-- 1. LOGGED-IN HERO CARD -->
+    <div id="logged-in-hero" class="profile-hero-card" style="display: none;">
+      <div class="profile-hero-glow"></div>
+      <div class="profile-left-meta">
+        <div class="profile-avatar-circle" id="user-avatar-initials">AS</div>
+        <div class="profile-meta-text">
+          <div class="profile-greeting-name" id="user-display-name">Hello, Anita</div>
+          <div class="profile-tagline-sub">Your journey to better everyday choices.</div>
+          <div class="profile-tier-badge" id="user-tier-badge">
+            <i class="ri-medal-fill"></i>
+            <span>Organic Club Member</span>
+          </div>
+        </div>
+      </div>
+      <button class="btn-edit-profile-icon" onclick="openProfileModal()" title="Edit Profile" aria-label="Edit Profile">
+        <i class="ri-pencil-line"></i>
+      </button>
+    </div>
 
-    <main class="account-page-wrap">
+    <!-- 2. GUEST / LOGGED-OUT HERO CARD -->
+    <div id="guest-welcome-hero" class="guest-welcome-card">
+      <div class="guest-icon-badge">
+        <i class="ri-user-3-line"></i>
+      </div>
+      <h2 class="guest-title">Welcome to EternalNutricare</h2>
+      <p class="guest-sub">Sign in to track orders, manage delivery addresses, save your favourite organic picks, and checkout faster.</p>
       
-      <!-- Profile Hero Card -->
-      <div class="profile-hero-card">
-        <div class="profile-avatar-circle">
-          <span>AS</span>
-        </div>
-        <div class="profile-user-meta">
-          <span class="profile-name">Anita Sharma</span>
-          <span class="profile-phone"><i class="ri-phone-fill" style="color:#281612; font-size:14px;"></i> +91 98765 43210</span>
-          <span class="profile-member-tag">
-            <i class="ri-medal-fill"></i> Gold Member
-          </span>
-        </div>
+      <div class="guest-btn-row">
+        <button class="btn-en-auth-primary" onclick="window.location.href='login.html'">
+          <i class="ri-login-box-line"></i>
+          <span>Sign In</span>
+        </button>
+        <button class="btn-auth-secondary" onclick="window.location.href='login.html?mode=signup'">
+          <i class="ri-user-add-line"></i>
+          <span>Create Account</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- 3. INTERACTIVE SECTION TABS (When Logged In) -->
+    <div id="acc-tabs-bar" class="account-section-tabs" style="display: none;">
+      <button class="acc-tab-chip active" onclick="switchAccountSection('orders', this)">
+        <i class="ri-shopping-bag-3-line"></i> My Orders
+      </button>
+      <button class="acc-tab-chip" onclick="switchAccountSection('addresses', this)">
+        <i class="ri-map-pin-2-line"></i> Saved Addresses
+      </button>
+      <button class="acc-tab-chip" onclick="switchAccountSection('wishlist', this)">
+        <i class="ri-heart-3-line"></i> Saved Items
+      </button>
+      <button class="acc-tab-chip" onclick="switchAccountSection('support', this)">
+        <i class="ri-customer-service-2-line"></i> Help & Support
+      </button>
+    </div>
+
+    <!-- SECTION A: MY ORDERS -->
+    <div id="sec-orders" class="acc-content-card" style="display: none;">
+      <div class="acc-card-head">
+        <h2 class="acc-card-title">
+          <i class="ri-shopping-bag-3-line" style="color: #281612;"></i>
+          <span>My Orders & Status</span>
+        </h2>
+        <span id="orders-count-label" style="font-size: 11.5px; color: #726259; font-weight: 700;">2 Total Orders</span>
       </div>
 
-      <!-- 1. My Recent Orders Card (Replaces the old contact block) -->
-      <div class="recent-orders-card">
-        <div class="recent-orders-head">
-          <h2 class="recent-orders-title">
-            <i class="ri-shopping-bag-3-line" style="color:#281612;"></i>
-            <span>My Recent Orders</span>
-          </h2>
-          <span style="font-size:11.5px; color:#7A6E67; font-weight:600;">2 Total Orders</span>
-        </div>
+      <div id="orders-list-container">
+        <!-- Rendered dynamically -->
+      </div>
+    </div>
 
-        <!-- Order 1 -->
-        <div class="recent-order-item">
-          <div class="order-top-meta">
-            <span class="order-id-label">Order #EN-8842</span>
-            <span class="order-status-badge"><i class="ri-checkbox-circle-fill"></i> Delivered Today</span>
-          </div>
-          <div class="order-content-row">
-            <div class="order-thumbs-cluster">
-              <img src="assets/prod_honey_studio.jpg" alt="Organic Honey" class="order-item-thumb">
-              <img src="assets/prod_laddu_studio.jpg" alt="Dates Laddu" class="order-item-thumb">
-            </div>
-            <div class="order-item-desc">
-              <div class="order-items-summary">Raw Honey + Dates Laddu</div>
-              <div class="order-date-total">₹848 • Paid via UPI</div>
-            </div>
-            <button class="btn-reorder-pill" onclick="showToast('Re-ordering items to cart...')">
-              <span>Reorder</span>
-            </button>
-          </div>
-        </div>
-
-        <!-- Order 2 -->
-        <div class="recent-order-item">
-          <div class="order-top-meta">
-            <span class="order-id-label">Order #EN-8719</span>
-            <span class="order-status-badge"><i class="ri-checkbox-circle-fill"></i> Delivered 15 Aug</span>
-          </div>
-          <div class="order-content-row">
-            <div class="order-thumbs-cluster">
-              <img src="assets/prod_pickle_studio.jpg" alt="Lemon Pickle" class="order-item-thumb">
-            </div>
-            <div class="order-item-desc">
-              <div class="order-items-summary">Handmade Lemon Pickle</div>
-              <div class="order-date-total">₹249 • COD</div>
-            </div>
-            <button class="btn-reorder-pill" onclick="showToast('Re-ordering items to cart...')">
-              <span>Reorder</span>
-            </button>
-          </div>
-        </div>
-
+    <!-- SECTION B: SAVED ADDRESSES -->
+    <div id="sec-addresses" class="acc-content-card" style="display: none;">
+      <div class="acc-card-head">
+        <h2 class="acc-card-title">
+          <i class="ri-map-pin-2-line" style="color: #281612;"></i>
+          <span>Saved Delivery Addresses</span>
+        </h2>
+        <button class="btn-reorder-action" onclick="openAddAddressModal()">
+          <i class="ri-add-line"></i>
+          <span>Add New</span>
+        </button>
       </div>
 
-      <!-- 2. Account Navigation List -->
-      <div class="account-menu-card">
-        
-        <div class="menu-item-row" onclick="showToast('Viewing all past orders...')">
-          <div class="menu-item-left">
-            <div class="menu-icon-wrap"><i class="ri-truck-line"></i></div>
-            <span class="menu-item-title">All Orders & Tracking</span>
-          </div>
-          <i class="ri-arrow-right-s-line" style="color:#8C9C87;"></i>
-        </div>
+      <div id="addresses-list-container">
+        <!-- Rendered dynamically -->
+      </div>
+    </div>
 
-        <div class="menu-item-row" onclick="showToast('Wishlist: 3 items saved')">
-          <div class="menu-item-left">
-            <div class="menu-icon-wrap"><i class="ri-heart-3-line"></i></div>
-            <span class="menu-item-title">Saved Wishlist</span>
-          </div>
-          <i class="ri-arrow-right-s-line" style="color:#8C9C87;"></i>
-        </div>
-
-        <div class="menu-item-row" onclick="showToast('Address: Indiranagar, Bangalore')">
-          <div class="menu-item-left">
-            <div class="menu-icon-wrap"><i class="ri-map-pin-2-line"></i></div>
-            <span class="menu-item-title">Saved Addresses</span>
-          </div>
-          <i class="ri-arrow-right-s-line" style="color:#8C9C87;"></i>
-        </div>
-
+    <!-- SECTION C: WISHLIST / SAVED ITEMS -->
+    <div id="sec-wishlist" class="acc-content-card" style="display: none;">
+      <div class="acc-card-head">
+        <h2 class="acc-card-title">
+          <i class="ri-heart-3-fill" style="color: #E11D48;"></i>
+          <span>Saved Favourites</span>
+        </h2>
+        <span id="wishlist-count-label" style="font-size: 11.5px; color: #726259; font-weight: 700;">3 Items</span>
       </div>
 
-    </main>
+      <div id="wishlist-grid-container" class="wishlist-cards-grid">
+        <!-- Rendered dynamically -->
+      </div>
+    </div>
 
-    <!-- Mobile Bottom Navigation Dock -->
-    <nav class="mobile-bottom-dock">
-      <a href="index.html" class="mobile-dock-btn">
-        <i class="ri-home-5-line"></i>
-        <span>Home</span>
-      </a>
-      <a href="categories.html" class="mobile-dock-btn">
-        <i class="ri-store-2-line"></i>
-        <span>Shop</span>
-      </a>
-      <a href="cart.html" class="mobile-dock-btn">
-        <i class="ri-shopping-bag-3-line"></i>
-        <span>Cart</span>
-      </a>
-      <a href="account.html" class="mobile-dock-btn active">
-        <i class="ri-user-3-fill"></i>
-        <span>Account</span>
-      </a>
-    </nav>
+    <!-- SECTION D: HELP & SUPPORT -->
+    <div id="sec-support" class="acc-content-card" style="display: none;">
+      <div class="acc-card-head">
+        <h2 class="acc-card-title">
+          <i class="ri-customer-service-2-line" style="color: #281612;"></i>
+          <span>Direct Concierge Support</span>
+        </h2>
+      </div>
 
+      <div style="display: flex; flex-direction: column; gap: 10px;">
+        <a href="https://wa.me/916302017482" target="_blank" class="btn-auth-secondary" style="justify-content: flex-start; text-decoration: none; padding: 0 16px;">
+          <i class="ri-whatsapp-fill" style="color: #25D366; font-size: 20px;"></i>
+          <span>Chat on WhatsApp (+91 6302017482)</span>
+        </a>
+        <a href="tel:6302017482" class="btn-auth-secondary" style="justify-content: flex-start; text-decoration: none; padding: 0 16px;">
+          <i class="ri-phone-fill" style="color: #281612; font-size: 18px;"></i>
+          <span>Call Customer Care (+91 6302017482)</span>
+        </a>
+        <a href="mailto:eternalncdm@gmail.com" class="btn-auth-secondary" style="justify-content: flex-start; text-decoration: none; padding: 0 16px;">
+          <i class="ri-mail-line" style="color: #281612; font-size: 18px;"></i>
+          <span>Email: eternalncdm@gmail.com</span>
+        </a>
+      </div>
+    </div>
+
+    <!-- 4. ACCOUNT NAVIGATION ROWS (Quick Shortcuts & Logout) -->
+    <div class="acc-menu-group">
+      <div class="acc-menu-row" onclick="openProfileModal()">
+        <div class="acc-menu-left">
+          <div class="acc-icon-square"><i class="ri-user-line"></i></div>
+          <span class="acc-menu-title">Personal Profile & Contact</span>
+        </div>
+        <i class="ri-arrow-right-s-line" style="color: #8C7B72; font-size: 20px;"></i>
+      </div>
+
+      <div class="acc-menu-row" onclick="openPrivacyModal()">
+        <div class="acc-menu-left">
+          <div class="acc-icon-square"><i class="ri-shield-keyhole-line"></i></div>
+          <span class="acc-menu-title">Privacy & Security</span>
+        </div>
+        <i class="ri-arrow-right-s-line" style="color: #8C7B72; font-size: 20px;"></i>
+      </div>
+
+      <div class="acc-menu-row btn-logout-row" id="logout-menu-row" onclick="handleLogoutClick()">
+        <div class="acc-menu-left">
+          <div class="acc-icon-square"><i class="ri-logout-box-r-line"></i></div>
+          <span class="acc-menu-title" style="color: #B91C1C;">Log Out</span>
+        </div>
+        <i class="ri-arrow-right-s-line" style="color: #B91C1C; font-size: 20px;"></i>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- EDIT PROFILE MODAL -->
+  <div id="modal-edit-profile" class="en-auth-modal-overlay" onclick="closeLocalModal('modal-edit-profile', event)">
+    <div class="en-auth-modal-sheet" onclick="event.stopPropagation()">
+      <button class="en-modal-close-btn" onclick="closeLocalModal('modal-edit-profile')"><i class="ri-close-line"></i></button>
+      <h3 class="en-modal-heading">Edit Personal Profile</h3>
+      <p class="en-modal-body-text">Update your name, mobile number, and email.</p>
+      
+      <form onsubmit="handleSaveProfile(event)">
+        <input type="text" id="prof-input-name" class="modal-input-field" placeholder="Full Name" required>
+        <input type="tel" id="prof-input-phone" class="modal-input-field" placeholder="Mobile Number" required>
+        <input type="email" id="prof-input-email" class="modal-input-field" placeholder="Email Address" required>
+        <button type="submit" class="btn-en-auth-primary">Save Changes</button>
+      </form>
+    </div>
   </div>
 
-  <!-- Toast Notification -->
+  <!-- ADD ADDRESS MODAL -->
+  <div id="modal-add-address" class="en-auth-modal-overlay" onclick="closeLocalModal('modal-add-address', event)">
+    <div class="en-auth-modal-sheet" onclick="event.stopPropagation()">
+      <button class="en-modal-close-btn" onclick="closeLocalModal('modal-add-address')"><i class="ri-close-line"></i></button>
+      <h3 class="en-modal-heading">Add Delivery Address</h3>
+      <p class="en-modal-body-text">Save your home or office address for 1-click checkout.</p>
+      
+      <form onsubmit="handleSaveNewAddress(event)">
+        <input type="text" id="addr-input-title" class="modal-input-field" placeholder="Address Tag (e.g. Home, Office)" value="Home" required>
+        <input type="text" id="addr-input-flat" class="modal-input-field" placeholder="House / Flat / Block No." required>
+        <input type="text" id="addr-input-street" class="modal-input-field" placeholder="Street / Area / Landmark" required>
+        <div style="display: flex; gap: 8px;">
+          <input type="text" id="addr-input-city" class="modal-input-field" placeholder="City" value="Bangalore" required>
+          <input type="text" id="addr-input-pin" class="modal-input-field" placeholder="Pincode" value="560067" required>
+        </div>
+        <button type="submit" class="btn-en-auth-primary">Save Address</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- PRIVACY MODAL -->
+  <div id="modal-privacy" class="en-auth-modal-overlay" onclick="closeLocalModal('modal-privacy', event)">
+    <div class="en-auth-modal-sheet" onclick="event.stopPropagation()">
+      <button class="en-modal-close-btn" onclick="closeLocalModal('modal-privacy')"><i class="ri-close-line"></i></button>
+      <h3 class="en-modal-heading">Security & Password</h3>
+      <p class="en-modal-body-text">Manage your credentials and login sessions.</p>
+      
+      <form onsubmit="handleSavePassword(event)">
+        <input type="password" id="sec-input-curr" class="modal-input-field" placeholder="Current Password" required>
+        <input type="password" id="sec-input-new" class="modal-input-field" placeholder="New Password (min 6 chars)" minlength="6" required>
+        <button type="submit" class="btn-en-auth-primary">Update Password</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Mobile Bottom Navigation Dock (4 Tabs: Home, Shop, Cart, Account) -->
+  <nav class="mobile-bottom-dock">
+    <a href="index.html" class="mobile-dock-btn">
+      <i class="ri-home-5-line"></i>
+      <span>Home</span>
+    </a>
+    <a href="categories.html" class="mobile-dock-btn">
+      <i class="ri-store-2-line"></i>
+      <span>Shop</span>
+    </a>
+    <a href="cart.html" class="mobile-dock-btn">
+      <i class="ri-shopping-bag-3-line"></i>
+      <span>Cart</span>
+    </a>
+    <a href="account.html" class="mobile-dock-btn active">
+      <i class="ri-user-3-fill"></i>
+      <span>Account</span>
+    </a>
+  </nav>
+
+  <!-- Global Toast -->
   <div id="toast-wrapper" class="toast-floating-container"></div>
 
+  <!-- Scripts -->
   <script src="config/store.config.js"></script>
+  <script src="core/auth-engine.js"></script>
   <script>
+    const CATALOG_MAP = {
+      'prod_1': { title: 'Organic Honey', price: 499, image: 'assets/prod_honey_studio.jpg' },
+      'prod_2': { title: 'Lemon Pickle', price: 249, image: 'assets/prod_pickle_studio.jpg' },
+      'prod_3': { title: 'Millet Rava', price: 189, image: 'assets/prod_rava_studio.jpg' },
+      'prod_4': { title: 'Millet Biscuits', price: 149, image: 'assets/prod_cookie_studio.jpg' },
+      'prod_5': { title: "Dates Laddu's", price: 349, image: 'assets/prod_laddu_studio.jpg' },
+      'prod_6': { title: 'Moringa Chikki', price: 129, image: 'assets/prod_chikki_studio.jpg' }
+    };
+
     function showToast(msg) {
       const wrap = document.getElementById('toast-wrapper');
       const toast = document.createElement('div');
@@ -457,6 +916,270 @@
       wrap.appendChild(toast);
       setTimeout(() => toast.remove(), 2500);
     }
+
+    function renderAccountUI() {
+      const isAuth = AuthEngine.isAuthenticated();
+      const user = AuthEngine.getCurrentUser();
+
+      const heroLoggedIn = document.getElementById('logged-in-hero');
+      const heroGuest = document.getElementById('guest-welcome-hero');
+      const tabsBar = document.getElementById('acc-tabs-bar');
+      const logoutRow = document.getElementById('logout-menu-row');
+
+      if (isAuth && user) {
+        heroLoggedIn.style.display = 'flex';
+        heroGuest.style.display = 'none';
+        tabsBar.style.display = 'flex';
+        logoutRow.style.display = 'flex';
+
+        document.getElementById('user-avatar-initials').textContent = user.avatarInitials || 'ME';
+        document.getElementById('user-display-name').textContent = `Hello, ${user.fullName.split(' ')[0]}`;
+        
+        // Render orders, addresses, wishlist
+        renderOrders();
+        renderAddresses();
+        renderWishlist();
+
+        // Default open orders section
+        switchAccountSection('orders');
+      } else {
+        heroLoggedIn.style.display = 'none';
+        heroGuest.style.display = 'block';
+        tabsBar.style.display = 'none';
+        logoutRow.style.display = 'none';
+        
+        // Hide all sections for guest
+        document.getElementById('sec-orders').style.display = 'none';
+        document.getElementById('sec-addresses').style.display = 'none';
+        document.getElementById('sec-wishlist').style.display = 'none';
+        document.getElementById('sec-support').style.display = 'none';
+      }
+    }
+
+    function switchAccountSection(secName, btn) {
+      document.querySelectorAll('.acc-tab-chip').forEach(c => c.classList.remove('active'));
+      if (btn) btn.classList.add('active');
+
+      document.getElementById('sec-orders').style.display = secName === 'orders' ? 'block' : 'none';
+      document.getElementById('sec-addresses').style.display = secName === 'addresses' ? 'block' : 'none';
+      document.getElementById('sec-wishlist').style.display = secName === 'wishlist' ? 'block' : 'none';
+      document.getElementById('sec-support').style.display = secName === 'support' ? 'block' : 'none';
+    }
+
+    function renderOrders() {
+      const orders = AuthEngine.getOrders();
+      const container = document.getElementById('orders-list-container');
+      document.getElementById('orders-count-label').textContent = `${orders.length} Total Orders`;
+
+      if (orders.length === 0) {
+        container.innerHTML = `<div style="text-align:center; padding:20px; color:#7A6960; font-size:13px;">No past orders yet. Start your organic journey today!</div>`;
+        return;
+      }
+
+      container.innerHTML = orders.map(ord => {
+        const thumbs = ord.items.map(i => `<img src="${i.image}" alt="${i.title}" class="order-img-thumb">`).join('');
+        const titles = ord.items.map(i => `${i.title} × ${i.qty}`).join(' + ');
+
+        return `
+          <div class="order-card-box">
+            <div class="order-card-top">
+              <span style="font-size:12.5px; font-weight:800; color:#281612;">Order #${ord.id}</span>
+              <span class="order-badge-pill delivered"><i class="ri-checkbox-circle-fill"></i> ${ord.status}</span>
+            </div>
+            <div class="order-items-grid">
+              <div style="display:flex; gap:4px;">${thumbs}</div>
+              <div class="order-info-details">
+                <div class="order-name-sum">${titles}</div>
+                <div class="order-meta-sub">${ord.date} • ${ord.paymentMethod}</div>
+              </div>
+            </div>
+            <div class="order-action-bar">
+              <span class="order-total-price">Total: ₹${ord.totalAmount}</span>
+              <button class="btn-reorder-action" onclick="handleReorder('${ord.id}')">
+                <i class="ri-refresh-line"></i> <span>Reorder</span>
+              </button>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function renderAddresses() {
+      const addrs = AuthEngine.getAddresses();
+      const container = document.getElementById('addresses-list-container');
+
+      if (addrs.length === 0) {
+        container.innerHTML = `<div style="text-align:center; padding:20px; color:#7A6960; font-size:13px;">No saved addresses yet.</div>`;
+        return;
+      }
+
+      container.innerHTML = addrs.map(a => `
+        <div class="addr-card-item">
+          <div class="addr-top-head">
+            <span class="addr-tag-name">
+              <i class="ri-map-pin-line"></i> ${a.title}
+              ${a.isDefault ? '<span class="addr-default-chip">Default</span>' : ''}
+            </span>
+            <button class="btn-addr-del" onclick="handleDeleteAddress('${a.id}')">Delete</button>
+          </div>
+          <div class="addr-text-body">
+            <strong>${a.fullName}</strong> • ${a.phone}<br>
+            ${a.flat}, ${a.street}, ${a.city} - ${a.pincode}
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function renderWishlist() {
+      const items = AuthEngine.getWishlist();
+      const container = document.getElementById('wishlist-grid-container');
+      document.getElementById('wishlist-count-label').textContent = `${items.length} Items`;
+
+      if (items.length === 0) {
+        container.innerHTML = `<div style="grid-column: 1/-1; text-align:center; padding:20px; color:#7A6960; font-size:13px;">No saved items yet. Tap the heart on products to save them!</div>`;
+        return;
+      }
+
+      container.innerHTML = items.map(id => {
+        const prod = CATALOG_MAP[id] || { title: 'Organic Product', price: 299, image: 'assets/prod_honey_studio.jpg' };
+        return `
+          <div class="wish-product-card">
+            <button class="wish-remove-icon" onclick="handleRemoveWish('${id}')" title="Remove"><i class="ri-close-line"></i></button>
+            <div class="wish-img-wrap">
+              <img src="${prod.image}" alt="${prod.title}">
+            </div>
+            <div class="wish-title-name">${prod.title}</div>
+            <div class="wish-price-text">₹${prod.price}</div>
+            <button class="wish-btn-add" onclick="handleWishAddToCart('${id}')">
+              <i class="ri-shopping-cart-2-line"></i> <span>Add to Cart</span>
+            </button>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function handleReorder(orderId) {
+      const orders = AuthEngine.getOrders();
+      const ord = orders.find(o => o.id === orderId);
+      if (!ord) return;
+
+      let currentCart = [];
+      try {
+        currentCart = JSON.parse(localStorage.getItem('em_cart_items') || '[]');
+      } catch(e) {}
+
+      ord.items.forEach(item => {
+        const existing = currentCart.find(i => i.id === item.id);
+        if (existing) existing.qty += item.qty;
+        else currentCart.push({ id: item.id, title: item.title, price: item.price, image: item.image, qty: item.qty });
+      });
+
+      localStorage.setItem('em_cart_items', JSON.stringify(currentCart));
+      showToast(`Items from Order #${orderId} added to cart!`);
+    }
+
+    function handleWishAddToCart(id) {
+      const prod = CATALOG_MAP[id] || { title: 'Organic Product', price: 299, image: 'assets/prod_honey_studio.jpg' };
+      let currentCart = [];
+      try {
+        currentCart = JSON.parse(localStorage.getItem('em_cart_items') || '[]');
+      } catch(e) {}
+
+      const existing = currentCart.find(i => i.id === id);
+      if (existing) existing.qty += 1;
+      else currentCart.push({ id, title: prod.title, price: prod.price, image: prod.image, qty: 1 });
+
+      localStorage.setItem('em_cart_items', JSON.stringify(currentCart));
+      showToast(`${prod.title} added to cart!`);
+    }
+
+    function handleRemoveWish(id) {
+      AuthEngine.toggleWishlist(id);
+      renderWishlist();
+    }
+
+    function handleDeleteAddress(id) {
+      AuthEngine.deleteAddress(id);
+      renderAddresses();
+      showToast('Address removed');
+    }
+
+    function openProfileModal() {
+      const user = AuthEngine.getCurrentUser();
+      if (!user) return window.location.href = 'login.html';
+      document.getElementById('prof-input-name').value = user.fullName || '';
+      document.getElementById('prof-input-phone').value = user.phone || '';
+      document.getElementById('prof-input-email').value = user.email || '';
+      document.getElementById('modal-edit-profile').classList.add('open');
+    }
+
+    function handleSaveProfile(e) {
+      e.preventDefault();
+      const fullName = document.getElementById('prof-input-name').value;
+      const phone = document.getElementById('prof-input-phone').value;
+      const email = document.getElementById('prof-input-email').value;
+      AuthEngine.updateProfile({ fullName, phone, email });
+      closeLocalModal('modal-edit-profile');
+      renderAccountUI();
+      showToast('Profile updated successfully!');
+    }
+
+    function openAddAddressModal() {
+      document.getElementById('modal-add-address').classList.add('open');
+    }
+
+    function handleSaveNewAddress(e) {
+      e.preventDefault();
+      const title = document.getElementById('addr-input-title').value;
+      const flat = document.getElementById('addr-input-flat').value;
+      const street = document.getElementById('addr-input-street').value;
+      const city = document.getElementById('addr-input-city').value;
+      const pincode = document.getElementById('addr-input-pin').value;
+      const user = AuthEngine.getCurrentUser() || {};
+
+      AuthEngine.saveAddress({
+        title,
+        flat,
+        street,
+        city,
+        pincode,
+        fullName: user.fullName || 'Member',
+        phone: user.phone || '+91 98765 43210',
+        isDefault: false
+      });
+
+      closeLocalModal('modal-add-address');
+      renderAddresses();
+      showToast('New address saved!');
+    }
+
+    function openPrivacyModal() {
+      document.getElementById('modal-privacy').classList.add('open');
+    }
+
+    function handleSavePassword(e) {
+      e.preventDefault();
+      const n = document.getElementById('sec-input-new').value;
+      AuthEngine.resetPassword(n);
+      closeLocalModal('modal-privacy');
+      showToast('Password updated securely!');
+    }
+
+    function handleLogoutClick() {
+      AuthEngine.showLogoutConfirm(() => {
+        renderAccountUI();
+        showToast('Logged out successfully');
+      });
+    }
+
+    function closeLocalModal(id, e) {
+      if (e && e.target !== e.currentTarget) return;
+      document.getElementById(id).classList.remove('open');
+    }
+
+    window.addEventListener('DOMContentLoaded', () => {
+      renderAccountUI();
+    });
   </script>
 </body>
 </html>

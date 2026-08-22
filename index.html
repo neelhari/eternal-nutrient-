@@ -98,8 +98,12 @@
         </div>
       </div>
 
-      <!-- Right Minimalist Cart Button -->
-      <div class="header-actions-right">
+      <!-- Right Minimalist Actions (Account + Cart) -->
+      <div class="header-actions-right" style="display: flex; align-items: center; gap: 12px;">
+        <a href="account.html" class="auth-header-indicator" style="text-decoration: none; color: inherit; display: flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 700;">
+          <i class="ri-user-3-line" style="font-size: 20px;"></i>
+          <span class="header-auth-label">Sign In</span>
+        </a>
         <button class="minimal-cart-icon-btn" onclick="openCartDrawer()" aria-label="Shopping Cart">
           <i class="ri-shopping-cart-2-line"></i>
           <span class="minimal-cart-badge">2</span>
@@ -871,6 +875,7 @@
 
   <!-- Scripts -->
   <script src="config/store.config.js"></script>
+  <script src="core/auth-engine.js"></script>
   <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
   
   <!-- Store Controller Logic -->

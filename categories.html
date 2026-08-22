@@ -17,6 +17,7 @@
   <link rel="stylesheet" href="styles/theme.css">
   <link rel="stylesheet" href="styles/storefront.css">
   <link rel="stylesheet" href="styles/categories.css">
+  <link rel="stylesheet" href="styles/auth.css">
 </head>
 <body>
 
@@ -30,7 +31,7 @@
     </div>
 
     <div class="zepto-header-actions">
-      <button class="zepto-head-icon" onclick="showToast('Added to Wishlist!')" aria-label="Wishlist">
+      <button class="zepto-head-icon" onclick="if (window.AuthEngine) AuthEngine.showWishlistModal('prod_1');" aria-label="Wishlist">
         <i class="ri-heart-3-line"></i>
       </button>
     </div>
@@ -238,6 +239,7 @@
   </nav>
 
   <script src="config/store.config.js"></script>
+  <script src="core/auth-engine.js"></script>
   <script>
     const CATALOG = {
       'Honey': [

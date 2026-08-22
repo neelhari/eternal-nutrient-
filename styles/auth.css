@@ -1,0 +1,826 @@
+/* ==========================================================================
+   ETERNAL NUTRICARE — MASTER AUTHENTICATION & ACCOUNT EXPERIENCE CSS
+   Design System: Deep Chocolate Brown (#281612) + Warm Ivory + Soft Cream
+   Restrained Natural Green Accent • Botanical Line-Art & Editorial Polish
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   1. Root Page & Background Atmosphere
+   -------------------------------------------------------------------------- */
+.auth-page-body {
+  background-color: #FAF7F2;
+  background-image: radial-gradient(#E8DFC8 0.75px, transparent 0.75px), radial-gradient(#E8DFC8 0.75px, #FAF7F2 0.75px);
+  background-size: 30px 30px;
+  background-position: 0 0, 15px 15px;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  color: #1E1A17;
+  font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+  margin: 0;
+  padding: 0;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* --------------------------------------------------------------------------
+   2. Top Minimalist Brand Header
+   -------------------------------------------------------------------------- */
+.auth-top-header {
+  height: 64px;
+  padding: 0 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: rgba(250, 247, 242, 0.92);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(223, 211, 196, 0.6);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.auth-header-brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  text-decoration: none;
+}
+
+.auth-header-emblem {
+  height: 36px;
+  width: auto;
+  object-fit: contain;
+}
+
+.auth-brand-wordmark {
+  display: flex;
+  flex-direction: column;
+  line-height: 1;
+}
+
+.auth-brand-eternal {
+  font-size: 15px;
+  font-weight: 800;
+  letter-spacing: 2px;
+  color: #281612;
+}
+
+.auth-brand-nutricare {
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 2.5px;
+  color: #4A7A25;
+  margin-top: 1px;
+}
+
+.auth-header-back-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: #55443C;
+  font-size: 13px;
+  font-weight: 700;
+  text-decoration: none;
+  padding: 6px 12px;
+  border-radius: 999px;
+  background: #FFFDF9;
+  border: 1px solid #E5DBD0;
+  transition: all 0.2s ease;
+}
+
+.auth-header-back-btn:hover {
+  background: #281612;
+  color: #FFFFFF;
+  border-color: #281612;
+}
+
+/* --------------------------------------------------------------------------
+   3. Main Split Container (Desktop: 2 Column, Mobile: 1 Column)
+   -------------------------------------------------------------------------- */
+.auth-split-wrapper {
+  max-width: 1120px;
+  width: calc(100% - 32px);
+  margin: 32px auto 48px;
+  background: #FFFDF9;
+  border: 1px solid #EAE0D3;
+  border-radius: 28px;
+  box-shadow: 0 16px 48px rgba(40, 22, 18, 0.06), 0 2px 10px rgba(40, 22, 18, 0.03);
+  overflow: hidden;
+  display: grid;
+  grid-template-columns: 1fr;
+  position: relative;
+}
+
+@media (min-width: 900px) {
+  .auth-split-wrapper {
+    grid-template-columns: 1.05fr 0.95fr;
+    margin: 40px auto 60px;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   4. Left Form Panel
+   -------------------------------------------------------------------------- */
+.auth-form-panel {
+  padding: 36px 28px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  position: relative;
+}
+
+@media (min-width: 600px) {
+  .auth-form-panel {
+    padding: 48px 44px;
+  }
+}
+
+.auth-watermark-botanical {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 180px;
+  height: 180px;
+  opacity: 0.04;
+  pointer-events: none;
+  background-image: url('../assets/botanical_branch.jpg');
+  background-size: cover;
+  background-repeat: no-repeat;
+}
+
+/* Header Text */
+.auth-eyebrow-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: #F4EFE6;
+  border: 1px solid #E5DBD0;
+  color: #55443C;
+  font-size: 11px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 1.2px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  width: fit-content;
+  margin-bottom: 12px;
+}
+
+.auth-main-title {
+  font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+  font-size: 28px;
+  font-weight: 800;
+  color: #281612;
+  letter-spacing: -0.5px;
+  line-height: 1.2;
+  margin: 0 0 8px;
+}
+
+.auth-sub-desc {
+  font-size: 14px;
+  color: #6C5D55;
+  line-height: 1.5;
+  margin: 0 0 24px;
+}
+
+/* Tab Switcher */
+.auth-nav-pill-group {
+  display: flex;
+  background: #F3ECE1;
+  padding: 4px;
+  border-radius: 14px;
+  margin-bottom: 24px;
+  border: 1px solid #E8DFD3;
+}
+
+.auth-pill-btn {
+  flex: 1;
+  padding: 10px 14px;
+  font-size: 13px;
+  font-weight: 700;
+  color: #726259;
+  background: none;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  text-align: center;
+}
+
+.auth-pill-btn.active {
+  background: #281612;
+  color: #FFFFFF;
+  box-shadow: 0 4px 14px rgba(40, 22, 18, 0.2);
+}
+
+/* --------------------------------------------------------------------------
+   5. Form Inputs & Groups
+   -------------------------------------------------------------------------- */
+.auth-form-body {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.auth-input-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  position: relative;
+}
+
+.auth-label {
+  font-size: 12.5px;
+  font-weight: 700;
+  color: #382C27;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.auth-input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.auth-leading-icon {
+  position: absolute;
+  left: 14px;
+  color: #8C7B72;
+  font-size: 18px;
+  pointer-events: none;
+}
+
+.auth-field-input {
+  width: 100%;
+  height: 48px;
+  background: #FAF7F2;
+  border: 1.5px solid #E2D7CB;
+  border-radius: 12px;
+  padding: 0 14px 0 42px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #281612;
+  font-family: inherit;
+  outline: none;
+  transition: all 0.2s ease;
+  box-sizing: border-box;
+}
+
+.auth-field-input.no-icon {
+  padding-left: 14px;
+}
+
+.auth-field-input:focus {
+  background: #FFFFFF;
+  border-color: #281612;
+  box-shadow: 0 0 0 3.5px rgba(40, 22, 18, 0.08);
+}
+
+.auth-field-input.has-error {
+  border-color: #C2410C;
+  background: #FFF7F5;
+}
+
+.auth-toggle-pass-btn {
+  position: absolute;
+  right: 12px;
+  background: none;
+  border: none;
+  color: #8C7B72;
+  font-size: 18px;
+  cursor: pointer;
+  padding: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.auth-toggle-pass-btn:hover {
+  color: #281612;
+}
+
+.auth-field-error-msg {
+  font-size: 11.5px;
+  color: #C2410C;
+  font-weight: 600;
+  display: none;
+  align-items: center;
+  gap: 4px;
+}
+
+.auth-field-error-msg.visible {
+  display: flex;
+}
+
+/* Row with Remember Me & Forgot Password */
+.auth-options-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 12.5px;
+  margin-top: 2px;
+}
+
+.auth-checkbox-label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: #6C5D55;
+  cursor: pointer;
+  font-weight: 600;
+  user-select: none;
+}
+
+.auth-checkbox-label input[type="checkbox"] {
+  accent-color: #281612;
+  width: 16px;
+  height: 16px;
+  cursor: pointer;
+}
+
+.auth-link-text {
+  color: #281612;
+  font-weight: 700;
+  text-decoration: none;
+  transition: color 0.15s ease;
+  cursor: pointer;
+}
+
+.auth-link-text:hover {
+  text-decoration: underline;
+  color: #4A7A25;
+}
+
+/* --------------------------------------------------------------------------
+   6. Action Buttons
+   -------------------------------------------------------------------------- */
+.btn-auth-submit {
+  width: 100%;
+  height: 50px;
+  background: #281612;
+  color: #FFFFFF;
+  border: none;
+  border-radius: 12px;
+  font-size: 14px;
+  font-weight: 800;
+  letter-spacing: 0.3px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 8px;
+  box-shadow: 0 4px 16px rgba(40, 22, 18, 0.25);
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.btn-auth-submit:hover {
+  background: #3E241E;
+  transform: translateY(-1px);
+  box-shadow: 0 6px 20px rgba(40, 22, 18, 0.3);
+}
+
+.btn-auth-submit:active {
+  transform: scale(0.98);
+}
+
+.btn-auth-submit:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* Subtle Divider */
+.auth-or-divider {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 18px 0;
+  color: #9C8B82;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+.auth-or-divider::before,
+.auth-or-divider::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: #E8DFD3;
+}
+
+/* Demo / Alternate Quick Auth */
+.btn-auth-secondary {
+  width: 100%;
+  height: 46px;
+  background: #FFFDF9;
+  color: #281612;
+  border: 1.5px solid #DFCFC0;
+  border-radius: 12px;
+  font-size: 13.5px;
+  font-weight: 700;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: all 0.18s ease;
+}
+
+.btn-auth-secondary:hover {
+  background: #F8F3EA;
+  border-color: #281612;
+}
+
+.auth-foot-switch {
+  text-align: center;
+  font-size: 13px;
+  color: #6C5D55;
+  margin-top: 20px;
+}
+
+/* --------------------------------------------------------------------------
+   7. Right Luxury Brand Campaign Panel (Desktop)
+   -------------------------------------------------------------------------- */
+.auth-campaign-panel {
+  display: none;
+  background: linear-gradient(145deg, #2D1A15 0%, #1E100D 100%);
+  color: #FFFFFF;
+  padding: 48px;
+  flex-direction: column;
+  justify-content: space-between;
+  position: relative;
+  overflow: hidden;
+}
+
+@media (min-width: 900px) {
+  .auth-campaign-panel {
+    display: flex;
+  }
+}
+
+/* Subtle Background Pattern & Glow */
+.auth-campaign-bg-glow {
+  position: absolute;
+  top: -20%;
+  right: -20%;
+  width: 320px;
+  height: 320px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(226, 192, 149, 0.2) 0%, transparent 70%);
+  filter: blur(40px);
+  pointer-events: none;
+}
+
+.auth-campaign-top-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(226, 192, 149, 0.3);
+  padding: 6px 14px;
+  border-radius: 999px;
+  font-size: 11.5px;
+  font-weight: 700;
+  color: #E2C095;
+  width: fit-content;
+  z-index: 2;
+}
+
+.auth-campaign-center-content {
+  z-index: 2;
+  margin: auto 0;
+}
+
+.auth-campaign-headline {
+  font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+  font-size: 32px;
+  font-weight: 800;
+  line-height: 1.25;
+  color: #FFFDF9;
+  letter-spacing: -0.5px;
+  margin: 16px 0 12px;
+}
+
+.auth-campaign-subtext {
+  font-size: 14.5px;
+  color: #D6C5B9;
+  line-height: 1.6;
+  max-width: 380px;
+}
+
+/* Featured Products Carousel Cards in Campaign */
+.auth-campaign-cards-row {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  margin-top: 28px;
+}
+
+.auth-campaign-mini-card {
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 14px;
+  padding: 10px;
+  text-align: center;
+  backdrop-filter: blur(6px);
+  transition: transform 0.2s ease;
+}
+
+.auth-campaign-mini-card:hover {
+  transform: translateY(-3px);
+  border-color: rgba(226, 192, 149, 0.4);
+}
+
+.auth-campaign-mini-img {
+  width: 100%;
+  aspect-ratio: 1/1;
+  object-fit: cover;
+  border-radius: 8px;
+  background: #FFFDF9;
+  margin-bottom: 6px;
+}
+
+.auth-campaign-mini-name {
+  font-size: 11.5px;
+  font-weight: 700;
+  color: #FFFDF9;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.auth-campaign-foot {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  font-size: 12px;
+  color: #C2B0A6;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  padding-top: 20px;
+  z-index: 2;
+}
+
+.auth-campaign-foot-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.auth-campaign-foot-item i {
+  color: #A3E635;
+  font-size: 16px;
+}
+
+/* --------------------------------------------------------------------------
+   8. Dedicated State Views (Success, Forgot, Reset)
+   -------------------------------------------------------------------------- */
+.auth-view-screen {
+  display: none;
+}
+
+.auth-view-screen.active {
+  display: block;
+}
+
+/* Welcome Success Screen */
+.auth-success-box {
+  text-align: center;
+  padding: 20px 10px;
+}
+
+.auth-success-icon-wrap {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #EBF4E5 0%, #D8EACF 100%);
+  color: #2F7D26;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 38px;
+  margin-bottom: 20px;
+  border: 3px solid #FFFFFF;
+  box-shadow: 0 8px 24px rgba(47, 125, 38, 0.18);
+  animation: popSuccess 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+@keyframes popSuccess {
+  0% { transform: scale(0.5); opacity: 0; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+.auth-success-heading {
+  font-size: 24px;
+  font-weight: 800;
+  color: #281612;
+  margin: 0 0 8px;
+}
+
+.auth-success-subtext {
+  font-size: 14px;
+  color: #6C5D55;
+  line-height: 1.5;
+  margin: 0 0 28px;
+}
+
+/* --------------------------------------------------------------------------
+   9. Global Auth Modals & Overlays
+   -------------------------------------------------------------------------- */
+.en-auth-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(20, 10, 8, 0.65);
+  backdrop-filter: blur(8px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2100;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.25s ease;
+  padding: 16px;
+}
+
+.en-auth-modal-overlay.open {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.en-auth-modal-sheet {
+  background: #FFFDF9;
+  border: 1px solid #EAE0D3;
+  border-radius: 24px;
+  padding: 32px 24px 28px;
+  width: 100%;
+  max-width: 400px;
+  text-align: center;
+  box-shadow: 0 20px 60px rgba(40, 22, 18, 0.25);
+  position: relative;
+  transform: scale(0.94) translateY(12px);
+  transition: transform 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.en-auth-modal-overlay.open .en-auth-modal-sheet {
+  transform: scale(1) translateY(0);
+}
+
+.en-modal-close-btn {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  background: #F4EFE6;
+  border: none;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  font-size: 18px;
+  color: #55443C;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.en-modal-icon-header {
+  margin-bottom: 16px;
+}
+
+.en-modal-heart-avatar {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background: #FDE8E8;
+  color: #E11D48;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 28px;
+}
+
+.en-modal-warn-avatar {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background: #FEF3C7;
+  color: #D97706;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 28px;
+}
+
+.en-modal-heading {
+  font-size: 19px;
+  font-weight: 800;
+  color: #281612;
+  margin: 0 0 8px;
+}
+
+.en-modal-body-text {
+  font-size: 13.5px;
+  color: #6C5D55;
+  line-height: 1.45;
+  margin: 0 0 24px;
+}
+
+.en-modal-actions-col {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.btn-en-auth-primary {
+  width: 100%;
+  height: 46px;
+  background: #281612;
+  color: #FFFFFF;
+  border: none;
+  border-radius: 12px;
+  font-size: 13.5px;
+  font-weight: 800;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+
+.btn-en-auth-danger {
+  width: 100%;
+  height: 46px;
+  background: #B91C1C;
+  color: #FFFFFF;
+  border: none;
+  border-radius: 12px;
+  font-size: 13.5px;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.btn-en-auth-subtle {
+  background: none;
+  border: none;
+  color: #726259;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  padding: 6px;
+}
+
+.btn-en-auth-subtle:hover {
+  color: #281612;
+}
+
+/* --------------------------------------------------------------------------
+   10. Header Indicators
+   -------------------------------------------------------------------------- */
+.user-auth-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: #FAF3E7;
+  border: 1px solid #E5D5C2;
+  padding: 4px 10px 4px 4px;
+  border-radius: 999px;
+  text-decoration: none;
+  color: #281612;
+  transition: all 0.2s ease;
+}
+
+.user-auth-pill:hover {
+  background: #281612;
+  color: #FFFFFF;
+  border-color: #281612;
+}
+
+.user-avatar-dot {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: #281612;
+  color: #FFFFFF;
+  font-size: 11px;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.user-auth-pill:hover .user-avatar-dot {
+  background: #E2C095;
+  color: #281612;
+}
+
+.user-name-short {
+  font-size: 12px;
+  font-weight: 800;
+}

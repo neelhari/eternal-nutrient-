@@ -12,9 +12,10 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=DM+Serif+Display&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
-  <!-- Core Layout Styles -->
+  <!-- Core Styles -->
   <link rel="stylesheet" href="styles/theme.css">
   <link rel="stylesheet" href="styles/storefront.css">
+  <link rel="stylesheet" href="styles/auth.css">
 
   <style>
     * {
@@ -461,8 +462,8 @@
     <div>
       <div class="p-hero-img-wrap">
         <img id="p-hero-img" src="assets/showcase_honey.png" alt="Product Image">
-        <button class="p-wishlist-float-btn" onclick="showToast('Saved to Wishlist!')" aria-label="Wishlist">
-          <i class="ri-heart-line"></i>
+        <button class="p-wishlist-float-btn" id="p-wish-btn" onclick="handleProductWishlistClick()" aria-label="Wishlist">
+          <i class="ri-heart-line" id="p-wish-icon"></i>
         </button>
       </div>
     </div>
@@ -650,6 +651,7 @@
   <div id="toast-wrapper" class="toast-floating-container"></div>
 
   <script src="config/store.config.js"></script>
+  <script src="core/auth-engine.js"></script>
   <script>
     const CATALOG = {
       'prod_1': { title: 'Organic Honey', sub: 'Raw & Unfiltered • 500g', price: 499, mrp: 599, img: 'assets/showcase_honey.png', desc: 'Sourced directly from deep forest wild hives, our organic honey is cold-extracted and entirely unfiltered. It retains all natural pollen, enzymes, and raw vitality.' },
@@ -665,10 +667,27 @@
     let packMultiplier = 1.0;
     let qty = 1;
 
+    function handleProductWishlistClick() {
+      if (window.AuthEngine) {
+        const res = window.AuthEngine.toggleWishlist(currentId);
+        updateWishIconUI();
+      }
+    }
+
+    function updateWishIconUI() {
+      const icon = document.getElementById('p-wish-icon');
+      if (icon && window.AuthEngine) {
+        const isWish = window.AuthEngine.isWishlisted(currentId);
+        icon.className = isWish ? 'ri-heart-fill' : 'ri-heart-line';
+        icon.style.color = isWish ? '#E11D48' : '#281612';
+      }
+    }
+
     window.addEventListener('DOMContentLoaded', () => {
       const params = new URLSearchParams(window.location.search);
       currentId = params.get('id') || 'prod_1';
       const item = CATALOG[currentId] || CATALOG['prod_1'];
+      setTimeout(updateWishIconUI, 100);
 
       document.getElementById('p-title').textContent = item.title;
       document.getElementById('p-subtitle').textContent = item.sub;
