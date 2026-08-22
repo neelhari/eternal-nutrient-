@@ -16,7 +16,6 @@
   <!-- Core Layout Styles -->
   <link rel="stylesheet" href="styles/theme.css">
   <link rel="stylesheet" href="styles/storefront.css">
-  <link rel="stylesheet" href="styles/auth.css">
 
   <!-- Supabase CDN -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -239,8 +238,8 @@
     .guest-btn-row {
       display: flex;
       flex-direction: column;
-      gap: 10px;
-      max-width: 320px;
+      gap: 12px;
+      max-width: 340px;
       margin: 0 auto;
     }
 
@@ -248,6 +247,53 @@
       .guest-btn-row {
         flex-direction: row;
       }
+    }
+
+    .btn-en-auth-primary {
+      width: 100%;
+      height: 48px;
+      background: #281612;
+      color: #FFFFFF;
+      border: none;
+      border-radius: 12px;
+      font-size: 14px;
+      font-weight: 800;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      text-decoration: none;
+      box-shadow: 0 4px 14px rgba(40, 22, 18, 0.2);
+      transition: all 0.2s ease;
+    }
+
+    .btn-en-auth-primary:hover {
+      background: #3E241E;
+      transform: translateY(-1px);
+    }
+
+    .btn-auth-secondary {
+      width: 100%;
+      height: 48px;
+      background: #FFFDF9;
+      color: #281612;
+      border: 1.5px solid #DFCFC0;
+      border-radius: 12px;
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      text-decoration: none;
+      transition: all 0.2s ease;
+    }
+
+    .btn-auth-secondary:hover {
+      background: #F8F3EA;
+      border-color: #281612;
     }
 
     /* Interactive Section Tabs */
@@ -645,6 +691,80 @@
     .modal-input-field:focus {
       border-color: #281612;
       background: #FFFFFF;
+    }
+
+    /* Modal Overlays in Account */
+    .en-auth-modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(20, 10, 8, 0.65);
+      backdrop-filter: blur(8px);
+      display: none !important;
+      align-items: center;
+      justify-content: center;
+      z-index: 2100;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.25s ease;
+      padding: 16px;
+    }
+
+    .en-auth-modal-overlay.open {
+      display: flex !important;
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .en-auth-modal-sheet {
+      background: #FFFDF9;
+      border: 1px solid #EAE0D3;
+      border-radius: 24px;
+      padding: 32px 24px 28px;
+      width: 100%;
+      max-width: 400px;
+      text-align: center;
+      box-shadow: 0 20px 60px rgba(40, 22, 18, 0.25);
+      position: relative;
+      transform: scale(0.94) translateY(12px);
+      transition: transform 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .en-auth-modal-overlay.open .en-auth-modal-sheet {
+      transform: scale(1) translateY(0);
+    }
+
+    .en-modal-close-btn {
+      position: absolute;
+      top: 14px;
+      right: 14px;
+      background: #F4EFE6;
+      border: none;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      font-size: 18px;
+      color: #55443C;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .en-modal-heading {
+      font-size: 19px;
+      font-weight: 800;
+      color: #281612;
+      margin: 0 0 8px;
+    }
+
+    .en-modal-body-text {
+      font-size: 13.5px;
+      color: #6C5D55;
+      line-height: 1.45;
+      margin: 0 0 20px;
     }
   </style>
 </head>
