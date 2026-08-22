@@ -320,7 +320,7 @@ body {
   bottom: -11px !important;
   left: 50% !important;
   transform: translateX(-50%) !important;
-  background: #2D5C14 !important;
+  background: #553518 !important;
   color: #FFFFFF !important;
   border-radius: 6px !important;
   width: 78px !important;
@@ -329,7 +329,7 @@ body {
   align-items: center !important;
   justify-content: space-between !important;
   padding: 0 4px !important;
-  box-shadow: 0 3px 10px rgba(45, 92, 20, 0.35) !important;
+  box-shadow: 0 3px 10px rgba(85, 53, 24, 0.35) !important;
   z-index: 10 !important;
 }
 

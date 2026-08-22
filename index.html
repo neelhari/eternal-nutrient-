@@ -89,8 +89,11 @@
       <!-- Desktop Center Search Bar (Hidden on Mobile) -->
       <div class="header-search-wrap">
         <div class="search-input-pill">
-          <i class="ri-search-2-line"></i>
+          <i class="ri-search-2-line search-leading-icon"></i>
           <input type="text" id="desktop-search-input" placeholder="Search for honey, pickles, millets, laddus, chikkis..." oninput="handleSearch(this.value)">
+          <button class="search-submit-btn" onclick="handleSearch(document.getElementById('desktop-search-input').value)" aria-label="Search">
+            <i class="ri-search-2-line"></i>
+          </button>
         </div>
       </div>
 
@@ -107,8 +110,11 @@
     <!-- Mobile Secondary Search Bar -->
     <div class="mobile-search-bar">
       <div class="search-input-pill">
-        <i class="ri-search-2-line"></i>
+        <i class="ri-search-2-line search-leading-icon"></i>
         <input type="text" id="mobile-search-input" placeholder="Search honey, pickles, millets, laddus..." oninput="handleSearch(this.value)">
+        <button class="search-submit-btn" onclick="handleSearch(document.getElementById('mobile-search-input').value)" aria-label="Search">
+          <i class="ri-search-2-line"></i>
+        </button>
       </div>
     </div>
 
@@ -218,7 +224,7 @@
             </div>
             <div class="zepto-dual-actions" id="bs-actions-prod_1">
               <button class="zepto-btn-buynow" onclick="event.stopPropagation(); buyNowDirect('prod_1')">
-                <i class="ri-flashlight-fill"></i> Buy
+                Buy
               </button>
               <button class="zepto-btn-cart-icon" onclick="event.stopPropagation(); addToCart('prod_1')" aria-label="Add to cart">
                 <i class="ri-shopping-cart-2-line"></i>
@@ -245,7 +251,7 @@
             </div>
             <div class="zepto-dual-actions" id="bs-actions-prod_2">
               <button class="zepto-btn-buynow" onclick="event.stopPropagation(); buyNowDirect('prod_2')">
-                <i class="ri-flashlight-fill"></i> Buy
+                Buy
               </button>
               <button class="zepto-btn-cart-icon" onclick="event.stopPropagation(); addToCart('prod_2')" aria-label="Add to cart">
                 <i class="ri-shopping-cart-2-line"></i>
@@ -272,7 +278,7 @@
             </div>
             <div class="zepto-dual-actions" id="bs-actions-prod_3">
               <button class="zepto-btn-buynow" onclick="event.stopPropagation(); buyNowDirect('prod_3')">
-                <i class="ri-flashlight-fill"></i> Buy
+                Buy
               </button>
               <button class="zepto-btn-cart-icon" onclick="event.stopPropagation(); addToCart('prod_3')" aria-label="Add to cart">
                 <i class="ri-shopping-cart-2-line"></i>
@@ -299,7 +305,7 @@
             </div>
             <div class="zepto-dual-actions" id="bs-actions-prod_4">
               <button class="zepto-btn-buynow" onclick="event.stopPropagation(); buyNowDirect('prod_4')">
-                <i class="ri-flashlight-fill"></i> Buy
+                Buy
               </button>
               <button class="zepto-btn-cart-icon" onclick="event.stopPropagation(); addToCart('prod_4')" aria-label="Add to cart">
                 <i class="ri-shopping-cart-2-line"></i>
@@ -326,7 +332,7 @@
             </div>
             <div class="zepto-dual-actions" id="bs-actions-prod_5">
               <button class="zepto-btn-buynow" onclick="event.stopPropagation(); buyNowDirect('prod_5')">
-                <i class="ri-flashlight-fill"></i> Buy
+                Buy
               </button>
               <button class="zepto-btn-cart-icon" onclick="event.stopPropagation(); addToCart('prod_5')" aria-label="Add to cart">
                 <i class="ri-shopping-cart-2-line"></i>
@@ -367,7 +373,7 @@
             </div>
             <div class="card-dual-actions" id="sc-actions-prod_1">
               <button class="btn-buy-light-green" onclick="event.stopPropagation(); buyNowDirect('prod_1')">
-                <i class="ri-flashlight-fill"></i> Buy Now
+                Buy Now
               </button>
               <button class="btn-add-cart-outline" onclick="event.stopPropagation(); addToCart('prod_1')" aria-label="Add to cart">
                 <i class="ri-shopping-cart-2-line"></i>
@@ -394,7 +400,7 @@
             </div>
             <div class="card-dual-actions" id="sc-actions-prod_2">
               <button class="btn-buy-light-green" onclick="event.stopPropagation(); buyNowDirect('prod_2')">
-                <i class="ri-flashlight-fill"></i> Buy Now
+                Buy Now
               </button>
               <button class="btn-add-cart-outline" onclick="event.stopPropagation(); addToCart('prod_2')" aria-label="Add to cart">
                 <i class="ri-shopping-cart-2-line"></i>
@@ -421,7 +427,7 @@
             </div>
             <div class="card-dual-actions" id="sc-actions-prod_3">
               <button class="btn-buy-light-green" onclick="event.stopPropagation(); buyNowDirect('prod_3')">
-                <i class="ri-flashlight-fill"></i> Buy Now
+                Buy Now
               </button>
               <button class="btn-add-cart-outline" onclick="event.stopPropagation(); addToCart('prod_3')" aria-label="Add to cart">
                 <i class="ri-shopping-cart-2-line"></i>
@@ -448,7 +454,7 @@
             </div>
             <div class="card-dual-actions" id="sc-actions-prod_4">
               <button class="btn-buy-light-green" onclick="event.stopPropagation(); buyNowDirect('prod_4')">
-                <i class="ri-flashlight-fill"></i> Buy Now
+                Buy Now
               </button>
               <button class="btn-add-cart-outline" onclick="event.stopPropagation(); addToCart('prod_4')" aria-label="Add to cart">
                 <i class="ri-shopping-cart-2-line"></i>
@@ -475,7 +481,7 @@
             </div>
             <div class="card-dual-actions" id="sc-actions-prod_5">
               <button class="btn-buy-light-green" onclick="event.stopPropagation(); buyNowDirect('prod_5')">
-                <i class="ri-flashlight-fill"></i> Buy Now
+                Buy Now
               </button>
               <button class="btn-add-cart-outline" onclick="event.stopPropagation(); addToCart('prod_5')" aria-label="Add to cart">
                 <i class="ri-shopping-cart-2-line"></i>
@@ -502,7 +508,7 @@
             </div>
             <div class="card-dual-actions" id="sc-actions-prod_6">
               <button class="btn-buy-light-green" onclick="event.stopPropagation(); buyNowDirect('prod_6')">
-                <i class="ri-flashlight-fill"></i> Buy Now
+                Buy Now
               </button>
               <button class="btn-add-cart-outline" onclick="event.stopPropagation(); addToCart('prod_6')" aria-label="Add to cart">
                 <i class="ri-shopping-cart-2-line"></i>
@@ -536,18 +542,18 @@
       </div>
     </section>
 
-    <!-- Live Trust Stats Strip (AOS Animated) -->
-    <section class="stats-strip-container" data-aos="fade-up">
+    <!-- Live Trust Stats Strip (AOS Animated with Dynamic Count-Up) -->
+    <section class="stats-strip-container" id="trust-stats-section" data-aos="fade-up">
       <div class="stat-box-card">
-        <div class="stat-num-val">10,000+</div>
+        <div class="stat-num-val stat-count-animated" data-target="10000" data-suffix="+" data-format="comma">0+</div>
         <div class="stat-desc-label">Happy Families</div>
       </div>
       <div class="stat-box-card">
-        <div class="stat-num-val">100%</div>
+        <div class="stat-num-val stat-count-animated" data-target="100" data-suffix="%">0%</div>
         <div class="stat-desc-label">Certified Organic</div>
       </div>
       <div class="stat-box-card">
-        <div class="stat-num-val">★ 4.9 / 5</div>
+        <div class="stat-num-val stat-count-animated" data-target="4.9" data-prefix='<span class="star-gold">★</span> ' data-suffix=" / 5" data-decimals="1"><span class="star-gold">★</span> 0.0 / 5</div>
         <div class="stat-desc-label">Customer Rating</div>
       </div>
       <div class="stat-box-card">
@@ -901,7 +907,7 @@
           } else {
             bsEl.innerHTML = `
               <button class="zepto-btn-buynow" onclick="event.stopPropagation(); buyNowDirect('${id}')">
-                <i class="ri-flashlight-fill"></i> Buy
+                Buy
               </button>
               <button class="zepto-btn-cart-icon" onclick="event.stopPropagation(); addToCart('${id}', event)" aria-label="Add to cart">
                 <i class="ri-shopping-cart-2-line"></i>
@@ -924,7 +930,7 @@
           } else {
             scEl.innerHTML = `
               <button class="btn-buy-light-green" onclick="event.stopPropagation(); buyNowDirect('${id}')">
-                <i class="ri-flashlight-fill"></i> Buy Now
+                Buy Now
               </button>
               <button class="btn-add-cart-outline" onclick="event.stopPropagation(); addToCart('${id}', event)" aria-label="Add to cart">
                 <i class="ri-shopping-cart-2-line"></i>
@@ -1010,7 +1016,7 @@
             </div>
             <div class="card-dual-actions">
               <button class="btn-buy-light-green" onclick="event.stopPropagation(); buyNowDirect('${p.id}')">
-                <i class="ri-flashlight-fill"></i> Buy Now
+                Buy Now
               </button>
               <button class="btn-add-cart-outline" onclick="event.stopPropagation(); addToCart('${p.id}')">
                 <i class="ri-shopping-cart-2-line"></i>
@@ -1044,8 +1050,77 @@
       document.getElementById('bestsellers-section').scrollIntoView({ behavior: 'smooth' });
     }
 
+    // Smooth Number Count-Up Animation
+    function initStatsCounter() {
+      const statElements = document.querySelectorAll('.stat-count-animated');
+      if (!statElements.length) return;
+
+      let animated = false;
+      const startCountAnimation = () => {
+        if (animated) return;
+        animated = true;
+        statElements.forEach(el => animateCount(el));
+      };
+
+      if ('IntersectionObserver' in window) {
+        const observer = new IntersectionObserver((entries) => {
+          entries.forEach(entry => {
+            if (entry.isIntersecting) {
+              startCountAnimation();
+              observer.disconnect();
+            }
+          });
+        }, { threshold: 0.15 });
+
+        const section = document.getElementById('trust-stats-section');
+        if (section) observer.observe(section);
+        else startCountAnimation();
+      } else {
+        startCountAnimation();
+      }
+    }
+
+    function animateCount(el) {
+      const target = parseFloat(el.getAttribute('data-target'));
+      const prefix = el.getAttribute('data-prefix') || '';
+      const suffix = el.getAttribute('data-suffix') || '';
+      const decimals = parseInt(el.getAttribute('data-decimals') || '0', 10);
+      const useComma = el.getAttribute('data-format') === 'comma';
+      const duration = 1600;
+      const startTime = performance.now();
+
+      function update(currentTime) {
+        const elapsed = currentTime - startTime;
+        const progress = Math.min(elapsed / duration, 1);
+        
+        // Ease-out cubic curve
+        const easeOut = 1 - Math.pow(1 - progress, 3);
+        const currentVal = target * easeOut;
+
+        let formattedVal = decimals > 0 ? currentVal.toFixed(decimals) : Math.floor(currentVal).toString();
+        if (useComma) {
+          formattedVal = parseInt(formattedVal, 10).toLocaleString('en-IN');
+        }
+
+        el.innerHTML = `${prefix}${formattedVal}${suffix}`;
+
+        if (progress < 1) {
+          requestAnimationFrame(update);
+        } else {
+          let finalFormatted = decimals > 0 ? target.toFixed(decimals) : target.toString();
+          if (useComma) {
+            finalFormatted = parseInt(finalFormatted, 10).toLocaleString('en-IN');
+          }
+          el.innerHTML = `${prefix}${finalFormatted}${suffix}`;
+        }
+      }
+
+      requestAnimationFrame(update);
+    }
+
     window.addEventListener('DOMContentLoaded', () => {
       renderCart();
+      initStatsCounter();
       if (typeof AOS !== 'undefined') {
         AOS.init({
           duration: 650,

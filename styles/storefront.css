@@ -49,7 +49,8 @@ body {
   top: 0;
   background: #FFFFFF;
   border-bottom: 1px solid #EAEFE6;
-  padding: 10px 16px;
+  padding: 10px 24px;
+  min-height: 72px;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -60,18 +61,27 @@ body {
 
 @media (max-width: 768px) {
   .main-header {
-    padding: 12px 18px;
+    padding: 8px 16px;
+    min-height: 64px;
     gap: 12px;
   }
 }
 
-/* Brand Logo (Left-aligned) */
+/* Brand Logo (PDF Matched: Emblem on Top, Name Below) */
 .brand-link-left {
   display: flex;
+  flex-direction: column;
   align-items: center;
-  gap: 10px;
+  justify-content: center;
   text-decoration: none;
   flex-shrink: 0;
+  gap: 2px;
+  padding: 2px 4px;
+  transition: transform 0.2s ease;
+}
+
+.brand-link-left:hover {
+  transform: scale(1.03);
 }
 
 .brand-logo-official-img {
@@ -82,32 +92,52 @@ body {
 }
 
 .brand-emblem-img {
-  width: 38px;
-  height: 38px;
+  width: 36px;
+  height: 36px;
   object-fit: contain;
+  display: block;
   flex-shrink: 0;
 }
 
 .brand-text-block {
   display: flex;
   flex-direction: column;
-  line-height: 1;
+  align-items: center;
+  text-align: center;
+  line-height: 1.08;
 }
 
 .brand-name-eternal {
   font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
-  font-size: 15.5px;
+  font-size: 13px;
   font-weight: 800;
-  color: #553518;
-  letter-spacing: 0.8px;
+  color: #553518; /* Exact Logo Core Brown */
+  letter-spacing: 1.4px;
+  text-transform: uppercase;
 }
 
 .brand-name-nutricare {
   font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
-  font-size: 9.5px;
+  font-size: 8px;
   font-weight: 800;
-  color: #659B28;
-  letter-spacing: 2px;
+  color: #4A7A25; /* Exact Logo Leaf Green */
+  letter-spacing: 2.2px;
+  text-transform: uppercase;
+}
+
+@media (max-width: 768px) {
+  .brand-emblem-img {
+    width: 30px;
+    height: 30px;
+  }
+  .brand-name-eternal {
+    font-size: 11.5px;
+    letter-spacing: 1.2px;
+  }
+  .brand-name-nutricare {
+    font-size: 7px;
+    letter-spacing: 1.8px;
+  }
 }
 
 /* Center Desktop Search Bar */
@@ -120,21 +150,21 @@ body {
   display: flex;
   align-items: center;
   background: #F3F6EF;
-  border: 1px solid #E2EAD8;
+  border: 1.5px solid #E2EAD8;
   border-radius: 999px;
-  padding: 8px 16px;
-  gap: 10px;
+  padding: 4px 6px 4px 16px;
+  gap: 8px;
   transition: all 0.2s ease;
 }
 
 .search-input-pill:focus-within {
   background: #FFFFFF;
-  border-color: #4A7A25;
-  box-shadow: 0 0 0 3px rgba(74, 122, 37, 0.12);
+  border-color: #553518;
+  box-shadow: 0 0 0 3px rgba(85, 53, 24, 0.12);
 }
 
-.search-input-pill i {
-  font-size: 17px;
+.search-input-pill i.search-leading-icon {
+  font-size: 16px;
   color: #6C7E64;
 }
 
@@ -150,6 +180,33 @@ body {
 
 .search-input-pill input::placeholder {
   color: #889981;
+}
+
+/* Dedicated Search Button in Logo Brown */
+.search-submit-btn {
+  background: #553518;
+  color: #FFFFFF;
+  border: none;
+  border-radius: 999px;
+  width: 34px;
+  height: 34px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 6px rgba(85, 53, 24, 0.25);
+}
+
+.search-submit-btn:hover {
+  background: #3B240F;
+  transform: scale(1.05);
+}
+
+.search-submit-btn:active {
+  transform: scale(0.95);
 }
 
 /* Minimalist Clean Cart Button (Zero Thickness) */
@@ -182,7 +239,7 @@ body {
   position: absolute;
   top: 3px;
   right: 2px;
-  background: #4A7A25;
+  background: #553518;
   color: #FFFFFF;
   font-size: 10.5px;
   font-weight: 800;
@@ -291,7 +348,7 @@ body {
 }
 
 .hero-cta-btn {
-  background: #4A7A25;
+  background: #553518;
   color: #FFFFFF;
   border: none;
   font-size: 13px;
@@ -302,12 +359,12 @@ body {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 3px 10px rgba(74, 122, 37, 0.25);
+  box-shadow: 0 3px 10px rgba(85, 53, 24, 0.25);
   transition: all 0.2s ease;
 }
 
 .hero-cta-btn:hover {
-  background: #375C1A;
+  background: #3B240F;
 }
 
 .hero-dots-row {
@@ -325,7 +382,7 @@ body {
 }
 
 .hero-dot.active {
-  background: #4A7A25;
+  background: #553518;
 }
 
 /* ==========================================================================
@@ -548,9 +605,9 @@ body {
 
 .zepto-btn-buynow {
   flex: 1 !important;
-  background: #EEF7E8 !important;
-  color: #386618 !important;
-  border: 1.5px solid #BDDE9F !important;
+  background: #553518 !important;
+  color: #FFFFFF !important;
+  border: 1.5px solid #553518 !important;
   border-radius: 8px !important;
   font-size: 11.5px !important;
   font-weight: 800 !important;
@@ -558,15 +615,18 @@ body {
   display: flex !important;
   align-items: center !important;
   justify-content: center !important;
-  gap: 3px !important;
+  gap: 4px !important;
   cursor: pointer !important;
   transition: all 0.2s ease !important;
   line-height: 1 !important;
+  box-shadow: 0 2px 6px rgba(85, 53, 24, 0.2) !important;
 }
 
 .zepto-btn-buynow:hover {
-  background: #4A7A25 !important;
+  background: #3B240F !important;
+  border-color: #3B240F !important;
   color: #FFFFFF !important;
+  box-shadow: 0 4px 12px rgba(85, 53, 24, 0.3) !important;
 }
 
 .zepto-btn-cart-icon {
@@ -593,14 +653,14 @@ body {
 /* Live Dynamic Stepper for Product Cards */
 .card-stepper-active {
   width: 100% !important;
-  background: #386618 !important;
+  background: #553518 !important;
   color: #FFFFFF !important;
   border-radius: 8px !important;
   display: flex !important;
   align-items: center !important;
   justify-content: space-between !important;
   padding: 5px 8px !important;
-  box-shadow: 0 3px 10px rgba(56, 102, 24, 0.25) !important;
+  box-shadow: 0 3px 10px rgba(85, 53, 24, 0.25) !important;
 }
 
 .card-stepper-active button {
@@ -769,9 +829,9 @@ body {
 
 .btn-buy-light-green {
   flex: 1;
-  background: #EEF7E8;
-  color: #386618;
-  border: 1.5px solid #BDDE9F;
+  background: #553518;
+  color: #FFFFFF;
+  border: 1.5px solid #553518;
   border-radius: 8px;
   font-size: 12.5px;
   font-weight: 800;
@@ -779,14 +839,17 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 4px;
+  gap: 5px;
   cursor: pointer;
   transition: all 0.2s ease;
+  box-shadow: 0 2px 8px rgba(85, 53, 24, 0.2);
 }
 
 .btn-buy-light-green:hover {
-  background: #4A7A25;
+  background: #3B240F;
+  border-color: #3B240F;
   color: #FFFFFF;
+  box-shadow: 0 4px 12px rgba(85, 53, 24, 0.3);
 }
 
 .btn-add-cart-outline {
@@ -814,9 +877,9 @@ body {
    6. 4 QUALITY PILLARS STRIP
    ========================================================================== */
 .quality-pillars-section {
-  background: #EFF5E9;
-  border-top: 1px solid #DDE8D4;
-  border-bottom: 1px solid #DDE8D4;
+  background: #F8F5F0;
+  border-top: 1px solid #EBE3D7;
+  border-bottom: 1px solid #EBE3D7;
   padding: 18px 24px;
   margin-top: 16px;
 }
@@ -845,18 +908,18 @@ body {
   top: 10%;
   height: 80%;
   width: 1px;
-  background: #D5E2CB;
+  background: #E5DCD0;
 }
 
 .pillar-icon {
   font-size: 22px;
-  color: #4A7A25;
+  color: #553518;
 }
 
 .pillar-label {
   font-size: 11.5px;
   font-weight: 700;
-  color: #374A32;
+  color: #482B14;
   line-height: 1.2;
 }
 
@@ -920,7 +983,7 @@ body {
   }
 
   .mobile-dock-btn.active {
-    color: #4A7A25;
+    color: #553518;
     font-weight: 800;
   }
 }
@@ -1489,7 +1552,7 @@ body {
   }
 
   .mobile-dock-btn.active {
-    color: #4A7A25;
+    color: #553518;
     font-weight: 800;
   }
 }
@@ -1766,21 +1829,26 @@ body {
   padding: 14px;
   text-align: center;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.02);
-  transition: transform 0.2s ease, border-color 0.2s ease;
+  transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
 .stat-box-card:hover {
   transform: translateY(-2px);
-  border-color: #BDDE9F;
+  border-color: #553518;
+  box-shadow: 0 4px 14px rgba(85, 53, 24, 0.1);
 }
 
 .stat-num-val {
   font-family: 'Plus Jakarta Sans', sans-serif;
   font-size: 20px;
   font-weight: 800;
-  color: #2D5C14;
+  color: #553518;
   line-height: 1.1;
   margin-bottom: 3px;
+}
+
+.stat-num-val .star-gold {
+  color: #E59500;
 }
 
 .stat-desc-label {
