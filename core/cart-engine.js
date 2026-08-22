@@ -89,8 +89,9 @@ const CartEngine = {
   },
 
   getTotals() {
-    const config = window.STORE_CONFIG || { freeShippingThreshold: 499, standardDeliveryFee: 40 };
-    const threshold = config.freeShippingThreshold || 499;
+    const config = window.STORE_CONFIG || { freeShippingThreshold: 999, minOrderValue: 999, standardDeliveryFee: 40 };
+    const threshold = config.freeShippingThreshold || 999;
+    const minOrderValue = config.minOrderValue || 999;
     const deliveryCharge = config.standardDeliveryFee || 40;
 
     let subtotal = 0;

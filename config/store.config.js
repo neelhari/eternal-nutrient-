@@ -26,20 +26,21 @@ window.STORE_CONFIG = {
   // 4. Currency & Shipping Rules
   currency: '₹',
   currencyCode: 'INR',
-  freeShippingThreshold: 499, // Free shipping for orders >= ₹499
+  minOrderValue: 999, // Minimum order value is ₹999
+  freeShippingThreshold: 999, // Free shipping for orders >= ₹999
   standardShippingFee: 40,
 
   // 5. Cloud Database (Supabase)
   supabaseUrl: 'https://sfcxpvvqxldhdkvfyhgj.supabase.co',
   supabaseAnonKey: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNmY3hwdnZxeGxkaGRrdmZ5aGdqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDAwNDcxNTUsImV4cCI6MjA1NTYyMzE1NX0.eR6k7vj8z6sX9e-0123456789abcdefghijklmnopqrstuv',
 
-  // 6. Core Product Categories
+  // 6. Core Product Categories (Ordered: Millet Biscuits, Dates Laddu's, Honey, Moringa chikki, Millet Rava, Pickles)
   categories: [
-    'Organic Honey',
-    'Pickles',
     'Millet Biscuits',
     "Dates Laddu's",
+    'Honey',
     'Moringa Chikki',
-    'Millet Breakfast Rava'
+    'Millet Rava',
+    'Pickles'
   ]
 };

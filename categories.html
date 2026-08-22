@@ -138,11 +138,11 @@
         <span class="cat-chip-name">Chikki</span>
       </div>
 
-      <div class="cat-chip-tab" onclick="selectCategory('Millet Breakfast Rava', this)">
+      <div class="cat-chip-tab" onclick="selectCategory('Millet Rava', this)">
         <div class="cat-chip-avatar">
-          <img src="assets/prod_rava_studio.jpg" alt="Millet Breakfast Rava">
+          <img src="assets/prod_rava_studio.jpg" alt="Millet Rava">
         </div>
-        <span class="cat-chip-name">Breakfast Rava</span>
+        <span class="cat-chip-name">Millet Rava</span>
       </div>
 
     </div>
@@ -161,7 +161,7 @@
         <i class="ri-percent-fill"></i>
       </div>
       <div class="zepto-cart-bar-text">
-        <span class="zepto-bar-title" id="zepto-bar-msg">Free Delivery on Orders ₹499+</span>
+        <span class="zepto-bar-title" id="zepto-bar-msg">Free Delivery on Orders ₹999+ • Min. Order ₹999</span>
         <span class="zepto-bar-sub" id="zepto-bar-subtotal">Subtotal: ₹648</span>
       </div>
     </div>
@@ -420,19 +420,19 @@
         document.getElementById('zepto-cart-qty').textContent = totalQty;
         document.getElementById('zepto-bar-subtotal').textContent = `Subtotal: ₹${subtotal}`;
         
-        const freeThreshold = 499;
+        const freeThreshold = (window.STORE_CONFIG && window.STORE_CONFIG.freeShippingThreshold) ? window.STORE_CONFIG.freeShippingThreshold : 999;
         const isFree = subtotal >= freeThreshold;
         const msgEl = document.getElementById('zepto-bar-msg');
         if (isFree) {
           msgEl.innerHTML = `🎉 <strong>FREE Delivery Unlocked!</strong>`;
         } else {
-          msgEl.textContent = `Add ₹${freeThreshold - subtotal} more for Free Delivery`;
+          msgEl.textContent = `Min. order ₹999 • Add ₹${freeThreshold - subtotal} for Free Delivery`;
         }
       } else {
         floatBar.classList.remove('visible');
       }
 
-      const freeThreshold = 499;
+      const freeThreshold = (window.STORE_CONFIG && window.STORE_CONFIG.freeShippingThreshold) ? window.STORE_CONFIG.freeShippingThreshold : 999;
       const isFree = subtotal >= freeThreshold;
       const deliveryFee = isFree || subtotal === 0 ? 0 : 40;
       const grandTotal = subtotal + deliveryFee;
@@ -441,11 +441,11 @@
       const label = document.getElementById('free-ship-label');
 
       if (isFree) {
-        label.innerHTML = `🎉 <strong>Congratulations!</strong> You unlocked FREE Delivery!`;
+        label.innerHTML = `🎉 <strong>Min. order ₹999 met!</strong> You unlocked FREE Delivery!`;
         fill.style.width = '100%';
       } else {
         const needed = freeThreshold - subtotal;
-        label.innerHTML = `Add <strong>₹${needed}</strong> more for <strong>FREE Delivery!</strong>`;
+        label.innerHTML = `Min. order ₹999 • Add <strong>₹${needed}</strong> more for <strong>FREE Delivery!</strong>`;
         fill.style.width = `${Math.min(100, Math.round((subtotal / freeThreshold) * 100))}%`;
       }
 

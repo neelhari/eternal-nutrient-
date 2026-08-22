@@ -204,12 +204,12 @@
           <span class="cat-grid-label-name">Moringa Chikki</span>
         </a>
 
-        <!-- Category 7: Millet Breakfast Rava -->
-        <a href="categories.html?cat=Millet%20Breakfast%20Rava" class="cat-grid-card-item">
+        <!-- Category 7: Millet Rava -->
+        <a href="categories.html?cat=Millet%20Rava" class="cat-grid-card-item">
           <div class="cat-grid-avatar-circle">
-            <img src="assets/prod_rava_studio.jpg" alt="Millet Breakfast Rava">
+            <img src="assets/prod_rava_studio.jpg" alt="Millet Rava">
           </div>
-          <span class="cat-grid-label-name">Breakfast Rava</span>
+          <span class="cat-grid-label-name">Millet Rava</span>
         </a>
 
         <!-- Category 8: Explore All -->
@@ -667,16 +667,18 @@
     <!-- Infinite Continuous Marquee Ribbon -->
     <div class="marquee-ribbon-wrap">
       <div class="marquee-track">
+        <span class="marquee-item"><i class="ri-shopping-basket-fill"></i> Minimum Order Value: ₹999</span>
+        <span class="marquee-item"><i class="ri-truck-fill"></i> Free Express Delivery on All Orders Above ₹999</span>
         <span class="marquee-item"><i class="ri-leaf-fill"></i> 100% Certified Organic</span>
-        <span class="marquee-item"><i class="ri-truck-fill"></i> Express Delivery in Bangalore</span>
-        <span class="marquee-item"><i class="ri-drop-fill"></i> Cold-Extracted Raw Forest Honey</span>
+        <span class="marquee-item"><i class="ri-drop-fill"></i> Pure Raw Forest Honey</span>
         <span class="marquee-item"><i class="ri-shield-check-fill"></i> 100% Safe UPI & COD Checkout</span>
         <span class="marquee-item"><i class="ri-heart-3-fill"></i> Zero Preservatives • Zero Maida</span>
         <span class="marquee-item"><i class="ri-plant-fill"></i> Handcrafted in Small Batches</span>
         <!-- Duplicate for infinite seamless loop -->
+        <span class="marquee-item"><i class="ri-shopping-basket-fill"></i> Minimum Order Value: ₹999</span>
+        <span class="marquee-item"><i class="ri-truck-fill"></i> Free Express Delivery on All Orders Above ₹999</span>
         <span class="marquee-item"><i class="ri-leaf-fill"></i> 100% Certified Organic</span>
-        <span class="marquee-item"><i class="ri-truck-fill"></i> Express Delivery in Bangalore</span>
-        <span class="marquee-item"><i class="ri-drop-fill"></i> Cold-Extracted Raw Forest Honey</span>
+        <span class="marquee-item"><i class="ri-drop-fill"></i> Pure Raw Forest Honey</span>
         <span class="marquee-item"><i class="ri-shield-check-fill"></i> 100% Safe UPI & COD Checkout</span>
         <span class="marquee-item"><i class="ri-heart-3-fill"></i> Zero Preservatives • Zero Maida</span>
         <span class="marquee-item"><i class="ri-plant-fill"></i> Handcrafted in Small Batches</span>
@@ -717,16 +719,16 @@
           </div>
         </div>
 
-        <!-- Column 2: Quick Organic Categories -->
+        <!-- Column 2: Quick Organic Categories (Ordered: Millet Biscuits, Dates Laddu's, Honey, Moringa chikki, Millet Rava, Pickles) -->
         <div>
           <div class="footer-col-header">Our Categories</div>
           <ul class="footer-links-list">
-            <li class="footer-link-item"><a href="categories.html?cat=Honey">🍯 Organic Honey</a></li>
-            <li class="footer-link-item"><a href="categories.html?cat=Pickles">🍋 Handmade Pickles</a></li>
-            <li class="footer-link-item"><a href="categories.html?cat=Millet%20Breakfast%20Rava">🌾 Millet Breakfast Rava</a></li>
             <li class="footer-link-item"><a href="categories.html?cat=Millet%20Biscuits">🍪 Millet Biscuits</a></li>
             <li class="footer-link-item"><a href="categories.html?cat=Dates%20Laddu's">🌴 Dates Laddu's</a></li>
+            <li class="footer-link-item"><a href="categories.html?cat=Honey">🍯 Honey</a></li>
             <li class="footer-link-item"><a href="categories.html?cat=Moringa%20Chikki">🌿 Moringa Chikki</a></li>
+            <li class="footer-link-item"><a href="categories.html?cat=Millet%20Rava">🌾 Millet Rava</a></li>
+            <li class="footer-link-item"><a href="categories.html?cat=Pickles">🍋 Pickles</a></li>
           </ul>
         </div>
 
@@ -933,7 +935,7 @@
 
       updateCardSteppersUI();
 
-      const freeThreshold = 499;
+      const freeThreshold = (window.STORE_CONFIG && window.STORE_CONFIG.freeShippingThreshold) ? window.STORE_CONFIG.freeShippingThreshold : 999;
       const isFree = subtotal >= freeThreshold;
       const deliveryFee = isFree || subtotal === 0 ? 0 : 40;
       const grandTotal = subtotal + deliveryFee;
@@ -943,11 +945,11 @@
 
       if (label && fill) {
         if (isFree) {
-          label.innerHTML = `🎉 <strong>Congratulations!</strong> You unlocked FREE Delivery!`;
+          label.innerHTML = `🎉 <strong>Min. order ₹999 met!</strong> You unlocked FREE Delivery!`;
           fill.style.width = '100%';
         } else {
           const needed = freeThreshold - subtotal;
-          label.innerHTML = `Add <strong>₹${needed}</strong> more for <strong>FREE Delivery!</strong>`;
+          label.innerHTML = `Min. order ₹999 • Add <strong>₹${needed}</strong> more for <strong>FREE Delivery!</strong>`;
           fill.style.width = `${Math.min(100, Math.round((subtotal / freeThreshold) * 100))}%`;
         }
       }

@@ -135,7 +135,7 @@ INSERT INTO products (id, title, category, image, price, original_price, discoun
 ON CONFLICT (id) DO NOTHING;
 
 INSERT INTO store_settings (id, store_name, tagline, whatsapp_number, phone, email, currency_symbol, primary_color, accent_color, free_shipping_threshold, delivery_charge) VALUES
-('main_store', 'Eternal Nutricare', 'Pure. Natural. Eternal. Goodness from nature for a healthier you.', '919876543210', '+91 98765 43210', 'care@eternalnutricare.com', '₹', '#4B7322', '#553518', 499, 40)
+('main_store', 'Eternal Nutricare', 'Pure. Natural. Eternal. Goodness from nature for a healthier you.', '919876543210', '+91 98765 43210', 'care@eternalnutricare.com', '₹', '#4B7322', '#553518', 999, 40)
 ON CONFLICT (id) DO UPDATE SET
 store_name = EXCLUDED.store_name,
 tagline = EXCLUDED.tagline;
