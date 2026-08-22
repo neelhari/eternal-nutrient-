@@ -500,28 +500,47 @@ body {
 }
 
 /* ==========================================================================
-   EXACT MOCKUP CURATED RAILS (BEST SELLERS & NEW ARRIVALS)
+   FULL-BLEED STRAIGHT LINES CURATED RAILS (ZEPTO NATIVE STYLE)
    ========================================================================== */
 .editorial-curated-section {
-  width: 100%;
-  border-radius: 22px;
-  padding: 18px 16px 20px;
-  margin-bottom: 24px;
+  width: calc(100% + 32px);
+  margin-left: -16px;
+  margin-right: -16px;
+  border-radius: 0;
+  padding: 16px 16px 18px;
+  margin-bottom: 22px;
   position: relative;
   overflow: hidden;
   box-sizing: border-box;
 }
 
-/* Best Sellers Container: Warm Almond Cream */
-.editorial-curated-section.theme-bestsellers {
-  background: #FAF3E7;
-  border: 1px solid #EFE4D3;
+@media (min-width: 900px) {
+  .editorial-curated-section {
+    width: 100%;
+    margin-left: 0;
+    margin-right: 0;
+    border-radius: 20px;
+    padding: 20px;
+    margin-bottom: 28px;
+  }
 }
 
-/* New Arrivals Container: Soft Fresh Sage */
+/* Best Sellers Container: Warm Almond Cream Straight Band */
+.editorial-curated-section.theme-bestsellers {
+  background: #FAF3E7;
+  border-top: 1px solid #EAD8C3;
+  border-bottom: 1px solid #EAD8C3;
+  border-left: none;
+  border-right: none;
+}
+
+/* New Arrivals Container: Soft Fresh Sage Straight Band */
 .editorial-curated-section.theme-newarrivals {
   background: #F1F7EE;
-  border: 1px solid #E1ECE0;
+  border-top: 1px solid #D6E4D1;
+  border-bottom: 1px solid #D6E4D1;
+  border-left: none;
+  border-right: none;
 }
 
 /* Authentic watercolor pencil botanical branch sketch watermark in background */
@@ -645,18 +664,27 @@ body {
   color: #2F7D26;
 }
 
-/* Horizontal Track for Exact Mockup Cards */
+/* Horizontal Track for Exact Mockup Cards (Seamless Edge-to-Edge Scroll) */
 .exact-mockup-track {
   display: flex;
   gap: 12px;
   overflow-x: auto;
-  padding: 4px 2px 8px;
-  margin: 0;
+  padding: 4px 16px 8px;
+  margin-left: -16px;
+  margin-right: -16px;
   scroll-snap-type: x mandatory;
   -webkit-overflow-scrolling: touch;
   scrollbar-width: none;
   position: relative;
   z-index: 2;
+}
+
+@media (min-width: 900px) {
+  .exact-mockup-track {
+    padding: 4px 2px 8px;
+    margin-left: 0;
+    margin-right: 0;
+  }
 }
 
 .exact-mockup-track::-webkit-scrollbar {
