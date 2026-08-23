@@ -125,6 +125,20 @@ body {
   color: #553518; /* Exact Logo Core Brown */
   letter-spacing: 1.4px;
   text-transform: uppercase;
+  display: inline-flex;
+  align-items: baseline;
+  position: relative;
+}
+
+.brand-tm {
+  font-size: 0.58em;
+  font-weight: 800;
+  color: #553518;
+  position: relative;
+  top: -4px;
+  margin-left: 1.5px;
+  letter-spacing: 0;
+  line-height: 1;
 }
 
 .brand-name-nutricare {
@@ -147,6 +161,10 @@ body {
   .brand-name-eternal {
     font-size: 11px;
     letter-spacing: 1.2px;
+  }
+  .brand-tm {
+    font-size: 0.55em;
+    top: -3.5px;
   }
   .brand-name-nutricare {
     font-size: 6.8px;
@@ -1728,6 +1746,16 @@ body {
   color: #FFFFFF;
   letter-spacing: 1px;
   text-align: left;
+}
+
+.footer-tm {
+  font-size: 0.55em;
+  font-weight: 800;
+  position: relative;
+  top: -6px;
+  margin-left: 1px;
+  letter-spacing: 0;
+  display: inline-block;
 }
 
 .footer-brand-tagline {
