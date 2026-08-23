@@ -1858,7 +1858,7 @@ body {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  gap: 9px;
+  gap: 10px;
   padding: 0;
   margin: 0;
   text-align: left;
@@ -1868,14 +1868,34 @@ body {
   color: #C2B0A6;
   text-decoration: none;
   font-size: 13px;
-  transition: color 0.15s ease, padding-left 0.15s ease;
-  display: inline-block;
+  font-weight: 500;
+  transition: color 0.15s ease, transform 0.15s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
   text-align: left;
+}
+
+.footer-cat-thumb {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  object-fit: cover;
+  flex-shrink: 0;
+  border: 1px solid rgba(226, 192, 149, 0.45);
+  background: #FFFFFF;
+  display: inline-block;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25);
 }
 
 .footer-link-item a:hover {
   color: #FFFFFF;
-  padding-left: 4px;
+  transform: translateX(4px);
+}
+
+.footer-link-item a:hover .footer-cat-thumb {
+  border-color: #E2C095;
+  transform: scale(1.08);
 }
 
 .footer-contact-row {
