@@ -2,552 +2,1335 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Admin Portal - Eternal Nutricare</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Eternal Nutricare — Enterprise Store Admin</title>
   
-  <!-- Remix Icons -->
+  <!-- Remix Icons v4.2.0 -->
   <link href="https://cdn.jsdelivr.net/npm/remixicon@4.2.0/fonts/remixicon.css" rel="stylesheet">
   
-  <!-- Google Fonts -->
+  <!-- Google Fonts: Plus Jakarta Sans -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
-  <!-- Core Styles -->
-  <link rel="stylesheet" href="styles/theme.css">
+  <!-- Enterprise Admin Styles -->
   <link rel="stylesheet" href="styles/admin.css">
-
-  <!-- Supabase CDN -->
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body>
 
-  <!-- Admin App Layout -->
-  <div class="admin-layout">
+  <!-- Mobile Sidebar Backdrop Overlay -->
+  <div id="mobile-sidebar-backdrop" onclick="AdminController.closeMobileSidebar()"></div>
+
+  <!-- Admin Application Wrapper -->
+  <div class="admin-app-wrapper">
     
-    <!-- Sidebar Navigation -->
+    <!-- 1. DEEP SLATE SIDEBAR NAVIGATION -->
     <aside class="admin-sidebar">
-      <div class="admin-brand-header">
-        <i class="ri-shield-check-fill" style="font-size: 28px; color: var(--primary);"></i>
-        <div>
-          <div class="admin-brand-title">Store Admin</div>
-          <span class="admin-badge">Production v2.0</span>
+      
+      <!-- Brand Lockup -->
+      <div class="sidebar-brand-header">
+        <img src="assets/brand_logo.svg" alt="Eternal Nutricare" class="sidebar-logo-emblem">
+        <div class="sidebar-brand-text">
+          <div class="sidebar-brand-title">Admin Portal</div>
+          <span class="sidebar-brand-badge">Enterprise v2.0</span>
         </div>
       </div>
 
-      <nav class="admin-nav">
-        <button class="nav-item active" onclick="switchTab('products')">
-          <i class="ri-shopping-bag-3-line"></i>
-          <span>Products</span>
-        </button>
-        <button class="nav-item" onclick="switchTab('categories')">
-          <i class="ri-apps-2-line"></i>
-          <span>Categories</span>
-        </button>
-        <button class="nav-item" onclick="switchTab('orders')">
-          <i class="ri-file-list-3-line"></i>
-          <span>Orders</span>
-        </button>
-        <button class="nav-item" onclick="switchTab('settings')">
-          <i class="ri-settings-3-line"></i>
-          <span>Store Settings</span>
-        </button>
-        <div style="margin-top: auto; padding: 10px 0;">
-          <a href="index.html" class="nav-item" target="_blank" style="color: var(--primary);">
-            <i class="ri-external-link-line"></i>
-            <span>View Live Store</span>
-          </a>
+      <!-- Navigation Groups -->
+      <div class="sidebar-nav-scroll">
+        
+        <!-- MAIN MODULES -->
+        <div class="nav-group-block">
+          <div class="nav-group-title">Main</div>
+          <ul class="sidebar-nav-list">
+            <li>
+              <button class="sidebar-nav-btn active" data-tab="dashboard" onclick="AdminController.switchTab('dashboard')">
+                <i class="ri-dashboard-3-line"></i>
+                <span>Dashboard Overview</span>
+              </button>
+            </li>
+            <li>
+              <button class="sidebar-nav-btn" data-tab="orders" onclick="AdminController.switchTab('orders')">
+                <i class="ri-file-list-3-line"></i>
+                <span>Orders</span>
+              </button>
+            </li>
+            <li>
+              <button class="sidebar-nav-btn" data-tab="products" onclick="AdminController.switchTab('products')">
+                <i class="ri-shopping-bag-3-line"></i>
+                <span>Products</span>
+              </button>
+            </li>
+            <li>
+              <button class="sidebar-nav-btn" data-tab="categories" onclick="AdminController.switchTab('categories')">
+                <i class="ri-apps-2-line"></i>
+                <span>Categories</span>
+              </button>
+            </li>
+            <li>
+              <button class="sidebar-nav-btn" data-tab="inventory" onclick="AdminController.switchTab('inventory')">
+                <i class="ri-archive-stack-line"></i>
+                <span>Inventory Ledger</span>
+              </button>
+            </li>
+          </ul>
         </div>
-      </nav>
+
+        <!-- MARKETING & CMS -->
+        <div class="nav-group-block">
+          <div class="nav-group-title">Marketing & CMS</div>
+          <ul class="sidebar-nav-list">
+            <li>
+              <button class="sidebar-nav-btn" data-tab="banners" onclick="AdminController.switchTab('banners')">
+                <i class="ri-image-line"></i>
+                <span>Hero Banners</span>
+              </button>
+            </li>
+            <li>
+              <button class="sidebar-nav-btn" data-tab="collections" onclick="AdminController.switchTab('collections')">
+                <i class="ri-gallery-line"></i>
+                <span>Featured Collections</span>
+              </button>
+            </li>
+            <li>
+              <button class="sidebar-nav-btn" data-tab="festive" onclick="AdminController.switchTab('festive')">
+                <i class="ri-sparkling-line"></i>
+                <span>Festive Specials</span>
+              </button>
+            </li>
+            <li>
+              <button class="sidebar-nav-btn" data-tab="marquee" onclick="AdminController.switchTab('marquee')">
+                <i class="ri-notification-badge-line"></i>
+                <span>Announcement Ribbon</span>
+              </button>
+            </li>
+            <li>
+              <button class="sidebar-nav-btn" data-tab="coupons" onclick="AdminController.switchTab('coupons')">
+                <i class="ri-coupon-3-line"></i>
+                <span>Coupons & Discounts</span>
+              </button>
+            </li>
+          </ul>
+        </div>
+
+        <!-- CUSTOMERS -->
+        <div class="nav-group-block">
+          <div class="nav-group-title">Customers</div>
+          <ul class="sidebar-nav-list">
+            <li>
+              <button class="sidebar-nav-btn" data-tab="customers" onclick="AdminController.switchTab('customers')">
+                <i class="ri-user-shared-line"></i>
+                <span>Customer Directory</span>
+              </button>
+            </li>
+          </ul>
+        </div>
+
+        <!-- SYSTEM -->
+        <div class="nav-group-block">
+          <div class="nav-group-title">System & Settings</div>
+          <ul class="sidebar-nav-list">
+            <li>
+              <button class="sidebar-nav-btn" data-tab="shipping" onclick="AdminController.switchTab('shipping')">
+                <i class="ri-truck-line"></i>
+                <span>Shipping & Delivery</span>
+              </button>
+            </li>
+            <li>
+              <button class="sidebar-nav-btn" data-tab="settings" onclick="AdminController.switchTab('settings')">
+                <i class="ri-store-2-line"></i>
+                <span>Business & Legal</span>
+              </button>
+            </li>
+            <li>
+              <a href="index.html" class="sidebar-nav-btn" target="_blank">
+                <i class="ri-external-link-line"></i>
+                <span>View Live Store</span>
+              </a>
+            </li>
+          </ul>
+        </div>
+
+      </div>
+
+      <!-- Sidebar User Profile Footer -->
+      <div class="sidebar-footer-user">
+        <div class="admin-avatar-circle">AD</div>
+        <div class="admin-user-info">
+          <div class="admin-user-name">Neelhari (Admin)</div>
+          <div class="admin-user-role">Super Administrator</div>
+        </div>
+      </div>
+
     </aside>
 
-    <!-- Main Content Area -->
-    <main class="admin-main">
+    <!-- 2. MAIN VIEWPORT CANVAS -->
+    <main class="admin-main-viewport">
       
-      <!-- Top Diagnostic Bar -->
-      <header class="admin-topbar">
-        <div id="cloud-status-badge" class="cloud-status-badge">
-          <span class="pulse-dot"></span>
-          <span id="cloud-status-text">Checking Cloud Database...</span>
-        </div>
+      <!-- Top Sticky Header -->
+      <header class="admin-top-header">
+        
+        <div class="header-left-actions">
+          <!-- Mobile Menu Hamburger -->
+          <button class="mobile-menu-trigger" onclick="AdminController.toggleMobileSidebar()" aria-label="Open menu">
+            <i class="ri-menu-2-line"></i>
+          </button>
 
-        <div style="display: flex; gap: 10px;">
-          <button class="btn-secondary" onclick="runHealthCheck()">
-            <i class="ri-refresh-line"></i> Test Cloud Sync
+          <!-- Global Search Pill (Ctrl+K) -->
+          <button class="global-search-pill-btn" onclick="AdminController.openModal('modal-global-search')">
+            <i class="ri-search-2-line"></i>
+            <span>Search products, orders...</span>
+            <kbd class="search-kbd-shortcut">Ctrl+K</kbd>
           </button>
         </div>
+
+        <div class="header-right-actions">
+          
+          <!-- Store Live / Paused Status Toggle Indicator -->
+          <div id="header-store-status-pill" class="header-status-pill status-live" onclick="AdminController.toggleStoreStatusHeader()" title="Click to toggle store operational status">
+            <span class="pulse-dot"></span>
+            <span>Store Open</span>
+          </div>
+
+          <!-- Quick Add Product Button -->
+          <button class="btn btn-sm btn-primary" onclick="AdminController.openProductModal()">
+            <i class="ri-add-line"></i>
+            <span>Add Product</span>
+          </button>
+
+        </div>
+
       </header>
 
-      <div class="admin-container">
+      <!-- Dynamic Views Container -->
+      <div class="admin-views-container">
         
-        <!-- TAB 1: PRODUCTS MANAGER -->
-        <section id="tab-products" class="tab-pane active">
-          <div class="page-action-bar">
+        <!-- ================================================================= -->
+        <!-- VIEW: DASHBOARD OVERVIEW -->
+        <!-- ================================================================= -->
+        <section id="view-dashboard" class="admin-view-panel active">
+          
+          <div class="view-header-strip">
             <div>
-              <h2 style="font-size: 20px; font-weight: 800;">Product Catalog</h2>
-              <p style="font-size: 13px; color: #52604D;">Manage products, prices, images, and live inventory sync.</p>
+              <h1 class="view-heading-title">Dashboard Overview</h1>
+              <p class="view-heading-sub">Live visual performance metrics, inventory alerts, and recent transactions.</p>
             </div>
-            <button class="btn-primary" onclick="openProductModal()">
+            <button class="btn btn-subtle" onclick="AdminController.renderActiveView('dashboard')">
+              <i class="ri-refresh-line"></i> Refresh Data
+            </button>
+          </div>
+
+          <!-- Low Stock Warning Alert Strip -->
+          <div id="dash-low-stock-alert" class="admin-card" style="display: none; align-items: center; gap: 14px; background: #FEF2F2; border-color: #FECACA; color: #991B1B; margin-bottom: 20px; padding: 14px 18px;"></div>
+
+          <!-- 10 Metric Analytics Grid -->
+          <div class="metrics-grid-10">
+            
+            <div class="metric-card-box">
+              <div class="metric-card-header">
+                <span class="metric-card-label">Today's Revenue</span>
+                <div class="metric-icon-bubble"><i class="ri-money-rupee-circle-line"></i></div>
+              </div>
+              <div class="metric-card-val" id="stat-today-revenue">₹0</div>
+              <div class="metric-trend-badge trend-up"><i class="ri-arrow-up-line"></i> +14.2% vs yesterday</div>
+            </div>
+
+            <div class="metric-card-box">
+              <div class="metric-card-header">
+                <span class="metric-card-label">This Week</span>
+                <div class="metric-icon-bubble"><i class="ri-calendar-line"></i></div>
+              </div>
+              <div class="metric-card-val" id="stat-week-revenue">₹0</div>
+              <div class="metric-trend-badge trend-up"><i class="ri-arrow-up-line"></i> +8.5% weekly pace</div>
+            </div>
+
+            <div class="metric-card-box">
+              <div class="metric-card-header">
+                <span class="metric-card-label">This Month</span>
+                <div class="metric-icon-bubble"><i class="ri-calendar-check-line"></i></div>
+              </div>
+              <div class="metric-card-val" id="stat-month-revenue">₹0</div>
+              <div class="metric-trend-badge trend-up"><i class="ri-arrow-up-line"></i> +21.4% MoM</div>
+            </div>
+
+            <div class="metric-card-box">
+              <div class="metric-card-header">
+                <span class="metric-card-label">All-Time Sales</span>
+                <div class="metric-icon-bubble"><i class="ri-bank-card-line"></i></div>
+              </div>
+              <div class="metric-card-val" id="stat-alltime-revenue">₹0</div>
+              <div class="metric-trend-badge trend-neutral">Verified Revenue</div>
+            </div>
+
+            <div class="metric-card-box">
+              <div class="metric-card-header">
+                <span class="metric-card-label">Total Orders</span>
+                <div class="metric-icon-bubble"><i class="ri-shopping-basket-line"></i></div>
+              </div>
+              <div class="metric-card-val" id="stat-total-orders">0</div>
+              <div class="metric-trend-badge trend-up"><i class="ri-check-line"></i> All Time</div>
+            </div>
+
+            <div class="metric-card-box">
+              <div class="metric-card-header">
+                <span class="metric-card-label">Pending Orders</span>
+                <div class="metric-icon-bubble" style="background: #FEF3C7; color: #B45309;"><i class="ri-time-line"></i></div>
+              </div>
+              <div class="metric-card-val" id="stat-pending-orders" style="color: #B45309;">0</div>
+              <div class="metric-trend-badge trend-neutral">Needs Dispatch</div>
+            </div>
+
+            <div class="metric-card-box">
+              <div class="metric-card-header">
+                <span class="metric-card-label">Completed Orders</span>
+                <div class="metric-icon-bubble" style="background: #DCFCE7; color: #15803D;"><i class="ri-checkbox-circle-line"></i></div>
+              </div>
+              <div class="metric-card-val" id="stat-completed-orders" style="color: #15803D;">0</div>
+              <div class="metric-trend-badge trend-up">Delivered</div>
+            </div>
+
+            <div class="metric-card-box">
+              <div class="metric-card-header">
+                <span class="metric-card-label">Average Order Value</span>
+                <div class="metric-icon-bubble"><i class="ri-pie-chart-line"></i></div>
+              </div>
+              <div class="metric-card-val" id="stat-aov">₹0</div>
+              <div class="metric-trend-badge trend-up">AOV Benchmark</div>
+            </div>
+
+            <div class="metric-card-box">
+              <div class="metric-card-header">
+                <span class="metric-card-label">Active Products</span>
+                <div class="metric-icon-bubble"><i class="ri-box-3-line"></i></div>
+              </div>
+              <div class="metric-card-val" id="stat-active-products">0</div>
+              <div class="metric-trend-badge trend-neutral">In Catalog</div>
+            </div>
+
+            <div class="metric-card-box">
+              <div class="metric-card-header">
+                <span class="metric-card-label">Low Stock Alert</span>
+                <div class="metric-icon-bubble" style="background: #FEE2E2; color: #B91C1C;"><i class="ri-error-warning-line"></i></div>
+              </div>
+              <div class="metric-card-val" id="stat-low-stock" style="color: #B91C1C;">0</div>
+              <div class="metric-trend-badge trend-neutral">≤ 10 Units</div>
+            </div>
+
+          </div>
+
+          <!-- Split Grid: Top Products Leaderboard & Recent Orders -->
+          <div class="dashboard-split-grid">
+            
+            <!-- Left: Top Selling Products Leaderboard -->
+            <div class="admin-card">
+              <div class="card-title-row">
+                <h3 class="card-heading">Top Selling Bestsellers</h3>
+                <button class="btn btn-sm btn-subtle" onclick="AdminController.switchTab('products')">View All Products</button>
+              </div>
+              <div id="dash-top-products-list" class="leaderboard-list"></div>
+            </div>
+
+            <!-- Right: Recent Orders Feed -->
+            <div class="admin-card">
+              <div class="card-title-row">
+                <h3 class="card-heading">Recent Orders</h3>
+                <button class="btn btn-sm btn-subtle" onclick="AdminController.switchTab('orders')">View All</button>
+              </div>
+              <div id="dash-recent-orders-list" class="recent-orders-list"></div>
+            </div>
+
+          </div>
+
+        </section>
+
+        <!-- ================================================================= -->
+        <!-- VIEW: PRODUCTS MANAGEMENT -->
+        <!-- ================================================================= -->
+        <section id="view-products" class="admin-view-panel">
+          
+          <div class="view-header-strip">
+            <div>
+              <h1 class="view-heading-title">Product Catalog</h1>
+              <p class="view-heading-sub">Manage products, pricing, stock levels, merchandising badges, and rich descriptions.</p>
+            </div>
+            <button class="btn btn-primary" onclick="AdminController.openProductModal()">
               <i class="ri-add-line"></i> Add New Product
             </button>
           </div>
 
-          <!-- Products Table -->
-          <div class="data-card">
-            <div class="table-responsive">
-              <table class="admin-table">
-                <thead>
-                  <tr>
-                    <th>Product</th>
-                    <th>Category</th>
-                    <th>Price</th>
-                    <th>Discount</th>
-                    <th>Stock</th>
-                    <th>Status</th>
-                    <th>Actions</th>
-                  </tr>
-                </thead>
-                <tbody id="products-table-body">
-                  <!-- Rendered dynamically -->
-                </tbody>
-              </table>
+          <!-- Filters & Search Toolbar -->
+          <div class="filter-toolbar-strip">
+            <div class="filter-group-left">
+              <input type="text" id="prod-search-input" class="form-input-search" placeholder="Search by title, SKU..." oninput="AdminController.renderProductsTable()">
+              <select id="prod-filter-category" class="form-select-pill" onchange="AdminController.renderProductsTable()">
+                <option value="All">All Categories</option>
+              </select>
+              <select id="prod-filter-stock" class="form-select-pill" onchange="AdminController.renderProductsTable()">
+                <option value="All">All Stock Levels</option>
+                <option value="InStock">In Stock Only</option>
+                <option value="LowStock">Low Stock (≤10)</option>
+                <option value="OutOfStock">Out of Stock</option>
+              </select>
             </div>
           </div>
+
+          <!-- Products Table -->
+          <div class="table-responsive-wrapper">
+            <table class="admin-data-table">
+              <thead>
+                <tr>
+                  <th>Product</th>
+                  <th>Category</th>
+                  <th>Pricing</th>
+                  <th>Unit</th>
+                  <th>Stock</th>
+                  <th>Flags & Badges</th>
+                  <th>In-Stock</th>
+                  <th style="text-align: right;">Actions</th>
+                </tr>
+              </thead>
+              <tbody id="products-table-body"></tbody>
+            </table>
+          </div>
+
         </section>
 
-        <!-- TAB 2: CATEGORIES MANAGER -->
-        <section id="tab-categories" class="tab-pane" style="display: none;">
-          <div class="page-action-bar">
+        <!-- ================================================================= -->
+        <!-- VIEW: CATEGORIES MANAGEMENT -->
+        <!-- ================================================================= -->
+        <section id="view-categories" class="admin-view-panel">
+          
+          <div class="view-header-strip">
             <div>
-              <h2 style="font-size: 20px; font-weight: 800;">Categories</h2>
-              <p style="font-size: 13px; color: #52604D;">Create and manage product classifications.</p>
+              <h1 class="view-heading-title">Category Management</h1>
+              <p class="view-heading-sub">Organize circular store categories, avatars, sort orders, and visibility switches.</p>
             </div>
-            <button class="btn-primary" onclick="openCategoryModal()">
+            <button class="btn btn-primary" onclick="AdminController.openCategoryModal()">
               <i class="ri-add-line"></i> Add Category
             </button>
           </div>
 
-          <div class="data-card">
-            <div class="table-responsive">
-              <table class="admin-table">
-                <thead>
-                  <tr>
-                    <th>Category Name</th>
-                    <th>Icon / Image</th>
-                    <th>Description</th>
-                    <th>Actions</th>
-                  </tr>
-                </thead>
-                <tbody id="categories-table-body">
-                  <!-- Rendered dynamically -->
-                </tbody>
-              </table>
-            </div>
-          </div>
+          <div id="categories-cards-grid" class="cards-responsive-grid"></div>
+
         </section>
 
-        <!-- TAB 3: ORDERS MANAGER -->
-        <section id="tab-orders" class="tab-pane" style="display: none;">
-          <div class="page-action-bar">
+        <!-- ================================================================= -->
+        <!-- VIEW: ORDERS MANAGEMENT -->
+        <!-- ================================================================= -->
+        <section id="view-orders" class="admin-view-panel">
+          
+          <div class="view-header-strip">
             <div>
-              <h2 style="font-size: 20px; font-weight: 800;">Customer Orders</h2>
-              <p style="font-size: 13px; color: #52604D;">View all WhatsApp & online orders.</p>
+              <h1 class="view-heading-title">Orders & Fulfillment</h1>
+              <p class="view-heading-sub">Process incoming orders, track delivery stages, and send 1-click WhatsApp customer updates.</p>
             </div>
           </div>
 
-          <div class="data-card">
-            <div class="table-responsive">
-              <table class="admin-table">
-                <thead>
-                  <tr>
-                    <th>Order ID</th>
-                    <th>Customer</th>
-                    <th>Items</th>
-                    <th>Total</th>
-                    <th>Status</th>
-                    <th>Actions</th>
-                  </tr>
-                </thead>
-                <tbody id="orders-table-body">
-                  <!-- Rendered dynamically -->
-                </tbody>
-              </table>
-            </div>
-          </div>
-        </section>
-
-        <!-- TAB 4: SETTINGS -->
-        <section id="tab-settings" class="tab-pane" style="display: none;">
-          <div class="page-action-bar">
-            <div>
-              <h2 style="font-size: 20px; font-weight: 800;">Store Settings</h2>
-              <p style="font-size: 13px; color: #52604D;">Configure WhatsApp number, delivery fees, and credentials.</p>
-            </div>
-          </div>
-
-          <div class="data-card" style="padding: 24px; max-width: 600px;">
-            <form onsubmit="saveSettings(event)">
-              <div class="form-group" style="margin-bottom: 16px;">
-                <label style="font-size: 13px; font-weight: 700; display: block; margin-bottom: 6px;">Store Name</label>
-                <input type="text" id="setting-store-name" class="form-input" value="Eternal Nutricare" style="width: 100%; padding: 10px; border: 1px solid #CBD8BE; border-radius: 8px;">
-              </div>
-              <div class="form-group" style="margin-bottom: 16px;">
-                <label style="font-size: 13px; font-weight: 700; display: block; margin-bottom: 6px;">WhatsApp Order Number (Country code + 10 digits)</label>
-                <input type="text" id="setting-wa-num" class="form-input" value="919876543210" style="width: 100%; padding: 10px; border: 1px solid #CBD8BE; border-radius: 8px;">
-              </div>
-              <div class="form-group" style="margin-bottom: 16px;">
-                <label style="font-size: 13px; font-weight: 700; display: block; margin-bottom: 6px;">Free Shipping Minimum Cart (₹)</label>
-                <input type="number" id="setting-free-ship" class="form-input" value="499" style="width: 100%; padding: 10px; border: 1px solid #CBD8BE; border-radius: 8px;">
-              </div>
-              <button type="submit" class="btn-primary">Save Settings</button>
-            </form>
-          </div>
-        </section>
-
-      </div>
-    </main>
-  </div>
-
-  <!-- ADD / EDIT PRODUCT MODAL -->
-  <div id="product-modal" style="position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 100; display: none; align-items: center; justify-content: center; padding: 16px;">
-    <div style="background: #FFFFFF; width: 100%; max-width: 540px; border-radius: 16px; overflow: hidden; max-height: 90vh; display: flex; flex-direction: column;">
-      <div style="padding: 16px 20px; border-bottom: 1px solid #E2EAD8; display: flex; justify-content: space-between; align-items: center;">
-        <h3 id="modal-heading" style="font-size: 17px; font-weight: 800;">Add New Product</h3>
-        <button onclick="closeProductModal()" style="background:none; border:none; font-size: 22px; cursor: pointer;">&times;</button>
-      </div>
-
-      <div style="padding: 20px; overflow-y: auto; flex: 1;">
-        <form id="product-form" onsubmit="handleProductFormSubmit(event)">
-          <input type="hidden" id="prod-id">
-
-          <!-- Image Drop / Upload Area -->
-          <div class="form-group" style="margin-bottom: 16px;">
-            <label style="font-size: 13px; font-weight: 700; display: block; margin-bottom: 6px;">Product Image</label>
-            <div class="image-drop-area" onclick="document.getElementById('prod-file-input').click()">
-              <i class="ri-image-add-line" style="font-size: 28px; color: var(--primary);"></i>
-              <div style="font-size: 13px; font-weight: 600; margin-top: 4px;">Click to upload product photo</div>
-              <div style="font-size: 11px; color: #72836D;">Auto-compresses high-res camera photos to <200KB</div>
-            </div>
-            <input type="file" id="prod-file-input" accept="image/*" style="display: none;" onchange="handleImageFileSelect(this)">
-            <input type="text" id="prod-image-url" placeholder="Or paste image URL" style="width: 100%; margin-top: 8px; padding: 8px 12px; border: 1px solid #CBD8BE; border-radius: 8px; font-size: 13px;">
-            <img id="image-preview" class="image-preview-thumb" style="display: none;">
-          </div>
-
-          <div class="form-group" style="margin-bottom: 14px;">
-            <label style="font-size: 13px; font-weight: 700; display: block; margin-bottom: 6px;">Product Title *</label>
-            <input type="text" id="prod-title" required placeholder="e.g. Raw Organic Honey" style="width: 100%; padding: 10px 12px; border: 1px solid #CBD8BE; border-radius: 8px; font-size: 14px;">
-          </div>
-
-          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 14px;">
-            <div class="form-group">
-              <label style="font-size: 13px; font-weight: 700; display: block; margin-bottom: 6px;">Category</label>
-              <select id="prod-category" style="width: 100%; padding: 10px; border: 1px solid #CBD8BE; border-radius: 8px;">
-                <!-- Populated dynamically -->
+          <!-- Order Filter Toolbar -->
+          <div class="filter-toolbar-strip">
+            <div class="filter-group-left">
+              <input type="text" id="order-search-input" class="form-input-search" placeholder="Search by order #, customer, phone..." oninput="AdminController.renderOrdersTable()">
+              <select id="order-filter-status" class="form-select-pill" onchange="AdminController.renderOrdersTable()">
+                <option value="All">All Order Statuses</option>
+                <option value="Placed">Placed</option>
+                <option value="Confirmed">Confirmed</option>
+                <option value="Packed">Packed</option>
+                <option value="Out for Delivery">Out for Delivery</option>
+                <option value="Delivered">Delivered</option>
+                <option value="Cancelled">Cancelled</option>
               </select>
             </div>
-            <div class="form-group">
-              <label style="font-size: 13px; font-weight: 700; display: block; margin-bottom: 6px;">Unit / Weight</label>
-              <input type="text" id="prod-unit" placeholder="e.g. 500g / 250g" style="width: 100%; padding: 10px; border: 1px solid #CBD8BE; border-radius: 8px;">
+          </div>
+
+          <!-- Orders Table -->
+          <div class="table-responsive-wrapper">
+            <table class="admin-data-table">
+              <thead>
+                <tr>
+                  <th>Order # & Time</th>
+                  <th>Customer</th>
+                  <th>Items</th>
+                  <th>Total & Payment</th>
+                  <th>Pay Status</th>
+                  <th>Order Status</th>
+                  <th style="text-align: right;">Action</th>
+                </tr>
+              </thead>
+              <tbody id="orders-table-body"></tbody>
+            </table>
+          </div>
+
+        </section>
+
+        <!-- ================================================================= -->
+        <!-- VIEW: INVENTORY LEDGER -->
+        <!-- ================================================================= -->
+        <section id="view-inventory" class="admin-view-panel">
+          
+          <div class="view-header-strip">
+            <div>
+              <h1 class="view-heading-title">Inventory Ledger</h1>
+              <p class="view-heading-sub">Real-time stock monitoring with quick adjustment controls.</p>
             </div>
           </div>
 
-          <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin-bottom: 14px;">
-            <div class="form-group">
-              <label style="font-size: 13px; font-weight: 700; display: block; margin-bottom: 6px;">Selling Price (₹) *</label>
-              <input type="number" id="prod-price" required placeholder="499" oninput="calcDiscount()" style="width: 100%; padding: 10px; border: 1px solid #CBD8BE; border-radius: 8px;">
+          <div class="table-responsive-wrapper">
+            <table class="admin-data-table">
+              <thead>
+                <tr>
+                  <th>Product</th>
+                  <th>Category</th>
+                  <th>Current Stock</th>
+                  <th>Quick Stock Adjustments</th>
+                </tr>
+              </thead>
+              <tbody id="inventory-table-body"></tbody>
+            </table>
+          </div>
+
+        </section>
+
+        <!-- ================================================================= -->
+        <!-- VIEW: HERO BANNERS CMS -->
+        <!-- ================================================================= -->
+        <section id="view-banners" class="admin-view-panel">
+          
+          <div class="view-header-strip">
+            <div>
+              <h1 class="view-heading-title">Hero Carousel Banners</h1>
+              <p class="view-heading-sub">Control homepage rotating hero banners, headlines, CTA links, and slide ordering.</p>
             </div>
-            <div class="form-group">
-              <label style="font-size: 13px; font-weight: 700; display: block; margin-bottom: 6px;">Original MRP (₹)</label>
-              <input type="number" id="prod-original-price" placeholder="599" oninput="calcDiscount()" style="width: 100%; padding: 10px; border: 1px solid #CBD8BE; border-radius: 8px;">
-            </div>
-            <div class="form-group">
-              <label style="font-size: 13px; font-weight: 700; display: block; margin-bottom: 6px;">Stock Qty</label>
-              <input type="number" id="prod-stock" value="50" style="width: 100%; padding: 10px; border: 1px solid #CBD8BE; border-radius: 8px;">
+            <button class="btn btn-primary" onclick="AdminController.openBannerModal()">
+              <i class="ri-add-line"></i> Add Hero Banner
+            </button>
+          </div>
+
+          <div id="banners-cards-grid" class="cards-responsive-grid"></div>
+
+        </section>
+
+        <!-- ================================================================= -->
+        <!-- VIEW: FEATURED COLLECTIONS -->
+        <!-- ================================================================= -->
+        <section id="view-collections" class="admin-view-panel">
+          
+          <div class="view-header-strip">
+            <div>
+              <h1 class="view-heading-title">Featured Collections</h1>
+              <p class="view-heading-sub">Curate spotlight rails like Best Sellers and Fresh Harvest collections.</p>
             </div>
           </div>
 
-          <div class="form-group" style="margin-bottom: 14px;">
-            <label style="font-size: 13px; font-weight: 700; display: block; margin-bottom: 6px;">Badge / Highlight Tag</label>
-            <input type="text" id="prod-badge" placeholder="e.g. Raw & Unfiltered / 100% Organic" style="width: 100%; padding: 10px; border: 1px solid #CBD8BE; border-radius: 8px;">
+          <div id="collections-cards-grid" class="cards-responsive-grid"></div>
+
+        </section>
+
+        <!-- ================================================================= -->
+        <!-- VIEW: FESTIVE SPECIALS -->
+        <!-- ================================================================= -->
+        <section id="view-festive" class="admin-view-panel">
+          
+          <div class="view-header-strip">
+            <div>
+              <h1 class="view-heading-title">Festive Specials Spotlight</h1>
+              <p class="view-heading-sub">Manage the Categories Page headline banner and 3 curated spotlight cards.</p>
+            </div>
+            <button class="btn btn-primary" onclick="AdminController.saveFestiveSpecialsForm(this)">
+              <i class="ri-save-3-line"></i> Save Festive Changes
+            </button>
           </div>
 
-          <div class="form-group" style="margin-bottom: 16px;">
-            <label style="font-size: 13px; font-weight: 700; display: block; margin-bottom: 6px;">Description</label>
-            <textarea id="prod-desc" rows="3" placeholder="Nutritional benefits, ingredients, and storage..." style="width: 100%; padding: 10px; border: 1px solid #CBD8BE; border-radius: 8px; font-family: inherit; font-size: 13px;"></textarea>
+          <div class="admin-card" style="margin-bottom: 20px;">
+            <h3 class="card-heading" style="margin-bottom: 14px;">Main Spotlight Header</h3>
+            <div class="form-grid-2">
+              <div class="form-field-block">
+                <label class="form-label">Banner Eyebrow Text</label>
+                <input type="text" id="festive-banner-eyebrow-input" class="form-input">
+              </div>
+              <div class="form-field-block">
+                <label class="form-label">Main Headline</label>
+                <input type="text" id="festive-banner-headline-input" class="form-input">
+              </div>
+            </div>
           </div>
 
-          <div style="display: flex; justify-content: flex-end; gap: 10px;">
-            <button type="button" class="btn-secondary" onclick="closeProductModal()">Cancel</button>
-            <button type="submit" id="save-product-btn" class="btn-primary">Save Product</button>
+          <div class="admin-card">
+            <h3 class="card-heading" style="margin-bottom: 14px;">Curated 3 Mini-Cards</h3>
+            <div id="festive-cards-container" class="cards-responsive-grid"></div>
+          </div>
+
+        </section>
+
+        <!-- ================================================================= -->
+        <!-- VIEW: CONTINUOUS MARQUEE RIBBON -->
+        <!-- ================================================================= -->
+        <section id="view-marquee" class="admin-view-panel">
+          
+          <div class="view-header-strip">
+            <div>
+              <h1 class="view-heading-title">Announcement Marquee Ticker</h1>
+              <p class="view-heading-sub">Edit the moving announcement ticker strip running across the store.</p>
+            </div>
+            <button class="btn btn-primary" onclick="AdminController.addMarqueeItem()">
+              <i class="ri-add-line"></i> Add New Announcement
+            </button>
+          </div>
+
+          <div id="marquee-items-list" class="marquee-items-list"></div>
+
+        </section>
+
+        <!-- ================================================================= -->
+        <!-- VIEW: COUPONS & DISCOUNTS -->
+        <!-- ================================================================= -->
+        <section id="view-coupons" class="admin-view-panel">
+          
+          <div class="view-header-strip">
+            <div>
+              <h1 class="view-heading-title">Coupons & Promo Engine</h1>
+              <p class="view-heading-sub">Create discount promo codes with percentage or flat deductions and minimum order thresholds.</p>
+            </div>
+            <button class="btn btn-primary" onclick="AdminController.openCouponModal()">
+              <i class="ri-add-line"></i> Create Coupon
+            </button>
+          </div>
+
+          <div class="table-responsive-wrapper">
+            <table class="admin-data-table">
+              <thead>
+                <tr>
+                  <th>Coupon Code</th>
+                  <th>Discount Type & Value</th>
+                  <th>Min Order (MOV)</th>
+                  <th>Max Cap</th>
+                  <th>Expiry Date</th>
+                  <th>Usage Counter</th>
+                  <th>Active</th>
+                  <th style="text-align: right;">Actions</th>
+                </tr>
+              </thead>
+              <tbody id="coupons-table-body"></tbody>
+            </table>
+          </div>
+
+        </section>
+
+        <!-- ================================================================= -->
+        <!-- VIEW: CUSTOMER DIRECTORY (CRM) -->
+        <!-- ================================================================= -->
+        <section id="view-customers" class="admin-view-panel">
+          
+          <div class="view-header-strip">
+            <div>
+              <h1 class="view-heading-title">Customer Directory</h1>
+              <p class="view-heading-sub">Verified customer accounts, order frequency, and lifetime spend records.</p>
+            </div>
+          </div>
+
+          <div class="table-responsive-wrapper">
+            <table class="admin-data-table">
+              <thead>
+                <tr>
+                  <th>Customer</th>
+                  <th>Phone</th>
+                  <th>Total Orders</th>
+                  <th>Lifetime Spend (LTV)</th>
+                  <th>Last Order</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody id="customers-table-body"></tbody>
+            </table>
+          </div>
+
+        </section>
+
+        <!-- ================================================================= -->
+        <!-- VIEW: SHIPPING & DELIVERY RULES -->
+        <!-- ================================================================= -->
+        <section id="view-shipping" class="admin-view-panel">
+          
+          <div class="view-header-strip">
+            <div>
+              <h1 class="view-heading-title">Shipping & Order Rules</h1>
+              <p class="view-heading-sub">Configure checkout rules, minimum order values, delivery fees, and order pause notices.</p>
+            </div>
+            <button class="btn btn-primary" onclick="AdminController.saveShippingSettingsForm(this)">
+              <i class="ri-save-3-line"></i> Save Shipping Rules
+            </button>
+          </div>
+
+          <div class="admin-card" style="max-width: 780px;">
+            <div class="form-grid-2">
+              
+              <div class="form-field-block">
+                <label class="form-label">Minimum Order Value (MOV) ₹</label>
+                <input type="number" id="ship-mov" class="form-input" value="999">
+                <small class="text-muted">Customers cannot checkout if cart total is below this amount.</small>
+              </div>
+
+              <div class="form-field-block">
+                <label class="form-label">Free Delivery Threshold ₹</label>
+                <input type="number" id="ship-free-threshold" class="form-input" value="999">
+                <small class="text-muted">Orders at or above this value receive zero shipping fee.</small>
+              </div>
+
+              <div class="form-field-block">
+                <label class="form-label">Standard Delivery Charge ₹</label>
+                <input type="number" id="ship-std-fee" class="form-input" value="40">
+                <small class="text-muted">Applied if order is below the free shipping threshold.</small>
+              </div>
+
+              <div class="form-field-block">
+                <label class="form-label">Store Status (Orders Active)</label>
+                <div style="display: flex; align-items: center; gap: 10px; margin-top: 8px;">
+                  <label class="switch-toggle">
+                    <input type="checkbox" id="ship-store-live" checked>
+                    <span class="slider round"></span>
+                  </label>
+                  <span style="font-weight: 700;">Accepting Live Orders</span>
+                </div>
+              </div>
+
+              <div class="form-field-block col-span-2">
+                <label class="form-label">Custom Orders Paused Notice Message</label>
+                <textarea id="ship-pause-msg" class="form-textarea" placeholder="Message shown to customers if orders are paused..."></textarea>
+              </div>
+
+              <div class="form-field-block col-span-2">
+                <label class="form-label">Serviceable Bangalore Pincodes (Comma-separated)</label>
+                <textarea id="ship-pincodes" class="form-textarea" style="min-height: 60px;"></textarea>
+              </div>
+
+            </div>
+          </div>
+
+        </section>
+
+        <!-- ================================================================= -->
+        <!-- VIEW: BUSINESS & LEGAL SETTINGS -->
+        <!-- ================================================================= -->
+        <section id="view-settings" class="admin-view-panel">
+          
+          <div class="view-header-strip">
+            <div>
+              <h1 class="view-heading-title">Business & Legal Identity</h1>
+              <p class="view-heading-sub">Update store contacts, registered address, UDYAM, FSSAI licenses, and trust statistics.</p>
+            </div>
+            <button class="btn btn-primary" onclick="AdminController.saveBusinessSettingsForm(this)">
+              <i class="ri-save-3-line"></i> Save Store Settings
+            </button>
+          </div>
+
+          <div class="admin-card" style="max-width: 860px; margin-bottom: 24px;">
+            <div class="form-sub-section-title">1. Brand & Contact Information</div>
+            <div class="form-grid-2" style="margin-top: 14px;">
+              <div class="form-field-block">
+                <label class="form-label">Business Name</label>
+                <input type="text" id="set-biz-name" class="form-input">
+              </div>
+              <div class="form-field-block">
+                <label class="form-label">Brand Name</label>
+                <input type="text" id="set-brand-name" class="form-input">
+              </div>
+              <div class="form-field-block">
+                <label class="form-label">Tagline</label>
+                <input type="text" id="set-tagline" class="form-input">
+              </div>
+              <div class="form-field-block">
+                <label class="form-label">Owner / Management Name</label>
+                <input type="text" id="set-owner-name" class="form-input">
+              </div>
+              <div class="form-field-block">
+                <label class="form-label">Primary Call Phone</label>
+                <input type="text" id="set-phone-primary" class="form-input">
+              </div>
+              <div class="form-field-block">
+                <label class="form-label">Secondary Call Phone</label>
+                <input type="text" id="set-phone-secondary" class="form-input">
+              </div>
+              <div class="form-field-block">
+                <label class="form-label">Primary WhatsApp Number (e.g. 916302017482)</label>
+                <input type="text" id="set-wa-primary" class="form-input">
+              </div>
+              <div class="form-field-block">
+                <label class="form-label">Secondary WhatsApp Number</label>
+                <input type="text" id="set-wa-secondary" class="form-input">
+              </div>
+              <div class="form-field-block col-span-2">
+                <label class="form-label">Official Support Email</label>
+                <input type="email" id="set-email" class="form-input">
+              </div>
+              <div class="form-field-block col-span-2">
+                <label class="form-label">Registered Business Address</label>
+                <textarea id="set-address" class="form-textarea"></textarea>
+              </div>
+            </div>
+
+            <div class="form-sub-section-title" style="margin-top: 24px;">2. Government Registrations & Licenses</div>
+            <div class="form-grid-3" style="margin-top: 14px;">
+              <div class="form-field-block">
+                <label class="form-label">GSTIN (Optional)</label>
+                <input type="text" id="set-gstin" class="form-input">
+              </div>
+              <div class="form-field-block">
+                <label class="form-label">UDYAM Number</label>
+                <input type="text" id="set-udyam" class="form-input">
+              </div>
+              <div class="form-field-block">
+                <label class="form-label">FSSAI License Number</label>
+                <input type="text" id="set-fssai" class="form-input">
+              </div>
+            </div>
+
+            <div class="form-sub-section-title" style="margin-top: 24px;">3. Live Trust Stats Strip (Homepage Footer)</div>
+            <div class="form-grid-2" style="margin-top: 14px;">
+              <div class="form-field-block">
+                <label class="form-label">Stat 1 Count & Label</label>
+                <div style="display: flex; gap: 8px;">
+                  <input type="text" id="set-ts-1-count" class="form-input" style="width: 110px;" placeholder="10,000+">
+                  <input type="text" id="set-ts-1-label" class="form-input" placeholder="Happy Families">
+                </div>
+              </div>
+              <div class="form-field-block">
+                <label class="form-label">Stat 2 Count & Label</label>
+                <div style="display: flex; gap: 8px;">
+                  <input type="text" id="set-ts-2-count" class="form-input" style="width: 110px;" placeholder="100%">
+                  <input type="text" id="set-ts-2-label" class="form-input" placeholder="Certified Organic">
+                </div>
+              </div>
+              <div class="form-field-block">
+                <label class="form-label">Stat 3 Rating & Label</label>
+                <div style="display: flex; gap: 8px;">
+                  <input type="text" id="set-ts-3-count" class="form-input" style="width: 110px;" placeholder="★ 4.9 / 5">
+                  <input type="text" id="set-ts-3-label" class="form-input" placeholder="Customer Rating">
+                </div>
+              </div>
+              <div class="form-field-block">
+                <label class="form-label">Stat 4 Speed & Label</label>
+                <div style="display: flex; gap: 8px;">
+                  <input type="text" id="set-ts-4-count" class="form-input" style="width: 110px;" placeholder="Bangalore">
+                  <input type="text" id="set-ts-4-label" class="form-input" placeholder="Express Delivery">
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+        </section>
+
+      </div>
+
+    </main>
+
+  </div>
+
+  <!-- ======================================================================= -->
+  <!-- MODAL: PRODUCT ADD / EDIT (COMPLETE MULTI-SECTION FORM) -->
+  <!-- ======================================================================= -->
+  <div id="modal-product-form" class="admin-modal-overlay" onclick="AdminController.closeModal(event)">
+    <div class="admin-modal-sheet modal-lg" onclick="event.stopPropagation()">
+      
+      <div class="modal-header-bar">
+        <h3 id="prod-modal-title-heading" class="modal-title-heading">Add Product</h3>
+        <button class="modal-close-trigger" onclick="AdminController.closeModal()"><i class="ri-close-line"></i></button>
+      </div>
+
+      <div class="modal-scroll-body">
+        <form id="form-product" onsubmit="event.preventDefault()">
+          <input type="hidden" id="prod-modal-id">
+
+          <!-- 1. Basic Details -->
+          <div class="form-sub-section-title">1. Basic Details</div>
+          <div class="form-grid-2" style="margin-top: 10px; margin-bottom: 20px;">
+            <div class="form-field-block col-span-2">
+              <label class="form-label">Product Title / Name *</label>
+              <input type="text" id="prod-form-title" class="form-input" placeholder="e.g. Raw Organic Forest Honey" required>
+            </div>
+            <div class="form-field-block">
+              <label class="form-label">SKU Identifier</label>
+              <input type="text" id="prod-form-sku" class="form-input" placeholder="e.g. EN-HON-500">
+            </div>
+            <div class="form-field-block">
+              <label class="form-label">Category</label>
+              <select id="prod-form-category" class="form-select"></select>
+            </div>
+            <div class="form-field-block col-span-2">
+              <label class="form-label">Product Image Path / URL</label>
+              <div style="display: flex; gap: 12px; align-items: center;">
+                <input type="text" id="prod-form-image" class="form-input" onchange="AdminController.updateImagePreview('prod-form-image', 'prod-form-img-preview')">
+                <img id="prod-form-img-preview" src="assets/prod_honey_studio.jpg" style="width: 44px; height: 44px; border-radius: 8px; object-fit: cover; border: 1px solid #E2E8F0;">
+              </div>
+            </div>
+          </div>
+
+          <!-- 2. Pricing & Pack Size -->
+          <div class="form-sub-section-title">2. Pricing & Unit</div>
+          <div class="form-grid-3" style="margin-top: 10px; margin-bottom: 20px;">
+            <div class="form-field-block">
+              <label class="form-label">Selling Price (₹) *</label>
+              <input type="number" id="prod-form-price" class="form-input" placeholder="349" required>
+            </div>
+            <div class="form-field-block">
+              <label class="form-label">Original MRP (₹)</label>
+              <input type="number" id="prod-form-mrp" class="form-input" placeholder="420">
+            </div>
+            <div class="form-field-block">
+              <label class="form-label">Pack Size / Unit Label</label>
+              <input type="text" id="prod-form-unit" class="form-input" placeholder="e.g. 500g Glass Jar">
+            </div>
+          </div>
+
+          <!-- 3. Merchandising & Placement Badges -->
+          <div class="form-sub-section-title">3. Merchandising & Inventory</div>
+          <div class="form-grid-3" style="margin-top: 10px; margin-bottom: 20px;">
+            <div class="form-field-block">
+              <label class="form-label">Badge Text (Optional)</label>
+              <input type="text" id="prod-form-badge" class="form-input" placeholder="e.g. 100% Pure Raw">
+            </div>
+            <div class="form-field-block">
+              <label class="form-label">Stock Quantity</label>
+              <input type="number" id="prod-form-stock" class="form-input" value="50">
+            </div>
+            <div class="form-field-block">
+              <label class="form-label">Display Sort Order</label>
+              <input type="number" id="prod-form-sort" class="form-input" value="1">
+            </div>
+            <div class="form-field-block">
+              <label class="form-label">Rating (e.g. 4.9)</label>
+              <input type="number" step="0.1" id="prod-form-rating" class="form-input" value="4.9">
+            </div>
+            <div class="form-field-block">
+              <label class="form-label">Review Count</label>
+              <input type="number" id="prod-form-reviews" class="form-input" value="50">
+            </div>
+            <div class="form-field-block">
+              <label class="form-label">In-Stock Status</label>
+              <div style="display: flex; align-items: center; gap: 8px; margin-top: 8px;">
+                <label class="switch-toggle">
+                  <input type="checkbox" id="prod-form-in-stock" checked>
+                  <span class="slider round"></span>
+                </label>
+                <span style="font-size: 13px; font-weight: 600;">Available for Sale</span>
+              </div>
+            </div>
+            <div class="form-field-block col-span-3">
+              <label class="form-label">Placement Rail Toggles</label>
+              <div style="display: flex; gap: 20px; flex-wrap: wrap; margin-top: 6px;">
+                <label style="display: flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 600; cursor: pointer;">
+                  <input type="checkbox" id="prod-form-is-bestseller">
+                  <span>Is Bestseller (Show in Best Sellers Rail)</span>
+                </label>
+                <label style="display: flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 600; cursor: pointer;">
+                  <input type="checkbox" id="prod-form-is-featured">
+                  <span>Is Featured</span>
+                </label>
+                <label style="display: flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 600; cursor: pointer;">
+                  <input type="checkbox" id="prod-form-is-new">
+                  <span>Is New Arrival (Show in Fresh Harvest Rail)</span>
+                </label>
+              </div>
+            </div>
+          </div>
+
+          <!-- 4. Descriptions & Benefits -->
+          <div class="form-sub-section-title">4. Descriptions, Ingredients & Storage</div>
+          <div class="form-grid-2" style="margin-top: 10px;">
+            <div class="form-field-block col-span-2">
+              <label class="form-label">Key Highlights (Comma-separated)</label>
+              <input type="text" id="prod-form-highlights" class="form-input" placeholder="e.g. Zero Preservatives, Lab Tested, Forest Fresh">
+            </div>
+            <div class="form-field-block col-span-2">
+              <label class="form-label">Short Summary</label>
+              <input type="text" id="prod-form-summary" class="form-input" placeholder="One sentence summary for product cards">
+            </div>
+            <div class="form-field-block col-span-2">
+              <label class="form-label">Full Description</label>
+              <textarea id="prod-form-description" class="form-textarea" placeholder="Detailed product story..."></textarea>
+            </div>
+            <div class="form-field-block">
+              <label class="form-label">Health Benefits</label>
+              <textarea id="prod-form-benefits" class="form-textarea" placeholder="Immunity, digestion, antioxidant benefits..."></textarea>
+            </div>
+            <div class="form-field-block">
+              <label class="form-label">Ingredients</label>
+              <textarea id="prod-form-ingredients" class="form-textarea" placeholder="100% Raw Honey, Almonds, etc..."></textarea>
+            </div>
+            <div class="form-field-block">
+              <label class="form-label">Nutritional Information</label>
+              <textarea id="prod-form-nutrition" class="form-textarea" placeholder="Energy: 304 kcal, Carbs: 82g..."></textarea>
+            </div>
+            <div class="form-field-block">
+              <label class="form-label">Storage Instructions</label>
+              <textarea id="prod-form-storage" class="form-textarea" placeholder="Store in a cool dry place..."></textarea>
+            </div>
+          </div>
+
+        </form>
+      </div>
+
+      <div class="modal-footer-actions">
+        <button class="btn btn-subtle" onclick="AdminController.closeModal()">Cancel</button>
+        <button class="btn btn-primary" onclick="AdminController.saveProductForm(this)">
+          <i class="ri-check-line"></i> Save Product
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ======================================================================= -->
+  <!-- MODAL: CATEGORY ADD / EDIT -->
+  <!-- ======================================================================= -->
+  <div id="modal-category-form" class="admin-modal-overlay" onclick="AdminController.closeModal(event)">
+    <div class="admin-modal-sheet" onclick="event.stopPropagation()">
+      <div class="modal-header-bar">
+        <h3 id="cat-modal-title-heading" class="modal-title-heading">Add Category</h3>
+        <button class="modal-close-trigger" onclick="AdminController.closeModal()"><i class="ri-close-line"></i></button>
+      </div>
+      <div class="modal-scroll-body">
+        <form id="form-category" onsubmit="event.preventDefault()">
+          <input type="hidden" id="cat-modal-id">
+          <div class="form-field-block">
+            <label class="form-label">Category Display Name *</label>
+            <input type="text" id="cat-form-name" class="form-input" placeholder="e.g. Dates Laddu's" required>
+          </div>
+          <div class="form-field-block">
+            <label class="form-label">Category Tagline</label>
+            <input type="text" id="cat-form-tagline" class="form-input" placeholder="e.g. 100% Pure Medjoul Dates & Premium Nuts">
+          </div>
+          <div class="form-field-block">
+            <label class="form-label">Thumbnail Image Path</label>
+            <div style="display: flex; gap: 12px; align-items: center;">
+              <input type="text" id="cat-form-image" class="form-input" onchange="AdminController.updateImagePreview('cat-form-image', 'cat-form-img-preview')">
+              <img id="cat-form-img-preview" src="assets/prod_cookie_studio.jpg" style="width: 44px; height: 44px; border-radius: 50%; object-fit: cover; border: 1px solid #E2E8F0;">
+            </div>
+          </div>
+          <div class="form-field-block">
+            <label class="form-label">Sort Order</label>
+            <input type="number" id="cat-form-sort" class="form-input" value="1">
+          </div>
+          <div style="display: flex; gap: 20px; margin-top: 10px;">
+            <label style="display: flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 600; cursor: pointer;">
+              <input type="checkbox" id="cat-form-show-home" checked>
+              <span>Show on Homepage Shelf</span>
+            </label>
+            <label style="display: flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 600; cursor: pointer;">
+              <input type="checkbox" id="cat-form-show-shop" checked>
+              <span>Show in Shop Tabs</span>
+            </label>
           </div>
         </form>
+      </div>
+      <div class="modal-footer-actions">
+        <button class="btn btn-subtle" onclick="AdminController.closeModal()">Cancel</button>
+        <button class="btn btn-primary" onclick="AdminController.saveCategoryForm(this)">
+          <i class="ri-check-line"></i> Save Category
+        </button>
       </div>
     </div>
   </div>
 
-  <!-- Core Scripts -->
-  <script src="config/store.config.js"></script>
-  <script src="core/cloud-db.js"></script>
-  <script src="core/image-uploader.js"></script>
-
-  <!-- Admin Controller -->
-  <script>
-    let currentProducts = [];
-    let currentCategories = [];
-
-    async function initAdmin() {
-      CloudDB.init();
-      await runHealthCheck();
-      await loadAllData();
-    }
-
-    async function runHealthCheck() {
-      const badge = document.getElementById('cloud-status-badge');
-      const text = document.getElementById('cloud-status-text');
-
-      text.textContent = 'Testing Cloud Sync...';
-      const result = await CloudDB.testConnection();
-
-      if (result.ok) {
-        badge.className = 'cloud-status-badge';
-        text.textContent = '🟢 Cloud DB Synced (Supabase Active)';
-      } else {
-        badge.className = 'cloud-status-badge error';
-        text.textContent = `🔴 Cloud Offline: ${result.error}`;
-      }
-    }
-
-    async function loadAllData() {
-      currentCategories = await CloudDB.getCategories();
-      currentProducts = await CloudDB.getProducts();
-
-      renderCategoriesTable();
-      renderProductsTable();
-      populateCategoryDropdown();
-    }
-
-    function renderProductsTable() {
-      const tbody = document.getElementById('products-table-body');
-      if (!tbody) return;
-
-      if (currentProducts.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="7" style="text-align: center; padding: 24px; color: #72836D;">No products found. Click 'Add New Product'.</td></tr>`;
-        return;
-      }
-
-      tbody.innerHTML = currentProducts.map(p => `
-        <tr>
-          <td>
-            <div class="table-product-cell">
-              <img class="table-thumb" src="${p.image}" alt="${p.title}">
-              <div>
-                <strong style="display:block; font-size: 14px;">${p.title}</strong>
-                <span style="font-size: 11px; color: #72836D;">${p.unit || 'Standard'}</span>
-              </div>
+  <!-- ======================================================================= -->
+  <!-- MODAL: HERO BANNER ADD / EDIT -->
+  <!-- ======================================================================= -->
+  <div id="modal-banner-form" class="admin-modal-overlay" onclick="AdminController.closeModal(event)">
+    <div class="admin-modal-sheet" onclick="event.stopPropagation()">
+      <div class="modal-header-bar">
+        <h3 id="banner-modal-title-heading" class="modal-title-heading">Hero Banner</h3>
+        <button class="modal-close-trigger" onclick="AdminController.closeModal()"><i class="ri-close-line"></i></button>
+      </div>
+      <div class="modal-scroll-body">
+        <form id="form-banner" onsubmit="event.preventDefault()">
+          <input type="hidden" id="banner-modal-id">
+          <div class="form-field-block">
+            <label class="form-label">Eyebrow Tag</label>
+            <input type="text" id="banner-form-eyebrow" class="form-input" placeholder="e.g. Pure. Natural. Eternal.">
+          </div>
+          <div class="form-field-block">
+            <label class="form-label">Main Headline *</label>
+            <input type="text" id="banner-form-headline" class="form-input" placeholder="e.g. Goodness from Nature for a healthier you." required>
+          </div>
+          <div class="form-field-block">
+            <label class="form-label">Sub-text / Tagline</label>
+            <input type="text" id="banner-form-tagline" class="form-input">
+          </div>
+          <div class="form-grid-2">
+            <div class="form-field-block">
+              <label class="form-label">CTA Button Text</label>
+              <input type="text" id="banner-form-btn-text" class="form-input" value="Shop Now">
             </div>
-          </td>
-          <td>${p.category}</td>
-          <td><strong>₹${p.price}</strong></td>
-          <td>${p.discount > 0 ? `<span style="color:#059669; font-weight:700;">${p.discount}% OFF</span>` : '-'}</td>
-          <td>${p.stockQty}</td>
-          <td>
-            <span class="badge-stock ${p.inStock && p.stockQty > 0 ? 'in' : 'out'}">
-              ${p.inStock && p.stockQty > 0 ? 'In Stock' : 'Out of Stock'}
-            </span>
-          </td>
-          <td>
-            <div style="display: flex; gap: 8px;">
-              <button class="btn-secondary" style="padding: 4px 8px;" onclick="editProduct('${p.id}')"><i class="ri-edit-line"></i></button>
-              <button class="btn-secondary" style="padding: 4px 8px; color: #DC2626;" onclick="deleteProduct('${p.id}')"><i class="ri-delete-bin-line"></i></button>
+            <div class="form-field-block">
+              <label class="form-label">Target Link</label>
+              <input type="text" id="banner-form-target-link" class="form-input" value="categories.html">
             </div>
-          </td>
-        </tr>
-      `).join('');
-    }
+          </div>
+          <div class="form-grid-2">
+            <div class="form-field-block">
+              <label class="form-label">Desktop Image Path</label>
+              <input type="text" id="banner-form-desktop-img" class="form-input" onchange="AdminController.updateImagePreview('banner-form-desktop-img', 'banner-form-img-preview')">
+            </div>
+            <div class="form-field-block">
+              <label class="form-label">Mobile Image Path</label>
+              <input type="text" id="banner-form-mobile-img" class="form-input">
+            </div>
+          </div>
+          <div class="form-grid-2" style="align-items: center;">
+            <div class="form-field-block">
+              <label class="form-label">Display Order</label>
+              <input type="number" id="banner-form-order" class="form-input" value="1">
+            </div>
+            <div class="form-field-block" style="padding-top: 20px;">
+              <label style="display: flex; align-items: center; gap: 8px; font-weight: 700; cursor: pointer;">
+                <input type="checkbox" id="banner-form-active" checked>
+                <span>Active in Carousel</span>
+              </label>
+            </div>
+          </div>
+          <img id="banner-form-img-preview" src="assets/hero_banner.jpg" style="width: 100%; height: 120px; object-fit: cover; border-radius: 10px; border: 1px solid #E2E8F0; margin-top: 10px;">
+        </form>
+      </div>
+      <div class="modal-footer-actions">
+        <button class="btn btn-subtle" onclick="AdminController.closeModal()">Cancel</button>
+        <button class="btn btn-primary" onclick="AdminController.saveBannerForm(this)">
+          <i class="ri-check-line"></i> Save Banner
+        </button>
+      </div>
+    </div>
+  </div>
 
-    function renderCategoriesTable() {
-      const tbody = document.getElementById('categories-table-body');
-      if (!tbody) return;
+  <!-- ======================================================================= -->
+  <!-- MODAL: COUPON ADD / EDIT -->
+  <!-- ======================================================================= -->
+  <div id="modal-coupon-form" class="admin-modal-overlay" onclick="AdminController.closeModal(event)">
+    <div class="admin-modal-sheet" onclick="event.stopPropagation()">
+      <div class="modal-header-bar">
+        <h3 id="coupon-modal-title-heading" class="modal-title-heading">Create Promo Coupon</h3>
+        <button class="modal-close-trigger" onclick="AdminController.closeModal()"><i class="ri-close-line"></i></button>
+      </div>
+      <div class="modal-scroll-body">
+        <form id="form-coupon" onsubmit="event.preventDefault()">
+          <input type="hidden" id="coupon-modal-id">
+          <div class="form-grid-2">
+            <div class="form-field-block">
+              <label class="form-label">Coupon Code *</label>
+              <input type="text" id="coupon-form-code" class="form-input" placeholder="e.g. ETERNAL10" style="text-transform: uppercase;" required>
+            </div>
+            <div class="form-field-block">
+              <label class="form-label">Discount Type</label>
+              <select id="coupon-form-type" class="form-select">
+                <option value="percentage">Percentage (%)</option>
+                <option value="flat">Flat Amount (₹)</option>
+              </select>
+            </div>
+            <div class="form-field-block">
+              <label class="form-label">Discount Value *</label>
+              <input type="number" id="coupon-form-val" class="form-input" placeholder="10" required>
+            </div>
+            <div class="form-field-block">
+              <label class="form-label">Min Order Value (MOV) ₹</label>
+              <input type="number" id="coupon-form-mov" class="form-input" value="999">
+            </div>
+            <div class="form-field-block">
+              <label class="form-label">Max Discount Cap ₹ (Optional)</label>
+              <input type="number" id="coupon-form-cap" class="form-input" placeholder="250">
+            </div>
+            <div class="form-field-block">
+              <label class="form-label">Expiry Date</label>
+              <input type="date" id="coupon-form-expiry" class="form-input">
+            </div>
+            <div class="form-field-block">
+              <label class="form-label">Total Usage Limit</label>
+              <input type="number" id="coupon-form-limit" class="form-input" value="500">
+            </div>
+            <div class="form-field-block" style="padding-top: 20px;">
+              <label style="display: flex; align-items: center; gap: 8px; font-weight: 700; cursor: pointer;">
+                <input type="checkbox" id="coupon-form-active" checked>
+                <span>Coupon Active</span>
+              </label>
+            </div>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer-actions">
+        <button class="btn btn-subtle" onclick="AdminController.closeModal()">Cancel</button>
+        <button class="btn btn-primary" onclick="AdminController.saveCouponForm(this)">
+          <i class="ri-check-line"></i> Save Coupon
+        </button>
+      </div>
+    </div>
+  </div>
 
-      tbody.innerHTML = currentCategories.map(c => `
-        <tr>
-          <td><strong>${c.name}</strong></td>
-          <td><i class="${c.icon || 'ri-apps-2-line'}" style="font-size: 20px; color: var(--primary);"></i></td>
-          <td>${c.description || '-'}</td>
-          <td>
-            <button class="btn-secondary" style="padding: 4px 8px; color: #DC2626;" onclick="deleteCategory('${c.id}')"><i class="ri-delete-bin-line"></i></button>
-          </td>
-        </tr>
-      `).join('');
-    }
+  <!-- ======================================================================= -->
+  <!-- MODAL: ORDER INSPECTOR & INVOICE VIEW -->
+  <!-- ======================================================================= -->
+  <div id="modal-order-inspector" class="admin-modal-overlay" onclick="AdminController.closeModal(event)">
+    <div class="admin-modal-sheet modal-lg" onclick="event.stopPropagation()">
+      <div class="modal-header-bar">
+        <div>
+          <h3 class="modal-title-heading">Order Details: <span id="insp-order-num">#EN-00000</span></h3>
+          <span id="insp-order-date" style="font-size: 11.5px; color: var(--text-muted);"></span>
+        </div>
+        <button class="modal-close-trigger" onclick="AdminController.closeModal()"><i class="ri-close-line"></i></button>
+      </div>
+      
+      <div class="modal-scroll-body">
+        
+        <!-- Status Updater Bar -->
+        <div style="display: flex; gap: 14px; flex-wrap: wrap; background: #F8FAFC; padding: 14px 18px; border-radius: 12px; border: 1px solid #E2E8F0;">
+          <div class="form-field-block" style="flex: 1;">
+            <label class="form-label">Order Status</label>
+            <select id="insp-order-status-select" class="form-select">
+              <option value="Placed">Placed</option>
+              <option value="Confirmed">Confirmed</option>
+              <option value="Packed">Packed</option>
+              <option value="Out for Delivery">Out for Delivery</option>
+              <option value="Delivered">Delivered</option>
+              <option value="Cancelled">Cancelled</option>
+            </select>
+          </div>
+          <div class="form-field-block" style="flex: 1;">
+            <label class="form-label">Payment Status</label>
+            <select id="insp-pay-status-select" class="form-select">
+              <option value="Pending">Pending</option>
+              <option value="Paid">Paid</option>
+              <option value="Failed">Failed</option>
+              <option value="Refunded">Refunded</option>
+            </select>
+          </div>
+          <div class="form-field-block" style="display: flex; align-items: flex-end;">
+            <button class="btn btn-primary" onclick="AdminController.saveOrderInspector(this)">
+              <i class="ri-check-line"></i> Update Status
+            </button>
+          </div>
+        </div>
 
-    function populateCategoryDropdown() {
-      const select = document.getElementById('prod-category');
-      if (!select) return;
-      select.innerHTML = currentCategories.map(c => `<option value="${c.name}">${c.name}</option>`).join('');
-    }
+        <!-- Customer & Delivery Address -->
+        <div class="form-grid-2">
+          <div class="admin-card" style="padding: 16px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+              <h4 style="font-size: 14px; font-weight: 800;">Customer Info</h4>
+              <button class="btn btn-sm btn-subtle" style="color: #15803D;" onclick="AdminController.sendWhatsAppUpdate()">
+                <i class="ri-whatsapp-line"></i> Message on WhatsApp
+              </button>
+            </div>
+            <div id="insp-cust-name" style="font-weight: 700; font-size: 15px;"></div>
+            <div style="margin-top: 4px;"><a id="insp-cust-phone-link" href="#" style="color: var(--primary); font-weight: 700;"><span id="insp-cust-phone"></span></a></div>
+            <div id="insp-cust-email" style="font-size: 12.5px; color: var(--text-muted); margin-top: 2px;"></div>
+          </div>
 
-    /* Modals & Handlers */
-    function openProductModal(prod = null) {
-      document.getElementById('product-form').reset();
-      document.getElementById('image-preview').style.display = 'none';
+          <div class="admin-card" style="padding: 16px;">
+            <h4 style="font-size: 14px; font-weight: 800; margin-bottom: 8px;">Delivery Address</h4>
+            <p id="insp-cust-address" style="font-size: 13px; line-height: 1.5; color: #334155;"></p>
+          </div>
+        </div>
 
-      if (prod) {
-        document.getElementById('modal-heading').textContent = 'Edit Product';
-        document.getElementById('prod-id').value = prod.id;
-        document.getElementById('prod-title').value = prod.title;
-        document.getElementById('prod-category').value = prod.category;
-        document.getElementById('prod-unit').value = prod.unit || '';
-        document.getElementById('prod-price').value = prod.price;
-        document.getElementById('prod-original-price').value = prod.originalPrice || '';
-        document.getElementById('prod-stock').value = prod.stockQty;
-        document.getElementById('prod-badge').value = prod.badge || '';
-        document.getElementById('prod-desc').value = prod.description || '';
-        document.getElementById('prod-image-url').value = prod.image || '';
-        if (prod.image) {
-          document.getElementById('image-preview').src = prod.image;
-          document.getElementById('image-preview').style.display = 'block';
-        }
-      } else {
-        document.getElementById('modal-heading').textContent = 'Add New Product';
-        document.getElementById('prod-id').value = '';
-      }
+        <!-- Ordered Items Table -->
+        <div class="admin-card" style="padding: 16px;">
+          <h4 style="font-size: 14px; font-weight: 800; margin-bottom: 12px;">Line Items</h4>
+          <table style="width: 100%; font-size: 13px; border-collapse: collapse;">
+            <thead>
+              <tr style="border-bottom: 1px solid #E2E8F0; text-align: left; font-size: 11.5px; color: #64748B;">
+                <th style="padding-bottom: 8px;">Item</th>
+                <th style="padding-bottom: 8px; text-align: center;">Qty</th>
+                <th style="padding-bottom: 8px; text-align: right;">Unit Price</th>
+                <th style="padding-bottom: 8px; text-align: right;">Total</th>
+              </tr>
+            </thead>
+            <tbody id="insp-items-table-body"></tbody>
+          </table>
 
-      document.getElementById('product-modal').style.display = 'flex';
-    }
+          <!-- Bill Breakdown -->
+          <div style="display: flex; flex-direction: column; gap: 6px; width: 240px; margin-left: auto; margin-top: 16px; font-size: 13px; border-top: 1px solid #E2E8F0; padding-top: 10px;">
+            <div style="display: flex; justify-content: space-between;">
+              <span class="text-muted">Subtotal:</span>
+              <strong id="insp-subtotal">₹0</strong>
+            </div>
+            <div style="display: flex; justify-content: space-between;">
+              <span class="text-muted">Delivery Fee:</span>
+              <span id="insp-delivery-fee" style="color: #15803D; font-weight: 700;">FREE</span>
+            </div>
+            <div style="display: flex; justify-content: space-between;">
+              <span class="text-muted">Coupon Discount:</span>
+              <span id="insp-discount" style="color: #B91C1C; font-weight: 700;">₹0</span>
+            </div>
+            <div style="display: flex; justify-content: space-between; font-size: 15px; font-weight: 800; border-top: 1px dashed #CBD5E1; padding-top: 6px; margin-top: 4px;">
+              <span>Grand Total:</span>
+              <span id="insp-final-total" style="color: var(--primary-dark);">₹0</span>
+            </div>
+          </div>
+        </div>
 
-    function closeProductModal() {
-      document.getElementById('product-modal').style.display = 'none';
-    }
+        <!-- Notes & Tracking -->
+        <div class="form-grid-2">
+          <div class="form-field-block">
+            <label class="form-label">Admin Internal Notes</label>
+            <input type="text" id="insp-admin-notes" class="form-input" placeholder="e.g. Customer requested evening delivery">
+          </div>
+          <div class="form-field-block">
+            <label class="form-label">Delivery Tracking ID / Courier</label>
+            <input type="text" id="insp-tracking-id" class="form-input" placeholder="e.g. EXP-BLR-84291">
+          </div>
+        </div>
 
-    function editProduct(id) {
-      const p = currentProducts.find(item => item.id === id);
-      if (p) openProductModal(p);
-    }
+      </div>
 
-    async function deleteProduct(id) {
-      if (!confirm('Are you sure you want to delete this product?')) return;
-      try {
-        await CloudDB.deleteProduct(id);
-        await loadAllData();
-      } catch (err) {
-        alert(err.message);
-      }
-    }
+      <div class="modal-footer-actions">
+        <button class="btn btn-subtle" onclick="AdminController.closeModal()">Close</button>
+        <button class="btn btn-primary" onclick="AdminController.saveOrderInspector(this)">
+          <i class="ri-check-line"></i> Save Order Changes
+        </button>
+      </div>
 
-    async function handleImageFileSelect(input) {
-      const file = input.files[0];
-      if (!file) return;
+    </div>
+  </div>
 
-      const btn = document.getElementById('save-product-btn');
-      btn.disabled = true;
-      btn.textContent = 'Compressing & Uploading...';
+  <!-- ======================================================================= -->
+  <!-- MODAL: GLOBAL COMMAND SEARCH (CTRL+K) -->
+  <!-- ======================================================================= -->
+  <div id="modal-global-search" class="admin-modal-overlay" onclick="AdminController.closeModal(event)">
+    <div class="cmd-search-sheet" onclick="event.stopPropagation()">
+      <div class="cmd-input-bar">
+        <i class="ri-search-2-line"></i>
+        <input type="text" id="global-command-input" class="cmd-input-field" placeholder="Search products, orders, categories... (Esc to close)" oninput="AdminController.handleGlobalCommandSearch(this.value)">
+      </div>
+      <div id="global-search-results" class="cmd-results-box">
+        <div class="cmd-section-header">Quick Navigation</div>
+        <div class="cmd-result-item" onclick="AdminController.switchTab('products'); AdminController.closeModal();"><i class="ri-shopping-bag-3-line"></i> Manage Products</div>
+        <div class="cmd-result-item" onclick="AdminController.switchTab('orders'); AdminController.closeModal();"><i class="ri-file-list-3-line"></i> Orders & Delivery</div>
+        <div class="cmd-result-item" onclick="AdminController.switchTab('banners'); AdminController.closeModal();"><i class="ri-image-line"></i> Hero Banners CMS</div>
+        <div class="cmd-result-item" onclick="AdminController.switchTab('settings'); AdminController.closeModal();"><i class="ri-settings-3-line"></i> Store & Legal Settings</div>
+      </div>
+    </div>
+  </div>
 
-      try {
-        const url = await ImageUploader.upload(file);
-        document.getElementById('prod-image-url').value = url;
-        const preview = document.getElementById('image-preview');
-        preview.src = url;
-        preview.style.display = 'block';
-      } catch (err) {
-        alert('Image Upload Error: ' + err.message);
-      } finally {
-        btn.disabled = false;
-        btn.textContent = 'Save Product';
-      }
-    }
+  <!-- ======================================================================= -->
+  <!-- MODAL: DESTRUCTIVE ACTION CONFIRMATION DIALOG -->
+  <!-- ======================================================================= -->
+  <div id="modal-confirm-delete" class="admin-modal-overlay" onclick="AdminController.closeModal(event)">
+    <div class="admin-modal-sheet" style="max-width: 440px;" onclick="event.stopPropagation()">
+      <div class="modal-header-bar" style="background: #FEF2F2; border-color: #FECACA;">
+        <h3 class="modal-title-heading" style="color: #B91C1C;"><i class="ri-alarm-warning-line"></i> Confirm Deletion</h3>
+        <button class="modal-close-trigger" onclick="AdminController.closeModal()"><i class="ri-close-line"></i></button>
+      </div>
+      <div class="modal-scroll-body" style="padding: 20px;">
+        <p id="confirm-delete-msg" style="font-size: 14px; line-height: 1.5; color: #334155;">Are you sure you want to delete this item?</p>
+      </div>
+      <div class="modal-footer-actions">
+        <button class="btn btn-subtle" onclick="AdminController.closeModal()">Cancel</button>
+        <button class="btn btn-danger" onclick="AdminController.confirmDeleteAction(this)">
+          <i class="ri-delete-bin-line"></i> Delete Permanently
+        </button>
+      </div>
+    </div>
+  </div>
 
-    function calcDiscount() {
-      const price = Number(document.getElementById('prod-price').value) || 0;
-      const mrp = Number(document.getElementById('prod-original-price').value) || 0;
-      if (mrp > price && price > 0) {
-        const disc = Math.round(((mrp - price) / mrp) * 100);
-        document.getElementById('prod-badge').value = `${disc}% OFF`;
-      }
-    }
+  <!-- Toast Notification Container -->
+  <div id="admin-toast-container"></div>
 
-    async function handleProductFormSubmit(e) {
-      e.preventDefault();
-      const btn = document.getElementById('save-product-btn');
-      btn.disabled = true;
-      btn.textContent = 'Saving to Cloud...';
+  <!-- In-Memory Mock Database & Controller Scripts (Strictly Phase 1 Frontend Only) -->
+  <script src="core/admin-mock-db.js"></script>
+  <script src="core/admin-controller.js"></script>
 
-      const price = Number(document.getElementById('prod-price').value);
-      const originalPrice = Number(document.getElementById('prod-original-price').value) || price;
-      const discount = originalPrice > price ? Math.round(((originalPrice - price) / originalPrice) * 100) : 0;
-
-      const product = {
-        id: document.getElementById('prod-id').value || undefined,
-        title: document.getElementById('prod-title').value.trim(),
-        category: document.getElementById('prod-category').value,
-        unit: document.getElementById('prod-unit').value.trim(),
-        price: price,
-        originalPrice: originalPrice,
-        discount: discount,
-        stockQty: Number(document.getElementById('prod-stock').value) || 0,
-        badge: document.getElementById('prod-badge').value.trim(),
-        description: document.getElementById('prod-desc').value.trim(),
-        image: document.getElementById('prod-image-url').value.trim() || 'https://images.unsplash.com/photo-1542838132-92c53300491e?w=400',
-        inStock: Number(document.getElementById('prod-stock').value) > 0
-      };
-
-      try {
-        await CloudDB.saveProduct(product);
-        closeProductModal();
-        await loadAllData();
-      } catch (err) {
-        alert('Cloud Save Error: ' + err.message);
-      } finally {
-        btn.disabled = false;
-        btn.textContent = 'Save Product';
-      }
-    }
-
-    function switchTab(tab) {
-      document.querySelectorAll('.tab-pane').forEach(el => el.style.display = 'none');
-      document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
-
-      const target = document.getElementById(`tab-${tab}`);
-      if (target) target.style.display = 'block';
-      event.currentTarget.classList.add('active');
-
-      if (tab === 'orders') renderOrdersTable();
-    }
-
-    async function renderOrdersTable() {
-      const tbody = document.getElementById('orders-table-body');
-      if (!tbody) return;
-      const orders = await CloudDB.getOrders();
-
-      if (orders.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="6" style="text-align: center; padding: 24px; color: #72836D;">No orders received yet.</td></tr>`;
-        return;
-      }
-
-      tbody.innerHTML = orders.map(o => `
-        <tr>
-          <td><strong>#${o.order_number}</strong></td>
-          <td>
-            <div><strong>${o.customer_name}</strong></div>
-            <span style="font-size: 11px; color: #72836D;">${o.customer_phone}</span>
-          </td>
-          <td>${Array.isArray(o.items) ? o.items.length : 1} items</td>
-          <td><strong>₹${o.total_amount}</strong></td>
-          <td><span class="badge-stock in">${o.order_status || 'placed'}</span></td>
-          <td>
-            <a href="https://wa.me/${(o.customer_phone || '').replace(/[^0-9]/g, '')}" target="_blank" class="btn-secondary" style="padding: 4px 8px; color: #25D366;">
-              <i class="ri-whatsapp-line"></i> Chat
-            </a>
-          </td>
-        </tr>
-      `).join('');
-    }
-
-    function saveSettings(e) {
-      e.preventDefault();
-      alert('Settings saved successfully!');
-    }
-
-    window.addEventListener('DOMContentLoaded', initAdmin);
-  </script>
 </body>
 </html>
