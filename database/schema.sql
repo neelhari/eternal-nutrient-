@@ -1,141 +1,203 @@
 -- ==============================================================================
--- PRODUCTION-GRADE E-COMMERCE DATABASE SCHEMA & POLICIES (SUPABASE)
+-- ETERNAL NUTRICARE — MASTER PRODUCTION SUPABASE SQL SCHEMA & RLS POLICIES
 -- ==============================================================================
--- Run this script ONCE in your Supabase SQL Editor (https://supabase.com/dashboard)
--- It creates all tables and unlocks full Public Read + Admin/Anon Write permissions
--- so your store and admin panel will NEVER hit RLS permission errors.
+-- Run this complete script in your Supabase SQL Editor (https://supabase.com/dashboard)
+-- It creates all 7 core tables, foreign relations, and unlocks complete RLS permissions.
 -- ==============================================================================
 
--- 1. CREATE CATEGORIES TABLE
+-- 1. CATEGORIES TABLE
 CREATE TABLE IF NOT EXISTS categories (
     id TEXT PRIMARY KEY,
-    name TEXT NOT NULL,
-    description TEXT DEFAULT '',
+    name TEXT NOT NULL UNIQUE,
+    tagline TEXT DEFAULT '',
     image TEXT DEFAULT '',
     icon TEXT DEFAULT 'ri-apps-2-line',
-    sort_order INT DEFAULT 0,
-    is_featured BOOLEAN DEFAULT true,
-    is_visible BOOLEAN DEFAULT true,
+    sort_order INT DEFAULT 1,
+    show_on_home BOOLEAN DEFAULT true,
+    show_in_shop BOOLEAN DEFAULT true,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL,
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL
 );
 
--- 2. CREATE PRODUCTS TABLE
+-- 2. PRODUCTS CATALOG TABLE
 CREATE TABLE IF NOT EXISTS products (
     id TEXT PRIMARY KEY,
     title TEXT NOT NULL,
+    sku TEXT UNIQUE,
     category TEXT DEFAULT 'General',
     image TEXT DEFAULT '',
+    gallery JSONB DEFAULT '[]'::jsonb,
     price NUMERIC NOT NULL DEFAULT 0,
     original_price NUMERIC DEFAULT 0,
     discount NUMERIC DEFAULT 0,
-    rating NUMERIC DEFAULT 4.8,
-    reviews_count INT DEFAULT 12,
-    description TEXT DEFAULT '',
+    unit TEXT DEFAULT 'Pack',
     badge TEXT DEFAULT '',
-    unit TEXT DEFAULT '',
+    rating NUMERIC DEFAULT 4.9,
+    reviews_count INT DEFAULT 12,
+    highlights JSONB DEFAULT '[]'::jsonb,
     in_stock BOOLEAN DEFAULT true,
     stock_qty INT DEFAULT 50,
-    is_featured BOOLEAN DEFAULT false,
     is_bestseller BOOLEAN DEFAULT false,
+    is_featured BOOLEAN DEFAULT false,
+    is_new_arrival BOOLEAN DEFAULT false,
+    sort_order INT DEFAULT 1,
+    short_summary TEXT DEFAULT '',
+    description TEXT DEFAULT '',
+    benefits TEXT DEFAULT '',
+    ingredients TEXT DEFAULT '',
+    nutritional_info TEXT DEFAULT '',
+    storage_instructions TEXT DEFAULT '',
     created_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL,
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL
 );
 
--- 3. CREATE ORDERS TABLE
+-- 3. ORDERS TABLE
 CREATE TABLE IF NOT EXISTS orders (
     id TEXT PRIMARY KEY,
-    order_number TEXT NOT NULL,
+    order_number TEXT NOT NULL UNIQUE,
     customer_name TEXT NOT NULL,
     customer_phone TEXT NOT NULL,
-    customer_address TEXT DEFAULT '',
+    customer_email TEXT DEFAULT '',
+    delivery_address JSONB NOT NULL DEFAULT '{}'::jsonb,
     items JSONB NOT NULL DEFAULT '[]'::jsonb,
     subtotal NUMERIC NOT NULL DEFAULT 0,
     delivery_fee NUMERIC DEFAULT 0,
     discount_amount NUMERIC DEFAULT 0,
     total_amount NUMERIC NOT NULL DEFAULT 0,
-    payment_method TEXT DEFAULT 'whatsapp',
-    payment_status TEXT DEFAULT 'pending',
-    order_status TEXT DEFAULT 'placed',
-    notes TEXT DEFAULT '',
+    coupon_code TEXT DEFAULT '',
+    payment_method TEXT DEFAULT 'COD',
+    payment_status TEXT DEFAULT 'Pending',
+    razorpay_order_id TEXT DEFAULT '',
+    razorpay_payment_id TEXT DEFAULT '',
+    order_status TEXT DEFAULT 'Placed',
+    tracking_id TEXT DEFAULT '',
+    admin_notes TEXT DEFAULT '',
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL,
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL
+);
+
+-- 4. CUSTOMERS TABLE (CRM)
+CREATE TABLE IF NOT EXISTS customers (
+    id TEXT PRIMARY KEY,
+    name TEXT NOT NULL,
+    phone TEXT NOT NULL UNIQUE,
+    email TEXT DEFAULT '',
+    addresses JSONB DEFAULT '[]'::jsonb,
+    total_orders INT DEFAULT 1,
+    lifetime_spend NUMERIC DEFAULT 0,
+    last_order_date TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()),
+    status TEXT DEFAULT 'Active',
     created_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL
 );
 
--- 4. CREATE STORE SETTINGS TABLE
+-- 5. COUPONS & PROMOTIONS TABLE
+CREATE TABLE IF NOT EXISTS coupons (
+    id TEXT PRIMARY KEY,
+    code TEXT NOT NULL UNIQUE,
+    type TEXT NOT NULL DEFAULT 'percentage', -- 'percentage' or 'flat'
+    value NUMERIC NOT NULL DEFAULT 10,
+    min_order_value NUMERIC DEFAULT 999,
+    max_discount NUMERIC DEFAULT 0,
+    expiry_date DATE,
+    usage_limit INT DEFAULT 500,
+    total_used INT DEFAULT 0,
+    is_active BOOLEAN DEFAULT true,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL
+);
+
+-- 6. CMS CONTENT TABLE (Banners, Collections, Festive Specials, Marquee)
+CREATE TABLE IF NOT EXISTS cms_content (
+    id TEXT PRIMARY KEY,
+    section_type TEXT NOT NULL, -- 'hero_banner', 'festive_special', 'featured_collection', 'marquee_announcement'
+    content_payload JSONB NOT NULL DEFAULT '{}'::jsonb,
+    sort_order INT DEFAULT 1,
+    is_active BOOLEAN DEFAULT true,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL,
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL
+);
+
+-- 7. STORE SETTINGS TABLE
 CREATE TABLE IF NOT EXISTS store_settings (
     id TEXT PRIMARY KEY DEFAULT 'main_store',
-    store_name TEXT DEFAULT 'My Store',
-    tagline TEXT DEFAULT 'Pure & Natural Goods',
-    whatsapp_number TEXT DEFAULT '919876543210',
-    phone TEXT DEFAULT '+91 98765 43210',
-    email TEXT DEFAULT 'contact@store.com',
-    currency_symbol TEXT DEFAULT '₹',
-    primary_color TEXT DEFAULT '#4B7322',
-    accent_color TEXT DEFAULT '#553518',
-    free_shipping_threshold NUMERIC DEFAULT 499,
-    delivery_charge NUMERIC DEFAULT 40,
+    business_name TEXT DEFAULT 'Eternal Nutricare',
+    brand_name TEXT DEFAULT 'Eternal Nutricare',
+    tagline TEXT DEFAULT 'Pure. Natural. Eternal.',
+    owner_name TEXT DEFAULT 'Neelhari & Team',
+    primary_phone TEXT DEFAULT '+91 6302017482',
+    secondary_phone TEXT DEFAULT '+91 9392235693',
+    primary_whatsapp TEXT DEFAULT '916302017482',
+    secondary_whatsapp TEXT DEFAULT '919392235693',
+    support_email TEXT DEFAULT 'eternalncdm@gmail.com',
+    registered_address TEXT DEFAULT '3g Crimson Layout, Channasandra, opp Krishnakuteer Phase 2, Bangalore East, Bangalore Urban, Karnataka - 560067',
+    gstin TEXT DEFAULT '29ABCDE1234F1Z5',
+    udyam_number TEXT DEFAULT 'UDYAM-KR-03-0464297',
+    fssai_number TEXT DEFAULT '21226009001641',
+    is_store_live BOOLEAN DEFAULT true,
+    pause_notice_message TEXT DEFAULT 'We are temporarily pausing new orders for inventory restocking.',
+    min_order_value NUMERIC DEFAULT 999,
+    free_shipping_threshold NUMERIC DEFAULT 999,
+    standard_shipping_fee NUMERIC DEFAULT 40,
+    serviceable_pincodes TEXT DEFAULT '560001, 560002, 560034, 560038, 560067, 560103',
+    trust_stats JSONB DEFAULT '[
+        {"id": "ts_1", "count": "10,000+", "label": "Happy Families"},
+        {"id": "ts_2", "count": "100%", "label": "Certified Organic"},
+        {"id": "ts_3", "count": "★ 4.9 / 5", "label": "Customer Rating"},
+        {"id": "ts_4", "count": "Bangalore", "label": "Express Delivery"}
+    ]'::jsonb,
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL
 );
 
 -- ==============================================================================
--- 5. ROW LEVEL SECURITY (RLS) POLICIES — GUARANTEED TO PREVENT 42501 PERMISSION ERRORS
+-- 8. ROW LEVEL SECURITY (RLS) POLICIES
 -- ==============================================================================
 
--- Enable RLS on all tables
+-- Enable RLS across all tables
 ALTER TABLE categories ENABLE ROW LEVEL SECURITY;
 ALTER TABLE products ENABLE ROW LEVEL SECURITY;
 ALTER TABLE orders ENABLE ROW LEVEL SECURITY;
+ALTER TABLE customers ENABLE ROW LEVEL SECURITY;
+ALTER TABLE coupons ENABLE ROW LEVEL SECURITY;
+ALTER TABLE cms_content ENABLE ROW LEVEL SECURITY;
 ALTER TABLE store_settings ENABLE ROW LEVEL SECURITY;
 
--- Remove any old conflicting policies
+-- Clean up old policies
 DROP POLICY IF EXISTS "Public Read Categories" ON categories;
-DROP POLICY IF EXISTS "Public Write Categories" ON categories;
+DROP POLICY IF EXISTS "Admin All Categories" ON categories;
 DROP POLICY IF EXISTS "Public Read Products" ON products;
-DROP POLICY IF EXISTS "Public Write Products" ON products;
+DROP POLICY IF EXISTS "Admin All Products" ON products;
 DROP POLICY IF EXISTS "Public Read Orders" ON orders;
-DROP POLICY IF EXISTS "Public Write Orders" ON orders;
+DROP POLICY IF EXISTS "Public Insert Orders" ON orders;
+DROP POLICY IF EXISTS "Admin All Orders" ON orders;
+DROP POLICY IF EXISTS "Public Read Customers" ON customers;
+DROP POLICY IF EXISTS "Public Insert Customers" ON customers;
+DROP POLICY IF EXISTS "Admin All Customers" ON customers;
+DROP POLICY IF EXISTS "Public Read Coupons" ON coupons;
+DROP POLICY IF EXISTS "Admin All Coupons" ON coupons;
+DROP POLICY IF EXISTS "Public Read CMS" ON cms_content;
+DROP POLICY IF EXISTS "Admin All CMS" ON cms_content;
 DROP POLICY IF EXISTS "Public Read Settings" ON store_settings;
-DROP POLICY IF EXISTS "Public Write Settings" ON store_settings;
+DROP POLICY IF EXISTS "Admin All Settings" ON store_settings;
 
--- A) CATEGORIES POLICIES (Allow everyone to read and write)
+-- Public Read & Admin All Policies
 CREATE POLICY "Public Read Categories" ON categories FOR SELECT USING (true);
-CREATE POLICY "Public Write Categories" ON categories FOR ALL USING (true) WITH CHECK (true);
+CREATE POLICY "Admin All Categories" ON categories FOR ALL USING (true);
 
--- B) PRODUCTS POLICIES (Allow public to view, admin/store to add/edit/delete)
 CREATE POLICY "Public Read Products" ON products FOR SELECT USING (true);
-CREATE POLICY "Public Write Products" ON products FOR ALL USING (true) WITH CHECK (true);
+CREATE POLICY "Admin All Products" ON products FOR ALL USING (true);
 
--- C) ORDERS POLICIES (Allow customers to place orders, admin to manage)
 CREATE POLICY "Public Read Orders" ON orders FOR SELECT USING (true);
-CREATE POLICY "Public Write Orders" ON orders FOR ALL USING (true) WITH CHECK (true);
+CREATE POLICY "Public Insert Orders" ON orders FOR INSERT WITH CHECK (true);
+CREATE POLICY "Admin All Orders" ON orders FOR ALL USING (true);
 
--- D) SETTINGS POLICIES (Allow public reading, admin updating)
+CREATE POLICY "Public Read Customers" ON customers FOR SELECT USING (true);
+CREATE POLICY "Public Insert Customers" ON customers FOR INSERT WITH CHECK (true);
+CREATE POLICY "Admin All Customers" ON customers FOR ALL USING (true);
+
+CREATE POLICY "Public Read Coupons" ON coupons FOR SELECT USING (true);
+CREATE POLICY "Admin All Coupons" ON coupons FOR ALL USING (true);
+
+CREATE POLICY "Public Read CMS" ON cms_content FOR SELECT USING (true);
+CREATE POLICY "Admin All CMS" ON cms_content FOR ALL USING (true);
+
 CREATE POLICY "Public Read Settings" ON store_settings FOR SELECT USING (true);
-CREATE POLICY "Public Write Settings" ON store_settings FOR ALL USING (true) WITH CHECK (true);
-
--- ==============================================================================
--- 6. SEED INITIAL STARTER DATA
--- ==============================================================================
-
-INSERT INTO categories (id, name, description, icon, sort_order) VALUES
-('cat_honey', 'Organic Honey', 'Pure, raw and unfiltered forest honey', 'ri-drop-line', 1),
-('cat_pickles', 'Pickles', 'Traditional handmade homemade pickles', 'ri-goblet-line', 2),
-('cat_millets', 'Millet Breakfast Rava', 'Nutrient-rich ancient grains & breakfast rava', 'ri-plant-line', 3),
-('cat_biscuits', 'Millet Biscuits', 'Zero maida, zero preservative healthy cookies', 'ri-cake-3-line', 4),
-('cat_snacks', 'Healthy Snacks', 'Moringa chikki, dates laddu & sweets', 'ri-heart-pulse-line', 5)
-ON CONFLICT (id) DO NOTHING;
-
-INSERT INTO products (id, title, category, image, price, original_price, discount, rating, reviews_count, description, badge, unit, in_stock, stock_qty, is_featured, is_bestseller) VALUES
-('prod_1', 'Organic Honey', 'Organic Honey', 'https://images.unsplash.com/photo-1587049352846-4a222e784d38?w=600&auto=format&fit=crop&q=80', 499, 599, 17, 4.9, 48, '100% Raw & Unfiltered Organic Honey. NMR tested pure with natural immunity boosters.', 'Raw & Unfiltered', '500g', true, 35, true, true),
-('prod_2', 'Lemon Pickle (Handmade)', 'Pickles', 'https://images.unsplash.com/photo-1599488615731-7e5c2823ff28?w=600&auto=format&fit=crop&q=80', 249, 299, 17, 4.8, 32, 'Handmade traditional recipe with zero preservatives and cold-pressed mustard oil.', 'No Preservatives', '300g', true, 40, true, true),
-('prod_3', 'Millet Breakfast Rava', 'Millet Breakfast Rava', 'https://images.unsplash.com/photo-1586201375761-83865001e31c?w=600&auto=format&fit=crop&q=80', 189, 220, 14, 4.7, 26, '100% Organic Millet Breakfast Rava. Low glycemic index, perfect for healthy upma and idli.', '100% Organic', '500g', true, 50, true, true),
-('prod_4', 'Millet Biscuits', 'Millet Biscuits', 'https://images.unsplash.com/photo-1558961363-fa8fdf82db35?w=600&auto=format&fit=crop&q=80', 149, 180, 17, 4.9, 65, 'Crunchy wholesome biscuits made with millets and jaggery. Zero maida, zero artificial flavor.', 'No Maida', '200g', true, 45, true, true),
-('prod_5', 'Dates Laddu (Sugar-Free)', 'Healthy Snacks', 'https://images.unsplash.com/photo-1601050690597-df0568f70950?w=600&auto=format&fit=crop&q=80', 349, 399, 13, 5.0, 19, 'Wholesome nutrition with Medjool dates, almonds, cashews and pure desi cow ghee. Zero added sugar.', 'Sugar Free', '250g', true, 25, true, false),
-('prod_6', 'Moringa Chikki', 'Healthy Snacks', 'https://images.unsplash.com/photo-1590080875515-8a3a8dc5735e?w=600&auto=format&fit=crop&q=80', 129, 150, 14, 4.8, 14, 'Immunity boosting superfood snack combining organic moringa leaf extract with roasted peanuts and jaggery.', 'Superfood', '150g', true, 30, false, false)
-ON CONFLICT (id) DO NOTHING;
-
-INSERT INTO store_settings (id, store_name, tagline, whatsapp_number, phone, email, currency_symbol, primary_color, accent_color, free_shipping_threshold, delivery_charge) VALUES
-('main_store', 'Eternal Nutricare', 'Pure. Natural. Eternal. Goodness from nature for a healthier you.', '919876543210', '+91 98765 43210', 'care@eternalnutricare.com', '₹', '#4B7322', '#553518', 999, 40)
-ON CONFLICT (id) DO UPDATE SET
-store_name = EXCLUDED.store_name,
-tagline = EXCLUDED.tagline;
+CREATE POLICY "Admin All Settings" ON store_settings FOR ALL USING (true);
