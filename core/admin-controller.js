@@ -12,6 +12,118 @@ window.AdminController = (function() {
   let currentInspectedOrder = null;
 
   // =========================================================================
+  // 0. SUPABASE AUTHENTICATION & LOCKSCREEN ENGINE
+  // =========================================================================
+  let currentAdminUser = null;
+
+  async function checkAdminSession() {
+    const config = window.STORE_CONFIG || {};
+    const lockscreen = document.getElementById('admin-auth-lockscreen');
+    if (!lockscreen) return;
+
+    if (typeof window.supabase !== 'undefined' && config.supabaseUrl && config.supabaseAnonKey && config.supabaseUrl.startsWith('https://')) {
+      try {
+        const client = window.supabase.createClient(config.supabaseUrl, config.supabaseAnonKey);
+        const { data: { session }, error } = await client.auth.getSession();
+        
+        if (session && session.user) {
+          currentAdminUser = session.user;
+          lockscreen.style.display = 'none';
+          document.body.style.overflow = '';
+          updateAdminProfileDisplay(session.user.email);
+          showToast(`Welcome back, ${session.user.email}`, 'info');
+          return;
+        }
+      } catch (err) {
+        console.warn('Session check error:', err.message);
+      }
+    }
+
+    // Show lockscreen if not authenticated
+    lockscreen.style.display = 'flex';
+    document.body.style.overflow = 'hidden';
+  }
+
+  async function handleAdminLogin(event) {
+    if (event) event.preventDefault();
+    const btn = document.getElementById('btn-admin-login');
+    const email = document.getElementById('admin-login-email').value.trim();
+    const password = document.getElementById('admin-login-password').value;
+
+    if (!email || !password) {
+      showToast('Please enter your admin email and password.', 'error');
+      return;
+    }
+
+    const config = window.STORE_CONFIG || {};
+    if (!config.supabaseUrl || !config.supabaseAnonKey || !config.supabaseUrl.startsWith('https://')) {
+      // In preview mode before user pastes Supabase keys
+      withActionSpinner(btn, () => {
+        document.getElementById('admin-auth-lockscreen').style.display = 'none';
+        document.body.style.overflow = '';
+        showToast('Preview access granted (Connect Supabase in config to enforce real JWT)', 'info');
+      }, 'Authenticated!');
+      return;
+    }
+
+    const originalText = btn.innerHTML;
+    btn.disabled = true;
+    btn.innerHTML = `<i class="ri-loader-4-line ri-spin"></i> Authenticating...`;
+
+    try {
+      const client = window.supabase.createClient(config.supabaseUrl, config.supabaseAnonKey);
+      const { data, error } = await client.auth.signInWithPassword({ email, password });
+
+      btn.disabled = false;
+      btn.innerHTML = originalText;
+
+      if (error) {
+        // Display exact Supabase error message in red toast as required by prompt
+        showToast(error.message, 'error');
+        return;
+      }
+
+      if (data && data.session) {
+        currentAdminUser = data.user;
+        document.getElementById('admin-auth-lockscreen').style.display = 'none';
+        document.body.style.overflow = '';
+        updateAdminProfileDisplay(data.user.email);
+        showToast('Admin authentication successful! Access granted.', 'success');
+      }
+    } catch (err) {
+      btn.disabled = false;
+      btn.innerHTML = originalText;
+      showToast(err.message || 'Authentication error', 'error');
+    }
+  }
+
+  async function handleAdminLogout() {
+    const config = window.STORE_CONFIG || {};
+    if (typeof window.supabase !== 'undefined' && config.supabaseUrl && config.supabaseAnonKey) {
+      try {
+        const client = window.supabase.createClient(config.supabaseUrl, config.supabaseAnonKey);
+        await client.auth.signOut();
+      } catch (err) {
+        console.warn('Logout notice:', err.message);
+      }
+    }
+
+    currentAdminUser = null;
+    document.getElementById('admin-auth-lockscreen').style.display = 'flex';
+    document.body.style.overflow = 'hidden';
+    showToast('You have been logged out of the Admin Portal.', 'info');
+  }
+
+  function updateAdminProfileDisplay(email) {
+    const nameEl = document.querySelector('.admin-user-name');
+    const roleEl = document.querySelector('.admin-user-role');
+    const avatarEl = document.querySelector('.admin-avatar-circle');
+    if (nameEl) nameEl.innerText = email || 'Admin User';
+    if (roleEl) roleEl.innerText = 'Verified Administrator';
+    if (avatarEl && email) avatarEl.innerText = email.charAt(0).toUpperCase();
+  }
+
+  // =========================================================================
   // 1. ASYNC ACTION SIMULATION & SPINNER ENGINE (STRICT 1-SECOND CONSTRAINT)
   // =========================================================================
   function withActionSpinner(btnElement, asyncCallback, successMessage) {
@@ -1333,6 +1445,7 @@ window.AdminController = (function() {
   // INITIALIZATION ON DOM READY
   // =========================================================================
   function init() {
+    checkAdminSession();
     renderDashboard();
     updateStoreStatusIndicator();
     initGlobalSearch();
@@ -1341,6 +1454,11 @@ window.AdminController = (function() {
   document.addEventListener('DOMContentLoaded', init);
 
   return {
+    // Auth & Lockscreen
+    checkAdminSession,
+    handleAdminLogin,
+    handleAdminLogout,
+
     switchTab,
     renderActiveView,
     withActionSpinner,

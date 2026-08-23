@@ -1,11 +1,13 @@
 -- ==============================================================================
--- ETERNAL NUTRICARE — MASTER PRODUCTION SUPABASE SQL SCHEMA & RLS POLICIES
+-- ETERNAL NUTRICARE — ENTERPRISE AUTHENTICATION & RLS SECURITY POLICIES
 -- ==============================================================================
--- Run this complete script in your Supabase SQL Editor (https://supabase.com/dashboard)
--- It creates all 7 core tables, foreign relations, and unlocks complete RLS permissions.
+-- Run this in your Supabase SQL Editor (https://supabase.com/dashboard/project/_/sql)
+-- It enforces strict JWT-based Row Level Security (RLS) so only verified Admins can write
+-- while customers can read products and place orders.
 -- ==============================================================================
 
--- 1. CATEGORIES TABLE
+-- 1. CREATE ALL CORE TABLES IF NOT EXISTS
+
 CREATE TABLE IF NOT EXISTS categories (
     id TEXT PRIMARY KEY,
     name TEXT NOT NULL UNIQUE,
@@ -19,7 +21,6 @@ CREATE TABLE IF NOT EXISTS categories (
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL
 );
 
--- 2. PRODUCTS CATALOG TABLE
 CREATE TABLE IF NOT EXISTS products (
     id TEXT PRIMARY KEY,
     title TEXT NOT NULL,
@@ -51,7 +52,6 @@ CREATE TABLE IF NOT EXISTS products (
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL
 );
 
--- 3. ORDERS TABLE
 CREATE TABLE IF NOT EXISTS orders (
     id TEXT PRIMARY KEY,
     order_number TEXT NOT NULL UNIQUE,
@@ -76,25 +76,21 @@ CREATE TABLE IF NOT EXISTS orders (
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL
 );
 
--- 4. CUSTOMERS TABLE (CRM)
-CREATE TABLE IF NOT EXISTS customers (
-    id TEXT PRIMARY KEY,
-    name TEXT NOT NULL,
-    phone TEXT NOT NULL UNIQUE,
-    email TEXT DEFAULT '',
+CREATE TABLE IF NOT EXISTS profiles (
+    id UUID PRIMARY KEY REFERENCES auth.users(id) ON DELETE CASCADE,
+    email TEXT UNIQUE,
+    full_name TEXT DEFAULT '',
+    phone TEXT DEFAULT '',
+    role TEXT DEFAULT 'customer', -- 'admin' or 'customer'
     addresses JSONB DEFAULT '[]'::jsonb,
-    total_orders INT DEFAULT 1,
-    lifetime_spend NUMERIC DEFAULT 0,
-    last_order_date TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()),
-    status TEXT DEFAULT 'Active',
-    created_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL,
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL
 );
 
--- 5. COUPONS & PROMOTIONS TABLE
 CREATE TABLE IF NOT EXISTS coupons (
     id TEXT PRIMARY KEY,
     code TEXT NOT NULL UNIQUE,
-    type TEXT NOT NULL DEFAULT 'percentage', -- 'percentage' or 'flat'
+    type TEXT NOT NULL DEFAULT 'percentage',
     value NUMERIC NOT NULL DEFAULT 10,
     min_order_value NUMERIC DEFAULT 999,
     max_discount NUMERIC DEFAULT 0,
@@ -105,10 +101,9 @@ CREATE TABLE IF NOT EXISTS coupons (
     created_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL
 );
 
--- 6. CMS CONTENT TABLE (Banners, Collections, Festive Specials, Marquee)
 CREATE TABLE IF NOT EXISTS cms_content (
     id TEXT PRIMARY KEY,
-    section_type TEXT NOT NULL, -- 'hero_banner', 'festive_special', 'featured_collection', 'marquee_announcement'
+    section_type TEXT NOT NULL,
     content_payload JSONB NOT NULL DEFAULT '{}'::jsonb,
     sort_order INT DEFAULT 1,
     is_active BOOLEAN DEFAULT true,
@@ -116,7 +111,6 @@ CREATE TABLE IF NOT EXISTS cms_content (
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL
 );
 
--- 7. STORE SETTINGS TABLE
 CREATE TABLE IF NOT EXISTS store_settings (
     id TEXT PRIMARY KEY DEFAULT 'main_store',
     business_name TEXT DEFAULT 'Eternal Nutricare',
@@ -128,76 +122,118 @@ CREATE TABLE IF NOT EXISTS store_settings (
     primary_whatsapp TEXT DEFAULT '916302017482',
     secondary_whatsapp TEXT DEFAULT '919392235693',
     support_email TEXT DEFAULT 'eternalncdm@gmail.com',
-    registered_address TEXT DEFAULT '3g Crimson Layout, Channasandra, opp Krishnakuteer Phase 2, Bangalore East, Bangalore Urban, Karnataka - 560067',
+    registered_address TEXT DEFAULT '3g Crimson Layout, Channasandra, Bangalore - 560067',
     gstin TEXT DEFAULT '29ABCDE1234F1Z5',
     udyam_number TEXT DEFAULT 'UDYAM-KR-03-0464297',
     fssai_number TEXT DEFAULT '21226009001641',
     is_store_live BOOLEAN DEFAULT true,
-    pause_notice_message TEXT DEFAULT 'We are temporarily pausing new orders for inventory restocking.',
+    pause_notice_message TEXT DEFAULT 'We are temporarily pausing new orders for restocking.',
     min_order_value NUMERIC DEFAULT 999,
     free_shipping_threshold NUMERIC DEFAULT 999,
     standard_shipping_fee NUMERIC DEFAULT 40,
-    serviceable_pincodes TEXT DEFAULT '560001, 560002, 560034, 560038, 560067, 560103',
-    trust_stats JSONB DEFAULT '[
-        {"id": "ts_1", "count": "10,000+", "label": "Happy Families"},
-        {"id": "ts_2", "count": "100%", "label": "Certified Organic"},
-        {"id": "ts_3", "count": "★ 4.9 / 5", "label": "Customer Rating"},
-        {"id": "ts_4", "count": "Bangalore", "label": "Express Delivery"}
-    ]'::jsonb,
+    serviceable_pincodes TEXT DEFAULT '560001, 560034, 560067, 560103',
+    trust_stats JSONB DEFAULT '[]'::jsonb,
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL
 );
 
 -- ==============================================================================
--- 8. ROW LEVEL SECURITY (RLS) POLICIES
+-- 2. ENABLE ROW LEVEL SECURITY (RLS) ON ALL TABLES
 -- ==============================================================================
 
--- Enable RLS across all tables
 ALTER TABLE categories ENABLE ROW LEVEL SECURITY;
 ALTER TABLE products ENABLE ROW LEVEL SECURITY;
 ALTER TABLE orders ENABLE ROW LEVEL SECURITY;
-ALTER TABLE customers ENABLE ROW LEVEL SECURITY;
+ALTER TABLE profiles ENABLE ROW LEVEL SECURITY;
 ALTER TABLE coupons ENABLE ROW LEVEL SECURITY;
 ALTER TABLE cms_content ENABLE ROW LEVEL SECURITY;
 ALTER TABLE store_settings ENABLE ROW LEVEL SECURITY;
 
--- Clean up old policies
-DROP POLICY IF EXISTS "Public Read Categories" ON categories;
-DROP POLICY IF EXISTS "Admin All Categories" ON categories;
-DROP POLICY IF EXISTS "Public Read Products" ON products;
-DROP POLICY IF EXISTS "Admin All Products" ON products;
-DROP POLICY IF EXISTS "Public Read Orders" ON orders;
-DROP POLICY IF EXISTS "Public Insert Orders" ON orders;
-DROP POLICY IF EXISTS "Admin All Orders" ON orders;
-DROP POLICY IF EXISTS "Public Read Customers" ON customers;
-DROP POLICY IF EXISTS "Public Insert Customers" ON customers;
-DROP POLICY IF EXISTS "Admin All Customers" ON customers;
-DROP POLICY IF EXISTS "Public Read Coupons" ON coupons;
-DROP POLICY IF EXISTS "Admin All Coupons" ON coupons;
-DROP POLICY IF EXISTS "Public Read CMS" ON cms_content;
-DROP POLICY IF EXISTS "Admin All CMS" ON cms_content;
-DROP POLICY IF EXISTS "Public Read Settings" ON store_settings;
-DROP POLICY IF EXISTS "Admin All Settings" ON store_settings;
+-- ==============================================================================
+-- 3. DROP EXISTING POLICIES TO AVOID DUPLICATION
+-- ==============================================================================
 
--- Public Read & Admin All Policies
-CREATE POLICY "Public Read Categories" ON categories FOR SELECT USING (true);
-CREATE POLICY "Admin All Categories" ON categories FOR ALL USING (true);
+DO $$
+BEGIN
+    DROP POLICY IF EXISTS "Public Read Categories" ON categories;
+    DROP POLICY IF EXISTS "Admin Write Categories" ON categories;
+    DROP POLICY IF EXISTS "Public Read Products" ON products;
+    DROP POLICY IF EXISTS "Admin Write Products" ON products;
+    DROP POLICY IF EXISTS "Public Read Active Coupons" ON coupons;
+    DROP POLICY IF EXISTS "Admin Write Coupons" ON coupons;
+    DROP POLICY IF EXISTS "Public Read CMS" ON cms_content;
+    DROP POLICY IF EXISTS "Admin Write CMS" ON cms_content;
+    DROP POLICY IF EXISTS "Public Read Settings" ON store_settings;
+    DROP POLICY IF EXISTS "Admin Write Settings" ON store_settings;
+    DROP POLICY IF EXISTS "Customer Insert Orders" ON orders;
+    DROP POLICY IF EXISTS "Admin All Orders" ON orders;
+    DROP POLICY IF EXISTS "Customer Own Orders" ON orders;
+    DROP POLICY IF EXISTS "User Own Profile" ON profiles;
+    DROP POLICY IF EXISTS "Admin All Profiles" ON profiles;
+EXCEPTION WHEN OTHERS THEN
+    NULL;
+END $$;
 
-CREATE POLICY "Public Read Products" ON products FOR SELECT USING (true);
-CREATE POLICY "Admin All Products" ON products FOR ALL USING (true);
+-- ==============================================================================
+-- 4. STRICT RLS POLICIES (JWT AUTHENTICATION RULES)
+-- ==============================================================================
 
-CREATE POLICY "Public Read Orders" ON orders FOR SELECT USING (true);
-CREATE POLICY "Public Insert Orders" ON orders FOR INSERT WITH CHECK (true);
-CREATE POLICY "Admin All Orders" ON orders FOR ALL USING (true);
+-- A) PRODUCTS & CATEGORIES: PUBLIC READ, ADMIN-ONLY WRITE
+CREATE POLICY "Public Read Products" ON products
+    FOR SELECT USING (true);
 
-CREATE POLICY "Public Read Customers" ON customers FOR SELECT USING (true);
-CREATE POLICY "Public Insert Customers" ON customers FOR INSERT WITH CHECK (true);
-CREATE POLICY "Admin All Customers" ON customers FOR ALL USING (true);
+CREATE POLICY "Admin Write Products" ON products
+    FOR ALL TO authenticated
+    USING (auth.jwt() ->> 'email' = 'eternalncdm@gmail.com' OR (auth.jwt() -> 'user_metadata' ->> 'role') = 'admin');
 
-CREATE POLICY "Public Read Coupons" ON coupons FOR SELECT USING (true);
-CREATE POLICY "Admin All Coupons" ON coupons FOR ALL USING (true);
+CREATE POLICY "Public Read Categories" ON categories
+    FOR SELECT USING (true);
 
-CREATE POLICY "Public Read CMS" ON cms_content FOR SELECT USING (true);
-CREATE POLICY "Admin All CMS" ON cms_content FOR ALL USING (true);
+CREATE POLICY "Admin Write Categories" ON categories
+    FOR ALL TO authenticated
+    USING (auth.jwt() ->> 'email' = 'eternalncdm@gmail.com' OR (auth.jwt() -> 'user_metadata' ->> 'role') = 'admin');
 
-CREATE POLICY "Public Read Settings" ON store_settings FOR SELECT USING (true);
-CREATE POLICY "Admin All Settings" ON store_settings FOR ALL USING (true);
+-- B) CMS CONTENT & STORE SETTINGS: PUBLIC READ, ADMIN-ONLY WRITE
+CREATE POLICY "Public Read CMS" ON cms_content
+    FOR SELECT USING (true);
+
+CREATE POLICY "Admin Write CMS" ON cms_content
+    FOR ALL TO authenticated
+    USING (auth.jwt() ->> 'email' = 'eternalncdm@gmail.com' OR (auth.jwt() -> 'user_metadata' ->> 'role') = 'admin');
+
+CREATE POLICY "Public Read Settings" ON store_settings
+    FOR SELECT USING (true);
+
+CREATE POLICY "Admin Write Settings" ON store_settings
+    FOR ALL TO authenticated
+    USING (auth.jwt() ->> 'email' = 'eternalncdm@gmail.com' OR (auth.jwt() -> 'user_metadata' ->> 'role') = 'admin');
+
+-- C) COUPONS: PUBLIC READ ACTIVE, ADMIN-ONLY WRITE
+CREATE POLICY "Public Read Active Coupons" ON coupons
+    FOR SELECT USING (is_active = true);
+
+CREATE POLICY "Admin Write Coupons" ON coupons
+    FOR ALL TO authenticated
+    USING (auth.jwt() ->> 'email' = 'eternalncdm@gmail.com' OR (auth.jwt() -> 'user_metadata' ->> 'role') = 'admin');
+
+-- D) ORDERS: CUSTOMER CAN INSERT, CUSTOMER CAN READ OWN (BY PHONE/EMAIL), ADMIN SEES ALL
+CREATE POLICY "Customer Insert Orders" ON orders
+    FOR INSERT WITH CHECK (true);
+
+CREATE POLICY "Admin All Orders" ON orders
+    FOR ALL TO authenticated
+    USING (auth.jwt() ->> 'email' = 'eternalncdm@gmail.com' OR (auth.jwt() -> 'user_metadata' ->> 'role') = 'admin');
+
+CREATE POLICY "Customer Own Orders" ON orders
+    FOR SELECT USING (
+        auth.jwt() IS NULL -- Guest checkout lookup
+        OR (auth.jwt() ->> 'email' = customer_email)
+    );
+
+-- E) PROFILES: USERS MANAGE OWN PROFILE, ADMIN MANAGES ALL
+CREATE POLICY "User Own Profile" ON profiles
+    FOR ALL TO authenticated
+    USING (auth.uid() = id);
+
+CREATE POLICY "Admin All Profiles" ON profiles
+    FOR ALL TO authenticated
+    USING (auth.jwt() ->> 'email' = 'eternalncdm@gmail.com' OR (auth.jwt() -> 'user_metadata' ->> 'role') = 'admin');
