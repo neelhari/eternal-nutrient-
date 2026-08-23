@@ -120,3 +120,14 @@ button:active, .btn:active, .addr-chip:active, .p-pack-pill:active {
   animation: gridFadeLift 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
+/* Prevent iOS Safari from auto-styling numbers/IDs as blue links */
+a[x-apple-data-detectors] {
+  color: inherit !important;
+  text-decoration: none !important;
+  font-size: inherit !important;
+  font-family: inherit !important;
+  font-weight: inherit !important;
+  line-height: inherit !important;
+}
+
+

@@ -154,59 +154,65 @@ body {
 .search-input-pill {
   display: flex;
   align-items: center;
-  background: #F3F6EF;
-  border: 1.5px solid #E2EAD8;
+  background: #FFFFFF;
+  border: 1.5px solid #EAE5DE;
   border-radius: 999px;
-  padding: 4px 6px 4px 16px;
+  padding: 4px 6px 4px 14px;
   gap: 8px;
+  box-shadow: 0 2px 8px rgba(40, 22, 18, 0.04);
   transition: all 0.2s ease;
 }
 
 .search-input-pill:focus-within {
   background: #FFFFFF;
-  border-color: #553518;
-  box-shadow: 0 0 0 3px rgba(85, 53, 24, 0.12);
+  border-color: #281612;
+  box-shadow: 0 3px 12px rgba(40, 22, 18, 0.1);
 }
 
-.search-input-pill i.search-leading-icon {
-  font-size: 16px;
-  color: #6C7E64;
+.search-input-pill i.search-leading-icon,
+.search-leading-icon {
+  font-size: 17px;
+  color: #8C7E77;
+  margin-right: 0;
+  flex-shrink: 0;
 }
 
 .search-input-pill input {
   flex: 1;
-  border: none;
   background: transparent;
+  border: none;
   outline: none;
-  font-size: 13.5px;
-  font-family: inherit;
-  color: #1E2519;
+  font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+  font-size: 13px;
+  font-weight: 500;
+  color: #1E1A17;
+  padding: 4px 0;
 }
 
 .search-input-pill input::placeholder {
-  color: #889981;
+  color: #9C8F88;
 }
 
 /* Dedicated Search Button in Logo Brown */
 .search-submit-btn {
-  background: #553518;
+  background: #281612;
   color: #FFFFFF;
   border: none;
-  border-radius: 999px;
-  width: 34px;
-  height: 34px;
+  border-radius: 50%;
+  width: 32px;
+  height: 32px;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 16px;
+  font-size: 14px;
   cursor: pointer;
   flex-shrink: 0;
-  transition: all 0.2s ease;
-  box-shadow: 0 2px 6px rgba(85, 53, 24, 0.25);
+  transition: background 0.15s ease, transform 0.15s ease;
+  box-shadow: 0 2px 6px rgba(40, 22, 18, 0.2);
 }
 
 .search-submit-btn:hover {
-  background: #3B240F;
+  background: #3E241E;
   transform: scale(1.05);
 }
 
@@ -1766,14 +1772,76 @@ body {
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  background: rgba(226, 192, 149, 0.15);
+  background: rgba(226, 192, 149, 0.12);
   border: 1px solid rgba(226, 192, 149, 0.35);
-  color: #E2C095;
+  color: #E2C095 !important;
+  -webkit-text-fill-color: #E2C095 !important;
   font-size: 11px;
   font-weight: 700;
-  padding: 4px 10px;
+  padding: 5px 10px;
   border-radius: 6px;
   text-align: left;
+  text-decoration: none !important;
+}
+
+.footer-gstin-chip span,
+.footer-gstin-chip a,
+.footer-gstin-chip a[x-apple-data-detectors],
+.footer-gstin-chip a[href^="tel"] {
+  color: #E2C095 !important;
+  -webkit-text-fill-color: #E2C095 !important;
+  text-decoration: none !important;
+  font-size: inherit !important;
+  font-weight: inherit !important;
+  font-family: inherit !important;
+  pointer-events: none;
+}
+
+/* Enhanced Official FSSAI Trust Card in Footer */
+.footer-fssai-badge-wrap {
+  margin-top: 12px;
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  background: #FFFFFF;
+  padding: 8px 14px;
+  border-radius: 10px;
+  border: 1px solid rgba(242, 103, 34, 0.25);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.18);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.footer-fssai-badge-wrap:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.25);
+}
+
+.fssai-footer-logo-img {
+  height: 32px;
+  width: auto;
+  object-fit: contain;
+  display: block;
+}
+
+.footer-fssai-text-block {
+  display: flex;
+  flex-direction: column;
+  text-align: left;
+}
+
+.footer-fssai-title {
+  font-size: 11px;
+  font-weight: 800;
+  color: #0C2085;
+  letter-spacing: 0.3px;
+  line-height: 1.2;
+}
+
+.footer-fssai-subtitle {
+  font-size: 10px;
+  font-weight: 600;
+  color: #F26722;
+  line-height: 1.3;
 }
 
 .footer-links-list {

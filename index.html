@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="format-detection" content="telephone=no">
   <title>Eternal Nutricare - Pure. Natural. Eternal.</title>
   
   <!-- Remix Icons Font -->
@@ -91,7 +92,7 @@
       <div class="header-search-wrap">
         <div class="search-input-pill">
           <i class="ri-search-2-line search-leading-icon"></i>
-          <input type="text" id="desktop-search-input" placeholder="Search for honey, pickles, millets, laddus, chikkis..." oninput="handleSearch(this.value)">
+          <input type="text" id="desktop-search-input" placeholder="Search organic honey, pickles, millets, laddus..." oninput="handleSearch(this.value)">
           <button class="search-submit-btn" onclick="handleSearch(document.getElementById('desktop-search-input').value)" aria-label="Search">
             <i class="ri-search-2-line"></i>
           </button>
@@ -115,7 +116,7 @@
     <div class="mobile-search-bar">
       <div class="search-input-pill">
         <i class="ri-search-2-line search-leading-icon"></i>
-        <input type="text" id="mobile-search-input" placeholder="Search honey, pickles, millets, laddus..." oninput="handleSearch(this.value)">
+        <input type="text" id="mobile-search-input" placeholder="Search organic honey, pickles, millets, laddus..." oninput="handleSearch(this.value)">
         <button class="search-submit-btn" onclick="handleSearch(document.getElementById('mobile-search-input').value)" aria-label="Search">
           <i class="ri-search-2-line"></i>
         </button>
@@ -717,6 +718,15 @@
             <div class="footer-gstin-chip">
               <i class="ri-shield-check-fill"></i>
               <span>FSSAI Lic: 21226009001641</span>
+            </div>
+          </div>
+
+          <!-- Enhanced Official FSSAI Trust Emblem -->
+          <div class="footer-fssai-badge-wrap">
+            <img src="assets/fssai_logo.png" alt="FSSAI Official Certified Logo" class="fssai-footer-logo-img">
+            <div class="footer-fssai-text-block">
+              <span class="footer-fssai-title">Certified Food Safety</span>
+              <span class="footer-fssai-subtitle">Govt. Lic: 21226009001641</span>
             </div>
           </div>
         </div>
