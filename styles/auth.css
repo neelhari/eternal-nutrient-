@@ -456,7 +456,7 @@ body.plantland-auth-body {
   bottom: 0;
   background: rgba(20, 10, 8, 0.65);
   backdrop-filter: blur(8px);
-  display: none !important;
+  display: none;
   align-items: center;
   justify-content: center;
   z-index: 2100;
