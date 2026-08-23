@@ -9,6 +9,12 @@
   -webkit-tap-highlight-color: transparent;
 }
 
+html {
+  overflow-x: hidden;
+  max-width: 100%;
+  width: 100%;
+}
+
 body {
   font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
   background-color: #FAFBF9;
@@ -16,9 +22,11 @@ body {
   line-height: 1.45;
   min-height: 100vh;
   width: 100%;
+  max-width: 100%;
   display: flex;
   flex-direction: column;
   overflow-x: hidden;
+  position: relative;
 }
 
 /* ==========================================================================
@@ -32,6 +40,7 @@ body {
   display: flex;
   flex-direction: column;
   background-color: #FAFBF9;
+  overflow-x: hidden;
 }
 
 @media (max-width: 768px) {
@@ -553,11 +562,11 @@ body {
    FULL-BLEED STRAIGHT LINES CURATED RAILS (PERFECT MARGINS & BREATHING SPACE)
    ========================================================================== */
 .editorial-curated-section {
-  width: calc(100% + 32px);
-  margin-left: -16px;
-  margin-right: -16px;
+  width: 100%;
+  margin-left: 0;
+  margin-right: 0;
   border-radius: 0;
-  padding: 24px 20px 26px;
+  padding: 24px 16px 26px;
   margin-top: 8px;
   margin-bottom: 26px;
   position: relative;

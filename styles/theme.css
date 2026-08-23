@@ -2,6 +2,12 @@
    ETERNAL NUTRICARE — EXACT BRAND DESIGN TOKENS
    ========================================================================== */
 
+/* Universal Mobile Screen Stabilization */
+html, body {
+  overflow-x: hidden;
+  max-width: 100%;
+}
+
 :root {
   /* Brand Leaf Greens */
   --primary: #4A7A25;          /* Nature Leaf Green */
