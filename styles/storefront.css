@@ -76,7 +76,7 @@ body {
   }
 }
 
-/* Brand Logo (PDF Matched: Emblem on Top, Name Below) */
+/* Brand Logo (Exact Alignment: Centered Emblem -> Centered ETERNAL + Absolute TM -> Centered NUTRICARE) */
 .brand-link-left {
   display: flex;
   flex-direction: column;
@@ -84,7 +84,7 @@ body {
   justify-content: center;
   text-decoration: none;
   flex-shrink: 0;
-  gap: 0;
+  gap: 2px;
   padding: 0 4px;
   transition: transform 0.2s ease;
 }
@@ -101,44 +101,49 @@ body {
 }
 
 .brand-emblem-img {
-  width: 46px;
-  height: 46px;
+  width: 44px;
+  height: 44px;
   object-fit: contain;
   display: block;
   flex-shrink: 0;
   filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.04));
+  margin: 0 auto;
 }
 
 .brand-text-block {
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: center;
   text-align: center;
-  line-height: 1.05;
-  margin-top: -3px;
+  line-height: 1;
+  margin-top: 2px;
+  width: auto;
 }
 
 .brand-name-eternal {
   font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
-  font-size: 13px;
-  font-weight: 800;
+  font-size: 13.5px;
+  font-weight: 900;
   color: #553518; /* Exact Logo Core Brown */
-  letter-spacing: 1.4px;
+  letter-spacing: 1.6px;
   text-transform: uppercase;
-  display: inline-flex;
-  align-items: baseline;
   position: relative;
+  display: inline-block;
+  text-align: center;
+  line-height: 1.1;
 }
 
 .brand-tm {
-  font-size: 0.58em;
-  font-weight: 800;
+  font-size: 7.5px;
+  font-weight: 900;
   color: #553518;
-  position: relative;
-  top: -4px;
-  margin-left: 1.5px;
+  position: absolute;
+  top: -1px;
+  right: -13px;
   letter-spacing: 0;
   line-height: 1;
+  font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
 }
 
 .brand-name-nutricare {
@@ -146,29 +151,35 @@ body {
   font-size: 8px;
   font-weight: 800;
   color: #4A7A25; /* Exact Logo Leaf Green */
-  letter-spacing: 2.2px;
+  letter-spacing: 2.8px;
   text-transform: uppercase;
+  text-align: center;
+  display: block;
+  line-height: 1.1;
+  margin-top: 2px;
 }
 
 @media (max-width: 768px) {
   .brand-emblem-img {
-    width: 40px;
-    height: 40px;
+    width: 38px;
+    height: 38px;
   }
   .brand-text-block {
-    margin-top: -3px;
+    margin-top: 1px;
   }
   .brand-name-eternal {
-    font-size: 11px;
-    letter-spacing: 1.2px;
+    font-size: 12px;
+    letter-spacing: 1.3px;
   }
   .brand-tm {
-    font-size: 0.55em;
-    top: -3.5px;
+    font-size: 7px;
+    top: -1px;
+    right: -12px;
   }
   .brand-name-nutricare {
-    font-size: 6.8px;
-    letter-spacing: 1.8px;
+    font-size: 7.2px;
+    letter-spacing: 2.4px;
+    margin-top: 1.5px;
   }
 }
 
