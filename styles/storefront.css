@@ -77,7 +77,7 @@ body {
 }
 
 /* ==========================================================================
-   ETERNAL NUTRICARE LOGO — OFFICIAL VECTOR LOGO (PERFECT MOBILE VIEW)
+   ETERNAL NUTRICARE LOGO — OFFICIAL VECTOR LOGO (CLEAR & PROMINENT)
    ========================================================================== */
 .brand-link-left {
   display: inline-flex;
@@ -85,26 +85,30 @@ body {
   justify-content: center;
   text-decoration: none;
   flex-shrink: 0;
-  padding: 0 4px;
+  padding: 0;
   transition: transform 0.2s ease;
 }
 
 .brand-link-left:hover {
-  transform: scale(1.04);
+  transform: scale(1.03);
 }
 
 .brand-logo-official-img {
-  height: 52px;
+  height: 58px;
   width: auto;
-  max-width: 96px;
+  max-width: 120px;
   object-fit: contain;
   display: block;
 }
 
 @media (max-width: 768px) {
+  .main-header {
+    padding: 6px 16px;
+    min-height: 68px;
+  }
   .brand-logo-official-img {
-    height: 48px;
-    max-width: 86px;
+    height: 54px;
+    max-width: 110px;
   }
 }
 
