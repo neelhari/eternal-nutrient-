@@ -268,65 +268,113 @@ window.AdminController = (function() {
   // 4. DASHBOARD OVERVIEW RENDERER
   // =========================================================================
   function renderDashboard() {
-    const stats = db.analytics;
-    
-    // Top metric cards
-    document.getElementById('stat-today-revenue').innerText = `₹${stats.todayRevenue.toLocaleString('en-IN')}`;
-    document.getElementById('stat-week-revenue').innerText = `₹${stats.weekRevenue.toLocaleString('en-IN')}`;
-    document.getElementById('stat-month-revenue').innerText = `₹${stats.monthRevenue.toLocaleString('en-IN')}`;
-    document.getElementById('stat-alltime-revenue').innerText = `₹${stats.allTimeRevenue.toLocaleString('en-IN')}`;
-    
-    document.getElementById('stat-total-orders').innerText = stats.totalOrders;
-    document.getElementById('stat-pending-orders').innerText = stats.pendingOrders;
-    document.getElementById('stat-completed-orders').innerText = stats.completedOrders;
-    document.getElementById('stat-aov').innerText = `₹${stats.averageOrderValue.toLocaleString('en-IN')}`;
-    document.getElementById('stat-active-products').innerText = db.products.filter(p => p.inStock).length;
-    document.getElementById('stat-low-stock').innerText = db.products.filter(p => p.stockQty <= 10).length;
+    const orders = db.orders || [];
+    const products = db.products || [];
 
-    // Leaderboard
-    const topProducts = db.products.filter(p => p.isBestseller).slice(0, 4);
+    const now = new Date();
+    const startOfToday = new Date(now.getFullYear(), now.getMonth(), now.getDate()).getTime();
+    const dayOfWeek = now.getDay();
+    const startOfWeek = new Date(now.getFullYear(), now.getMonth(), now.getDate() - dayOfWeek).getTime();
+    const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1).getTime();
+
+    let todayRevenue = 0;
+    let weekRevenue = 0;
+    let monthRevenue = 0;
+    let allTimeRevenue = 0;
+    let pendingOrders = 0;
+    let completedOrders = 0;
+
+    orders.forEach(o => {
+      const amt = Number(o.totalAmount || o.total_amount || 0);
+      const oDate = new Date(o.date || o.created_at || Date.now());
+      const oTime = oDate.getTime();
+
+      allTimeRevenue += amt;
+      if (oTime >= startOfToday) todayRevenue += amt;
+      if (oTime >= startOfWeek) weekRevenue += amt;
+      if (oTime >= startOfMonth) monthRevenue += amt;
+
+      const st = (o.orderStatus || o.order_status || '').toLowerCase();
+      if (st.includes('delivered') || st.includes('completed')) {
+        completedOrders++;
+      } else if (!st.includes('cancelled') && !st.includes('refunded')) {
+        pendingOrders++;
+      }
+    });
+
+    const totalOrders = orders.length;
+    const averageOrderValue = totalOrders > 0 ? Math.round(allTimeRevenue / totalOrders) : 0;
+    const activeProducts = products.filter(p => p.inStock).length;
+    const lowStockCount = products.filter(p => p.stockQty <= 10).length;
+
+    // Top metric cards
+    document.getElementById('stat-today-revenue').innerText = `₹${todayRevenue.toLocaleString('en-IN')}`;
+    document.getElementById('stat-week-revenue').innerText = `₹${weekRevenue.toLocaleString('en-IN')}`;
+    document.getElementById('stat-month-revenue').innerText = `₹${monthRevenue.toLocaleString('en-IN')}`;
+    document.getElementById('stat-alltime-revenue').innerText = `₹${allTimeRevenue.toLocaleString('en-IN')}`;
+    
+    document.getElementById('stat-total-orders').innerText = totalOrders;
+    document.getElementById('stat-pending-orders').innerText = pendingOrders;
+    document.getElementById('stat-completed-orders').innerText = completedOrders;
+    document.getElementById('stat-aov').innerText = `₹${averageOrderValue.toLocaleString('en-IN')}`;
+    document.getElementById('stat-active-products').innerText = activeProducts;
+    document.getElementById('stat-low-stock').innerText = lowStockCount;
+
+    // Leaderboard (Real Products from DB)
+    const topProducts = products.filter(p => p.isBestseller).length > 0
+      ? products.filter(p => p.isBestseller).slice(0, 4)
+      : products.slice(0, 4);
+
     const leaderboardContainer = document.getElementById('dash-top-products-list');
     if (leaderboardContainer) {
-      leaderboardContainer.innerHTML = topProducts.map((p, idx) => `
-        <div class="leaderboard-item-row">
-          <span class="rank-badge rank-${idx + 1}">#${idx + 1}</span>
-          <img src="${p.image}" alt="${p.title}" class="leaderboard-thumb">
-          <div class="leaderboard-info">
-            <div class="leaderboard-title">${p.title}</div>
-            <div class="leaderboard-meta">${p.category} • ${p.unit}</div>
+      if (topProducts.length === 0) {
+        leaderboardContainer.innerHTML = '<div class="p-3 text-muted">No products cataloged yet.</div>';
+      } else {
+        leaderboardContainer.innerHTML = topProducts.map((p, idx) => `
+          <div class="leaderboard-item-row">
+            <span class="rank-badge rank-${idx + 1}">#${idx + 1}</span>
+            <img src="${p.image}" alt="${p.title}" class="leaderboard-thumb">
+            <div class="leaderboard-info">
+              <div class="leaderboard-title">${p.title}</div>
+              <div class="leaderboard-meta">${p.category} • ${p.unit}</div>
+            </div>
+            <div class="leaderboard-sales">
+              <div class="sales-val">₹${p.price}</div>
+              <span class="stock-pill ${p.stockQty > 10 ? 'in-stock' : 'low-stock'}">${p.stockQty} in stock</span>
+            </div>
           </div>
-          <div class="leaderboard-sales">
-            <div class="sales-val">₹${p.price}</div>
-            <span class="stock-pill ${p.stockQty > 10 ? 'in-stock' : 'low-stock'}">${p.stockQty} in stock</span>
-          </div>
-        </div>
-      `).join('');
+        `).join('');
+      }
     }
 
     // Recent Orders in Dashboard
-    const recentOrders = db.orders.slice(0, 4);
+    const recentOrders = orders.slice(0, 5);
     const recentOrdersContainer = document.getElementById('dash-recent-orders-list');
     if (recentOrdersContainer) {
-      recentOrdersContainer.innerHTML = recentOrders.map(o => `
-        <div class="recent-order-row" onclick="AdminController.openOrderInspector('${o.id}')">
-          <div class="order-id-block">
-            <span class="order-num">${o.orderNumber}</span>
-            <span class="order-time">${new Date(o.date).toLocaleDateString('en-IN', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })}</span>
+      if (recentOrders.length === 0) {
+        recentOrdersContainer.innerHTML = '<div class="p-3 text-muted text-center"><i class="ri-shopping-bag-3-line" style="font-size: 24px; display: block; margin-bottom: 6px;"></i>No orders placed yet. Orders will appear here live.</div>';
+      } else {
+        recentOrdersContainer.innerHTML = recentOrders.map(o => `
+          <div class="recent-order-row" onclick="AdminController.openOrderInspector('${o.id}')">
+            <div class="order-id-block">
+              <span class="order-num">${o.orderNumber}</span>
+              <span class="order-time">${new Date(o.date).toLocaleDateString('en-IN', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })}</span>
+            </div>
+            <div class="order-cust-block">
+              <div class="cust-name">${o.customerName}</div>
+              <div class="cust-phone">${o.customerPhone}</div>
+            </div>
+            <div class="order-amount-block">
+              <div class="amount-val">₹${o.totalAmount}</div>
+              <span class="order-status-chip status-${(o.orderStatus || 'confirmed').toLowerCase().replace(/\s+/g, '-')}">${o.orderStatus || 'Confirmed'}</span>
+            </div>
           </div>
-          <div class="order-cust-block">
-            <div class="cust-name">${o.customerName}</div>
-            <div class="cust-phone">${o.customerPhone}</div>
-          </div>
-          <div class="order-amount-block">
-            <div class="amount-val">₹${o.totalAmount}</div>
-            <span class="order-status-chip status-${o.orderStatus.toLowerCase().replace(/\s+/g, '-')}">${o.orderStatus}</span>
-          </div>
-        </div>
-      `).join('');
+        `).join('');
+      }
     }
 
     // Low stock alert banner
-    const lowStockItems = db.products.filter(p => p.stockQty <= 10);
+    const lowStockItems = products.filter(p => p.stockQty <= 10);
     const alertBox = document.getElementById('dash-low-stock-alert');
     if (alertBox) {
       if (lowStockItems.length > 0) {
@@ -573,16 +621,16 @@ window.AdminController = (function() {
           window.CloudDB.getOrders(),
           window.CloudDB.getCustomers()
         ]);
-        if (cloudProds && cloudProds.length > 0) {
+        if (cloudProds) {
           db.products = cloudProds.map(normalizeProductFromDB);
         }
-        if (cloudCats && cloudCats.length > 0) {
+        if (cloudCats) {
           db.categories = cloudCats.map(normalizeCategoryFromDB);
         }
-        if (cloudOrders && cloudOrders.length > 0) {
+        if (cloudOrders) {
           db.orders = cloudOrders.map(normalizeOrderFromDB);
         }
-        if (cloudCusts && cloudCusts.length > 0) {
+        if (cloudCusts) {
           db.customers = cloudCusts;
         }
         renderActiveView(activeTab);
