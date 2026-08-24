@@ -883,15 +883,27 @@
               <select id="prod-form-category" class="form-select"></select>
             </div>
             <div class="form-field-block col-span-2">
-              <label class="form-label">Product Photo * (Cloud Storage URL or Upload)</label>
-              <div style="display: flex; gap: 10px; align-items: center;">
-                <input type="text" id="prod-form-image" class="form-input" placeholder="https://res.cloudinary.com/... or assets/..." onchange="AdminController.updateImagePreview('prod-form-image', 'prod-form-img-preview')">
-                <label class="btn btn-sm btn-outline" style="cursor: pointer; white-space: nowrap; display: flex; align-items: center; gap: 6px; padding: 9px 14px; height: 42px; border: 1px solid #CBD5E1; border-radius: 8px;">
-                  <i class="ri-upload-cloud-2-line"></i> Upload Photo
-                  <input type="file" id="prod-file-upload-input" accept="image/*" style="display: none;" onchange="AdminController.uploadProductImage(this)">
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                <label class="form-label" style="margin: 0; font-weight: 700;">Product Gallery Photos * (Upload multiple photos or paste URLs)</label>
+                <label class="btn btn-sm btn-outline" style="cursor: pointer; display: inline-flex; align-items: center; gap: 6px; padding: 6px 14px; border: 1.5px solid #2D471E; color: #2D471E; border-radius: 8px; font-weight: 700; font-size: 12px; transition: all 0.15s ease;">
+                  <i class="ri-upload-cloud-2-line"></i> + Upload Photos (Multi)
+                  <input type="file" id="prod-file-upload-input" accept="image/*" multiple style="display: none;" onchange="AdminController.uploadProductGallery(this)">
                 </label>
-                <img id="prod-form-img-preview" src="assets/prod_honey_studio.jpg" style="width: 44px; height: 44px; border-radius: 8px; object-fit: cover; border: 1px solid #E2E8F0; flex-shrink: 0;">
               </div>
+
+              <!-- Quick URL Add Bar -->
+              <div style="display: flex; gap: 8px; margin-bottom: 10px;">
+                <input type="text" id="prod-gallery-url-input" class="form-input" placeholder="Paste image URL here (e.g. https://res.cloudinary.com/...)..." style="font-size: 12.5px; height: 38px;">
+                <button type="button" class="btn btn-sm btn-subtle" onclick="AdminController.addGalleryImageUrl()" style="white-space: nowrap; height: 38px; padding: 0 14px; font-weight: 700; border: 1px solid #CBD5E1; border-radius: 8px;">
+                  <i class="ri-add-line"></i> Add URL
+                </button>
+              </div>
+
+              <!-- Interactive Gallery Thumbnail Strip -->
+              <div id="prod-gallery-strip" style="display: flex; gap: 12px; flex-wrap: wrap; align-items: center; min-height: 92px; background: #FAFAF9; border: 1.5px dashed #CBD5E1; border-radius: 12px; padding: 12px;">
+                <!-- Gallery Thumbnails injected dynamically -->
+              </div>
+              <input type="hidden" id="prod-form-image">
             </div>
           </div>
 

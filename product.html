@@ -236,6 +236,39 @@
       border-radius: 4px;
     }
 
+    /* Multi-Image Gallery Thumbnails */
+    .p-gallery-thumbs-row {
+      display: flex;
+      gap: 10px;
+      margin-top: 14px;
+      overflow-x: auto;
+      padding-bottom: 4px;
+    }
+    .p-thumb-btn {
+      width: 68px;
+      height: 68px;
+      border-radius: 12px;
+      border: 2px solid #E2E8F0;
+      background: #FFFFFF;
+      cursor: pointer;
+      overflow: hidden;
+      padding: 0;
+      flex-shrink: 0;
+      transition: all 0.15s ease;
+    }
+    .p-thumb-btn:hover {
+      border-color: #94A3B8;
+    }
+    .p-thumb-btn.active {
+      border-color: #385E28;
+      box-shadow: 0 0 0 2px rgba(56, 94, 40, 0.25);
+    }
+    .p-thumb-btn img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
     /* Select Quantity / Pack Size Pills */
     .p-pack-select-sec {
       margin: 16px 0;
@@ -458,7 +491,7 @@
   <!-- Product Screen Container (100% Screen Responsive) -->
   <main class="p-screen-container">
     
-    <!-- Left Column: Hero Image Card -->
+    <!-- Left Column: Hero Image Card & Gallery -->
     <div>
       <div class="p-hero-img-wrap">
         <img id="p-hero-img" src="assets/showcase_honey.png" alt="Product Image">
@@ -466,6 +499,7 @@
           <i class="ri-heart-line" id="p-wish-icon"></i>
         </button>
       </div>
+      <div id="p-gallery-thumbs" class="p-gallery-thumbs-row" style="display: none;"></div>
     </div>
 
     <!-- Right Column: Details, Packs, Accordions & Buy Bar -->
@@ -719,6 +753,22 @@
       document.getElementById('p-hero-img').src = item.image || item.img || 'assets/prod_honey_studio.jpg';
       document.getElementById('acc-desc').textContent = item.description || item.desc || '100% natural and authentic product.';
 
+      // Render Multi-Image Gallery Thumbnails
+      const gallery = (Array.isArray(item.gallery) && item.gallery.length > 0) ? item.gallery : (item.image ? [item.image] : [item.img || 'assets/prod_honey_studio.jpg']);
+      const thumbsContainer = document.getElementById('p-gallery-thumbs');
+      if (thumbsContainer) {
+        if (gallery.length > 1) {
+          thumbsContainer.style.display = 'flex';
+          thumbsContainer.innerHTML = gallery.map((url, idx) => `
+            <button class="p-thumb-btn ${idx === 0 ? 'active' : ''}" onclick="switchHeroImage('${url}', this)">
+              <img src="${url}" alt="Photo ${idx + 1}">
+            </button>
+          `).join('');
+        } else {
+          thumbsContainer.style.display = 'none';
+        }
+      }
+
       // Render Pack Size Variant Pills
       const pillsContainer = document.querySelector('.p-pack-pills-row');
       if (pillsContainer) {
@@ -741,6 +791,13 @@
     }
 
     window.addEventListener('DOMContentLoaded', loadProductDetail);
+
+    function switchHeroImage(url, btn) {
+      const hero = document.getElementById('p-hero-img');
+      if (hero) hero.src = url;
+      document.querySelectorAll('.p-thumb-btn').forEach(b => b.classList.remove('active'));
+      if (btn) btn.classList.add('active');
+    }
 
     function selectExactVariant(index) {
       if (!currentItem || !currentItem.variants || !currentItem.variants[index]) return;

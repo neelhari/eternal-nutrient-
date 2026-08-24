@@ -664,53 +664,110 @@ window.AdminController = (function() {
     if (row) row.remove();
   }
 
-  async function uploadProductImage(fileInput) {
-    if (!fileInput || !fileInput.files || fileInput.files.length === 0) return;
-    const file = fileInput.files[0];
+  let currentProductGallery = [];
 
-    // Local instant preview
-    const reader = new FileReader();
-    reader.onload = (e) => {
-      const imgPreview = document.getElementById('prod-form-img-preview');
-      if (imgPreview) imgPreview.src = e.target.result;
-    };
-    reader.readAsDataURL(file);
+  function renderGalleryStrip() {
+    const strip = document.getElementById('prod-gallery-strip');
+    const mainImgInput = document.getElementById('prod-form-image');
+    if (!strip) return;
 
-    showToast('Uploading image to Cloudinary...', 'info');
-
-    try {
-      const config = window.STORE_CONFIG || {};
-      const cloudName = config.cloudinaryCloudName || 'ewrpjo2g';
-      const uploadPreset = config.cloudinaryUploadPreset || 'eternal_products';
-
-      const formData = new FormData();
-      formData.append('file', file);
-      formData.append('upload_preset', uploadPreset);
-
-      const res = await fetch(`https://api.cloudinary.com/v1_1/${cloudName}/image/upload`, {
-        method: 'POST',
-        body: formData
-      });
-
-      const data = await res.json();
-      if (data.secure_url) {
-        const optimizedUrl = data.secure_url.replace('/upload/', '/upload/f_auto,q_auto,w_800/');
-        const imgInput = document.getElementById('prod-form-image');
-        const imgPreview = document.getElementById('prod-form-img-preview');
-        if (imgInput) imgInput.value = optimizedUrl;
-        if (imgPreview) imgPreview.src = optimizedUrl;
-        showToast('Product photo uploaded successfully!', 'success');
-      } else {
-        throw new Error(data.error?.message || 'Upload failed');
-      }
-    } catch (err) {
-      console.warn('Cloudinary upload notice:', err.message);
-      const imgInput = document.getElementById('prod-form-image');
-      if (imgInput && reader.result) {
-        imgInput.value = reader.result;
-      }
-      showToast('Photo selected for product.', 'info');
+    if (currentProductGallery.length === 0) {
+      strip.innerHTML = `
+        <div style="width: 100%; text-align: center; color: #94A3B8; font-size: 12.5px; padding: 14px 0;">
+          <i class="ri-image-add-line" style="font-size: 24px; display: block; margin-bottom: 4px; color: #CBD5E1;"></i>
+          No photos uploaded yet. Click <strong>"+ Upload Photos"</strong> or paste an image URL above.
+        </div>
+      `;
+      if (mainImgInput) mainImgInput.value = '';
+      return;
     }
+
+    if (mainImgInput) mainImgInput.value = currentProductGallery[0];
+
+    strip.innerHTML = currentProductGallery.map((url, idx) => `
+      <div class="gallery-thumb-item ${idx === 0 ? 'is-primary' : ''}" onclick="AdminController.setAsPrimaryImage(${idx})" title="${idx === 0 ? 'Primary Cover Photo' : 'Click to set as Primary Cover'}">
+        <img src="${url}" class="gallery-thumb-img" alt="Gallery Photo ${idx + 1}">
+        ${idx === 0 ? '<span class="gallery-primary-tag">Primary</span>' : ''}
+        <button type="button" class="gallery-delete-btn" onclick="event.stopPropagation(); AdminController.removeGalleryImage(${idx})" title="Remove photo">
+          <i class="ri-close-line"></i>
+        </button>
+      </div>
+    `).join('');
+  }
+
+  function setAsPrimaryImage(index) {
+    if (index < 0 || index >= currentProductGallery.length || index === 0) return;
+    const selected = currentProductGallery.splice(index, 1)[0];
+    currentProductGallery.unshift(selected);
+    renderGalleryStrip();
+    showToast('Cover photo updated!', 'info');
+  }
+
+  function removeGalleryImage(index) {
+    if (index < 0 || index >= currentProductGallery.length) return;
+    currentProductGallery.splice(index, 1);
+    renderGalleryStrip();
+    showToast('Photo removed.', 'info');
+  }
+
+  function addGalleryImageUrl() {
+    const input = document.getElementById('prod-gallery-url-input');
+    const url = input?.value.trim();
+    if (!url) {
+      showToast('Please paste a valid image URL.', 'error');
+      return;
+    }
+    currentProductGallery.push(url);
+    if (input) input.value = '';
+    renderGalleryStrip();
+    showToast('Photo URL added to gallery!', 'success');
+  }
+
+  async function uploadProductGallery(input) {
+    if (!input || !input.files || input.files.length === 0) return;
+    const files = Array.from(input.files);
+    
+    showToast(`Uploading ${files.length} photo(s) to Cloudinary...`, 'info');
+
+    const config = window.STORE_CONFIG || {};
+    const cloudName = config.cloudinaryCloudName || 'ewrpjo2g';
+    const uploadPreset = config.cloudinaryUploadPreset || 'eternal_products';
+
+    for (const file of files) {
+      try {
+        const formData = new FormData();
+        formData.append('file', file);
+        formData.append('upload_preset', uploadPreset);
+
+        const res = await fetch(`https://api.cloudinary.com/v1_1/${cloudName}/image/upload`, {
+          method: 'POST',
+          body: formData
+        });
+
+        const data = await res.json();
+        if (data.secure_url) {
+          const optimizedUrl = data.secure_url.replace('/upload/', '/upload/f_auto,q_auto,w_800/');
+          currentProductGallery.push(optimizedUrl);
+        } else {
+          currentProductGallery.push(await new Promise(r => {
+            const rd = new FileReader();
+            rd.onload = e => r(e.target.result);
+            rd.readAsDataURL(file);
+          }));
+        }
+      } catch (err) {
+        console.warn('Cloudinary upload notice:', err.message);
+        currentProductGallery.push(await new Promise(r => {
+          const rd = new FileReader();
+          rd.onload = e => r(e.target.result);
+          rd.readAsDataURL(file);
+        }));
+      }
+    }
+
+    renderGalleryStrip();
+    showToast(`${files.length} photo(s) added to gallery!`, 'success');
+    input.value = '';
   }
 
   function openProductModal(productId = null) {
@@ -736,7 +793,6 @@ window.AdminController = (function() {
       if (prod) {
         document.getElementById('prod-form-title').value = prod.title || '';
         document.getElementById('prod-form-category').value = prod.category || db.categories[0]?.name || '';
-        document.getElementById('prod-form-image').value = prod.image || '';
         document.getElementById('prod-form-description').value = prod.description || '';
         document.getElementById('prod-form-in-stock').checked = prod.inStock !== false;
         document.getElementById('prod-form-is-bestseller').checked = !!prod.isBestseller;
@@ -744,6 +800,16 @@ window.AdminController = (function() {
         if (featEl) featEl.checked = !!prod.isFeatured;
         const newEl = document.getElementById('prod-form-is-new');
         if (newEl) newEl.checked = !!prod.isNewArrival;
+
+        // Initialize Gallery
+        if (Array.isArray(prod.gallery) && prod.gallery.length > 0) {
+          currentProductGallery = [...prod.gallery];
+        } else if (prod.image) {
+          currentProductGallery = [prod.image];
+        } else {
+          currentProductGallery = ['assets/prod_honey_studio.jpg'];
+        }
+        renderGalleryStrip();
 
         // Render pack sizes (variants)
         if (Array.isArray(prod.variants) && prod.variants.length > 0) {
@@ -753,13 +819,10 @@ window.AdminController = (function() {
         } else {
           addPackSizeRow(prod.unit || '500g Glass Jar', prod.price, prod.originalPrice || prod.price, prod.stockQty ?? 50);
         }
-        
-        // Preview image
-        updateImagePreview('prod-form-image', 'prod-form-img-preview');
       }
     } else {
-      document.getElementById('prod-form-image').value = 'assets/prod_honey_studio.jpg';
-      updateImagePreview('prod-form-image', 'prod-form-img-preview');
+      currentProductGallery = ['assets/prod_honey_studio.jpg'];
+      renderGalleryStrip();
       
       // Default single variant row for new product
       addPackSizeRow('500g Glass Jar', '', '', 50);
@@ -836,13 +899,16 @@ window.AdminController = (function() {
     let existing = prodId ? db.products.find(p => p.id === prodId) : null;
     const generatedSku = existing?.sku || `EN-${category.substring(0, 3).toUpperCase()}-${Math.floor(100 + Math.random() * 900)}`;
 
+    const finalGallery = currentProductGallery.length > 0 ? [...currentProductGallery] : ['assets/prod_honey_studio.jpg'];
+    const primaryImage = finalGallery[0];
+
     const productPayload = {
       id: prodId || ('prod_' + Date.now()),
       title,
       sku: generatedSku,
       category,
-      image,
-      gallery: [image],
+      image: primaryImage,
+      gallery: finalGallery,
       price: primaryPrice,
       original_price: primaryMRP,
       discount,
@@ -2346,6 +2412,10 @@ window.AdminController = (function() {
     saveProductForm,
     addPackSizeRow,
     removePackSizeRow,
+    uploadProductGallery,
+    addGalleryImageUrl,
+    setAsPrimaryImage,
+    removeGalleryImage,
     toggleProductStock,
     promptDeleteProduct,
     uploadProductImage,
