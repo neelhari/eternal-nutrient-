@@ -1199,14 +1199,6 @@ window.AdminController = (function() {
       db.festiveSpecials.isActive = document.getElementById('festive-active-toggle')?.checked !== false;
     }, 'Festive Spotlight banner updated and applied to store!');
   }
-        <div class="col-card-info">
-          <h4 class="col-card-title">${c.title}</h4>
-          <p class="col-card-tag">${c.tagline}</p>
-          <span class="col-card-badge">Target: ${c.targetCategory}</span>
-        </div>
-      </div>
-    `).join('');
-  }
 
   // =========================================================================
   // 9. CONTINUOUS MARQUEE RIBBON CMS
