@@ -205,7 +205,16 @@ window.AdminController = (function() {
   // 3. TAB ROUTER & NAVIGATION
   // =========================================================================
   function switchTab(tabId) {
+    if (!tabId) tabId = 'dashboard';
     activeTab = tabId;
+
+    // Persist active tab in URL hash & localStorage so browser refresh stays on current tab
+    try {
+      localStorage.setItem('admin_active_tab', tabId);
+      if (window.location.hash !== `#${tabId}`) {
+        history.replaceState(null, '', `#${tabId}`);
+      }
+    } catch (e) {}
 
     // Update active nav button in sidebar
     document.querySelectorAll('.sidebar-nav-btn').forEach(btn => {
@@ -2398,7 +2407,18 @@ window.AdminController = (function() {
   function init() {
     checkAdminSession();
     loadCloudData();
-    renderDashboard();
+    
+    // Restore exact active tab on browser refresh from URL hash or localStorage
+    const savedTab = window.location.hash.replace('#', '') || localStorage.getItem('admin_active_tab') || 'dashboard';
+    switchTab(savedTab);
+
+    window.addEventListener('hashchange', () => {
+      const hashTab = window.location.hash.replace('#', '');
+      if (hashTab && hashTab !== activeTab) {
+        switchTab(hashTab);
+      }
+    });
+
     updateStoreStatusIndicator();
     initGlobalSearch();
   }
