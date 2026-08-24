@@ -180,8 +180,8 @@
           <!-- Global Search Pill (Ctrl+K) -->
           <button class="global-search-pill-btn" onclick="AdminController.openModal('modal-global-search')">
             <i class="ri-search-2-line"></i>
-            <span>Search products, orders...</span>
-            <kbd class="search-kbd-shortcut">Ctrl+K</kbd>
+            <span>Search products, orders, customers...</span>
+            <kbd class="search-kbd-shortcut">Ctrl + K</kbd>
           </button>
         </div>
 
@@ -193,8 +193,14 @@
             <span>Store Open</span>
           </div>
 
+          <!-- Notification Bell with Counter -->
+          <button class="header-notif-btn" title="3 unread notifications" onclick="AdminController.showToast('You have 3 new store orders pending fulfillment.', 'info')">
+            <i class="ri-notification-3-line"></i>
+            <span class="header-notif-badge">3</span>
+          </button>
+
           <!-- Quick Add Product Button -->
-          <button class="btn btn-sm btn-primary" onclick="AdminController.openProductModal()">
+          <button class="header-top-add-btn" onclick="AdminController.openProductModal()">
             <i class="ri-add-line"></i>
             <span>Add Product</span>
           </button>
@@ -349,49 +355,114 @@
         <!-- ================================================================= -->
         <section id="view-products" class="admin-view-panel">
           
-          <div class="view-header-strip">
+          <!-- Catalog Page Header -->
+          <div class="catalog-header-banner">
             <div>
-              <h1 class="view-heading-title">Product Catalog</h1>
-              <p class="view-heading-sub">Manage products, pricing, stock levels, merchandising badges, and rich descriptions.</p>
+              <h1 class="catalog-title">Product Catalog</h1>
+              <p class="catalog-sub">Manage products, pricing, stock levels, merchandising badges, and rich descriptions.</p>
             </div>
-            <button class="btn btn-primary" onclick="AdminController.openProductModal()">
+            <button class="btn-add-new-catalog" onclick="AdminController.openProductModal()">
               <i class="ri-add-line"></i> Add New Product
             </button>
           </div>
 
-          <!-- Filters & Search Toolbar -->
-          <div class="filter-toolbar-strip">
-            <div class="filter-group-left">
-              <input type="text" id="prod-search-input" class="form-input-search" placeholder="Search by title, SKU..." oninput="AdminController.renderProductsTable()">
-              <select id="prod-filter-category" class="form-select-pill" onchange="AdminController.renderProductsTable()">
-                <option value="All">All Categories</option>
-              </select>
-              <select id="prod-filter-stock" class="form-select-pill" onchange="AdminController.renderProductsTable()">
-                <option value="All">All Stock Levels</option>
-                <option value="InStock">In Stock Only</option>
-                <option value="LowStock">Low Stock (≤10)</option>
-                <option value="OutOfStock">Out of Stock</option>
-              </select>
+          <!-- Single-Row Filters & Search Toolbar -->
+          <div class="catalog-filter-bar">
+            <div class="catalog-search-wrap">
+              <input type="text" id="prod-search-input" class="catalog-search-input" placeholder="Search by title, SKU, barcode..." oninput="AdminController.renderProductsTable()">
+              <i class="ri-search-2-line catalog-search-icon"></i>
+            </div>
+            
+            <select id="prod-filter-category" class="catalog-select-pill" onchange="AdminController.renderProductsTable()">
+              <option value="All">All Categories</option>
+            </select>
+
+            <select id="prod-filter-stock" class="catalog-select-pill" onchange="AdminController.renderProductsTable()">
+              <option value="All">All Stock Levels</option>
+              <option value="InStock">In Stock Only</option>
+              <option value="LowStock">Low Stock (≤10)</option>
+              <option value="OutOfStock">Out of Stock (0)</option>
+            </select>
+
+            <select id="prod-filter-status" class="catalog-select-pill" onchange="AdminController.renderProductsTable()">
+              <option value="All">All Status</option>
+              <option value="Active">Active Only</option>
+              <option value="Inactive">Inactive Only</option>
+            </select>
+
+            <button class="catalog-btn-filter" onclick="AdminController.renderProductsTable()">
+              <i class="ri-filter-3-line"></i> Filters
+            </button>
+
+            <button class="catalog-btn-reset" onclick="AdminController.resetProductFilters()">
+              <i class="ri-refresh-line"></i> Reset
+            </button>
+          </div>
+
+          <!-- Bulk Actions & View Switcher Bar -->
+          <div class="catalog-bulk-bar">
+            <div class="bulk-select-group">
+              <label class="bulk-custom-checkbox">
+                <input type="checkbox" id="bulk-select-all-prods" onchange="AdminController.toggleSelectAllProducts(this.checked)">
+                <span id="bulk-selected-count-label">0 selected</span>
+              </label>
+              <button class="bulk-action-dropdown-btn" onclick="AdminController.showBulkActionsMenu(event)">
+                <span>Bulk Actions</span> <i class="ri-arrow-down-s-line"></i>
+              </button>
+            </div>
+
+            <div class="view-mode-toggle-group">
+              <button class="view-mode-btn active" title="Table list view" id="btn-view-table" onclick="AdminController.switchProductViewMode('table')">
+                <i class="ri-list-check"></i>
+              </button>
+              <button class="view-mode-btn" title="Grid cards view" id="btn-view-grid" onclick="AdminController.switchProductViewMode('grid')">
+                <i class="ri-grid-fill"></i>
+              </button>
             </div>
           </div>
 
-          <!-- Products Table -->
-          <div class="table-responsive-wrapper">
-            <table class="admin-data-table">
+          <!-- Products Table Container -->
+          <div class="catalog-table-container">
+            <table class="catalog-table">
               <thead>
                 <tr>
+                  <th style="width: 40px;">
+                    <input type="checkbox" onchange="AdminController.toggleSelectAllProducts(this.checked)">
+                  </th>
                   <th>Product</th>
                   <th>Category</th>
-                  <th>Pricing</th>
+                  <th>Price</th>
                   <th>Unit</th>
                   <th>Stock</th>
-                  <th>Flags & Badges</th>
-                  <th>In-Stock</th>
-                  <th style="text-align: right;">Actions</th>
+                  <th>Badges</th>
+                  <th>Status</th>
+                  <th style="text-align: right; width: 90px;">Actions</th>
                 </tr>
               </thead>
               <tbody id="products-table-body"></tbody>
             </table>
+          </div>
+
+          <!-- Table Footer Pagination Bar -->
+          <div class="catalog-pagination-bar">
+            <div id="catalog-pagination-showing-text">Showing 1 to 10 of 84 products</div>
+            
+            <div class="pagination-controls">
+              <button class="page-num-btn" onclick="AdminController.changeProductPage('prev')">&lt;</button>
+              <button class="page-num-btn active">1</button>
+              <button class="page-num-btn" onclick="AdminController.changeProductPage(2)">2</button>
+              <button class="page-num-btn" onclick="AdminController.changeProductPage(3)">3</button>
+              <span style="padding: 0 4px; color: #A8A29E;">...</span>
+              <button class="page-num-btn" onclick="AdminController.changeProductPage(9)">9</button>
+              <button class="page-num-btn" onclick="AdminController.changeProductPage('next')">&gt;</button>
+
+              <select class="catalog-select-pill" style="padding: 6px 28px 6px 10px; font-size: 12px; margin-left: 8px;" onchange="AdminController.setProductsPerPage(this.value)">
+                <option value="10" selected>10 / page</option>
+                <option value="25">25 / page</option>
+                <option value="50">50 / page</option>
+                <option value="100">100 / page</option>
+              </select>
+            </div>
           </div>
 
         </section>

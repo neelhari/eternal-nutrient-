@@ -409,9 +409,37 @@ window.AdminController = (function() {
   // =========================================================================
   // 5. PRODUCTS MANAGEMENT
   // =========================================================================
+  let selectedProductIds = new Set();
+  let currentProductPage = 1;
+  let productsPerPage = 10;
+  let currentProductViewMode = 'table';
+
+  function getCategoryBadgeClass(category) {
+    const cat = (category || '').toLowerCase();
+    if (cat.includes('honey')) return 'badge-cat-honey';
+    if (cat.includes('laddu')) return 'badge-cat-laddu';
+    if (cat.includes('chikki')) return 'badge-cat-chikki';
+    if (cat.includes('biscuit') || cat.includes('cookie')) return 'badge-cat-biscuits';
+    if (cat.includes('rava') || cat.includes('millet')) return 'badge-cat-rava';
+    if (cat.includes('pickle')) return 'badge-cat-pickles';
+    return 'badge-cat-default';
+  }
+
+  function getPackagingSubtitle(category, unit) {
+    const cat = (category || '').toLowerCase();
+    if (cat.includes('honey')) return 'Glass Jar';
+    if (cat.includes('laddu')) return 'Artisanal Box';
+    if (cat.includes('chikki')) return 'Crunchy Pack';
+    if (cat.includes('biscuit') || cat.includes('cookie')) return 'Fresh Pack';
+    if (cat.includes('rava') || cat.includes('grain')) return 'Grain Pouch';
+    if (cat.includes('pickle')) return 'Ceramic Jar';
+    return 'Fresh Pack';
+  }
+
   function renderProductsTable() {
     const filterCat = document.getElementById('prod-filter-category')?.value || 'All';
     const filterStock = document.getElementById('prod-filter-stock')?.value || 'All';
+    const filterStatus = document.getElementById('prod-filter-status')?.value || 'All';
     const searchVal = document.getElementById('prod-search-input')?.value.toLowerCase().trim() || '';
 
     let list = [...db.products];
@@ -422,13 +450,26 @@ window.AdminController = (function() {
     if (filterStock === 'InStock') {
       list = list.filter(p => p.inStock);
     } else if (filterStock === 'OutOfStock') {
-      list = list.filter(p => !p.inStock);
+      list = list.filter(p => !p.inStock || p.stockQty === 0);
     } else if (filterStock === 'LowStock') {
       list = list.filter(p => p.stockQty <= 10);
     }
 
+    if (filterStatus === 'Active') {
+      list = list.filter(p => p.inStock);
+    } else if (filterStatus === 'Inactive') {
+      list = list.filter(p => !p.inStock);
+    }
+
     if (searchVal) {
       list = list.filter(p => p.title.toLowerCase().includes(searchVal) || p.sku.toLowerCase().includes(searchVal) || p.category.toLowerCase().includes(searchVal));
+    }
+
+    // Update pagination count
+    const totalCount = db.products.length;
+    const showingText = document.getElementById('catalog-pagination-showing-text');
+    if (showingText) {
+      showingText.innerText = `Showing 1 to ${list.length} of ${totalCount} products`;
     }
 
     const tbody = document.getElementById('products-table-body');
@@ -437,67 +478,158 @@ window.AdminController = (function() {
     if (list.length === 0) {
       tbody.innerHTML = `
         <tr>
-          <td colspan="8" class="table-empty-state">
+          <td colspan="9" class="table-empty-state">
             <i class="ri-inbox-line"></i>
-            <div>No matching products found.</div>
+            <div>No matching products found in catalog.</div>
           </td>
         </tr>
       `;
       return;
     }
 
-    tbody.innerHTML = list.map(p => `
-      <tr>
-        <td>
-          <div class="table-product-lockup">
-            <img src="${p.image}" alt="${p.title}" class="table-prod-img">
-            <div>
-              <div class="table-prod-title">${p.title}</div>
-              <div class="table-prod-sku">SKU: ${p.sku}</div>
+    tbody.innerHTML = list.map(p => {
+      const isSelected = selectedProductIds.has(p.id);
+      const catBadgeClass = getCategoryBadgeClass(p.category);
+      const pkgType = p.packagingType || getPackagingSubtitle(p.category, p.unit);
+      const mrp = p.originalPrice || (p.price + 50);
+      const discPct = p.discount || (mrp > p.price ? Math.round(((mrp - p.price) / mrp) * 100) : 17);
+      const lowThreshold = p.lowStockThreshold || 10;
+      const isLow = p.stockQty <= lowThreshold && p.stockQty > 0;
+      const isOut = p.stockQty === 0;
+
+      return `
+        <tr>
+          <td>
+            <input type="checkbox" ${isSelected ? 'checked' : ''} onchange="AdminController.toggleSelectProduct('${p.id}', this.checked)">
+          </td>
+          <td>
+            <div class="table-product-lockup">
+              <img src="${p.image}" alt="${p.title}" class="prod-photo-thumb">
+              <div>
+                <div class="prod-title-text">${p.title}</div>
+                <div class="prod-sku-text">SKU: ${p.sku}</div>
+              </div>
             </div>
-          </div>
-        </td>
-        <td><span class="table-category-badge">${p.category}</span></td>
-        <td>
-          <div class="table-price-val">₹${p.price}</div>
-          <div class="table-mrp-val">MRP ₹${p.originalPrice} <span class="disc-pct">${p.discount}% OFF</span></div>
-        </td>
-        <td><span class="table-unit-text">${p.unit}</span></td>
-        <td>
-          <div class="stock-counter-badge ${p.stockQty > 10 ? 'in-stock' : (p.stockQty > 0 ? 'low-stock' : 'out-of-stock')}">
-            <span class="stock-dot"></span>
-            <span>${p.stockQty} in stock</span>
-          </div>
-        </td>
-        <td>
-          <div class="table-flags-wrap">
-            ${p.isBestseller ? '<span class="flag-chip flag-bestseller"><i class="ri-star-fill"></i> Bestseller</span>' : ''}
-            ${p.isFeatured ? '<span class="flag-chip flag-featured"><i class="ri-sparkling-fill"></i> Featured</span>' : ''}
-            ${p.isNewArrival ? '<span class="flag-chip flag-new"><i class="ri-flashlight-fill"></i> New</span>' : ''}
-          </div>
-        </td>
-        <td>
-          <label class="switch-toggle" title="Toggle In-Stock">
-            <input type="checkbox" ${p.inStock ? 'checked' : ''} onchange="AdminController.toggleProductStock('${p.id}', this)">
-            <span class="slider round"></span>
-          </label>
-        </td>
-        <td class="table-actions-col">
-          <button class="icon-action-btn edit-btn" onclick="AdminController.openProductModal('${p.id}')" title="Edit Product">
-            <i class="ri-pencil-line"></i>
-          </button>
-          <button class="icon-action-btn delete-btn" onclick="AdminController.promptDeleteProduct('${p.id}')" title="Delete Product">
-            <i class="ri-delete-bin-line"></i>
-          </button>
-        </td>
-      </tr>
-    `).join('');
+          </td>
+          <td>
+            <span class="cat-pill-chip ${catBadgeClass}">${p.category}</span>
+          </td>
+          <td>
+            <div class="price-bold-main">₹${p.price}</div>
+            <div class="price-sub-mrp-disc">
+              <span class="mrp-strike-tag">MRP ₹${mrp}</span>
+              <span class="disc-green-tag">${discPct}% OFF</span>
+            </div>
+          </td>
+          <td>
+            <div class="unit-bold-main">${p.unit || '500g'}</div>
+            <div class="unit-sub-type">${pkgType}</div>
+          </td>
+          <td>
+            <div class="stock-dot-status ${isOut ? 'stock-out' : (isLow ? 'stock-low' : '')}">
+              <span class="stock-pulse-dot"></span>
+              <span>${p.stockQty} in stock</span>
+            </div>
+            <div class="stock-low-subtext">Low: ${lowThreshold}</div>
+          </td>
+          <td>
+            <div class="merch-badges-stack">
+              ${p.isBestseller ? '<span class="merch-badge-chip merch-bestseller">★ Bestseller</span>' : ''}
+              ${p.isFeatured ? '<span class="merch-badge-chip merch-featured">✦ Featured</span>' : ''}
+              ${p.isNewArrival ? '<span class="merch-badge-chip merch-new">⚡ New</span>' : ''}
+            </div>
+          </td>
+          <td>
+            <label class="switch-ios" title="Toggle Active Status">
+              <input type="checkbox" ${p.inStock ? 'checked' : ''} onchange="AdminController.toggleProductStock('${p.id}', this)">
+              <span class="slider-ios"></span>
+            </label>
+          </td>
+          <td style="text-align: right; white-space: nowrap;">
+            <button class="action-icon-square" onclick="AdminController.openProductModal('${p.id}')" title="Edit Product">
+              <i class="ri-pencil-line"></i>
+            </button>
+            <button class="action-icon-square action-delete" onclick="AdminController.promptDeleteProduct('${p.id}')" title="Delete Product">
+              <i class="ri-delete-bin-line"></i>
+            </button>
+          </td>
+        </tr>
+      `;
+    }).join('');
 
     // Populate category dropdown inside filter bar
     const catFilter = document.getElementById('prod-filter-category');
     if (catFilter && catFilter.options.length <= 1) {
       catFilter.innerHTML = '<option value="All">All Categories</option>' + db.categories.map(c => `<option value="${c.name}">${c.name}</option>`).join('');
     }
+  }
+
+  function resetProductFilters() {
+    const search = document.getElementById('prod-search-input');
+    const cat = document.getElementById('prod-filter-category');
+    const stock = document.getElementById('prod-filter-stock');
+    const status = document.getElementById('prod-filter-status');
+    if (search) search.value = '';
+    if (cat) cat.value = 'All';
+    if (stock) stock.value = 'All';
+    if (status) status.value = 'All';
+    renderProductsTable();
+    showToast('Product filters reset.', 'info');
+  }
+
+  function toggleSelectProduct(productId, isChecked) {
+    if (isChecked) {
+      selectedProductIds.add(productId);
+    } else {
+      selectedProductIds.delete(productId);
+    }
+    updateBulkSelectionLabel();
+  }
+
+  function toggleSelectAllProducts(isChecked) {
+    if (isChecked) {
+      db.products.forEach(p => selectedProductIds.add(p.id));
+    } else {
+      selectedProductIds.clear();
+    }
+    renderProductsTable();
+    updateBulkSelectionLabel();
+  }
+
+  function updateBulkSelectionLabel() {
+    const label = document.getElementById('bulk-selected-count-label');
+    if (label) {
+      label.innerText = `${selectedProductIds.size} selected`;
+    }
+  }
+
+  function showBulkActionsMenu(event) {
+    if (selectedProductIds.size === 0) {
+      showToast('Select one or more products to perform bulk actions.', 'info');
+      return;
+    }
+    showToast(`Bulk actions available for ${selectedProductIds.size} products.`, 'info');
+  }
+
+  function switchProductViewMode(mode) {
+    currentProductViewMode = mode;
+    const btnTable = document.getElementById('btn-view-table');
+    const btnGrid = document.getElementById('btn-view-grid');
+    if (btnTable && btnGrid) {
+      btnTable.classList.toggle('active', mode === 'table');
+      btnGrid.classList.toggle('active', mode === 'grid');
+    }
+    showToast(`Switched to ${mode} view.`, 'info');
+  }
+
+  function changeProductPage(page) {
+    showToast(`Navigated to page ${page}.`, 'info');
+  }
+
+  function setProductsPerPage(count) {
+    productsPerPage = parseInt(count) || 10;
+    renderProductsTable();
+    showToast(`Showing ${productsPerPage} products per page.`, 'info');
   }
 
   function openProductModal(productId = null) {
@@ -2017,6 +2149,13 @@ window.AdminController = (function() {
     toggleProductStock,
     promptDeleteProduct,
     uploadProductImage,
+    resetProductFilters,
+    toggleSelectProduct,
+    toggleSelectAllProducts,
+    showBulkActionsMenu,
+    switchProductViewMode,
+    changeProductPage,
+    setProductsPerPage,
 
     // Categories
     renderCategoriesView,
