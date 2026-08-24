@@ -628,6 +628,39 @@ window.AdminController = (function() {
     showToast(`Showing ${productsPerPage} products per page.`, 'info');
   }
 
+  function addPackSizeRow(size = '', price = '', mrp = '', stock = 50) {
+    const container = document.getElementById('prod-variants-container');
+    if (!container) return;
+
+    const rowId = 'var-row-' + Date.now() + '-' + Math.floor(Math.random() * 1000);
+    const row = document.createElement('div');
+    row.id = rowId;
+    row.className = 'variant-item-row';
+    row.style.cssText = 'display: grid; grid-template-columns: 2fr 1.2fr 1.2fr 1fr 40px; gap: 10px; align-items: center;';
+    
+    row.innerHTML = `
+      <input type="text" class="form-input var-size-input" placeholder="e.g. 500g Glass Jar" value="${size}" required>
+      <input type="number" class="form-input var-price-input" placeholder="349" value="${price !== '' ? price : ''}" required>
+      <input type="number" class="form-input var-mrp-input" placeholder="420" value="${mrp !== '' ? mrp : ''}">
+      <input type="number" class="form-input var-stock-input" placeholder="50" value="${stock !== '' ? stock : 50}" required>
+      <button type="button" class="action-icon-square action-delete" onclick="AdminController.removePackSizeRow('${rowId}')" title="Delete Size" style="margin: 0;">
+        <i class="ri-delete-bin-line"></i>
+      </button>
+    `;
+    container.appendChild(row);
+  }
+
+  function removePackSizeRow(rowId) {
+    const container = document.getElementById('prod-variants-container');
+    if (!container) return;
+    if (container.children.length <= 1) {
+      showToast('Every product must have at least one pack size & price.', 'error');
+      return;
+    }
+    const row = document.getElementById(rowId);
+    if (row) row.remove();
+  }
+
   function openProductModal(productId = null) {
     const modal = document.getElementById('modal-product-form');
     if (!modal) return;
@@ -643,32 +676,29 @@ window.AdminController = (function() {
       catSelect.innerHTML = db.categories.map(c => `<option value="${c.name}">${c.name}</option>`).join('');
     }
 
+    const varContainer = document.getElementById('prod-variants-container');
+    if (varContainer) varContainer.innerHTML = '';
+
     if (productId) {
       const prod = db.products.find(p => p.id === productId);
       if (prod) {
-        document.getElementById('prod-form-title').value = prod.title;
-        document.getElementById('prod-form-sku').value = prod.sku;
-        document.getElementById('prod-form-category').value = prod.category;
-        document.getElementById('prod-form-image').value = prod.image;
-        document.getElementById('prod-form-price').value = prod.price;
-        document.getElementById('prod-form-mrp').value = prod.originalPrice;
-        document.getElementById('prod-form-unit').value = prod.unit;
-        document.getElementById('prod-form-badge').value = prod.badge || '';
-        document.getElementById('prod-form-rating').value = prod.rating;
-        document.getElementById('prod-form-reviews').value = prod.reviewsCount;
-        document.getElementById('prod-form-stock').value = prod.stockQty;
-        document.getElementById('prod-form-sort').value = prod.sortOrder || 1;
-        document.getElementById('prod-form-is-bestseller').checked = prod.isBestseller;
-        document.getElementById('prod-form-is-featured').checked = prod.isFeatured;
-        document.getElementById('prod-form-is-new').checked = prod.isNewArrival;
-        document.getElementById('prod-form-in-stock').checked = prod.inStock;
-        document.getElementById('prod-form-summary').value = prod.shortSummary || '';
+        document.getElementById('prod-form-title').value = prod.title || '';
+        document.getElementById('prod-form-category').value = prod.category || db.categories[0]?.name || '';
+        document.getElementById('prod-form-image').value = prod.image || '';
         document.getElementById('prod-form-description').value = prod.description || '';
-        document.getElementById('prod-form-benefits').value = prod.benefits || '';
-        document.getElementById('prod-form-ingredients').value = prod.ingredients || '';
-        document.getElementById('prod-form-nutrition').value = prod.nutritionalInfo || '';
-        document.getElementById('prod-form-storage').value = prod.storageInstructions || '';
-        document.getElementById('prod-form-highlights').value = (prod.highlights || []).join(', ');
+        document.getElementById('prod-form-in-stock').checked = prod.inStock !== false;
+        document.getElementById('prod-form-is-bestseller').checked = !!prod.isBestseller;
+        document.getElementById('prod-form-is-featured').checked = !!prod.isFeatured;
+        document.getElementById('prod-form-is-new').checked = !!prod.isNewArrival;
+
+        // Render pack sizes (variants)
+        if (Array.isArray(prod.variants) && prod.variants.length > 0) {
+          prod.variants.forEach(v => {
+            addPackSizeRow(v.size || v.unit || '500g', v.price, v.mrp || v.originalPrice || v.price, v.stock ?? v.stockQty ?? 50);
+          });
+        } else {
+          addPackSizeRow(prod.unit || '500g Glass Jar', prod.price, prod.originalPrice || prod.price, prod.stockQty ?? 50);
+        }
         
         // Preview image
         updateImagePreview('prod-form-image', 'prod-form-img-preview');
@@ -676,9 +706,127 @@ window.AdminController = (function() {
     } else {
       document.getElementById('prod-form-image').value = 'assets/prod_honey_studio.jpg';
       updateImagePreview('prod-form-image', 'prod-form-img-preview');
+      
+      // Default single variant row for new product
+      addPackSizeRow('500g Glass Jar', '', '', 50);
     }
 
     openModal('modal-product-form');
+  }
+
+  async function saveProductForm(btn) {
+    const title = document.getElementById('prod-form-title')?.value.trim();
+    const category = document.getElementById('prod-form-category')?.value;
+    const image = document.getElementById('prod-form-image')?.value.trim() || 'assets/prod_honey_studio.jpg';
+    const description = document.getElementById('prod-form-description')?.value.trim() || '';
+    const inStock = document.getElementById('prod-form-in-stock')?.checked ?? true;
+    const isBestseller = document.getElementById('prod-form-is-bestseller')?.checked ?? false;
+    const isFeatured = document.getElementById('prod-form-is-featured')?.checked ?? false;
+    const isNewArrival = document.getElementById('prod-form-is-new')?.checked ?? false;
+    const prodId = document.getElementById('prod-modal-id')?.value;
+
+    if (!title) {
+      showToast('Please enter a product name.', 'error');
+      return;
+    }
+
+    // Collect variants from the Pack Sizes table
+    const varRows = document.querySelectorAll('#prod-variants-container .variant-item-row');
+    if (varRows.length === 0) {
+      showToast('Please add at least one pack size and price.', 'error');
+      return;
+    }
+
+    const variants = [];
+    let primaryPrice = 0;
+    let primaryMRP = 0;
+    let primaryUnit = '';
+    let totalStock = 0;
+
+    for (let i = 0; i < varRows.length; i++) {
+      const sizeInput = varRows[i].querySelector('.var-size-input');
+      const priceInput = varRows[i].querySelector('.var-price-input');
+      const mrpInput = varRows[i].querySelector('.var-mrp-input');
+      const stockInput = varRows[i].querySelector('.var-stock-input');
+
+      const size = sizeInput?.value.trim() || 'Standard Pack';
+      const price = Number(priceInput?.value) || 0;
+      const mrp = Number(mrpInput?.value) || price;
+      const stock = Number(stockInput?.value) || 0;
+
+      if (price <= 0) {
+        showToast(`Please enter a valid selling price for ${size}.`, 'error');
+        priceInput?.focus();
+        return;
+      }
+
+      if (i === 0) {
+        primaryPrice = price;
+        primaryMRP = mrp;
+        primaryUnit = size;
+      }
+
+      totalStock += stock;
+
+      variants.push({
+        size,
+        price,
+        mrp,
+        stock
+      });
+    }
+
+    const discount = primaryMRP > primaryPrice ? Math.round(((primaryMRP - primaryPrice) / primaryMRP) * 100) : 0;
+    
+    // Existing product or new SKU
+    let existing = prodId ? db.products.find(p => p.id === prodId) : null;
+    const generatedSku = existing?.sku || `EN-${category.substring(0, 3).toUpperCase()}-${Math.floor(100 + Math.random() * 900)}`;
+
+    const productPayload = {
+      id: prodId || ('prod_' + Date.now()),
+      title,
+      sku: generatedSku,
+      category,
+      image,
+      gallery: [image],
+      price: primaryPrice,
+      original_price: primaryMRP,
+      discount,
+      unit: primaryUnit,
+      stock_qty: totalStock,
+      in_stock: inStock && totalStock > 0,
+      is_bestseller: isBestseller,
+      is_featured: isFeatured,
+      is_new_arrival: isNewArrival,
+      description,
+      variants,
+      rating: existing?.rating || 4.9,
+      reviews_count: existing?.reviewsCount || 24,
+      sort_order: existing?.sortOrder || 1
+    };
+
+    await withActionSpinner(btn, async () => {
+      // Save to Supabase Cloud / Mock DB
+      if (window.CloudDB) {
+        await window.CloudDB.saveProduct(productPayload);
+      }
+
+      // Update in-memory db
+      const normalized = normalizeProductFromDB(productPayload);
+      normalized.variants = variants;
+
+      if (prodId) {
+        const idx = db.products.findIndex(p => p.id === prodId);
+        if (idx !== -1) db.products[idx] = normalized;
+      } else {
+        db.products.unshift(normalized);
+      }
+
+      closeModal();
+      renderProductsTable();
+      renderInventoryTable();
+      showToast(`Product "${title}" saved successfully!`, 'success');
+    });
   }
 
   function normalizeProductFromDB(p) {
@@ -2142,6 +2290,8 @@ window.AdminController = (function() {
     renderProductsTable,
     openProductModal,
     saveProductForm,
+    addPackSizeRow,
+    removePackSizeRow,
     toggleProductStock,
     promptDeleteProduct,
     uploadProductImage,

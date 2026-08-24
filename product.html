@@ -675,8 +675,12 @@
     };
 
     let currentId = 'prod_1';
+    let currentItem = null;
+    let selectedVariant = null;
     let basePrice = 499;
-    let packMultiplier = 1.0;
+    let currentPrice = 499;
+    let currentMRP = 599;
+    let selectedUnit = '500g';
     let qty = 1;
 
     function handleProductWishlistClick() {
@@ -695,32 +699,70 @@
       }
     }
 
-    window.addEventListener('DOMContentLoaded', () => {
+    async function loadProductDetail() {
       const params = new URLSearchParams(window.location.search);
       currentId = params.get('id') || 'prod_1';
-      const item = CATALOG[currentId] || CATALOG['prod_1'];
+      
+      let item = null;
+      if (window.CloudDB) {
+        item = await window.CloudDB.getProductById(currentId);
+      }
+      if (!item) {
+        item = CATALOG[currentId] || CATALOG['prod_1'];
+      }
+      
+      currentItem = item;
       setTimeout(updateWishIconUI, 100);
 
-      document.getElementById('p-title').textContent = item.title;
-      document.getElementById('p-subtitle').textContent = item.sub;
-      document.getElementById('p-hero-img').src = item.img;
-      document.getElementById('acc-desc').textContent = item.desc;
-      
-      basePrice = item.price;
-      const mrp = item.mrp;
-      const discount = Math.round(((mrp - basePrice) / mrp) * 100);
+      document.getElementById('p-title').textContent = item.title || item.name;
+      document.getElementById('p-subtitle').textContent = item.sub || `${item.category || ''} • ${item.unit || '500g'}`;
+      document.getElementById('p-hero-img').src = item.image || item.img || 'assets/prod_honey_studio.jpg';
+      document.getElementById('acc-desc').textContent = item.description || item.desc || '100% natural and authentic product.';
 
-      document.getElementById('p-mrp').textContent = `₹${mrp}`;
-      document.getElementById('p-discount').textContent = `${discount}% OFF`;
+      // Render Pack Size Variant Pills
+      const pillsContainer = document.querySelector('.p-pack-pills-row');
+      if (pillsContainer) {
+        if (Array.isArray(item.variants) && item.variants.length > 0) {
+          pillsContainer.innerHTML = item.variants.map((v, index) => `
+            <button class="p-pack-pill ${index === 0 ? 'active' : ''}" onclick="selectExactVariant(${index})">${v.size || v.unit}</button>
+          `).join('');
+          selectExactVariant(0);
+        } else {
+          // Default fallbacks
+          basePrice = item.price || 499;
+          currentMRP = item.original_price || item.originalPrice || item.mrp || (basePrice + 100);
+          currentPrice = basePrice;
+          selectedUnit = item.unit || '500g';
+          updatePricingUI();
+        }
+      }
+
+      updateCartBadge();
+    }
+
+    window.addEventListener('DOMContentLoaded', loadProductDetail);
+
+    function selectExactVariant(index) {
+      if (!currentItem || !currentItem.variants || !currentItem.variants[index]) return;
+      const v = currentItem.variants[index];
+      selectedVariant = v;
+      currentPrice = Number(v.price) || 0;
+      currentMRP = Number(v.mrp) || currentPrice;
+      selectedUnit = v.size || v.unit || 'Pack';
+
+      document.querySelectorAll('.p-pack-pill').forEach((p, idx) => {
+        p.classList.toggle('active', idx === index);
+      });
 
       updatePricingUI();
-      updateCartBadge();
-    });
+    }
 
     function selectPack(el, weight, mult) {
       document.querySelectorAll('.p-pack-pill').forEach(p => p.classList.remove('active'));
       el.classList.add('active');
-      packMultiplier = mult;
+      currentPrice = Math.round(basePrice * mult);
+      currentMRP = Math.round((currentItem?.mrp || (basePrice + 100)) * mult);
+      selectedUnit = `${weight}g`;
       updatePricingUI();
     }
 
@@ -731,8 +773,21 @@
     }
 
     function updatePricingUI() {
-      const unitPrice = Math.round(basePrice * packMultiplier);
-      document.getElementById('p-price').textContent = `₹${unitPrice}`;
+      const discount = currentMRP > currentPrice ? Math.round(((currentMRP - currentPrice) / currentMRP) * 100) : 0;
+      document.getElementById('p-price').textContent = `₹${currentPrice}`;
+      
+      const mrpEl = document.getElementById('p-mrp');
+      const discEl = document.getElementById('p-discount');
+
+      if (discount > 0 && currentMRP > currentPrice) {
+        mrpEl.style.display = 'inline';
+        mrpEl.textContent = `₹${currentMRP}`;
+        discEl.style.display = 'inline-block';
+        discEl.textContent = `${discount}% OFF`;
+      } else {
+        mrpEl.style.display = 'none';
+        discEl.style.display = 'none';
+      }
     }
 
     function updateCartBadge() {
@@ -747,8 +802,7 @@
     }
 
     function handleAddToCart(event) {
-      const item = CATALOG[currentId] || CATALOG['prod_1'];
-      const unitPrice = Math.round(basePrice * packMultiplier);
+      const item = currentItem || CATALOG[currentId] || CATALOG['prod_1'];
       
       let currentCart = [];
       try {
@@ -757,23 +811,24 @@
         currentCart = [];
       }
 
-      const existing = currentCart.find(i => i.id === currentId);
+      const cartItemKey = `${currentId}-${selectedUnit}`;
+      const existing = currentCart.find(i => (i.variantKey === cartItemKey) || (i.id === currentId && i.unit === selectedUnit));
+      
       if (existing) {
         existing.qty += qty;
       } else {
         currentCart.push({
           id: currentId,
-          title: item.title,
-          price: unitPrice,
-          image: item.img,
+          variantKey: cartItemKey,
+          title: item.title || item.name,
+          unit: selectedUnit,
+          price: currentPrice,
+          image: item.image || item.img || 'assets/prod_honey_studio.jpg',
           qty: qty
         });
       }
 
-      try {
-        localStorage.setItem('em_cart_items', JSON.stringify(currentCart));
-      } catch(e) {}
-
+      localStorage.setItem('em_cart_items', JSON.stringify(currentCart));
       updateCartBadge();
 
       if (event) {
@@ -788,7 +843,7 @@
           }, 1200);
         }
       }
-      showToast(`Added ${qty} × ${item.title} to bag!`);
+      showToast(`Added ${qty} × ${item.title || item.name} (${selectedUnit}) to bag!`);
     }
 
     function handleBuyNow() {
