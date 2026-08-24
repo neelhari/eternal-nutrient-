@@ -740,8 +740,10 @@ window.AdminController = (function() {
         document.getElementById('prod-form-description').value = prod.description || '';
         document.getElementById('prod-form-in-stock').checked = prod.inStock !== false;
         document.getElementById('prod-form-is-bestseller').checked = !!prod.isBestseller;
-        document.getElementById('prod-form-is-featured').checked = !!prod.isFeatured;
-        document.getElementById('prod-form-is-new').checked = !!prod.isNewArrival;
+        const featEl = document.getElementById('prod-form-is-featured');
+        if (featEl) featEl.checked = !!prod.isFeatured;
+        const newEl = document.getElementById('prod-form-is-new');
+        if (newEl) newEl.checked = !!prod.isNewArrival;
 
         // Render pack sizes (variants)
         if (Array.isArray(prod.variants) && prod.variants.length > 0) {
