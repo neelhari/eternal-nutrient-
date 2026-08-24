@@ -12,6 +12,7 @@ window.AdminController = (function() {
   let currentInspectedOrder = null;
 
   // =========================================================================
+  // =========================================================================
   // 0. SUPABASE AUTHENTICATION & LOCKSCREEN ENGINE
   // =========================================================================
   let currentAdminUser = null;
@@ -28,6 +29,7 @@ window.AdminController = (function() {
         
         if (session && session.user) {
           currentAdminUser = session.user;
+          lockscreen.classList.remove('open');
           lockscreen.style.display = 'none';
           document.body.style.overflow = '';
           updateAdminProfileDisplay(session.user.email);
@@ -40,6 +42,7 @@ window.AdminController = (function() {
     }
 
     // Show lockscreen if not authenticated
+    lockscreen.classList.add('open');
     lockscreen.style.display = 'flex';
     document.body.style.overflow = 'hidden';
   }
@@ -59,7 +62,11 @@ window.AdminController = (function() {
     if (!config.supabaseUrl || !config.supabaseAnonKey || !config.supabaseUrl.startsWith('https://')) {
       // In preview mode before user pastes Supabase keys
       withActionSpinner(btn, () => {
-        document.getElementById('admin-auth-lockscreen').style.display = 'none';
+        const lockscreen = document.getElementById('admin-auth-lockscreen');
+        if (lockscreen) {
+          lockscreen.classList.remove('open');
+          lockscreen.style.display = 'none';
+        }
         document.body.style.overflow = '';
         showToast('Preview access granted (Connect Supabase in config to enforce real JWT)', 'info');
       }, 'Authenticated!');
@@ -78,14 +85,17 @@ window.AdminController = (function() {
       btn.innerHTML = originalText;
 
       if (error) {
-        // Display exact Supabase error message in red toast as required by prompt
         showToast(error.message, 'error');
         return;
       }
 
       if (data && data.session) {
         currentAdminUser = data.user;
-        document.getElementById('admin-auth-lockscreen').style.display = 'none';
+        const lockscreen = document.getElementById('admin-auth-lockscreen');
+        if (lockscreen) {
+          lockscreen.classList.remove('open');
+          lockscreen.style.display = 'none';
+        }
         document.body.style.overflow = '';
         updateAdminProfileDisplay(data.user.email);
         showToast('Admin authentication successful! Access granted.', 'success');
@@ -109,7 +119,11 @@ window.AdminController = (function() {
     }
 
     currentAdminUser = null;
-    document.getElementById('admin-auth-lockscreen').style.display = 'flex';
+    const lockscreen = document.getElementById('admin-auth-lockscreen');
+    if (lockscreen) {
+      lockscreen.classList.add('open');
+      lockscreen.style.display = 'flex';
+    }
     document.body.style.overflow = 'hidden';
     showToast('You have been logged out of the Admin Portal.', 'info');
   }

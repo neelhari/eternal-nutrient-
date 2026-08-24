@@ -226,6 +226,14 @@ html, body {
   text-align: left;
   transition: all 0.15s ease;
   text-decoration: none;
+  position: relative;
+  z-index: 5;
+  user-select: none;
+}
+
+.sidebar-nav-btn i,
+.sidebar-nav-btn span {
+  pointer-events: none;
 }
 
 .sidebar-nav-btn i {
@@ -1045,12 +1053,14 @@ input:checked + .slider:before {
   z-index: 2000;
   padding: 20px;
   opacity: 0;
+  pointer-events: none;
   transition: opacity 0.2s ease;
 }
 
 .admin-modal-overlay.open {
-  display: flex;
-  opacity: 1;
+  display: flex !important;
+  opacity: 1 !important;
+  pointer-events: auto !important;
 }
 
 .admin-modal-sheet {
