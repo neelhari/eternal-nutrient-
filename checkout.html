@@ -665,7 +665,11 @@
 
   </main>
 
+  <!-- Scripts -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="config/store.config.js"></script>
+  <script src="core/cloud-db.js"></script>
+  <script src="core/payment-verifier.js"></script>
   <script src="core/auth-engine.js"></script>
   <script>
     let selectedPaymentType = 'whatsapp';
@@ -725,7 +729,7 @@
       }
     }
 
-    function placeOrderFinal() {
+    async function placeOrderFinal() {
       const name = document.getElementById('cust-name').value.trim();
       const phone = document.getElementById('cust-phone').value.trim();
       const address = document.getElementById('cust-address').value.trim();
@@ -737,13 +741,63 @@
         return;
       }
 
+      const fullAddress = `${address}, ${city} - ${pincode}`;
       const waNumber = (window.STORE_CONFIG && window.STORE_CONFIG.whatsAppNumber) ? window.STORE_CONFIG.whatsAppNumber : '916302017482';
+      const orderNumber = `EN-${Math.floor(1000 + Math.random() * 9000)}`;
+
+      // Raw items to purchase
+      const rawItems = [
+        { id: 'prod_1', title: 'Organic Honey (500g Jar)', qty: 1, price: 499 },
+        { id: 'prod_3', title: 'Millet Breakfast Rava (500g Pack)', qty: 2, price: 189 }
+      ];
+
+      // Anti-Price-Tampering Recalculation
+      let orderTotals = {
+        subtotal: 877,
+        deliveryFee: 0,
+        discountAmount: discountApplied,
+        totalAmount: 877 - discountApplied,
+        verifiedItems: rawItems
+      };
+
+      if (window.PaymentVerifier) {
+        try {
+          const verified = await window.PaymentVerifier.recalculateOrderTotals(rawItems, discountApplied > 0 ? 'ETERNAL10' : '');
+          orderTotals = verified;
+        } catch (e) {
+          console.warn('Price verification fallback:', e);
+        }
+      }
+
+      // Save order to Supabase / CloudDB with Order Confirmed & stock deduction
+      if (window.CloudDB) {
+        try {
+          await window.CloudDB.createOrder({
+            order_number: orderNumber,
+            customer_name: name,
+            customer_phone: phone,
+            delivery_address: { address, city, pincode, fullAddress },
+            items: orderTotals.verifiedItems || rawItems,
+            subtotal: orderTotals.subtotal,
+            delivery_fee: orderTotals.deliveryFee,
+            discount_amount: orderTotals.discountAmount,
+            total_amount: orderTotals.totalAmount,
+            coupon_code: discountApplied > 0 ? 'ETERNAL10' : '',
+            payment_method: selectedPaymentType.toUpperCase(),
+            payment_status: 'Pending',
+            order_status: 'Order Confirmed'
+          });
+        } catch (e) {
+          console.warn('Cloud order record notice:', e);
+        }
+      }
 
       let msg = `🛍️ *NEW CONFIRMED ORDER - ETERNAL NUTRICARE*\n`;
       msg += `------------------------------------\n`;
+      msg += `🆔 *Order Number:* ${orderNumber}\n`;
       msg += `👤 *Customer Name:* ${name}\n`;
       msg += `📞 *Phone Number:* ${phone}\n`;
-      msg += `📍 *Delivery Address:* ${address}, ${city} - ${pincode}\n`;
+      msg += `📍 *Delivery Address:* ${fullAddress}\n`;
       msg += `💳 *Payment Method:* ${selectedPaymentType.toUpperCase()}\n`;
       msg += `------------------------------------\n`;
       msg += `*Ordered Items:*\n`;

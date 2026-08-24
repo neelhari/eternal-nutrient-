@@ -9,8 +9,8 @@
 const { createClient } = require('@supabase/supabase-js');
 
 // Configuration
-const SUPABASE_URL = process.env.SUPABASE_URL || 'https://sfcxpvvqxldhdkvfyhgj.supabase.co';
-const SUPABASE_ANON_KEY = process.env.SUPABASE_ANON_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.dummy_anon_key';
+const SUPABASE_URL = process.env.SUPABASE_URL || 'https://pqorpwmyhfwafzddubaf.supabase.co';
+const SUPABASE_ANON_KEY = process.env.SUPABASE_ANON_KEY || 'sb_publishable_1HaDlvVRIZQQP-x-i_wM7w_oHp3jUKu';
 const ADMIN_EMAIL = process.env.ADMIN_EMAIL || 'eternalncdm@gmail.com';
 const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || 'EternalAdmin@2026';
 

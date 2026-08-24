@@ -491,7 +491,108 @@ window.AdminController = (function() {
     openModal('modal-product-form');
   }
 
-  function saveProductForm(btnElement) {
+  function normalizeProductFromDB(p) {
+    return {
+      id: p.id,
+      title: p.title || '',
+      sku: p.sku || '',
+      category: p.category || 'General',
+      image: p.image || (Array.isArray(p.gallery) && p.gallery[0]) || 'assets/prod_honey_studio.jpg',
+      gallery: p.gallery || (p.image ? [p.image] : []),
+      price: Number(p.price) || 0,
+      originalPrice: Number(p.original_price ?? p.price ?? 0),
+      discount: Number(p.discount) || 0,
+      unit: p.unit || 'Pack',
+      badge: p.badge || '',
+      rating: Number(p.rating) || 4.9,
+      reviewsCount: Number(p.reviews_count ?? 12),
+      highlights: p.highlights || [],
+      inStock: p.in_stock !== false,
+      stockQty: Number(p.stock_qty ?? 50),
+      isBestseller: !!p.is_bestseller,
+      isFeatured: !!p.is_featured,
+      isNewArrival: !!p.is_new_arrival,
+      sortOrder: Number(p.sort_order || 1),
+      shortSummary: p.short_summary || '',
+      description: p.description || '',
+      benefits: p.benefits || '',
+      ingredients: p.ingredients || '',
+      nutritionalInfo: p.nutritional_info || '',
+      storageInstructions: p.storage_instructions || ''
+    };
+  }
+
+  function normalizeCategoryFromDB(c) {
+    return {
+      id: c.id,
+      name: c.name || '',
+      tagline: c.tagline || '',
+      image: c.image || 'assets/prod_cookie_studio.jpg',
+      icon: c.icon || 'ri-apps-2-line',
+      sortOrder: Number(c.sort_order || 1),
+      showOnHome: c.show_on_home !== false,
+      showInShop: c.show_in_shop !== false
+    };
+  }
+
+  function normalizeOrderFromDB(o) {
+    return {
+      id: o.id,
+      orderNumber: o.order_number || o.id,
+      date: o.created_at || new Date().toISOString(),
+      customerName: o.customer_name || 'Customer',
+      customerPhone: o.customer_phone || '',
+      customerEmail: o.customer_email || '',
+      deliveryAddress: typeof o.delivery_address === 'object' ? o.delivery_address : { address: o.delivery_address || '' },
+      items: Array.isArray(o.items) ? o.items.map(i => ({
+        id: i.id,
+        title: i.title,
+        unit: i.unit || 'Pack',
+        price: Number(i.price) || 0,
+        qty: Number(i.qty) || 1,
+        total: (Number(i.price) || 0) * (Number(i.qty) || 1)
+      })) : [],
+      subtotal: Number(o.subtotal) || 0,
+      deliveryFee: Number(o.delivery_fee) || 0,
+      discountAmount: Number(o.discount_amount) || 0,
+      totalAmount: Number(o.total_amount) || 0,
+      paymentMethod: o.payment_method || 'COD',
+      paymentStatus: o.payment_status || 'Pending',
+      orderStatus: o.order_status || 'Order Confirmed',
+      trackingId: o.tracking_id || '',
+      adminNotes: o.admin_notes || ''
+    };
+  }
+
+  async function loadCloudData() {
+    if (window.CloudDB && window.CloudDB.isSupabaseActive()) {
+      try {
+        const [cloudProds, cloudCats, cloudOrders, cloudCusts] = await Promise.all([
+          window.CloudDB.getProducts(),
+          window.CloudDB.getCategories(),
+          window.CloudDB.getOrders(),
+          window.CloudDB.getCustomers()
+        ]);
+        if (cloudProds && cloudProds.length > 0) {
+          db.products = cloudProds.map(normalizeProductFromDB);
+        }
+        if (cloudCats && cloudCats.length > 0) {
+          db.categories = cloudCats.map(normalizeCategoryFromDB);
+        }
+        if (cloudOrders && cloudOrders.length > 0) {
+          db.orders = cloudOrders.map(normalizeOrderFromDB);
+        }
+        if (cloudCusts && cloudCusts.length > 0) {
+          db.customers = cloudCusts;
+        }
+        renderActiveView(activeTab);
+      } catch (e) {
+        console.warn('Initial cloud load notice:', e.message);
+      }
+    }
+  }
+
+  async function saveProductForm(btnElement) {
     const id = document.getElementById('prod-modal-id').value;
     const title = document.getElementById('prod-form-title').value.trim();
     if (!title) {
@@ -499,58 +600,93 @@ window.AdminController = (function() {
       return;
     }
 
-    withActionSpinner(btnElement, () => {
-      const price = parseFloat(document.getElementById('prod-form-price').value) || 0;
-      const mrp = parseFloat(document.getElementById('prod-form-mrp').value) || price;
-      const discount = mrp > price ? Math.round(((mrp - price) / mrp) * 100) : 0;
-      const highlights = document.getElementById('prod-form-highlights').value.split(',').map(s => s.trim()).filter(Boolean);
+    const price = parseFloat(document.getElementById('prod-form-price').value) || 0;
+    const mrp = parseFloat(document.getElementById('prod-form-mrp').value) || price;
+    const discount = mrp > price ? Math.round(((mrp - price) / mrp) * 100) : 0;
+    const highlights = document.getElementById('prod-form-highlights').value.split(',').map(s => s.trim()).filter(Boolean);
+    const image = document.getElementById('prod-form-image').value.trim() || 'assets/prod_honey_studio.jpg';
+    const prodId = id || 'prod_' + Date.now();
 
-      const payload = {
-        id: id || 'prod_' + Date.now(),
-        title,
-        sku: document.getElementById('prod-form-sku').value.trim() || 'EN-GEN-' + Math.floor(Math.random() * 900),
-        category: document.getElementById('prod-form-category').value,
-        image: document.getElementById('prod-form-image').value.trim() || 'assets/prod_honey_studio.jpg',
-        gallery: [document.getElementById('prod-form-image').value.trim() || 'assets/prod_honey_studio.jpg'],
-        price,
-        originalPrice: mrp,
-        discount,
-        unit: document.getElementById('prod-form-unit').value.trim() || 'Pack',
-        badge: document.getElementById('prod-form-badge').value.trim(),
-        rating: parseFloat(document.getElementById('prod-form-rating').value) || 4.8,
-        reviewsCount: parseInt(document.getElementById('prod-form-reviews').value) || 12,
-        stockQty: parseInt(document.getElementById('prod-form-stock').value) || 20,
-        sortOrder: parseInt(document.getElementById('prod-form-sort').value) || 1,
-        isBestseller: document.getElementById('prod-form-is-bestseller').checked,
-        isFeatured: document.getElementById('prod-form-is-featured').checked,
-        isNewArrival: document.getElementById('prod-form-is-new').checked,
-        inStock: document.getElementById('prod-form-in-stock').checked,
-        shortSummary: document.getElementById('prod-form-summary').value.trim(),
-        description: document.getElementById('prod-form-description').value.trim(),
-        benefits: document.getElementById('prod-form-benefits').value.trim(),
-        ingredients: document.getElementById('prod-form-ingredients').value.trim(),
-        nutritionalInfo: document.getElementById('prod-form-nutrition').value.trim(),
-        storageInstructions: document.getElementById('prod-form-storage').value.trim(),
-        highlights
-      };
+    const dbPayload = {
+      id: prodId,
+      title,
+      sku: document.getElementById('prod-form-sku').value.trim() || 'EN-GEN-' + Math.floor(Math.random() * 900),
+      category: document.getElementById('prod-form-category').value,
+      image: image,
+      gallery: [image],
+      price,
+      original_price: mrp,
+      discount,
+      unit: document.getElementById('prod-form-unit').value.trim() || 'Pack',
+      badge: document.getElementById('prod-form-badge').value.trim(),
+      rating: parseFloat(document.getElementById('prod-form-rating').value) || 4.8,
+      reviews_count: parseInt(document.getElementById('prod-form-reviews').value) || 12,
+      stock_qty: parseInt(document.getElementById('prod-form-stock').value) || 20,
+      sort_order: parseInt(document.getElementById('prod-form-sort').value) || 1,
+      is_bestseller: document.getElementById('prod-form-is-bestseller').checked,
+      is_featured: document.getElementById('prod-form-is-featured').checked,
+      is_new_arrival: document.getElementById('prod-form-is-new').checked,
+      in_stock: document.getElementById('prod-form-in-stock').checked,
+      short_summary: document.getElementById('prod-form-summary').value.trim(),
+      description: document.getElementById('prod-form-description').value.trim(),
+      benefits: document.getElementById('prod-form-benefits').value.trim(),
+      ingredients: document.getElementById('prod-form-ingredients').value.trim(),
+      nutritional_info: document.getElementById('prod-form-nutrition').value.trim(),
+      storage_instructions: document.getElementById('prod-form-storage').value.trim(),
+      highlights,
+      updated_at: new Date().toISOString()
+    };
 
-      if (id) {
-        const idx = db.products.findIndex(p => p.id === id);
-        if (idx !== -1) db.products[idx] = payload;
-      } else {
-        db.products.unshift(payload);
+    const originalContent = btnElement.innerHTML;
+    btnElement.disabled = true;
+    btnElement.classList.add('btn-loading');
+    btnElement.innerHTML = `<i class="ri-loader-4-line ri-spin" style="margin-right: 6px; font-size: 16px;"></i> Saving to Cloud...`;
+
+    try {
+      if (window.CloudDB && window.CloudDB.isSupabaseActive() && window.CloudDB.supabase) {
+        const { data, error } = await window.CloudDB.supabase.from('products').upsert(dbPayload).select();
+        if (error) {
+          btnElement.disabled = false;
+          btnElement.classList.remove('btn-loading');
+          btnElement.innerHTML = originalContent;
+          showToast(`Database Error: ${error.message}`, 'error');
+          return; // Keep modal open, do NOT update local state
+        }
       }
+
+      // Success flow
+      const localObj = normalizeProductFromDB(dbPayload);
+      const idx = db.products.findIndex(p => p.id === prodId);
+      if (idx !== -1) {
+        db.products[idx] = localObj;
+      } else {
+        db.products.unshift(localObj);
+      }
+
+      btnElement.disabled = false;
+      btnElement.classList.remove('btn-loading');
+      btnElement.innerHTML = originalContent;
 
       closeModal();
       renderProductsTable();
       renderDashboard();
-    }, id ? 'Product updated successfully!' : 'New product created successfully!');
+      showToast(id ? 'Product updated successfully in Supabase!' : 'New product created successfully in Supabase!', 'success');
+    } catch (err) {
+      btnElement.disabled = false;
+      btnElement.classList.remove('btn-loading');
+      btnElement.innerHTML = originalContent;
+      showToast(`Error: ${err.message}`, 'error');
+    }
   }
 
-  function toggleProductStock(productId, checkbox) {
+  async function toggleProductStock(productId, checkbox) {
     const prod = db.products.find(p => p.id === productId);
     if (!prod) return;
     prod.inStock = checkbox.checked;
+
+    if (window.CloudDB && window.CloudDB.isSupabaseActive() && window.CloudDB.supabase) {
+      await window.CloudDB.supabase.from('products').update({ in_stock: checkbox.checked, updated_at: new Date().toISOString() }).eq('id', productId);
+    }
     showToast(`${prod.title} marked as ${prod.inStock ? 'In-Stock' : 'Out-of-Stock'}`, 'info');
     renderProductsTable();
     renderDashboard();
@@ -561,8 +697,34 @@ window.AdminController = (function() {
     if (!prod) return;
     pendingDeleteTarget = { type: 'product', id: productId, name: prod.title };
     
-    document.getElementById('confirm-delete-msg').innerHTML = `Are you sure you want to permanently delete <strong>${prod.title}</strong>? This action cannot be undone.`;
+    document.getElementById('confirm-delete-msg').innerHTML = `Are you sure you want to permanently delete <strong>${prod.title}</strong>? This action will remove it permanently from Supabase.`;
     openModal('modal-confirm-delete');
+  }
+
+  async function uploadProductImage(input) {
+    if (!input.files || !input.files[0]) return;
+    const file = input.files[0];
+    showToast('Uploading product image to Cloudinary...', 'info');
+
+    try {
+      if (window.CloudinaryUpload) {
+        const res = await window.CloudinaryUpload.uploadImageFile(file);
+        if (res && res.url) {
+          document.getElementById('prod-form-image').value = res.url;
+          updateImagePreview('prod-form-image', 'prod-form-img-preview');
+          showToast('Image uploaded successfully to Cloudinary!', 'success');
+          return;
+        }
+      }
+      if (window.ImageUploader) {
+        const url = await window.ImageUploader.upload(file);
+        document.getElementById('prod-form-image').value = url;
+        updateImagePreview('prod-form-image', 'prod-form-img-preview');
+        showToast('Image uploaded successfully!', 'success');
+      }
+    } catch (err) {
+      showToast('Image upload notice: ' + err.message, 'warning');
+    }
   }
 
   // =========================================================================
@@ -626,7 +788,7 @@ window.AdminController = (function() {
     openModal('modal-category-form');
   }
 
-  function saveCategoryForm(btnElement) {
+  async function saveCategoryForm(btnElement) {
     const id = document.getElementById('cat-modal-id').value;
     const name = document.getElementById('cat-form-name').value.trim();
     if (!name) {
@@ -634,36 +796,70 @@ window.AdminController = (function() {
       return;
     }
 
-    withActionSpinner(btnElement, () => {
-      const payload = {
-        id: id || 'cat_' + name.toLowerCase().replace(/[^a-z0-9]/g, '_'),
-        name,
-        tagline: document.getElementById('cat-form-tagline').value.trim(),
-        image: document.getElementById('cat-form-image').value.trim() || 'assets/prod_honey_studio.jpg',
-        icon: 'ri-apps-2-line',
-        sortOrder: parseInt(document.getElementById('cat-form-sort').value) || 1,
-        showOnHome: document.getElementById('cat-form-show-home').checked,
-        showInShop: document.getElementById('cat-form-show-shop').checked
-      };
+    const catId = id || 'cat_' + name.toLowerCase().replace(/[^a-z0-9]/g, '_');
+    const dbPayload = {
+      id: catId,
+      name,
+      tagline: document.getElementById('cat-form-tagline').value.trim(),
+      image: document.getElementById('cat-form-image').value.trim() || 'assets/prod_honey_studio.jpg',
+      icon: 'ri-apps-2-line',
+      sort_order: parseInt(document.getElementById('cat-form-sort').value) || 1,
+      show_on_home: document.getElementById('cat-form-show-home').checked,
+      show_in_shop: document.getElementById('cat-form-show-shop').checked,
+      updated_at: new Date().toISOString()
+    };
 
-      if (id) {
-        const idx = db.categories.findIndex(c => c.id === id);
-        if (idx !== -1) db.categories[idx] = payload;
-      } else {
-        db.categories.push(payload);
+    const originalContent = btnElement.innerHTML;
+    btnElement.disabled = true;
+    btnElement.classList.add('btn-loading');
+    btnElement.innerHTML = `<i class="ri-loader-4-line ri-spin" style="margin-right: 6px; font-size: 16px;"></i> Saving to Cloud...`;
+
+    try {
+      if (window.CloudDB && window.CloudDB.isSupabaseActive() && window.CloudDB.supabase) {
+        const { data, error } = await window.CloudDB.supabase.from('categories').upsert(dbPayload).select();
+        if (error) {
+          btnElement.disabled = false;
+          btnElement.classList.remove('btn-loading');
+          btnElement.innerHTML = originalContent;
+          showToast(`Database Error: ${error.message}`, 'error');
+          return; // Keep modal open, do NOT update local state
+        }
       }
+
+      const localObj = normalizeCategoryFromDB(dbPayload);
+      const idx = db.categories.findIndex(c => c.id === catId);
+      if (idx !== -1) {
+        db.categories[idx] = localObj;
+      } else {
+        db.categories.push(localObj);
+      }
+
+      btnElement.disabled = false;
+      btnElement.classList.remove('btn-loading');
+      btnElement.innerHTML = originalContent;
 
       closeModal();
       renderCategoriesView();
       renderProductsTable();
-    }, id ? 'Category updated successfully!' : 'New category created successfully!');
+      showToast(id ? 'Category updated in Supabase!' : 'New category created in Supabase!', 'success');
+    } catch (err) {
+      btnElement.disabled = false;
+      btnElement.classList.remove('btn-loading');
+      btnElement.innerHTML = originalContent;
+      showToast(`Error: ${err.message}`, 'error');
+    }
   }
 
-  function toggleCategoryVisibility(catId, target, isChecked) {
+  async function toggleCategoryVisibility(catId, target, isChecked) {
     const cat = db.categories.find(c => c.id === catId);
     if (!cat) return;
     if (target === 'home') cat.showOnHome = isChecked;
     if (target === 'shop') cat.showInShop = isChecked;
+
+    if (window.CloudDB && window.CloudDB.isSupabaseActive() && window.CloudDB.supabase) {
+      const updateField = target === 'home' ? { show_on_home: isChecked, updated_at: new Date().toISOString() } : { show_in_shop: isChecked, updated_at: new Date().toISOString() };
+      await window.CloudDB.supabase.from('categories').update(updateField).eq('id', catId);
+    }
     showToast(`Updated visibility for ${cat.name}`, 'info');
   }
 
@@ -672,8 +868,34 @@ window.AdminController = (function() {
     if (!cat) return;
     pendingDeleteTarget = { type: 'category', id: catId, name: cat.name };
     
-    document.getElementById('confirm-delete-msg').innerHTML = `Are you sure you want to delete category <strong>${cat.name}</strong>?`;
+    document.getElementById('confirm-delete-msg').innerHTML = `Are you sure you want to delete category <strong>${cat.name}</strong> from Supabase?`;
     openModal('modal-confirm-delete');
+  }
+
+  async function uploadCategoryImage(input) {
+    if (!input.files || !input.files[0]) return;
+    const file = input.files[0];
+    showToast('Uploading category image to Cloudinary...', 'info');
+
+    try {
+      if (window.CloudinaryUpload) {
+        const res = await window.CloudinaryUpload.uploadImageFile(file);
+        if (res && res.url) {
+          document.getElementById('cat-form-image').value = res.url;
+          updateImagePreview('cat-form-image', 'cat-form-img-preview');
+          showToast('Category image uploaded to Cloudinary!', 'success');
+          return;
+        }
+      }
+      if (window.ImageUploader) {
+        const url = await window.ImageUploader.upload(file);
+        document.getElementById('cat-form-image').value = url;
+        updateImagePreview('cat-form-image', 'cat-form-img-preview');
+        showToast('Image uploaded successfully!', 'success');
+      }
+    } catch (err) {
+      showToast('Image upload notice: ' + err.message, 'warning');
+    }
   }
 
   // =========================================================================
@@ -985,19 +1207,47 @@ window.AdminController = (function() {
     openModal('modal-order-inspector');
   }
 
-  function saveOrderInspector(btnElement) {
+  async function saveOrderInspector(btnElement) {
     if (!currentInspectedOrder) return;
+    const orderStatus = document.getElementById('insp-order-status-select').value;
+    const paymentStatus = document.getElementById('insp-pay-status-select').value;
+    const adminNotes = document.getElementById('insp-admin-notes').value;
+    const trackingId = document.getElementById('insp-tracking-id').value;
 
-    withActionSpinner(btnElement, () => {
-      currentInspectedOrder.orderStatus = document.getElementById('insp-order-status-select').value;
-      currentInspectedOrder.paymentStatus = document.getElementById('insp-pay-status-select').value;
-      currentInspectedOrder.adminNotes = document.getElementById('insp-admin-notes').value;
-      currentInspectedOrder.trackingId = document.getElementById('insp-tracking-id').value;
+    const originalContent = btnElement.innerHTML;
+    btnElement.disabled = true;
+    btnElement.classList.add('btn-loading');
+    btnElement.innerHTML = `<i class="ri-loader-4-line ri-spin"></i> Saving to Cloud...`;
+
+    try {
+      if (window.CloudDB) {
+        await window.CloudDB.updateOrderStatus(currentInspectedOrder.id, {
+          order_status: orderStatus,
+          payment_status: paymentStatus,
+          admin_notes: adminNotes,
+          tracking_id: trackingId
+        });
+      }
+
+      currentInspectedOrder.orderStatus = orderStatus;
+      currentInspectedOrder.paymentStatus = paymentStatus;
+      currentInspectedOrder.adminNotes = adminNotes;
+      currentInspectedOrder.trackingId = trackingId;
+
+      btnElement.disabled = false;
+      btnElement.classList.remove('btn-loading');
+      btnElement.innerHTML = originalContent;
 
       renderOrdersTable();
       renderDashboard();
       closeModal();
-    }, `Order ${currentInspectedOrder.orderNumber} updated successfully!`);
+      showToast(`Order ${currentInspectedOrder.orderNumber} updated in Supabase!`, 'success');
+    } catch (err) {
+      btnElement.disabled = false;
+      btnElement.classList.remove('btn-loading');
+      btnElement.innerHTML = originalContent;
+      showToast(`Update error: ${err.message}`, 'error');
+    }
   }
 
   function sendWhatsAppUpdate() {
@@ -1186,26 +1436,44 @@ window.AdminController = (function() {
   // =========================================================================
   // 13. CUSTOMER DIRECTORY (CRM)
   // =========================================================================
-  function renderCustomersView() {
+  async function renderCustomersView() {
     const tbody = document.getElementById('customers-table-body');
     if (!tbody) return;
 
-    tbody.innerHTML = db.customers.map(c => `
+    let customers = db.customers;
+    if (window.CloudDB) {
+      try {
+        const cloudCusts = await window.CloudDB.getCustomers();
+        if (cloudCusts && cloudCusts.length > 0) {
+          customers = cloudCusts;
+          db.customers = cloudCusts;
+        }
+      } catch (e) {
+        console.warn('Customer list cloud fetch notice:', e.message);
+      }
+    }
+
+    if (customers.length === 0) {
+      tbody.innerHTML = `<tr><td colspan="6" class="table-empty-state"><i class="ri-user-smile-line"></i><div>No registered customers or orders yet.</div></td></tr>`;
+      return;
+    }
+
+    tbody.innerHTML = customers.map(c => `
       <tr>
         <td>
           <div class="cust-avatar-lockup">
-            <div class="cust-initial-avatar">${c.name.charAt(0)}</div>
+            <div class="cust-initial-avatar">${(c.name || 'C').charAt(0).toUpperCase()}</div>
             <div>
               <div class="cust-tbl-name">${c.name}</div>
-              <div class="cust-tbl-email">${c.email}</div>
+              <div class="cust-tbl-email">${c.email || 'No email provided'}</div>
             </div>
           </div>
         </td>
-        <td><a href="tel:${c.phone}" class="cust-phone-link"><i class="ri-phone-line"></i> ${c.phone}</a></td>
+        <td><a href="tel:${c.phone}" class="cust-phone-link"><i class="ri-phone-line"></i> ${c.phone || '—'}</a></td>
         <td><strong>${c.totalOrders} Orders</strong></td>
-        <td><strong>₹${c.lifetimeSpend.toLocaleString('en-IN')}</strong></td>
+        <td><strong>₹${Number(c.lifetimeSpend || 0).toLocaleString('en-IN')}</strong></td>
         <td>${c.lastOrderDate}</td>
-        <td><span class="pay-status-pill pay-paid">${c.status}</span></td>
+        <td><span class="pay-status-pill pay-${c.totalOrders > 0 ? 'paid' : 'pending'}">${c.status || 'Active'}</span></td>
       </tr>
     `).join('');
   }
@@ -1329,29 +1597,70 @@ window.AdminController = (function() {
     document.body.style.overflow = '';
   }
 
-  function confirmDeleteAction(btnElement) {
+  async function confirmDeleteAction(btnElement) {
     if (!pendingDeleteTarget) return;
 
-    withActionSpinner(btnElement, () => {
-      const { type, id, name } = pendingDeleteTarget;
+    const { type, id, name } = pendingDeleteTarget;
+    const originalContent = btnElement.innerHTML;
+    btnElement.disabled = true;
+    btnElement.classList.add('btn-loading');
+    btnElement.innerHTML = `<i class="ri-loader-4-line ri-spin"></i> Deleting from Cloud...`;
+
+    try {
       if (type === 'product') {
+        if (window.CloudDB && window.CloudDB.isSupabaseActive() && window.CloudDB.supabase) {
+          const { error } = await window.CloudDB.supabase.from('products').delete().eq('id', id);
+          if (error) {
+            btnElement.disabled = false;
+            btnElement.classList.remove('btn-loading');
+            btnElement.innerHTML = originalContent;
+            showToast(`Delete Error: ${error.message}`, 'error');
+            return;
+          }
+        }
         db.products = db.products.filter(p => p.id !== id);
         renderProductsTable();
         renderDashboard();
+        showToast(`Product "${name}" permanently deleted from Supabase.`, 'success');
       } else if (type === 'category') {
+        if (window.CloudDB && window.CloudDB.isSupabaseActive() && window.CloudDB.supabase) {
+          const { error } = await window.CloudDB.supabase.from('categories').delete().eq('id', id);
+          if (error) {
+            btnElement.disabled = false;
+            btnElement.classList.remove('btn-loading');
+            btnElement.innerHTML = originalContent;
+            showToast(`Delete Error: ${error.message}`, 'error');
+            return;
+          }
+        }
         db.categories = db.categories.filter(c => c.id !== id);
         renderCategoriesView();
         renderProductsTable();
+        showToast(`Category "${name}" permanently deleted from Supabase.`, 'success');
       } else if (type === 'banner') {
         db.heroBanners = db.heroBanners.filter(b => b.id !== id);
         renderBannersView();
+        showToast('Banner deleted.', 'success');
       } else if (type === 'coupon') {
+        if (window.CloudDB && window.CloudDB.isSupabaseActive() && window.CloudDB.supabase) {
+          await window.CloudDB.supabase.from('coupons').delete().eq('id', id);
+        }
         db.coupons = db.coupons.filter(c => c.id !== id);
         renderCouponsView();
+        showToast('Coupon deleted.', 'success');
       }
+
+      btnElement.disabled = false;
+      btnElement.classList.remove('btn-loading');
+      btnElement.innerHTML = originalContent;
       closeModal();
       pendingDeleteTarget = null;
-    }, 'Item deleted successfully.');
+    } catch (err) {
+      btnElement.disabled = false;
+      btnElement.classList.remove('btn-loading');
+      btnElement.innerHTML = originalContent;
+      showToast(`Delete failed: ${err.message}`, 'error');
+    }
   }
 
   function updateImagePreview(inputId, previewImgId) {
@@ -1446,6 +1755,7 @@ window.AdminController = (function() {
   // =========================================================================
   function init() {
     checkAdminSession();
+    loadCloudData();
     renderDashboard();
     updateStoreStatusIndicator();
     initGlobalSearch();
@@ -1459,6 +1769,7 @@ window.AdminController = (function() {
     handleAdminLogin,
     handleAdminLogout,
 
+    loadCloudData,
     switchTab,
     renderActiveView,
     withActionSpinner,
@@ -1477,6 +1788,7 @@ window.AdminController = (function() {
     saveProductForm,
     toggleProductStock,
     promptDeleteProduct,
+    uploadProductImage,
 
     // Categories
     renderCategoriesView,
@@ -1484,6 +1796,7 @@ window.AdminController = (function() {
     saveCategoryForm,
     toggleCategoryVisibility,
     promptDeleteCategory,
+    uploadCategoryImage,
 
     // Banners
     renderBannersView,

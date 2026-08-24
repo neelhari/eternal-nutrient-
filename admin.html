@@ -863,10 +863,14 @@
               <select id="prod-form-category" class="form-select"></select>
             </div>
             <div class="form-field-block col-span-2">
-              <label class="form-label">Product Image Path / URL</label>
-              <div style="display: flex; gap: 12px; align-items: center;">
-                <input type="text" id="prod-form-image" class="form-input" onchange="AdminController.updateImagePreview('prod-form-image', 'prod-form-img-preview')">
-                <img id="prod-form-img-preview" src="assets/prod_honey_studio.jpg" style="width: 44px; height: 44px; border-radius: 8px; object-fit: cover; border: 1px solid #E2E8F0;">
+              <label class="form-label">Product Image (Cloud Storage URL or File Upload)</label>
+              <div style="display: flex; gap: 10px; align-items: center;">
+                <input type="text" id="prod-form-image" class="form-input" placeholder="https://res.cloudinary.com/... or assets/..." onchange="AdminController.updateImagePreview('prod-form-image', 'prod-form-img-preview')">
+                <label class="btn btn-sm btn-outline" style="cursor: pointer; white-space: nowrap; display: flex; align-items: center; gap: 6px; padding: 9px 14px; height: 42px; border: 1px solid #CBD5E1; border-radius: 8px;">
+                  <i class="ri-upload-cloud-2-line"></i> Upload
+                  <input type="file" id="prod-file-upload-input" accept="image/*" style="display: none;" onchange="AdminController.uploadProductImage(this)">
+                </label>
+                <img id="prod-form-img-preview" src="assets/prod_honey_studio.jpg" style="width: 44px; height: 44px; border-radius: 8px; object-fit: cover; border: 1px solid #E2E8F0; flex-shrink: 0;">
               </div>
             </div>
           </div>
@@ -1007,10 +1011,14 @@
             <input type="text" id="cat-form-tagline" class="form-input" placeholder="e.g. 100% Pure Medjoul Dates & Premium Nuts">
           </div>
           <div class="form-field-block">
-            <label class="form-label">Thumbnail Image Path</label>
-            <div style="display: flex; gap: 12px; align-items: center;">
-              <input type="text" id="cat-form-image" class="form-input" onchange="AdminController.updateImagePreview('cat-form-image', 'cat-form-img-preview')">
-              <img id="cat-form-img-preview" src="assets/prod_cookie_studio.jpg" style="width: 44px; height: 44px; border-radius: 50%; object-fit: cover; border: 1px solid #E2E8F0;">
+            <label class="form-label">Thumbnail Image (Cloud Storage URL or File Upload)</label>
+            <div style="display: flex; gap: 10px; align-items: center;">
+              <input type="text" id="cat-form-image" class="form-input" placeholder="https://res.cloudinary.com/... or assets/..." onchange="AdminController.updateImagePreview('cat-form-image', 'cat-form-img-preview')">
+              <label class="btn btn-sm btn-outline" style="cursor: pointer; white-space: nowrap; display: flex; align-items: center; gap: 6px; padding: 9px 14px; height: 42px; border: 1px solid #CBD5E1; border-radius: 8px;">
+                <i class="ri-upload-cloud-2-line"></i> Upload
+                <input type="file" id="cat-file-upload-input" accept="image/*" style="display: none;" onchange="AdminController.uploadCategoryImage(this)">
+              </label>
+              <img id="cat-form-img-preview" src="assets/prod_cookie_studio.jpg" style="width: 44px; height: 44px; border-radius: 50%; object-fit: cover; border: 1px solid #E2E8F0; flex-shrink: 0;">
             </div>
           </div>
           <div class="form-field-block">
@@ -1370,7 +1378,10 @@
   <!-- Toast Notification Container -->
   <div id="admin-toast-container"></div>
 
-  <!-- In-Memory Mock Database & Controller Scripts -->
+  <!-- Database, Storage & Controller Scripts -->
+  <script src="core/cloud-db.js"></script>
+  <script src="core/payment-verifier.js"></script>
+  <script src="core/image-uploader.js"></script>
   <script src="core/admin-mock-db.js"></script>
   <script src="core/admin-controller.js"></script>
 

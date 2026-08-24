@@ -30,11 +30,16 @@ window.STORE_CONFIG = {
   freeShippingThreshold: 999, // Free shipping for orders >= ₹999
   standardShippingFee: 40,
 
-  // 5. Cloud Database (Supabase)
-  supabaseUrl: 'https://sfcxpvvqxldhdkvfyhgj.supabase.co',
-  supabaseAnonKey: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNmY3hwdnZxeGxkaGRrdmZ5aGdqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDAwNDcxNTUsImV4cCI6MjA1NTYyMzE1NX0.eR6k7vj8z6sX9e-0123456789abcdefghijklmnopqrstuv',
+  // 5. Cloud Database (Supabase Public Client)
+  supabaseUrl: 'https://pqorpwmyhfwafzddubaf.supabase.co',
+  supabaseAnonKey: 'sb_publishable_1HaDlvVRIZQQP-x-i_wM7w_oHp3jUKu',
 
-  // 6. Core Product Categories (Ordered: Millet Biscuits, Dates Laddu's, Honey, Moringa chikki, Millet Rava, Pickles)
+  // 6. Media & Image CDN (Cloudinary)
+  cloudinaryCloudName: 'ewrpjo2g',
+  cloudinaryApiKey: '137966981823869',
+  cloudinaryUploadPreset: 'eternal_products', // Create an unsigned preset in Cloudinary > Upload Settings
+
+  // 7. Core Product Categories (Ordered: Millet Biscuits, Dates Laddu's, Honey, Moringa chikki, Millet Rava, Pickles)
   categories: [
     'Millet Biscuits',
     "Dates Laddu's",

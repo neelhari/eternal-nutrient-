@@ -878,7 +878,10 @@
   <div id="toast-wrapper" class="toast-floating-container"></div>
 
   <!-- Scripts -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="config/store.config.js"></script>
+  <script src="core/cloud-db.js"></script>
+  <script src="core/payment-verifier.js"></script>
   <script src="core/auth-engine.js"></script>
   <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
   
@@ -896,6 +899,31 @@
       'na_3': { id: 'na_3', title: 'Acacia Blossom Honey', category: 'Organic Honey', price: 599, originalPrice: 699, badge: 'Single Origin • 500g', unit: '500g', image: 'assets/header_honey_float.jpg' },
       'na_4': { id: 'na_4', title: 'Little Millet Rava', category: 'Millet Breakfast Rava', price: 199, originalPrice: 230, badge: 'Dietary Fiber • 500g', unit: '500g', image: 'assets/prod_rava_studio.jpg' }
     };
+
+    async function syncProductsFromSupabase() {
+      if (window.CloudDB && window.CloudDB.isSupabaseActive()) {
+        try {
+          const prods = await window.CloudDB.getProducts();
+          if (prods && prods.length > 0) {
+            prods.forEach(p => {
+              PRODUCTS[p.id] = {
+                id: p.id,
+                title: p.title,
+                category: p.category,
+                price: Number(p.price) || 0,
+                originalPrice: Number(p.original_price || p.price || 0),
+                badge: p.badge || '',
+                unit: p.unit || 'Pack',
+                image: p.image || (Array.isArray(p.gallery) && p.gallery[0]) || 'assets/prod_honey_studio.jpg'
+              };
+            });
+            renderCart();
+          }
+        } catch (e) {
+          console.warn('Supabase storefront sync notice:', e);
+        }
+      }
+    }
 
     let cart = [];
     try {
@@ -1292,6 +1320,7 @@
     }
 
     window.addEventListener('DOMContentLoaded', () => {
+      syncProductsFromSupabase();
       renderCart();
       initStatsCounter();
       if (typeof AOS !== 'undefined') {

@@ -118,7 +118,30 @@ window.CloudDB = (function() {
     return { success: true };
   }
 
-  // 3. ORDERS API
+  // 3. ORDERS & INVENTORY PIPELINE
+  async function deductInventory(items) {
+    if (!items || !Array.isArray(items) || items.length === 0) return;
+    if (!isSupabaseActive || !supabaseClient) return;
+
+    for (const item of items) {
+      if (!item.id || !item.qty) continue;
+      try {
+        const { data: prod } = await supabaseClient.from('products').select('id, stock_qty').eq('id', item.id).single();
+        if (prod) {
+          const currentStock = Number(prod.stock_qty) || 0;
+          const newStock = Math.max(0, currentStock - (Number(item.qty) || 1));
+          await supabaseClient.from('products').update({
+            stock_qty: newStock,
+            in_stock: newStock > 0,
+            updated_at: new Date().toISOString()
+          }).eq('id', item.id);
+        }
+      } catch (err) {
+        console.warn(`Inventory deduction notice for ${item.id}:`, err.message);
+      }
+    }
+  }
+
   async function getOrders() {
     if (isSupabaseActive && supabaseClient) {
       try {
@@ -131,38 +154,144 @@ window.CloudDB = (function() {
     return mock ? mock.orders : [];
   }
 
-  async function createOrder(order) {
+  async function createOrder(rawOrder) {
+    const orderId = rawOrder.id || `ord_${Date.now()}_${Math.random().toString(36).substr(2, 4)}`;
+    const orderNum = rawOrder.order_number || rawOrder.orderNumber || `EN-${Math.floor(1000 + Math.random() * 9000)}`;
+
+    const isPaid = (rawOrder.payment_status || rawOrder.paymentStatus || '').toLowerCase() === 'paid';
+    const defaultStatus = isPaid ? 'Paid & Confirmed' : 'Order Confirmed';
+
+    const normalizedOrder = {
+      id: orderId,
+      order_number: orderNum,
+      customer_name: rawOrder.customer_name || rawOrder.customerName || 'Guest Customer',
+      customer_phone: rawOrder.customer_phone || rawOrder.customerPhone || '',
+      customer_email: rawOrder.customer_email || rawOrder.customerEmail || '',
+      delivery_address: rawOrder.delivery_address || rawOrder.deliveryAddress || (typeof rawOrder.customerAddress === 'string' ? { address: rawOrder.customerAddress } : rawOrder.customerAddress) || {},
+      items: rawOrder.items || [],
+      subtotal: Number(rawOrder.subtotal) || 0,
+      delivery_fee: Number(rawOrder.delivery_fee ?? rawOrder.deliveryFee ?? 0),
+      discount_amount: Number(rawOrder.discount_amount ?? rawOrder.discountAmount ?? 0),
+      total_amount: Number(rawOrder.total_amount ?? rawOrder.totalAmount ?? rawOrder.grandTotal ?? 0),
+      coupon_code: rawOrder.coupon_code || rawOrder.couponCode || '',
+      payment_method: rawOrder.payment_method || rawOrder.paymentMethod || 'COD',
+      payment_status: rawOrder.payment_status || rawOrder.paymentStatus || (isPaid ? 'Paid' : 'Pending'),
+      razorpay_order_id: rawOrder.razorpay_order_id || rawOrder.razorpayOrderId || '',
+      razorpay_payment_id: rawOrder.razorpay_payment_id || rawOrder.razorpayPaymentId || '',
+      order_status: rawOrder.order_status || rawOrder.orderStatus || defaultStatus,
+      tracking_id: rawOrder.tracking_id || rawOrder.trackingId || '',
+      admin_notes: rawOrder.admin_notes || rawOrder.adminNotes || rawOrder.notes || '',
+      created_at: rawOrder.created_at || new Date().toISOString(),
+      updated_at: new Date().toISOString()
+    };
+
     if (isSupabaseActive && supabaseClient) {
       try {
-        const { data, error } = await supabaseClient.from('orders').insert(order).select();
-        if (!error) return { success: true, data: data[0] };
+        const { data, error } = await supabaseClient.from('orders').insert(normalizedOrder).select();
+        if (!error && data && data.length > 0) {
+          // Trigger stock deduction in database
+          await deductInventory(normalizedOrder.items);
+          return { success: true, data: data[0] };
+        }
       } catch (err) {
         console.warn('Cloud order creation fallback:', err.message);
       }
     }
     if (mock) {
-      mock.orders.unshift(order);
+      mock.orders.unshift(normalizedOrder);
     }
-    return { success: true, local: true };
+    return { success: true, local: true, data: normalizedOrder };
   }
 
   async function updateOrderStatus(orderId, statusPayload) {
+    const payload = typeof statusPayload === 'string' ? { order_status: statusPayload } : statusPayload;
+    payload.updated_at = new Date().toISOString();
+
     if (isSupabaseActive && supabaseClient) {
       try {
-        const { data, error } = await supabaseClient.from('orders').update(statusPayload).eq('id', orderId).select();
+        const { data, error } = await supabaseClient.from('orders').update(payload).eq('id', orderId).select();
         if (!error) return { success: true, data };
       } catch (err) {
         console.warn('Cloud update fallback:', err.message);
       }
     }
     if (mock) {
-      const ord = mock.orders.find(o => o.id === orderId);
-      if (ord) Object.assign(ord, statusPayload);
+      const ord = mock.orders.find(o => o.id === orderId || o.order_number === orderId);
+      if (ord) Object.assign(ord, payload);
     }
     return { success: true };
   }
 
-  // 4. COUPONS API
+  // 4. DYNAMIC CUSTOMER DIRECTORY AGGREGATION
+  async function getCustomers() {
+    let ordersList = [];
+    let profilesList = [];
+
+    if (isSupabaseActive && supabaseClient) {
+      try {
+        const [ordersRes, profilesRes] = await Promise.all([
+          supabaseClient.from('orders').select('*'),
+          supabaseClient.from('profiles').select('*')
+        ]);
+        if (!ordersRes.error && ordersRes.data) ordersList = ordersRes.data;
+        if (!profilesRes.error && profilesRes.data) profilesList = profilesRes.data;
+      } catch (err) {
+        console.warn('Customer directory cloud query fallback:', err.message);
+      }
+    }
+
+    if (ordersList.length === 0 && mock) {
+      return mock.customers || [];
+    }
+
+    const map = new Map();
+
+    // Aggregate from profiles
+    profilesList.forEach(p => {
+      const key = p.phone || p.email || p.id;
+      map.set(key, {
+        id: p.id,
+        name: p.full_name || 'Registered Member',
+        email: p.email || '',
+        phone: p.phone || '',
+        totalOrders: 0,
+        lifetimeSpend: 0,
+        lastOrderDate: 'Registered Member',
+        status: 'Active'
+      });
+    });
+
+    // Aggregate from real orders
+    ordersList.forEach(o => {
+      const key = o.customer_phone || o.customer_email || o.customer_name;
+      if (!key) return;
+
+      const total = Number(o.total_amount) || 0;
+      const orderDate = o.created_at ? new Date(o.created_at).toLocaleDateString('en-IN', { month: 'short', day: 'numeric', year: 'numeric' }) : 'Recent';
+
+      if (map.has(key)) {
+        const cust = map.get(key);
+        cust.totalOrders += 1;
+        cust.lifetimeSpend += total;
+        cust.lastOrderDate = orderDate;
+      } else {
+        map.set(key, {
+          id: 'cust_' + (o.customer_phone || Math.random().toString(36).substr(2, 6)),
+          name: o.customer_name || 'Customer',
+          email: o.customer_email || '',
+          phone: o.customer_phone || '',
+          totalOrders: 1,
+          lifetimeSpend: total,
+          lastOrderDate: orderDate,
+          status: 'Active'
+        });
+      }
+    });
+
+    return Array.from(map.values()).sort((a, b) => b.lifetimeSpend - a.lifetimeSpend);
+  }
+
+  // 5. COUPONS API
   async function getCoupons() {
     if (isSupabaseActive && supabaseClient) {
       try {
@@ -175,7 +304,7 @@ window.CloudDB = (function() {
     return mock ? mock.coupons : [];
   }
 
-  // 5. STORE SETTINGS API
+  // 6. STORE SETTINGS API
   async function getStoreSettings() {
     if (isSupabaseActive && supabaseClient) {
       try {
@@ -188,8 +317,27 @@ window.CloudDB = (function() {
     return mock ? mock.storeSettings : {};
   }
 
+  async function saveStoreSettings(settings) {
+    const payload = { id: 'main_store', ...settings, updated_at: new Date().toISOString() };
+    if (isSupabaseActive && supabaseClient) {
+      try {
+        const { data, error } = await supabaseClient.from('store_settings').upsert(payload).select();
+        if (!error) return { success: true, data };
+      } catch (err) {
+        console.warn('Cloud settings save fallback:', err.message);
+      }
+    }
+    if (mock) {
+      mock.storeSettings = Object.assign(mock.storeSettings || {}, settings);
+    }
+    return { success: true, local: true };
+  }
+
   return {
     isSupabaseActive: () => isSupabaseActive,
+    get supabase() { return supabaseClient; },
+    getClient: () => supabaseClient,
+    init: initClient,
     getProducts,
     getProductById,
     saveProduct,
@@ -199,8 +347,11 @@ window.CloudDB = (function() {
     getOrders,
     createOrder,
     updateOrderStatus,
+    deductInventory,
+    getCustomers,
     getCoupons,
-    getStoreSettings
+    getStoreSettings,
+    saveStoreSettings
   };
 
 })();
