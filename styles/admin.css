@@ -319,81 +319,41 @@ html, body {
   overflow-x: hidden;
 }
 
-.admin-top-header {
-  height: 68px;
+.admin-mobile-header {
+  display: none;
+  height: 60px;
   background: #FFFFFF;
   border-bottom: 1px solid var(--border-subtle);
-  padding: 0 28px;
-  display: flex;
+  padding: 0 20px;
   align-items: center;
   justify-content: space-between;
-  gap: 16px;
   position: sticky;
   top: 0;
   z-index: 900;
 }
 
-.header-left-actions {
-  display: flex;
-  align-items: center;
-  gap: 14px;
-  flex: 1;
-  max-width: 500px;
+.mobile-brand-title {
+  font-size: 15px;
+  font-weight: 800;
+  color: #1C1917;
 }
 
 .mobile-menu-trigger {
-  display: none;
   background: none;
   border: none;
   font-size: 24px;
   color: var(--text-main);
   cursor: pointer;
-}
-
-.global-search-pill-btn {
   display: flex;
   align-items: center;
-  gap: 10px;
-  background: #F1F5F9;
-  border: 1px solid #E2E8F0;
-  border-radius: 999px;
-  padding: 8px 16px;
-  color: var(--text-muted);
-  font-size: 13px;
-  font-weight: 500;
-  cursor: pointer;
-  width: 100%;
-  max-width: 360px;
-  transition: all 0.15s ease;
-}
-
-.global-search-pill-btn:hover {
-  background: #FFFFFF;
-  border-color: #CBD5E1;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.04);
-}
-
-.search-kbd-shortcut {
-  margin-left: auto;
-  font-size: 11px;
-  font-weight: 700;
-  background: #E2E8F0;
-  color: #475569;
-  padding: 2px 6px;
-  border-radius: 4px;
-}
-
-.header-right-actions {
-  display: flex;
-  align-items: center;
-  gap: 14px;
+  justify-content: center;
 }
 
 .header-status-pill {
   display: inline-flex;
   align-items: center;
   gap: 7px;
-  padding: 6px 14px;
+  padding: 5px 12px;
   border-radius: 999px;
   font-size: 12px;
   font-weight: 700;
@@ -448,8 +408,9 @@ html, body {
    3. VIEW PANELS & CONTENT CONTAINER
    -------------------------------------------------------------------------- */
 .admin-views-container {
-  padding: 28px;
+  padding: 32px 36px 48px;
   flex: 1;
+  max-width: 1600px;
 }
 
 .admin-view-panel {
@@ -2102,18 +2063,12 @@ input:checked + .slider:before {
     transform: translateX(0);
   }
 
-  .mobile-menu-trigger {
+  .admin-mobile-header {
     display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-
-  .admin-top-header {
-    padding: 0 16px;
   }
 
   .admin-views-container {
-    padding: 16px;
+    padding: 20px 16px;
   }
 
   .dashboard-split-grid {

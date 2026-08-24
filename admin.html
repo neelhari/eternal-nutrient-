@@ -168,45 +168,16 @@
     <!-- 2. MAIN VIEWPORT CANVAS -->
     <main class="admin-main-viewport">
       
-      <!-- Top Sticky Header -->
-      <header class="admin-top-header">
-        
-        <div class="header-left-actions">
-          <!-- Mobile Menu Hamburger -->
-          <button class="mobile-menu-trigger" onclick="AdminController.toggleMobileSidebar()" aria-label="Open menu">
-            <i class="ri-menu-2-line"></i>
-          </button>
-
-          <!-- Global Search Pill (Ctrl+K) -->
-          <button class="global-search-pill-btn" onclick="AdminController.openModal('modal-global-search')">
-            <i class="ri-search-2-line"></i>
-            <span>Search products, orders, customers...</span>
-            <kbd class="search-kbd-shortcut">Ctrl + K</kbd>
-          </button>
+      <!-- Mobile-Only Header Bar (Hidden on Desktop) -->
+      <header class="admin-mobile-header">
+        <button class="mobile-menu-trigger" onclick="AdminController.toggleMobileSidebar()" aria-label="Open menu">
+          <i class="ri-menu-2-line"></i>
+        </button>
+        <div class="mobile-brand-title">Admin Portal</div>
+        <div id="header-store-status-pill-mobile" class="header-status-pill status-live" onclick="AdminController.toggleStoreStatusHeader()">
+          <span class="pulse-dot"></span>
+          <span>Open</span>
         </div>
-
-        <div class="header-right-actions">
-          
-          <!-- Store Live / Paused Status Toggle Indicator -->
-          <div id="header-store-status-pill" class="header-status-pill status-live" onclick="AdminController.toggleStoreStatusHeader()" title="Click to toggle store operational status">
-            <span class="pulse-dot"></span>
-            <span>Store Open</span>
-          </div>
-
-          <!-- Notification Bell with Counter -->
-          <button class="header-notif-btn" title="3 unread notifications" onclick="AdminController.showToast('You have 3 new store orders pending fulfillment.', 'info')">
-            <i class="ri-notification-3-line"></i>
-            <span class="header-notif-badge">3</span>
-          </button>
-
-          <!-- Quick Add Product Button -->
-          <button class="header-top-add-btn" onclick="AdminController.openProductModal()">
-            <i class="ri-add-line"></i>
-            <span>Add Product</span>
-          </button>
-
-        </div>
-
       </header>
 
       <!-- Dynamic Views Container -->
