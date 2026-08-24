@@ -489,17 +489,22 @@ window.AdminController = (function() {
 
     tbody.innerHTML = list.map(p => {
       const catBadgeClass = getCategoryBadgeClass(p.category);
-      const pkgType = p.packagingType || getPackagingSubtitle(p.category, p.unit);
       const mrp = p.originalPrice || (p.price + 50);
       const discPct = p.discount || (mrp > p.price ? Math.round(((mrp - p.price) / mrp) * 100) : 17);
       const lowThreshold = p.lowStockThreshold || 10;
       const isLow = p.stockQty <= lowThreshold && p.stockQty > 0;
       const isOut = p.stockQty === 0;
 
+      // Clean unit display (handles multiple pack sizes cleanly)
+      let unitDisplay = p.unit || '500g';
+      if (Array.isArray(p.variants) && p.variants.length > 1) {
+        unitDisplay = p.variants.map(v => v.size || v.unit).join(' • ');
+      }
+
       return `
         <tr>
           <td>
-            <div class="table-product-lockup">
+            <div class="table-product-lockup" style="cursor: pointer;" onclick="AdminController.openProductModal('${p.id}')" title="Click to Edit Product">
               <img src="${p.image}" alt="${p.title}" class="prod-photo-thumb">
               <div>
                 <div class="prod-title-text">${p.title}</div>
@@ -518,8 +523,7 @@ window.AdminController = (function() {
             </div>
           </td>
           <td>
-            <div class="unit-bold-main">${p.unit || '500g'}</div>
-            <div class="unit-sub-type">${pkgType}</div>
+            <div class="unit-bold-main">${unitDisplay}</div>
           </td>
           <td>
             <div class="stock-dot-status ${isOut ? 'stock-out' : (isLow ? 'stock-low' : '')}">
@@ -531,8 +535,7 @@ window.AdminController = (function() {
           <td>
             <div class="merch-badges-stack">
               ${p.isBestseller ? '<span class="merch-badge-chip merch-bestseller">★ Bestseller</span>' : ''}
-              ${p.isFeatured ? '<span class="merch-badge-chip merch-featured">✦ Featured</span>' : ''}
-              ${p.isNewArrival ? '<span class="merch-badge-chip merch-new">⚡ New</span>' : ''}
+              ${p.isNewArrival ? '<span class="merch-badge-chip merch-new">⚡ New Arrival</span>' : ''}
             </div>
           </td>
           <td>
@@ -659,6 +662,55 @@ window.AdminController = (function() {
     }
     const row = document.getElementById(rowId);
     if (row) row.remove();
+  }
+
+  async function uploadProductImage(fileInput) {
+    if (!fileInput || !fileInput.files || fileInput.files.length === 0) return;
+    const file = fileInput.files[0];
+
+    // Local instant preview
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const imgPreview = document.getElementById('prod-form-img-preview');
+      if (imgPreview) imgPreview.src = e.target.result;
+    };
+    reader.readAsDataURL(file);
+
+    showToast('Uploading image to Cloudinary...', 'info');
+
+    try {
+      const config = window.STORE_CONFIG || {};
+      const cloudName = config.cloudinaryCloudName || 'ewrpjo2g';
+      const uploadPreset = config.cloudinaryUploadPreset || 'eternal_products';
+
+      const formData = new FormData();
+      formData.append('file', file);
+      formData.append('upload_preset', uploadPreset);
+
+      const res = await fetch(`https://api.cloudinary.com/v1_1/${cloudName}/image/upload`, {
+        method: 'POST',
+        body: formData
+      });
+
+      const data = await res.json();
+      if (data.secure_url) {
+        const optimizedUrl = data.secure_url.replace('/upload/', '/upload/f_auto,q_auto,w_800/');
+        const imgInput = document.getElementById('prod-form-image');
+        const imgPreview = document.getElementById('prod-form-img-preview');
+        if (imgInput) imgInput.value = optimizedUrl;
+        if (imgPreview) imgPreview.src = optimizedUrl;
+        showToast('Product photo uploaded successfully!', 'success');
+      } else {
+        throw new Error(data.error?.message || 'Upload failed');
+      }
+    } catch (err) {
+      console.warn('Cloudinary upload notice:', err.message);
+      const imgInput = document.getElementById('prod-form-image');
+      if (imgInput && reader.result) {
+        imgInput.value = reader.result;
+      }
+      showToast('Photo selected for product.', 'info');
+    }
   }
 
   function openProductModal(productId = null) {
