@@ -56,22 +56,25 @@ html, body {
   font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
   background-color: var(--canvas-bg);
   color: var(--text-main);
-  min-height: 100vh;
+  height: 100%;
   width: 100%;
-  overflow-x: hidden;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
 }
 
 /* --------------------------------------------------------------------------
-   1. GLOBAL ADMIN LAYOUT
+   1. GLOBAL ADMIN LAYOUT (FROZEN SIDEBAR + SCROLLABLE RIGHT VIEWPORT)
    -------------------------------------------------------------------------- */
 .admin-app-wrapper {
   display: flex;
-  min-height: 100vh;
-  width: 100%;
+  height: 100vh;
+  width: 100vw;
+  overflow: hidden;
   position: relative;
 }
 
-/* Deep Slate Sidebar */
+/* Constant Frozen Slate Sidebar */
 .admin-sidebar {
   width: 270px;
   background: var(--sidebar-bg);
@@ -80,11 +83,10 @@ html, body {
   flex-direction: column;
   flex-shrink: 0;
   z-index: 1000;
-  position: sticky;
-  top: 0;
   height: 100vh;
   max-height: 100vh;
   overflow: hidden;
+  position: relative;
   transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
@@ -308,7 +310,10 @@ html, body {
   display: flex;
   flex-direction: column;
   min-width: 0;
-  min-height: 100vh;
+  height: 100vh;
+  max-height: 100vh;
+  overflow-y: auto;
+  overflow-x: hidden;
 }
 
 .admin-top-header {
