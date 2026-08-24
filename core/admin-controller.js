@@ -1438,10 +1438,57 @@ window.AdminController = (function() {
   // 12. INVENTORY LEDGER
   // =========================================================================
   function renderInventoryTable() {
+    const products = db.products || [];
+
+    // Update KPI summary cards
+    const totalSKUs = products.length;
+    const healthyCount = products.filter(p => p.stockQty > 10).length;
+    const lowCount = products.filter(p => p.stockQty > 0 && p.stockQty <= 10).length;
+    const outCount = products.filter(p => p.stockQty === 0).length;
+
+    const elTotal = document.getElementById('inv-stat-total-skus');
+    const elHealthy = document.getElementById('inv-stat-healthy');
+    const elLow = document.getElementById('inv-stat-low');
+    const elOut = document.getElementById('inv-stat-out');
+
+    if (elTotal) elTotal.innerText = totalSKUs;
+    if (elHealthy) elHealthy.innerText = healthyCount;
+    if (elLow) elLow.innerText = lowCount;
+    if (elOut) elOut.innerText = outCount;
+
     const tbody = document.getElementById('inventory-table-body');
     if (!tbody) return;
 
-    tbody.innerHTML = db.products.map(p => `
+    const searchVal = document.getElementById('inv-search-input')?.value.toLowerCase().trim() || '';
+    const stockFilter = document.getElementById('inv-filter-stock')?.value || 'All';
+
+    let list = [...products];
+
+    if (stockFilter === 'Healthy') {
+      list = list.filter(p => p.stockQty > 10);
+    } else if (stockFilter === 'LowStock') {
+      list = list.filter(p => p.stockQty > 0 && p.stockQty <= 10);
+    } else if (stockFilter === 'OutOfStock') {
+      list = list.filter(p => p.stockQty === 0);
+    }
+
+    if (searchVal) {
+      list = list.filter(p => p.title.toLowerCase().includes(searchVal) || p.sku.toLowerCase().includes(searchVal) || p.category.toLowerCase().includes(searchVal));
+    }
+
+    if (list.length === 0) {
+      tbody.innerHTML = `
+        <tr>
+          <td colspan="4" class="table-empty-state">
+            <i class="ri-archive-line"></i>
+            <div>No matching products found in inventory.</div>
+          </td>
+        </tr>
+      `;
+      return;
+    }
+
+    tbody.innerHTML = list.map(p => `
       <tr>
         <td>
           <div class="table-product-lockup">
@@ -1472,26 +1519,57 @@ window.AdminController = (function() {
     `).join('');
   }
 
-  function adjustStock(productId, delta, btnElement) {
-    withActionSpinner(btnElement, () => {
-      const p = db.products.find(x => x.id === productId);
-      if (p) {
-        p.stockQty = Math.max(0, p.stockQty + delta);
-        p.inStock = p.stockQty > 0;
-        renderInventoryTable();
-        renderDashboard();
+  async function adjustStock(productId, delta, btnElement) {
+    const p = db.products.find(x => x.id === productId);
+    if (!p) return;
+
+    const newStock = Math.max(0, p.stockQty + delta);
+    p.stockQty = newStock;
+    p.inStock = newStock > 0;
+
+    renderInventoryTable();
+    renderDashboard();
+
+    if (window.CloudDB && window.CloudDB.isSupabaseActive() && window.CloudDB.supabase) {
+      try {
+        await window.CloudDB.supabase.from('products').update({
+          stock_qty: newStock,
+          in_stock: newStock > 0,
+          updated_at: new Date().toISOString()
+        }).eq('id', productId);
+        showToast(`"${p.title}" stock updated to ${newStock} units in Supabase.`, 'success');
+      } catch (err) {
+        showToast(`Cloud stock sync notice: ${err.message}`, 'error');
       }
-    }, `Stock updated for product.`);
+    } else {
+      showToast(`Stock updated to ${newStock} units.`, 'info');
+    }
   }
 
-  function setStockDirect(productId, val) {
+  async function setStockDirect(productId, val) {
     const p = db.products.find(x => x.id === productId);
-    if (p) {
-      p.stockQty = Math.max(0, parseInt(val) || 0);
-      p.inStock = p.stockQty > 0;
-      showToast(`Stock updated to ${p.stockQty} units.`, 'info');
-      renderInventoryTable();
-      renderDashboard();
+    if (!p) return;
+
+    const newStock = Math.max(0, parseInt(val) || 0);
+    p.stockQty = newStock;
+    p.inStock = newStock > 0;
+
+    renderInventoryTable();
+    renderDashboard();
+
+    if (window.CloudDB && window.CloudDB.isSupabaseActive() && window.CloudDB.supabase) {
+      try {
+        await window.CloudDB.supabase.from('products').update({
+          stock_qty: newStock,
+          in_stock: newStock > 0,
+          updated_at: new Date().toISOString()
+        }).eq('id', productId);
+        showToast(`"${p.title}" stock set to ${newStock} units in Supabase.`, 'success');
+      } catch (err) {
+        showToast(`Cloud stock sync notice: ${err.message}`, 'error');
+      }
+    } else {
+      showToast(`Stock updated to ${newStock} units.`, 'info');
     }
   }
 

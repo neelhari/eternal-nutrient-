@@ -91,12 +91,6 @@
               </button>
             </li>
             <li>
-              <button class="sidebar-nav-btn" data-tab="collections" onclick="AdminController.switchTab('collections')">
-                <i class="ri-gallery-line"></i>
-                <span>Featured Collections</span>
-              </button>
-            </li>
-            <li>
               <button class="sidebar-nav-btn" data-tab="festive" onclick="AdminController.switchTab('festive')">
                 <i class="ri-sparkling-line"></i>
                 <span>Festive Specials</span>
@@ -477,7 +471,43 @@
           <div class="view-header-strip">
             <div>
               <h1 class="view-heading-title">Inventory Ledger</h1>
-              <p class="view-heading-sub">Real-time stock monitoring with quick adjustment controls.</p>
+              <p class="view-heading-sub">Live stock management, low-inventory alerts, and instant 1-click quantity steppers.</p>
+            </div>
+            <button class="btn btn-subtle" onclick="AdminController.renderInventoryTable()">
+              <i class="ri-refresh-line"></i> Refresh Stock
+            </button>
+          </div>
+
+          <!-- Inventory KPI Summary Chips -->
+          <div class="metrics-grid-10" style="grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); margin-bottom: 20px;">
+            <div class="metric-card-box" style="padding: 16px;">
+              <div class="metric-card-label">Total SKUs</div>
+              <div class="metric-card-val" id="inv-stat-total-skus" style="font-size: 22px;">0</div>
+            </div>
+            <div class="metric-card-box" style="padding: 16px;">
+              <div class="metric-card-label">Healthy Stock (&gt;10)</div>
+              <div class="metric-card-val" id="inv-stat-healthy" style="font-size: 22px; color: #15803D;">0</div>
+            </div>
+            <div class="metric-card-box" style="padding: 16px;">
+              <div class="metric-card-label">Low Stock (≤10)</div>
+              <div class="metric-card-val" id="inv-stat-low" style="font-size: 22px; color: #B45309;">0</div>
+            </div>
+            <div class="metric-card-box" style="padding: 16px;">
+              <div class="metric-card-label">Out of Stock (0)</div>
+              <div class="metric-card-val" id="inv-stat-out" style="font-size: 22px; color: #B91C1C;">0</div>
+            </div>
+          </div>
+
+          <!-- Inventory Search & Filter Toolbar -->
+          <div class="filter-toolbar-strip">
+            <div class="filter-group-left">
+              <input type="text" id="inv-search-input" class="form-input-search" placeholder="Search inventory by title, SKU, category..." oninput="AdminController.renderInventoryTable()">
+              <select id="inv-filter-stock" class="form-select-pill" onchange="AdminController.renderInventoryTable()">
+                <option value="All">All Stock Levels</option>
+                <option value="Healthy">Healthy Stock (&gt;10)</option>
+                <option value="LowStock">Low Stock (≤10)</option>
+                <option value="OutOfStock">Out of Stock (0)</option>
+              </select>
             </div>
           </div>
 
@@ -513,22 +543,6 @@
           </div>
 
           <div id="banners-cards-grid" class="cards-responsive-grid"></div>
-
-        </section>
-
-        <!-- ================================================================= -->
-        <!-- VIEW: FEATURED COLLECTIONS -->
-        <!-- ================================================================= -->
-        <section id="view-collections" class="admin-view-panel">
-          
-          <div class="view-header-strip">
-            <div>
-              <h1 class="view-heading-title">Featured Collections</h1>
-              <p class="view-heading-sub">Curate spotlight rails like Best Sellers and Fresh Harvest collections.</p>
-            </div>
-          </div>
-
-          <div id="collections-cards-grid" class="cards-responsive-grid"></div>
 
         </section>
 
