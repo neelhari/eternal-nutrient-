@@ -469,7 +469,7 @@ window.AdminController = (function() {
     const totalCount = db.products.length;
     const showingText = document.getElementById('catalog-pagination-showing-text');
     if (showingText) {
-      showingText.innerText = `Showing 1 to ${list.length} of ${totalCount} products`;
+      showingText.innerText = `Showing ${list.length} of ${totalCount} products`;
     }
 
     const tbody = document.getElementById('products-table-body');
@@ -478,7 +478,7 @@ window.AdminController = (function() {
     if (list.length === 0) {
       tbody.innerHTML = `
         <tr>
-          <td colspan="9" class="table-empty-state">
+          <td colspan="8" class="table-empty-state">
             <i class="ri-inbox-line"></i>
             <div>No matching products found in catalog.</div>
           </td>
@@ -488,7 +488,6 @@ window.AdminController = (function() {
     }
 
     tbody.innerHTML = list.map(p => {
-      const isSelected = selectedProductIds.has(p.id);
       const catBadgeClass = getCategoryBadgeClass(p.category);
       const pkgType = p.packagingType || getPackagingSubtitle(p.category, p.unit);
       const mrp = p.originalPrice || (p.price + 50);
@@ -499,9 +498,6 @@ window.AdminController = (function() {
 
       return `
         <tr>
-          <td>
-            <input type="checkbox" ${isSelected ? 'checked' : ''} onchange="AdminController.toggleSelectProduct('${p.id}', this.checked)">
-          </td>
           <td>
             <div class="table-product-lockup">
               <img src="${p.image}" alt="${p.title}" class="prod-photo-thumb">

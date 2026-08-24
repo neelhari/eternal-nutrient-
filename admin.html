@@ -340,7 +340,7 @@
           <!-- Single-Row Filters & Search Toolbar -->
           <div class="catalog-filter-bar">
             <div class="catalog-search-wrap">
-              <input type="text" id="prod-search-input" class="catalog-search-input" placeholder="Search by title, SKU, barcode..." oninput="AdminController.renderProductsTable()">
+              <input type="text" id="prod-search-input" class="catalog-search-input" placeholder="Search by title or SKU..." oninput="AdminController.renderProductsTable()">
               <i class="ri-search-2-line catalog-search-icon"></i>
             </div>
             
@@ -361,35 +361,9 @@
               <option value="Inactive">Inactive Only</option>
             </select>
 
-            <button class="catalog-btn-filter" onclick="AdminController.renderProductsTable()">
-              <i class="ri-filter-3-line"></i> Filters
-            </button>
-
-            <button class="catalog-btn-reset" onclick="AdminController.resetProductFilters()">
+            <button class="catalog-btn-reset" onclick="AdminController.resetProductFilters()" title="Reset all search & filters">
               <i class="ri-refresh-line"></i> Reset
             </button>
-          </div>
-
-          <!-- Bulk Actions & View Switcher Bar -->
-          <div class="catalog-bulk-bar">
-            <div class="bulk-select-group">
-              <label class="bulk-custom-checkbox">
-                <input type="checkbox" id="bulk-select-all-prods" onchange="AdminController.toggleSelectAllProducts(this.checked)">
-                <span id="bulk-selected-count-label">0 selected</span>
-              </label>
-              <button class="bulk-action-dropdown-btn" onclick="AdminController.showBulkActionsMenu(event)">
-                <span>Bulk Actions</span> <i class="ri-arrow-down-s-line"></i>
-              </button>
-            </div>
-
-            <div class="view-mode-toggle-group">
-              <button class="view-mode-btn active" title="Table list view" id="btn-view-table" onclick="AdminController.switchProductViewMode('table')">
-                <i class="ri-list-check"></i>
-              </button>
-              <button class="view-mode-btn" title="Grid cards view" id="btn-view-grid" onclick="AdminController.switchProductViewMode('grid')">
-                <i class="ri-grid-fill"></i>
-              </button>
-            </div>
           </div>
 
           <!-- Products Table Container -->
@@ -397,9 +371,6 @@
             <table class="catalog-table">
               <thead>
                 <tr>
-                  <th style="width: 40px;">
-                    <input type="checkbox" onchange="AdminController.toggleSelectAllProducts(this.checked)">
-                  </th>
                   <th>Product</th>
                   <th>Category</th>
                   <th>Price</th>
@@ -414,26 +385,9 @@
             </table>
           </div>
 
-          <!-- Table Footer Pagination Bar -->
+          <!-- Table Footer Count -->
           <div class="catalog-pagination-bar">
-            <div id="catalog-pagination-showing-text">Showing 1 to 10 of 84 products</div>
-            
-            <div class="pagination-controls">
-              <button class="page-num-btn" onclick="AdminController.changeProductPage('prev')">&lt;</button>
-              <button class="page-num-btn active">1</button>
-              <button class="page-num-btn" onclick="AdminController.changeProductPage(2)">2</button>
-              <button class="page-num-btn" onclick="AdminController.changeProductPage(3)">3</button>
-              <span style="padding: 0 4px; color: #A8A29E;">...</span>
-              <button class="page-num-btn" onclick="AdminController.changeProductPage(9)">9</button>
-              <button class="page-num-btn" onclick="AdminController.changeProductPage('next')">&gt;</button>
-
-              <select class="catalog-select-pill" style="padding: 6px 28px 6px 10px; font-size: 12px; margin-left: 8px;" onchange="AdminController.setProductsPerPage(this.value)">
-                <option value="10" selected>10 / page</option>
-                <option value="25">25 / page</option>
-                <option value="50">50 / page</option>
-                <option value="100">100 / page</option>
-              </select>
-            </div>
+            <div id="catalog-pagination-showing-text">Showing all products</div>
           </div>
 
         </section>

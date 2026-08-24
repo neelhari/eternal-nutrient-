@@ -868,83 +868,11 @@ html, body {
   color: #1C1917;
 }
 
-/* Bulk Actions Toolbar Bar */
-.catalog-bulk-bar {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  background: #FFFFFF;
-  border: 1px solid #E7E5E4;
-  border-top-left-radius: 16px;
-  border-top-right-radius: 16px;
-  padding: 12px 18px;
-  border-bottom: 1px solid #E7E5E4;
-}
-
-.bulk-select-group {
-  display: flex;
-  align-items: center;
-  gap: 14px;
-}
-
-.bulk-custom-checkbox {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  font-size: 12.5px;
-  font-weight: 600;
-  color: #44403C;
-  cursor: pointer;
-}
-
-.bulk-action-dropdown-btn {
-  background: #F5F5F4;
-  border: 1px solid #E7E5E4;
-  border-radius: 8px;
-  padding: 6px 12px;
-  font-size: 12.5px;
-  font-weight: 600;
-  color: #44403C;
-  cursor: pointer;
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-}
-
-.view-mode-toggle-group {
-  display: flex;
-  align-items: center;
-  gap: 4px;
-}
-
-.view-mode-btn {
-  width: 32px;
-  height: 32px;
-  border-radius: 8px;
-  background: #F5F5F4;
-  border: 1px solid #E7E5E4;
-  color: #78716C;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  font-size: 16px;
-  transition: all 0.15s ease;
-}
-
-.view-mode-btn.active {
-  background: #2D471E;
-  border-color: #2D471E;
-  color: #FFFFFF;
-}
-
 /* Table Container */
 .catalog-table-container {
   background: #FFFFFF;
   border: 1px solid #E7E5E4;
-  border-top: none;
-  border-bottom-left-radius: 16px;
-  border-bottom-right-radius: 16px;
+  border-radius: 16px;
   overflow: hidden;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
 }
