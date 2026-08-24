@@ -1060,49 +1060,145 @@ window.AdminController = (function() {
   }
 
   // =========================================================================
-  // 8. FESTIVE SPECIALS & COLLECTIONS CMS
+  // 8. SEASONAL & FESTIVE SPECIALS CMS
   // =========================================================================
+  async function uploadImageToCloudinary(file) {
+    const config = window.STORE_CONFIG?.cloudinary || {
+      cloudName: 'ewrpjo2g',
+      uploadPreset: 'eternal_products'
+    };
+    const formData = new FormData();
+    formData.append('file', file);
+    formData.append('upload_preset', config.uploadPreset || 'eternal_products');
+
+    const res = await fetch(`https://api.cloudinary.com/v1_1/${config.cloudName || 'ewrpjo2g'}/image/upload`, {
+      method: 'POST',
+      body: formData
+    });
+    if (!res.ok) {
+      const err = await res.json();
+      throw new Error(err.error?.message || 'Failed to upload image to Cloudinary');
+    }
+    const data = await res.json();
+    return data.secure_url;
+  }
+
   function renderFestiveSpecialsView() {
     const f = db.festiveSpecials;
     const container = document.getElementById('festive-cards-container');
     if (!container) return;
 
-    document.getElementById('festive-banner-eyebrow-input').value = f.eyebrow;
-    document.getElementById('festive-banner-headline-input').value = f.headline;
+    const eyebrowInput = document.getElementById('festive-banner-eyebrow-input');
+    const headlineInput = document.getElementById('festive-banner-headline-input');
+    const activeToggle = document.getElementById('festive-active-toggle');
+
+    if (eyebrowInput) eyebrowInput.value = f.eyebrow || '';
+    if (headlineInput) headlineInput.value = f.headline || '';
+    if (activeToggle) activeToggle.checked = f.isActive !== false;
+
+    const categoriesList = db.categories || [];
 
     container.innerHTML = f.cards.map((c, i) => `
       <div class="festive-admin-card-item">
-        <img src="${c.image}" alt="${c.title}" class="festive-card-thumb">
+        <div class="festive-card-image-box">
+          <img src="${c.image}" alt="${c.title}" class="festive-card-thumb" id="festive-preview-img-${i}">
+          <button type="button" class="festive-upload-overlay-btn" id="btn-upload-festive-${i}" onclick="AdminController.triggerFestivePhotoUpload(${i})">
+            <i class="ri-camera-lens-line"></i> <span>Change Photo</span>
+          </button>
+          <input type="file" id="festive-file-input-${i}" accept="image/*" style="display: none;" onchange="AdminController.handleFestivePhotoUpload(${i}, this)">
+        </div>
+
         <div class="festive-card-fields">
-          <input type="text" class="form-input form-input-sm" value="${c.title}" onchange="AdminController.updateFestiveCard(${i}, 'title', this.value)" placeholder="Card Title">
-          <input type="text" class="form-input form-input-sm" value="${c.subLabel}" onchange="AdminController.updateFestiveCard(${i}, 'subLabel', this.value)" placeholder="Sub-Label">
-          <input type="text" class="form-input form-input-sm" value="${c.targetCategory}" onchange="AdminController.updateFestiveCard(${i}, 'targetCategory', this.value)" placeholder="Target Category">
+          <div>
+            <div class="festive-field-label">Display Title</div>
+            <input type="text" class="form-input form-input-sm" value="${c.title}" onchange="AdminController.updateFestiveCard(${i}, 'title', this.value)" placeholder="e.g. Rakhi Specials">
+          </div>
+
+          <div>
+            <div class="festive-field-label">Tagline / Sub-Label</div>
+            <input type="text" class="form-input form-input-sm" value="${c.subLabel}" onchange="AdminController.updateFestiveCard(${i}, 'subLabel', this.value)" placeholder="e.g. Dates Laddus">
+          </div>
+
+          <div>
+            <div class="festive-field-label">Link to Category</div>
+            <select class="form-select form-select-sm" onchange="AdminController.updateFestiveCard(${i}, 'targetCategory', this.value)">
+              ${categoriesList.map(cat => `<option value="${cat.name}" ${cat.name === c.targetCategory ? 'selected' : ''}>${cat.name}</option>`).join('')}
+            </select>
+          </div>
+
+          <div>
+            <div class="festive-field-label">Image URL</div>
+            <input type="text" class="form-input form-input-sm" value="${c.image}" onchange="AdminController.updateFestiveCardImageURL(${i}, this.value)" placeholder="https://res.cloudinary.com/...">
+          </div>
         </div>
       </div>
     `).join('');
   }
 
+  function triggerFestivePhotoUpload(index) {
+    const fileInput = document.getElementById(`festive-file-input-${index}`);
+    if (fileInput) fileInput.click();
+  }
+
+  async function handleFestivePhotoUpload(index, inputElement) {
+    const file = inputElement.files?.[0];
+    if (!file) return;
+
+    const btn = document.getElementById(`btn-upload-festive-${index}`);
+    const originalBtnHTML = btn ? btn.innerHTML : '';
+    if (btn) {
+      btn.disabled = true;
+      btn.innerHTML = `<i class="ri-loader-4-line ri-spin"></i> Uploading...`;
+    }
+
+    try {
+      const cdnUrl = await uploadImageToCloudinary(file);
+      if (db.festiveSpecials.cards[index]) {
+        db.festiveSpecials.cards[index].image = cdnUrl;
+      }
+      const previewImg = document.getElementById(`festive-preview-img-${index}`);
+      if (previewImg) previewImg.src = cdnUrl;
+
+      showToast(`Photo uploaded to Cloudinary for Card #${index + 1}!`, 'success');
+      renderFestiveSpecialsView();
+    } catch (err) {
+      showToast(`Cloudinary Upload Error: ${err.message}`, 'error');
+    } finally {
+      if (btn) {
+        btn.disabled = false;
+        btn.innerHTML = originalBtnHTML;
+      }
+    }
+  }
+
+  function updateFestiveCardImageURL(index, url) {
+    if (db.festiveSpecials.cards[index]) {
+      db.festiveSpecials.cards[index].image = url.trim();
+      const previewImg = document.getElementById(`festive-preview-img-${index}`);
+      if (previewImg) previewImg.src = url.trim();
+      showToast('Image URL updated.', 'info');
+    }
+  }
+
   function updateFestiveCard(index, field, value) {
     if (db.festiveSpecials.cards[index]) {
-      db.festiveSpecials.cards[index][field] = value;
-      showToast('Card updated locally. Click Save to apply.', 'info');
+      db.festiveSpecials.cards[index][field] = value.trim();
+      showToast('Card updated. Click Save Spotlight Changes to apply.', 'info');
     }
+  }
+
+  function toggleFestiveActive(isActive) {
+    db.festiveSpecials.isActive = isActive;
+    showToast(`Festive banner is now ${isActive ? 'ACTIVE' : 'HIDDEN'} on store.`, isActive ? 'success' : 'warning');
   }
 
   function saveFestiveSpecialsForm(btnElement) {
     withActionSpinner(btnElement, () => {
-      db.festiveSpecials.eyebrow = document.getElementById('festive-banner-eyebrow-input').value;
-      db.festiveSpecials.headline = document.getElementById('festive-banner-headline-input').value;
-    }, 'Festive Specials banner updated successfully!');
+      db.festiveSpecials.eyebrow = document.getElementById('festive-banner-eyebrow-input').value.trim();
+      db.festiveSpecials.headline = document.getElementById('festive-banner-headline-input').value.trim();
+      db.festiveSpecials.isActive = document.getElementById('festive-active-toggle')?.checked !== false;
+    }, 'Festive Spotlight banner updated and applied to store!');
   }
-
-  function renderCollectionsView() {
-    const grid = document.getElementById('collections-cards-grid');
-    if (!grid) return;
-
-    grid.innerHTML = db.featuredCollections.map(c => `
-      <div class="collection-admin-card">
-        <img src="${c.image}" alt="${c.title}" class="col-card-thumb">
         <div class="col-card-info">
           <h4 class="col-card-title">${c.title}</h4>
           <p class="col-card-tag">${c.tagline}</p>
@@ -1944,11 +2040,15 @@ window.AdminController = (function() {
     saveBannerForm,
     promptDeleteBanner,
 
-    // Festive & Collections
+    // Festive Specials CMS
     renderFestiveSpecialsView,
     updateFestiveCard,
+    updateFestiveCardImageURL,
+    triggerFestivePhotoUpload,
+    handleFestivePhotoUpload,
+    toggleFestiveActive,
     saveFestiveSpecialsForm,
-    renderCollectionsView,
+    uploadImageToCloudinary,
 
     // Marquee
     renderMarqueeView,

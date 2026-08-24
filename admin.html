@@ -553,30 +553,44 @@
           
           <div class="view-header-strip">
             <div>
-              <h1 class="view-heading-title">Festive Specials Spotlight</h1>
-              <p class="view-heading-sub">Manage the Categories Page headline banner and 3 curated spotlight cards.</p>
+              <h1 class="view-heading-title">Seasonal & Festive Spotlight</h1>
+              <p class="view-heading-sub">Control the top promotional campaign banner and 3 spotlight cards on the Shop page.</p>
             </div>
-            <button class="btn btn-primary" onclick="AdminController.saveFestiveSpecialsForm(this)">
-              <i class="ri-save-3-line"></i> Save Festive Changes
-            </button>
+            <div style="display: flex; align-items: center; gap: 14px;">
+              <label style="display: flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 700; color: #334155; cursor: pointer;">
+                <span class="switch-toggle switch-sm">
+                  <input type="checkbox" id="festive-active-toggle" checked onchange="AdminController.toggleFestiveActive(this.checked)">
+                  <span class="slider round"></span>
+                </span>
+                <span>Active on Store</span>
+              </label>
+              <button class="btn btn-primary" onclick="AdminController.saveFestiveSpecialsForm(this)">
+                <i class="ri-save-3-line"></i> Save Spotlight Changes
+              </button>
+            </div>
           </div>
 
-          <div class="admin-card" style="margin-bottom: 20px;">
-            <h3 class="card-heading" style="margin-bottom: 14px;">Main Spotlight Header</h3>
+          <div class="admin-card" style="margin-bottom: 24px; padding: 24px;">
+            <h3 class="card-heading" style="margin-bottom: 16px; font-size: 15px;">Main Campaign Headline</h3>
             <div class="form-grid-2">
               <div class="form-field-block">
-                <label class="form-label">Banner Eyebrow Text</label>
-                <input type="text" id="festive-banner-eyebrow-input" class="form-input">
+                <label class="form-label">Banner Eyebrow Tagline</label>
+                <input type="text" id="festive-banner-eyebrow-input" class="form-input" placeholder="e.g. ✨ Pure Organic Celebrations">
               </div>
               <div class="form-field-block">
-                <label class="form-label">Main Headline</label>
-                <input type="text" id="festive-banner-headline-input" class="form-input">
+                <label class="form-label">Main Campaign Headline</label>
+                <input type="text" id="festive-banner-headline-input" class="form-input" placeholder="e.g. Rakhi & Festive Specials">
               </div>
             </div>
           </div>
 
-          <div class="admin-card">
-            <h3 class="card-heading" style="margin-bottom: 14px;">Curated 3 Mini-Cards</h3>
+          <div class="admin-card" style="padding: 24px;">
+            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 18px;">
+              <div>
+                <h3 class="card-heading" style="font-size: 15px; margin-bottom: 2px;">Curated 3 Spotlight Cards</h3>
+                <p style="font-size: 12.5px; color: var(--text-muted);">Each card links directly to a filtered category on the store with custom photos and titles.</p>
+              </div>
+            </div>
             <div id="festive-cards-container" class="cards-responsive-grid"></div>
           </div>
 
