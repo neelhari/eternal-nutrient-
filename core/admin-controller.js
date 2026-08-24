@@ -831,14 +831,32 @@ window.AdminController = (function() {
     openModal('modal-product-form');
   }
 
+  async function withActionSpinner(btn, actionFn) {
+    let originalHtml = '';
+    if (btn) {
+      originalHtml = btn.innerHTML;
+      btn.disabled = true;
+      btn.innerHTML = `<i class="ri-loader-4-line ri-spin"></i> Saving...`;
+    }
+    try {
+      await actionFn();
+    } catch (err) {
+      console.error('Action error:', err);
+      showToast(err.message || 'Operation failed', 'error');
+    } finally {
+      if (btn) {
+        btn.disabled = false;
+        btn.innerHTML = originalHtml;
+      }
+    }
+  }
+
   async function saveProductForm(btn) {
     const title = document.getElementById('prod-form-title')?.value.trim();
     const category = document.getElementById('prod-form-category')?.value;
-    const image = document.getElementById('prod-form-image')?.value.trim() || 'assets/prod_honey_studio.jpg';
     const description = document.getElementById('prod-form-description')?.value.trim() || '';
     const inStock = document.getElementById('prod-form-in-stock')?.checked ?? true;
     const isBestseller = document.getElementById('prod-form-is-bestseller')?.checked ?? false;
-    const isFeatured = document.getElementById('prod-form-is-featured')?.checked ?? false;
     const isNewArrival = document.getElementById('prod-form-is-new')?.checked ?? false;
     const prodId = document.getElementById('prod-modal-id')?.value;
 
