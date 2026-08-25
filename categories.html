@@ -40,12 +40,12 @@
   <!-- Unified Main Container (Banner First ➔ Search Field ➔ Horizontal Categories ➔ Product Grid) -->
   <main class="categories-unified-page">
     
-    <!-- 1. Festive Specials Showcase Banner (Top) -->
-    <div class="festive-showcase-banner">
+    <!-- 1. Festive Specials Showcase Banner (Top Rich Brown Container with 2 Spotlight Cards) -->
+    <div id="festive-showcase-banner" class="festive-showcase-banner">
       <div class="festive-banner-head">
         <div class="festive-head-text">
-          <span class="festive-eyebrow">✨ Pure Organic Celebrations</span>
-          <div class="festive-main-title">Rakhi & Festive Specials</div>
+          <span class="festive-eyebrow" id="festive-eyebrow-text">✨ Pure Organic Celebrations</span>
+          <div class="festive-main-title" id="festive-headline-text">Rakhi & Festive Specials</div>
         </div>
         <div class="festive-badge-chip">
           <i class="ri-sparkling-fill" style="color: #E2C095;"></i>
@@ -54,31 +54,20 @@
       </div>
 
       <div class="festive-spotlight-cards-row">
-        <!-- Card 1: Rakhi Specials (Dates Laddus) -->
-        <div class="festive-mini-card" onclick="selectCategory('Dates Laddu\'s')">
+        <!-- Card 1: Dates Laddus -->
+        <div class="festive-mini-card" id="festive-card-1" onclick="selectCategory('Dates Laddu\'s')">
           <div class="festive-mini-thumb">
-            <img src="assets/prod_laddu_studio.jpg" alt="Dates Laddus">
+            <img id="festive-card-img-1" src="assets/prod_laddu_studio.jpg" alt="Dates Laddus">
           </div>
-          <div class="festive-mini-title">Rakhi Specials</div>
-          <div class="festive-mini-sub">Dates Laddus</div>
+          <div class="festive-mini-title" id="festive-card-title-1">Dates Laddus</div>
         </div>
 
         <!-- Card 2: Raw Honey -->
-        <div class="festive-mini-card" onclick="selectCategory('Honey')">
+        <div class="festive-mini-card" id="festive-card-2" onclick="selectCategory('Honey')">
           <div class="festive-mini-thumb">
-            <img src="assets/prod_honey_studio.jpg" alt="Raw Forest Honey">
+            <img id="festive-card-img-2" src="assets/prod_honey_studio.jpg" alt="Raw Forest Honey">
           </div>
-          <div class="festive-mini-title">Forest Pure</div>
-          <div class="festive-mini-sub">Raw Honey</div>
-        </div>
-
-        <!-- Card 3: Healthy Cookies & Snacks -->
-        <div class="festive-mini-card" onclick="selectCategory('Millet Biscuits')">
-          <div class="festive-mini-thumb">
-            <img src="assets/prod_cookie_studio.jpg" alt="Millet Cookies">
-          </div>
-          <div class="festive-mini-title">Immunity Bites</div>
-          <div class="festive-mini-sub">Millet Cookies</div>
+          <div class="festive-mini-title" id="festive-card-title-2">Raw Honey</div>
         </div>
       </div>
     </div>
@@ -515,7 +504,50 @@
       window.open(`https://wa.me/${waNumber}?text=${encodeURIComponent(msg)}`, '_blank');
     }
 
+    function syncDualBannersUI() {
+      let festiveData = null;
+      try {
+        const stored = localStorage.getItem('en_festive_specials');
+        if (stored) festiveData = JSON.parse(stored);
+      } catch(e){}
+
+      const banner = document.getElementById('festive-showcase-banner');
+      if (!banner) return;
+
+      if (festiveData && festiveData.isActive === false) {
+        banner.style.display = 'none';
+        return;
+      }
+
+      banner.style.display = 'block';
+      if (festiveData && Array.isArray(festiveData.cards)) {
+        if (festiveData.cards[0]) {
+          const img1 = document.getElementById('festive-card-img-1');
+          const title1 = document.getElementById('festive-card-title-1');
+          const card1 = document.getElementById('festive-card-1');
+          if (img1) img1.src = festiveData.cards[0].image || 'assets/prod_laddu_studio.jpg';
+          if (title1) title1.textContent = festiveData.cards[0].targetCategory || "Dates Laddus";
+          if (card1 && festiveData.cards[0].targetCategory) {
+            const catName = festiveData.cards[0].targetCategory;
+            card1.onclick = () => selectCategory(catName);
+          }
+        }
+        if (festiveData.cards[1]) {
+          const img2 = document.getElementById('festive-card-img-2');
+          const title2 = document.getElementById('festive-card-title-2');
+          const card2 = document.getElementById('festive-card-2');
+          if (img2) img2.src = festiveData.cards[1].image || 'assets/prod_honey_studio.jpg';
+          if (title2) title2.textContent = festiveData.cards[1].targetCategory || "Raw Honey";
+          if (card2 && festiveData.cards[1].targetCategory) {
+            const catName = festiveData.cards[1].targetCategory;
+            card2.onclick = () => selectCategory(catName);
+          }
+        }
+      }
+    }
+
     window.addEventListener('DOMContentLoaded', () => {
+      syncDualBannersUI();
       const params = new URLSearchParams(window.location.search);
       const catParam = params.get('cat');
       if (catParam && CATALOG[catParam]) {

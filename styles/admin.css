@@ -1054,6 +1054,53 @@ html, body {
   color: #FFFFFF;
 }
 
+/* Modern Spacious Table Action Buttons */
+.action-cell-wrap {
+  display: inline-flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 12px;
+  padding-right: 12px;
+}
+
+.action-icon-square {
+  width: 36px;
+  height: 36px;
+  border-radius: 9px;
+  border: 1px solid #E7E5E4;
+  background: #FAFAF9;
+  color: #57534E;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 15px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  padding: 0;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+}
+
+.action-icon-square:hover {
+  background: #2D471E;
+  border-color: #2D471E;
+  color: #FFFFFF;
+  transform: translateY(-1px);
+  box-shadow: 0 3px 8px rgba(45, 71, 30, 0.2);
+}
+
+.action-icon-square.action-delete {
+  background: #FEF2F2;
+  border-color: #FECACA;
+  color: #DC2626;
+}
+
+.action-icon-square.action-delete:hover {
+  background: #DC2626;
+  border-color: #DC2626;
+  color: #FFFFFF;
+  box-shadow: 0 3px 8px rgba(220, 38, 38, 0.25);
+}
+
 /* Core Buttons */
 .btn {
   display: inline-flex;

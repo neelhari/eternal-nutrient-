@@ -88,94 +88,100 @@ body {
   box-sizing: border-box;
 }
 
-/* 1. Festive Showcase Banner (Top) */
+/* 1. Festive Showcase Banner (Rich Brown Heritage Container with 2 Spotlight Cards) */
 .festive-showcase-banner {
-  background: linear-gradient(135deg, #2D1A15 0%, #1A0D0A 100%);
-  border-radius: 18px;
-  padding: 14px 14px 16px;
-  margin-bottom: 14px;
-  color: #FFFFFF;
-  box-shadow: 0 6px 20px rgba(45, 26, 21, 0.15);
-  border: 1px solid rgba(226, 192, 149, 0.2);
+  flex-shrink: 0;
   width: 100%;
+  background: linear-gradient(135deg, #241410 0%, #3D221A 55%, #1C0E0A 100%);
+  border-radius: 16px;
+  padding: 12px 14px 14px;
+  margin-bottom: 14px;
+  box-shadow: 0 4px 16px rgba(40, 22, 18, 0.18);
+  position: relative;
+  overflow: hidden;
+  border: 1px solid rgba(214, 180, 140, 0.25);
+  box-sizing: border-box;
 }
 
 .festive-banner-head {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 12px;
+  margin-bottom: 10px;
+  padding: 0 2px;
+}
+
+.festive-head-text {
+  display: flex;
+  flex-direction: column;
 }
 
 .festive-eyebrow {
-  font-size: 10.5px;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.6px;
+  font-size: 9px;
+  font-weight: 800;
   color: #E2C095;
-  display: block;
-  margin-bottom: 2px;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
 }
 
 .festive-main-title {
-  font-family: 'DM Serif Display', Georgia, serif;
-  font-size: 17px;
+  font-family: 'Noto Serif', Georgia, serif;
+  font-style: italic;
+  font-size: 16px;
   font-weight: 700;
-  color: #FFFFFF;
+  color: #FFFDF9;
   line-height: 1.2;
 }
 
 .festive-badge-chip {
-  background: rgba(226, 192, 149, 0.15);
-  border: 1px solid rgba(226, 192, 149, 0.35);
+  background: rgba(226, 192, 149, 0.18);
+  color: #F8E2C2;
+  font-size: 9.5px;
+  font-weight: 800;
+  padding: 3px 9px;
   border-radius: 999px;
-  padding: 3px 10px;
-  font-size: 10px;
-  font-weight: 700;
-  color: #F8ECD9;
+  border: 1px solid rgba(226, 192, 149, 0.35);
   display: flex;
   align-items: center;
   gap: 4px;
 }
 
 .festive-spotlight-cards-row {
-  display: flex;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
   gap: 10px;
-  overflow-x: auto;
-  padding-bottom: 4px;
-  scrollbar-width: none;
-  -webkit-overflow-scrolling: touch;
-}
-
-.festive-spotlight-cards-row::-webkit-scrollbar {
-  display: none;
+  width: 100%;
 }
 
 .festive-mini-card {
-  flex: 0 0 100px;
-  background: rgba(255, 255, 255, 0.08);
-  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: #FFFDF9;
   border-radius: 12px;
-  padding: 8px 6px 10px;
+  padding: 8px 8px 8px;
   text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   cursor: pointer;
-  transition: all 0.2s ease;
-  backdrop-filter: blur(4px);
+  transition: transform 0.18s ease, box-shadow 0.18s ease;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+  text-decoration: none;
 }
 
 .festive-mini-card:hover {
-  background: rgba(255, 255, 255, 0.15);
   transform: translateY(-2px);
+  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.2);
 }
 
 .festive-mini-thumb {
-  width: 54px;
-  height: 54px;
-  border-radius: 50%;
+  width: 100%;
+  height: 90px;
+  border-radius: 8px;
   overflow: hidden;
-  margin: 0 auto 6px;
-  border: 1.5px solid #E2C095;
-  background: #FFFFFF;
+  background: #F8F5F0;
+  margin-bottom: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .festive-mini-thumb img {
@@ -185,7 +191,16 @@ body {
 }
 
 .festive-mini-title {
-  font-size: 11px;
+  font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+  font-size: 12px;
+  font-weight: 800;
+  color: #281612;
+  line-height: 1.2;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  width: 100%;
+}
   font-weight: 700;
   color: #FFFFFF;
   white-space: nowrap;
@@ -375,134 +390,7 @@ body {
   }
 }
 
-/* Premium Festive / Rakhi Specials Banner (Onam Showcase Style) */
-.festive-showcase-banner {
-  flex-shrink: 0;
-  width: 100%;
-  background: linear-gradient(135deg, #241410 0%, #3D221A 55%, #1C0E0A 100%);
-  border-radius: 14px;
-  padding: 10px 10px 10px;
-  margin-bottom: 14px;
-  box-shadow: 0 4px 14px rgba(40, 22, 18, 0.15);
-  position: relative;
-  overflow: hidden;
-  border: 1px solid rgba(214, 180, 140, 0.25);
-  box-sizing: border-box;
-}
-
-.festive-banner-head {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 8px;
-  padding: 0 2px;
-}
-
-.festive-head-text {
-  display: flex;
-  flex-direction: column;
-}
-
-.festive-eyebrow {
-  font-size: 8.5px;
-  font-weight: 800;
-  color: #E2C095;
-  letter-spacing: 0.8px;
-  text-transform: uppercase;
-}
-
-.festive-main-title {
-  font-family: 'Noto Serif', Georgia, serif;
-  font-style: italic;
-  font-size: 14.5px;
-  font-weight: 700;
-  color: #FFFDF9;
-  line-height: 1.2;
-}
-
-.festive-badge-chip {
-  background: rgba(226, 192, 149, 0.18);
-  color: #F8E2C2;
-  font-size: 9px;
-  font-weight: 800;
-  padding: 2px 8px;
-  border-radius: 999px;
-  border: 1px solid rgba(226, 192, 149, 0.35);
-  display: flex;
-  align-items: center;
-  gap: 3px;
-}
-
-.festive-spotlight-cards-row {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 6px;
-  width: 100%;
-}
-
-.festive-mini-card {
-  background: #FFFDF9;
-  border-radius: 10px;
-  padding: 6px 4px 6px;
-  text-align: center;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  cursor: pointer;
-  transition: transform 0.18s ease, box-shadow 0.18s ease;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.12);
-  text-decoration: none;
-}
-
-.festive-mini-card:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-}
-
-.festive-mini-card:active {
-  transform: scale(0.96);
-}
-
-.festive-mini-thumb {
-  width: 100%;
-  aspect-ratio: 1 / 1;
-  max-height: 52px;
-  border-radius: 6px;
-  overflow: hidden;
-  background: #F8F5F0;
-  margin-bottom: 4px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.festive-mini-thumb img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-.festive-mini-title {
-  font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
-  font-size: 9.5px;
-  font-weight: 800;
-  color: #281612;
-  line-height: 1.15;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  width: 100%;
-}
-
-.festive-mini-sub {
-  font-size: 8px;
-  font-weight: 600;
-  color: #7A6965;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  width: 100%;
-}
+/* End of Navigation Layout */
 
 /* ==========================================================================
    UNIFIED 2-COLUMN PRODUCT GRID & CARDS (BOTTOM-ALIGNED ADD BUTTON)

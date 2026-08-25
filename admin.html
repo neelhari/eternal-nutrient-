@@ -87,13 +87,7 @@
             <li>
               <button class="sidebar-nav-btn" data-tab="banners" onclick="AdminController.switchTab('banners')">
                 <i class="ri-image-line"></i>
-                <span>Hero Banners</span>
-              </button>
-            </li>
-            <li>
-              <button class="sidebar-nav-btn" data-tab="festive" onclick="AdminController.switchTab('festive')">
-                <i class="ri-sparkling-line"></i>
-                <span>Festive Specials</span>
+                <span>Store Banners</span>
               </button>
             </li>
             <li>
@@ -400,14 +394,37 @@
           <div class="view-header-strip">
             <div>
               <h1 class="view-heading-title">Category Management</h1>
-              <p class="view-heading-sub">Organize circular store categories, avatars, sort orders, and visibility switches.</p>
+              <p class="view-heading-sub">Organize circular store categories, avatars, sort orders, and storefront visibility switches.</p>
             </div>
             <button class="btn btn-primary" onclick="AdminController.openCategoryModal()">
-              <i class="ri-add-line"></i> Add Category
+              <i class="ri-add-line"></i> + Add Category
             </button>
           </div>
 
-          <div id="categories-cards-grid" class="cards-responsive-grid"></div>
+          <!-- Category Search Bar -->
+          <div class="filter-toolbar-strip" style="margin-bottom: 16px;">
+            <div class="catalog-search-wrap">
+              <input type="text" id="cat-search-input" class="catalog-search-input" placeholder="Search category by name or tagline..." oninput="AdminController.renderCategoriesView()">
+              <i class="ri-search-2-line catalog-search-icon"></i>
+            </div>
+          </div>
+
+          <!-- Categories Table -->
+          <div class="table-responsive-wrapper">
+            <table class="admin-data-table">
+              <thead>
+                <tr>
+                  <th style="width: 24%;">Category</th>
+                  <th style="width: 32%;">Tagline / Subtitle</th>
+                  <th style="width: 15%;">Linked Products</th>
+                  <th style="width: 12%;">Display Order</th>
+                  <th style="width: 8%;">Status</th>
+                  <th style="text-align: right; padding-right: 28px; width: 9%;">Actions</th>
+                </tr>
+              </thead>
+              <tbody id="categories-table-body"></tbody>
+            </table>
+          </div>
 
         </section>
 
@@ -524,70 +541,110 @@
         </section>
 
         <!-- ================================================================= -->
-        <!-- VIEW: HERO BANNERS CMS -->
+        <!-- VIEW: STORE BANNERS & PROMOTIONS -->
         <!-- ================================================================= -->
         <section id="view-banners" class="admin-view-panel">
           
+          <!-- Top Hero Carousel Section -->
           <div class="view-header-strip">
             <div>
               <h1 class="view-heading-title">Hero Carousel Banners</h1>
-              <p class="view-heading-sub">Control homepage rotating hero banners, headlines, CTA links, and slide ordering.</p>
+              <p class="view-heading-sub">Rotating graphic banners displayed at the top of the homepage.</p>
             </div>
-            <button class="btn btn-primary" onclick="AdminController.openBannerModal()">
-              <i class="ri-add-line"></i> Add Hero Banner
-            </button>
-          </div>
-
-          <div id="banners-cards-grid" class="cards-responsive-grid"></div>
-
-        </section>
-
-        <!-- ================================================================= -->
-        <!-- VIEW: FESTIVE SPECIALS -->
-        <!-- ================================================================= -->
-        <section id="view-festive" class="admin-view-panel">
-          
-          <div class="view-header-strip">
-            <div>
-              <h1 class="view-heading-title">Seasonal & Festive Spotlight</h1>
-              <p class="view-heading-sub">Control the top promotional campaign banner and 3 spotlight cards on the Shop page.</p>
-            </div>
-            <div style="display: flex; align-items: center; gap: 14px;">
-              <label style="display: flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 700; color: #334155; cursor: pointer;">
-                <span class="switch-toggle switch-sm">
-                  <input type="checkbox" id="festive-active-toggle" checked onchange="AdminController.toggleFestiveActive(this.checked)">
-                  <span class="slider round"></span>
-                </span>
-                <span>Active on Store</span>
+            <div style="display: flex; align-items: center; gap: 10px;">
+              <label class="btn btn-outline" style="cursor: pointer; display: flex; align-items: center; gap: 6px; padding: 10px 16px; border: 1.5px solid #CBD5E1; border-radius: 10px; background: #FFFFFF; font-weight: 700; color: #334155;">
+                <i class="ri-upload-cloud-2-line" style="color: #2D471E; font-size: 16px;"></i> Upload Multiple Banners
+                <input type="file" id="hero-multiple-upload-input" multiple accept="image/*" style="display: none;" onchange="AdminController.uploadMultipleBanners(this)">
               </label>
-              <button class="btn btn-primary" onclick="AdminController.saveFestiveSpecialsForm(this)">
-                <i class="ri-save-3-line"></i> Save Spotlight Changes
+              <button class="btn btn-primary" onclick="AdminController.openBannerModal()">
+                <i class="ri-add-line"></i> + Add Hero Banner
               </button>
             </div>
           </div>
 
-          <div class="admin-card" style="margin-bottom: 24px; padding: 24px;">
-            <h3 class="card-heading" style="margin-bottom: 16px; font-size: 15px;">Main Campaign Headline</h3>
-            <div class="form-grid-2">
-              <div class="form-field-block">
-                <label class="form-label">Banner Eyebrow Tagline</label>
-                <input type="text" id="festive-banner-eyebrow-input" class="form-input" placeholder="e.g. ✨ Pure Organic Celebrations">
-              </div>
-              <div class="form-field-block">
-                <label class="form-label">Main Campaign Headline</label>
-                <input type="text" id="festive-banner-headline-input" class="form-input" placeholder="e.g. Rakhi & Festive Specials">
-              </div>
+          <div class="table-responsive-wrapper" style="margin-bottom: 36px;">
+            <table class="admin-data-table">
+              <thead>
+                <tr>
+                  <th style="width: 28%;">Banner Graphic</th>
+                  <th style="width: 32%;">Headline / Campaign</th>
+                  <th style="width: 20%;">Target Destination</th>
+                  <th style="width: 8%;">Order</th>
+                  <th style="width: 6%;">Status</th>
+                  <th style="text-align: right; padding-right: 28px; width: 6%;">Actions</th>
+                </tr>
+              </thead>
+              <tbody id="banners-table-body"></tbody>
+            </table>
+          </div>
+
+          <!-- Mid-Page Festive & Seasonal Showcase Section -->
+          <div class="view-header-strip" style="border-top: 1px solid #E7E5E4; padding-top: 28px; margin-top: 20px;">
+            <div>
+              <h1 class="view-heading-title" style="font-size: 18px;">Mid-Page Festive Showcase (2 Spotlight Cards)</h1>
+              <p class="view-heading-sub">Curated seasonal showcase banner with 2 spotlight product cards linking directly to categories.</p>
+            </div>
+            <div style="display: flex; align-items: center; gap: 14px;">
+              <label class="switch-ios" title="Toggle Festive Section Active">
+                <input type="checkbox" id="festive-active-toggle" checked onchange="AdminController.toggleFestiveActive(this.checked)">
+                <span class="slider-ios"></span>
+              </label>
+              <button class="btn btn-primary" onclick="AdminController.saveFestiveSpecialsForm(this)">
+                <i class="ri-save-3-line"></i> Save Festive Changes
+              </button>
             </div>
           </div>
 
-          <div class="admin-card" style="padding: 24px;">
-            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 18px;">
-              <div>
-                <h3 class="card-heading" style="font-size: 15px; margin-bottom: 2px;">Curated 3 Spotlight Cards</h3>
-                <p style="font-size: 12.5px; color: var(--text-muted);">Each card links directly to a filtered category on the store with custom photos and titles.</p>
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 24px;">
+            
+            <!-- Spotlight Card Slot 1 -->
+            <div class="admin-card" style="padding: 20px; border: 1px solid #E7E5E4; border-radius: 16px;">
+              <div style="font-size: 14px; font-weight: 800; color: #1C1917; margin-bottom: 12px;">🌟 Left Spotlight Card (Slot 1)</div>
+              
+              <div class="form-field-block">
+                <label class="form-label">Product Graphic (Upload or Cloudinary URL)</label>
+                <div style="display: flex; gap: 8px; align-items: center;">
+                  <input type="text" id="promo-slot1-img" class="form-input" placeholder="https://... or assets/..." onchange="AdminController.updateImagePreview('promo-slot1-img', 'promo-slot1-preview')">
+                  <label class="btn btn-sm btn-outline" style="cursor: pointer; white-space: nowrap; display: flex; align-items: center; gap: 6px; padding: 9px 14px; height: 42px; border: 1px solid #CBD5E1; border-radius: 8px;">
+                    <i class="ri-upload-cloud-2-line"></i> Upload
+                    <input type="file" accept="image/*" style="display: none;" onchange="AdminController.uploadPromoCardImage(0, this)">
+                  </label>
+                </div>
+                <div style="margin-top: 10px; border-radius: 12px; overflow: hidden; border: 1px solid #E2E8F0; height: 110px; background: #F8FAFC;">
+                  <img id="promo-slot1-preview" src="assets/prod_laddu_studio.jpg" style="width: 100%; height: 100%; object-fit: cover;">
+                </div>
+              </div>
+
+              <div class="form-field-block">
+                <label class="form-label">Link Card To Category</label>
+                <select id="promo-slot1-category" class="form-select" style="width: 100%; height: 42px; border-radius: 8px; border: 1.5px solid #E7E5E4; padding: 0 12px; font-weight: 600; background: #FFFFFF; font-size: 13px; outline: none;"></select>
               </div>
             </div>
-            <div id="festive-cards-container" class="cards-responsive-grid"></div>
+
+            <!-- Spotlight Card Slot 2 -->
+            <div class="admin-card" style="padding: 20px; border: 1px solid #E7E5E4; border-radius: 16px;">
+              <div style="font-size: 14px; font-weight: 800; color: #1C1917; margin-bottom: 12px;">🌟 Right Spotlight Card (Slot 2)</div>
+              
+              <div class="form-field-block">
+                <label class="form-label">Product Graphic (Upload or Cloudinary URL)</label>
+                <div style="display: flex; gap: 8px; align-items: center;">
+                  <input type="text" id="promo-slot2-img" class="form-input" placeholder="https://... or assets/..." onchange="AdminController.updateImagePreview('promo-slot2-img', 'promo-slot2-preview')">
+                  <label class="btn btn-sm btn-outline" style="cursor: pointer; white-space: nowrap; display: flex; align-items: center; gap: 6px; padding: 9px 14px; height: 42px; border: 1px solid #CBD5E1; border-radius: 8px;">
+                    <i class="ri-upload-cloud-2-line"></i> Upload
+                    <input type="file" accept="image/*" style="display: none;" onchange="AdminController.uploadPromoCardImage(1, this)">
+                  </label>
+                </div>
+                <div style="margin-top: 10px; border-radius: 12px; overflow: hidden; border: 1px solid #E2E8F0; height: 110px; background: #F8FAFC;">
+                  <img id="promo-slot2-preview" src="assets/prod_honey_studio.jpg" style="width: 100%; height: 100%; object-fit: cover;">
+                </div>
+              </div>
+
+              <div class="form-field-block">
+                <label class="form-label">Link Card To Category</label>
+                <select id="promo-slot2-category" class="form-select" style="width: 100%; height: 42px; border-radius: 8px; border: 1.5px solid #E7E5E4; padding: 0 12px; font-weight: 600; background: #FFFFFF; font-size: 13px; outline: none;"></select>
+              </div>
+            </div>
+
           </div>
 
         </section>
@@ -1003,14 +1060,10 @@
             <label class="form-label">Sort Order</label>
             <input type="number" id="cat-form-sort" class="form-input" value="1">
           </div>
-          <div style="display: flex; gap: 20px; margin-top: 10px;">
-            <label style="display: flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 600; cursor: pointer;">
-              <input type="checkbox" id="cat-form-show-home" checked>
-              <span>Show on Homepage Shelf</span>
-            </label>
-            <label style="display: flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 600; cursor: pointer;">
-              <input type="checkbox" id="cat-form-show-shop" checked>
-              <span>Show in Shop Tabs</span>
+          <div style="margin-top: 10px;">
+            <label style="display: flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 700; color: #15803D; cursor: pointer;">
+              <input type="checkbox" id="cat-form-active" checked>
+              <span>Active & Visible on Store</span>
             </label>
           </div>
         </form>
@@ -1036,51 +1089,43 @@
       <div class="modal-scroll-body">
         <form id="form-banner" onsubmit="event.preventDefault()">
           <input type="hidden" id="banner-modal-id">
+          
           <div class="form-field-block">
-            <label class="form-label">Eyebrow Tag</label>
-            <input type="text" id="banner-form-eyebrow" class="form-input" placeholder="e.g. Pure. Natural. Eternal.">
+            <label class="form-label">Banner Image (Upload or Cloudinary URL) *</label>
+            <div style="display: flex; gap: 10px; align-items: center;">
+              <input type="text" id="banner-form-desktop-img" class="form-input" placeholder="https://res.cloudinary.com/... or assets/..." required onchange="AdminController.updateImagePreview('banner-form-desktop-img', 'banner-form-img-preview')">
+              <label class="btn btn-sm btn-outline" style="cursor: pointer; white-space: nowrap; display: flex; align-items: center; gap: 6px; padding: 9px 14px; height: 42px; border: 1px solid #CBD5E1; border-radius: 8px;">
+                <i class="ri-upload-cloud-2-line"></i> Upload
+                <input type="file" id="banner-file-upload-input" accept="image/*" style="display: none;" onchange="AdminController.uploadBannerImage(this)">
+              </label>
+            </div>
+            <div style="margin-top: 10px; border-radius: 12px; overflow: hidden; border: 1px solid #E2E8F0; max-height: 140px; background: #000;">
+              <img id="banner-form-img-preview" src="assets/hero_banner.jpg" style="width: 100%; height: 140px; object-fit: cover;">
+            </div>
           </div>
+
           <div class="form-field-block">
-            <label class="form-label">Main Headline *</label>
+            <label class="form-label">Banner Name / Headline *</label>
             <input type="text" id="banner-form-headline" class="form-input" placeholder="e.g. Goodness from Nature for a healthier you." required>
           </div>
-          <div class="form-field-block">
-            <label class="form-label">Sub-text / Tagline</label>
-            <input type="text" id="banner-form-tagline" class="form-input">
-          </div>
+
           <div class="form-grid-2">
             <div class="form-field-block">
-              <label class="form-label">CTA Button Text</label>
-              <input type="text" id="banner-form-btn-text" class="form-input" value="Shop Now">
+              <label class="form-label">Link Banner To Category</label>
+              <select id="banner-form-category" class="form-select" style="width: 100%; height: 42px; border-radius: 8px; border: 1.5px solid #E7E5E4; padding: 0 12px; font-weight: 600; background: #FFFFFF; font-size: 13px; outline: none;"></select>
             </div>
-            <div class="form-field-block">
-              <label class="form-label">Target Link</label>
-              <input type="text" id="banner-form-target-link" class="form-input" value="categories.html">
-            </div>
-          </div>
-          <div class="form-grid-2">
-            <div class="form-field-block">
-              <label class="form-label">Desktop Image Path</label>
-              <input type="text" id="banner-form-desktop-img" class="form-input" onchange="AdminController.updateImagePreview('banner-form-desktop-img', 'banner-form-img-preview')">
-            </div>
-            <div class="form-field-block">
-              <label class="form-label">Mobile Image Path</label>
-              <input type="text" id="banner-form-mobile-img" class="form-input">
-            </div>
-          </div>
-          <div class="form-grid-2" style="align-items: center;">
             <div class="form-field-block">
               <label class="form-label">Display Order</label>
               <input type="number" id="banner-form-order" class="form-input" value="1">
             </div>
-            <div class="form-field-block" style="padding-top: 20px;">
-              <label style="display: flex; align-items: center; gap: 8px; font-weight: 700; cursor: pointer;">
-                <input type="checkbox" id="banner-form-active" checked>
-                <span>Active in Carousel</span>
-              </label>
-            </div>
           </div>
-          <img id="banner-form-img-preview" src="assets/hero_banner.jpg" style="width: 100%; height: 120px; object-fit: cover; border-radius: 10px; border: 1px solid #E2E8F0; margin-top: 10px;">
+
+          <div style="margin-top: 10px;">
+            <label style="display: flex; align-items: center; gap: 8px; font-weight: 700; color: #15803D; cursor: pointer;">
+              <input type="checkbox" id="banner-form-active" checked>
+              <span>Active in Carousel</span>
+            </label>
+          </div>
         </form>
       </div>
       <div class="modal-footer-actions">
