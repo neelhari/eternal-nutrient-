@@ -762,3 +762,37 @@ body {
   padding: 2px 7px;
   border-radius: 999px;
 }
+
+/* ==========================================================================
+   DESKTOP RESPONSIVE LAYOUT (>= 900px)
+   ========================================================================== */
+@media (min-width: 900px) {
+  .categories-unified-page {
+    max-width: 1320px !important;
+    margin: 0 auto !important;
+    padding: 0 28px 60px !important;
+  }
+
+  .zepto-top-nav {
+    max-width: 1320px;
+    margin: 0 auto;
+    width: 100%;
+    padding: 14px 28px;
+  }
+
+  .zepto-right-products-grid {
+    grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)) !important;
+    gap: 20px !important;
+  }
+
+  .zepto-product-card {
+    border-radius: 16px !important;
+    padding: 12px !important;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+
+  .zepto-product-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 28px rgba(0, 0, 0, 0.08) !important;
+  }
+}

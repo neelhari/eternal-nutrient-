@@ -92,7 +92,7 @@
         </div>
       </div>
 
-      <!-- Right Minimalist Actions (Account + Wishlist) -->
+      <!-- Right Minimalist Actions (Account + Wishlist + Cart) -->
       <div class="header-actions-right" style="display: flex; align-items: center; gap: 10px;">
         <a href="account.html" class="auth-header-indicator" style="text-decoration: none; color: inherit; display: flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 700;">
           <i class="ri-user-3-line" style="font-size: 20px;"></i>
@@ -101,9 +101,25 @@
         <a href="account.html" class="minimal-wishlist-icon-btn" aria-label="Saved Wishlist" title="Wishlist">
           <i class="ri-heart-3-line"></i>
         </a>
+        <a href="cart.html" class="minimal-cart-icon-btn" aria-label="Shopping Cart" title="Cart" style="position: relative; display: flex; align-items: center; justify-content: center; width: 38px; height: 38px; border-radius: 50%; background: #F0F4EC; color: #281612; text-decoration: none;">
+          <i class="ri-shopping-bag-3-line" style="font-size: 20px;"></i>
+          <span class="dock-badge-pill minimal-cart-badge cart-badge" style="position: absolute; top: -3px; right: -3px; background: #386618; color: #FFFFFF; font-size: 10px; font-weight: 800; border-radius: 999px; min-width: 17px; height: 17px; display: none; align-items: center; justify-content: center; padding: 0 4px;">0</span>
+        </a>
       </div>
 
     </header>
+
+    <!-- Desktop Category Quick Nav (Hidden on Mobile) -->
+    <nav class="desktop-category-nav-bar">
+      <a href="index.html" class="desktop-nav-pill active"><i class="ri-home-4-line"></i> Home</a>
+      <a href="categories.html" class="desktop-nav-pill"><i class="ri-store-2-line"></i> All Products</a>
+      <a href="categories.html?category=Honey" class="desktop-nav-pill">🍯 Raw Honey</a>
+      <a href="categories.html?category=Laddus" class="desktop-nav-pill">🌰 Dates Laddus</a>
+      <a href="categories.html?category=Snacks" class="desktop-nav-pill">🌿 Millet Snacks</a>
+      <a href="categories.html?category=Pickles" class="desktop-nav-pill">🍋 Handmade Pickles</a>
+      <a href="account.html" class="desktop-nav-pill"><i class="ri-heart-line"></i> Wishlist</a>
+      <a href="cart.html" class="desktop-nav-pill"><i class="ri-shopping-cart-2-line"></i> Cart</a>
+    </nav>
 
     <!-- Mobile Secondary Search Bar -->
     <div class="mobile-search-bar">

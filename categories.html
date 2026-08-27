@@ -30,10 +30,14 @@
       <h1 class="zepto-page-heading" id="top-cat-header-title">All Organic Products</h1>
     </div>
 
-    <div class="zepto-header-actions">
-      <button class="zepto-head-icon" onclick="if (window.AuthEngine) AuthEngine.showWishlistModal('prod_1');" aria-label="Wishlist">
-        <i class="ri-heart-3-line"></i>
-      </button>
+    <div class="zepto-header-actions" style="display: flex; align-items: center; gap: 8px;">
+      <a href="account.html" class="zepto-head-icon" aria-label="Account" style="text-decoration: none; color: inherit; display: flex; align-items: center; justify-content: center;">
+        <i class="ri-user-3-line"></i>
+      </a>
+      <a href="cart.html" class="zepto-head-icon" aria-label="Cart" style="position: relative; text-decoration: none; color: inherit; display: flex; align-items: center; justify-content: center;">
+        <i class="ri-shopping-bag-3-line"></i>
+        <span class="dock-badge-pill minimal-cart-badge cart-badge" style="position: absolute; top: -2px; right: -2px; background: #386618; color: #FFFFFF; font-size: 10px; font-weight: 800; border-radius: 999px; min-width: 16px; height: 16px; display: none; align-items: center; justify-content: center; padding: 0 3px;">0</span>
+      </a>
     </div>
   </header>
 

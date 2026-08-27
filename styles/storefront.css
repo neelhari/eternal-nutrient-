@@ -2189,57 +2189,100 @@ body {
 /* ==========================================================================
    DESKTOP RESPONSIVE & PROPORTIONATE LAYOUT ENHANCEMENTS (>= 900px)
    ========================================================================== */
+.desktop-category-nav-bar {
+  display: none;
+}
+
 @media (min-width: 900px) {
   .site-wrapper {
-    max-width: 1180px !important;
+    max-width: 1320px !important;
     margin: 0 auto !important;
-    padding: 0 20px 40px !important;
+    padding: 0 28px 60px !important;
   }
 
   .main-header {
-    padding: 12px 24px !important;
+    padding: 14px 0 !important;
+    border-bottom: 1px solid #ECEEE8 !important;
+    margin-bottom: 4px !important;
+  }
+
+  /* Desktop Quick Category & Store Nav Bar */
+  .desktop-category-nav-bar {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 0 16px;
+    border-bottom: 1px solid #F0F3ED;
+    margin-bottom: 16px;
+    overflow-x: auto;
+  }
+
+  .desktop-nav-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 13px;
+    font-weight: 700;
+    color: #4B6344;
+    text-decoration: none;
+    padding: 7px 16px;
+    border-radius: 999px;
+    background: #F3F7F0;
+    transition: all 0.2s ease;
+    white-space: nowrap;
+  }
+
+  .desktop-nav-pill:hover {
+    background: #E4EFE0;
+    color: #2D5213;
+  }
+
+  .desktop-nav-pill.active {
+    background: #386618;
+    color: #FFFFFF;
   }
 
   .content-section {
-    padding: 20px 0 !important;
+    padding: 24px 0 !important;
   }
 
   .section-container {
-    padding: 20px 0 !important;
+    padding: 24px 0 !important;
   }
 
   .section-main-title.serif-title,
   .section-main-title,
   .section-main-heading {
-    font-size: 20px !important;
+    font-size: 22px !important;
+    letter-spacing: -0.3px !important;
   }
 
   /* Desktop 1:1 Hero Promo Banner */
   .hero-section-wrap {
-    padding: 16px 0 !important;
+    padding: 12px 0 20px !important;
   }
 
   .hero-banner-card {
-    min-height: 240px !important;
-    padding: 36px 44px !important;
-    border-radius: 20px !important;
+    min-height: 280px !important;
+    padding: 44px 52px !important;
+    border-radius: 24px !important;
   }
 
   .hero-title-main {
-    font-size: 26px !important;
+    font-size: 30px !important;
     line-height: 1.25 !important;
     margin-bottom: 16px !important;
   }
 
   .hero-sub-tag {
-    font-size: 13.5px !important;
-    margin-bottom: 6px !important;
+    font-size: 14px !important;
+    margin-bottom: 8px !important;
   }
 
   .hero-cta-btn {
-    font-size: 13.5px !important;
-    padding: 10px 24px !important;
-    border-radius: 8px !important;
+    font-size: 14px !important;
+    padding: 11px 26px !important;
+    border-radius: 10px !important;
   }
 
   /* Desktop Shop by Category (Neatly Grouped Shelf) */
@@ -2250,31 +2293,37 @@ body {
     gap: 32px !important;
     overflow: visible !important;
     padding: 8px 0 16px !important;
+    flex-wrap: wrap !important;
   }
 
   .cat-circle-card {
     flex: none !important;
-    width: 92px !important;
-    max-width: 92px !important;
+    width: 96px !important;
+    max-width: 96px !important;
+    transition: transform 0.2s ease;
+  }
+
+  .cat-circle-card:hover {
+    transform: translateY(-4px);
   }
 
   .cat-circle-frame {
-    width: 80px !important;
-    height: 80px !important;
-    border-width: 1.5px !important;
+    width: 86px !important;
+    height: 86px !important;
+    border-width: 2px !important;
   }
 
   .cat-circle-title {
-    font-size: 12.5px !important;
+    font-size: 13px !important;
     margin-top: 8px !important;
+    font-weight: 700 !important;
   }
 
-  /* Desktop Best Sellers Shelf (Compact 5-Column Grid) */
+  /* Desktop Best Sellers Shelf (Proportional Auto-Fill Grid) */
   .zepto-rail-container {
     display: grid !important;
-    grid-template-columns: repeat(5, minmax(0, 210px)) !important;
-    gap: 16px !important;
-    justify-content: flex-start !important;
+    grid-template-columns: repeat(auto-fill, minmax(210px, 1fr)) !important;
+    gap: 18px !important;
     overflow: visible !important;
     padding: 8px 0 16px !important;
   }
@@ -2282,14 +2331,20 @@ body {
   .zepto-item-card {
     width: 100% !important;
     min-width: 0 !important;
-    padding: 10px !important;
-    border-radius: 14px !important;
+    padding: 12px !important;
+    border-radius: 16px !important;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+
+  .zepto-item-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 24px rgba(0, 0, 0, 0.08) !important;
   }
 
   .zepto-img-box {
     aspect-ratio: 1.05 / 1 !important;
-    border-radius: 10px !important;
-    margin-bottom: 8px !important;
+    border-radius: 12px !important;
+    margin-bottom: 10px !important;
   }
 
   .zepto-card-title {
@@ -2297,44 +2352,52 @@ body {
   }
 
   .zepto-card-badge {
-    font-size: 10.5px !important;
+    font-size: 11px !important;
   }
 
   .zepto-price-num {
-    font-size: 15px !important;
+    font-size: 16px !important;
   }
 
   .zepto-btn-buynow {
-    font-size: 11.5px !important;
-    padding: 7px 4px !important;
+    font-size: 12px !important;
+    padding: 8px 6px !important;
+    border-radius: 8px !important;
   }
 
   .zepto-btn-cart-icon {
-    width: 30px !important;
-    height: 30px !important;
+    width: 32px !important;
+    height: 32px !important;
+    border-radius: 8px !important;
   }
 
-  /* Desktop Showcase Product Grid (4-Column Proportional Grid) */
+  /* Desktop Showcase Product Grid (4-5 Column Auto-Fill Grid) */
   .showcase-grid-responsive {
     display: grid !important;
-    grid-template-columns: repeat(4, minmax(0, 260px)) !important;
-    gap: 20px !important;
-    justify-content: flex-start !important;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)) !important;
+    gap: 22px !important;
+    width: 100% !important;
   }
 
   .product-showcase-card {
-    padding: 12px !important;
-    border-radius: 14px !important;
+    padding: 14px !important;
+    border-radius: 16px !important;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+
+  .product-showcase-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 28px rgba(0, 0, 0, 0.08) !important;
   }
 
   .product-photo-wrap {
     aspect-ratio: 1.08 / 1 !important;
-    border-radius: 10px !important;
-    margin-bottom: 10px !important;
+    border-radius: 12px !important;
+    margin-bottom: 12px !important;
   }
 
   .card-item-title {
-    font-size: 15.5px !important;
+    font-size: 16px !important;
   }
 
   .card-item-badge {
