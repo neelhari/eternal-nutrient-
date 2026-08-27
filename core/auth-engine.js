@@ -174,7 +174,38 @@
         return { success: false, error: 'Please enter your password.' };
       }
 
-      // 1. Check registered accounts DB first
+      // 1. Try Supabase Auth First
+      if (this.supabase && cleanIdent.includes('@')) {
+        try {
+          const { data, error } = await this.supabase.auth.signInWithPassword({
+            email: cleanIdent,
+            password: cleanPass
+          });
+          if (!error && data && data.user) {
+            const fullName = data.user.user_metadata?.full_name || cleanIdent.split('@')[0].replace(/[._]/g, ' ');
+            const user = {
+              id: data.user.id,
+              fullName: fullName,
+              email: data.user.email,
+              phone: data.user.user_metadata?.phone || '',
+              memberTier: 'Organic Club Member',
+              memberSince: 'Member 2026',
+              avatarInitials: this.getInitials(fullName)
+            };
+            this.setCurrentUser(user);
+            return { success: true, user };
+          } else if (error) {
+            console.warn('[AuthEngine] Supabase login error:', error.message);
+            if (error.message.toLowerCase().includes('invalid login credentials') || error.message.toLowerCase().includes('invalid credentials')) {
+              return { success: false, error: 'Invalid email or password. If you are new, please click Sign Up.' };
+            }
+          }
+        } catch(e) {
+          console.warn('[AuthEngine] Supabase login exception:', e);
+        }
+      }
+
+      // 2. Check local registered accounts backup
       try {
         const users = JSON.parse(localStorage.getItem(STORAGE_KEYS.USERS_DB) || '[]');
         const matched = users.find(u => u.email && u.email.toLowerCase() === cleanIdent);
@@ -197,30 +228,6 @@
         }
       } catch (err) {}
 
-      // 2. Try Supabase Auth as secondary check
-      if (this.supabase && cleanIdent.includes('@')) {
-        try {
-          const { data, error } = await this.supabase.auth.signInWithPassword({
-            email: cleanIdent,
-            password: cleanPass
-          });
-          if (!error && data && data.user) {
-            const fullName = data.user.user_metadata?.full_name || cleanIdent.split('@')[0].replace(/[._]/g, ' ');
-            const user = {
-              id: data.user.id,
-              fullName: fullName,
-              email: data.user.email,
-              phone: data.user.user_metadata?.phone || '',
-              memberTier: 'Organic Club Member',
-              memberSince: 'Member 2026',
-              avatarInitials: this.getInitials(fullName)
-            };
-            this.setCurrentUser(user);
-            return { success: true, user };
-          }
-        } catch(e) {}
-      }
-
       return { success: false, error: 'No account found with this email. Please click "Sign Up" to create an account.' };
     },
 
@@ -236,30 +243,42 @@
       if (!em || !em.includes('@')) return { success: false, error: 'Please enter a valid email address.' };
       if (!pass || pass.length < 6) return { success: false, error: 'Password must be at least 6 characters long.' };
 
-      // 1. Strict Duplicate Account Check
-      const users = JSON.parse(localStorage.getItem(STORAGE_KEYS.USERS_DB) || '[]');
-      const existing = users.find(u => u.email && u.email.toLowerCase() === em);
-      if (existing) {
-        return { success: false, error: 'An account with this email already exists. Please Log In.' };
-      }
+      let userId = 'usr_' + Date.now();
 
-      const userId = 'usr_' + Date.now();
-
-      // 2. Try Supabase Signup in background
+      // 1. Supabase Signup Call
       if (this.supabase) {
         try {
-          await this.supabase.auth.signUp({
+          const { data, error } = await this.supabase.auth.signUp({
             email: em,
             password: pass,
             options: {
               data: { full_name: name, phone: ph }
             }
           });
-        } catch(e) {}
+          if (error) {
+            console.warn('[AuthEngine] Supabase signup error:', error.message);
+            if (error.message.toLowerCase().includes('already registered') || error.message.toLowerCase().includes('already exists') || error.status === 422) {
+              return { success: false, error: 'An account with this email already exists. Please Log In.' };
+            }
+            return { success: false, error: error.message };
+          }
+          if (data && data.user) {
+            userId = data.user.id;
+          }
+        } catch(e) {
+          console.warn('[AuthEngine] Supabase signup exception:', e);
+        }
       }
 
-      // 3. Save new user in database
-      users.push({ id: userId, fullName: name, email: em, phone: ph, password: pass, createdAt: new Date().toISOString() });
+      // 2. Save in Local Users DB
+      const users = JSON.parse(localStorage.getItem(STORAGE_KEYS.USERS_DB) || '[]');
+      const existingIdx = users.findIndex(u => u.email && u.email.toLowerCase() === em);
+      const newUserRecord = { id: userId, fullName: name, email: em, phone: ph, password: pass, createdAt: new Date().toISOString() };
+      if (existingIdx >= 0) {
+        users[existingIdx] = newUserRecord;
+      } else {
+        users.push(newUserRecord);
+      }
       localStorage.setItem(STORAGE_KEYS.USERS_DB, JSON.stringify(users));
 
       const user = {
