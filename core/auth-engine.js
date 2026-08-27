@@ -121,14 +121,7 @@
         if (saved) {
           this.currentUser = JSON.parse(saved);
         } else {
-          // Default to logged-in sample user for great out-of-the-box demo if not explicitly logged out
-          const hasExplicitLogout = localStorage.getItem('en_explicit_logout');
-          if (!hasExplicitLogout) {
-            this.currentUser = DEFAULT_SAMPLE_USER;
-            localStorage.setItem(STORAGE_KEYS.USER, JSON.stringify(DEFAULT_SAMPLE_USER));
-          } else {
-            this.currentUser = null;
-          }
+          this.currentUser = null;
         }
       } catch (e) {
         this.currentUser = null;
