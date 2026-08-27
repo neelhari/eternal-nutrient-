@@ -2184,6 +2184,14 @@ body {
     color: #386618;
     font-weight: 800;
   }
+
+  /* On Mobile (Screen <= 768px): Clean Top Header - Hide account name and cart icon (handled in 4-tab bottom dock) */
+  .header-desktop-account-btn,
+  .auth-header-indicator,
+  .minimal-cart-icon-btn,
+  .minimal-wishlist-icon-btn {
+    display: none !important;
+  }
 }
 
 /* ==========================================================================

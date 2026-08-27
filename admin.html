@@ -171,15 +171,25 @@
     <!-- 2. MAIN VIEWPORT CANVAS -->
     <main class="admin-main-viewport">
       
-      <!-- Mobile-Only Header Bar (Hidden on Desktop) -->
-      <header class="admin-mobile-header">
-        <button class="mobile-menu-trigger" onclick="AdminController.toggleMobileSidebar()" aria-label="Open menu">
-          <i class="ri-menu-2-line"></i>
-        </button>
-        <div class="mobile-brand-title">Admin Portal</div>
-        <div id="header-store-status-pill-mobile" class="header-status-pill status-live" onclick="AdminController.toggleStoreStatusHeader()">
-          <span class="pulse-dot"></span>
-          <span>Open</span>
+      <!-- Desktop Top Header Bar with Universal Predictive Search -->
+      <header class="admin-desktop-topbar">
+        <div class="admin-global-search-container">
+          <div class="admin-global-search-box">
+            <i class="ri-search-2-line" style="font-size: 17px; color: #64748B;"></i>
+            <input type="text" id="admin-global-search-input" placeholder="Search products, orders, customers, franchise, categories... (Ctrl + K)" autocomplete="off" oninput="AdminController.handleGlobalCommandSearch(this.value)">
+            <span class="admin-search-kbd-hint">Ctrl + K</span>
+          </div>
+          <div id="admin-global-search-dropdown" class="admin-global-dropdown"></div>
+        </div>
+
+        <div style="display: flex; align-items: center; gap: 14px;">
+          <a href="index.html" target="_blank" class="btn btn-outline" style="font-size: 13px; padding: 7px 14px; gap: 6px; text-decoration: none;">
+            <i class="ri-external-link-line"></i> View Live Store
+          </a>
+          <div id="header-store-status-pill-desktop" class="header-status-pill status-live" onclick="AdminController.toggleStoreStatusHeader()" title="Toggle Store Status">
+            <span class="pulse-dot"></span>
+            <span>Store Open</span>
+          </div>
         </div>
       </header>
 

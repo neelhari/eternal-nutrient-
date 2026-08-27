@@ -2798,6 +2798,125 @@ window.AdminController = (function() {
   }
 
   // =========================================================================
+  // UNIVERSAL PREDICTIVE COMMAND SEARCH ENGINE (Ctrl + K)
+  // =========================================================================
+  function initGlobalSearch() {
+    // Keyboard shortcut (Ctrl+K or Cmd+K)
+    document.addEventListener('keydown', (e) => {
+      if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') {
+        e.preventDefault();
+        const input = document.getElementById('admin-global-search-input');
+        if (input) {
+          input.focus();
+          input.select();
+        }
+      }
+    });
+
+    const searchInput = document.getElementById('admin-global-search-input');
+    const dropdown = document.getElementById('admin-global-search-dropdown');
+    if (!searchInput || !dropdown) return;
+
+    // Close dropdown on outside click
+    document.addEventListener('click', (e) => {
+      if (!searchInput.contains(e.target) && !dropdown.contains(e.target)) {
+        dropdown.style.display = 'none';
+      }
+    });
+  }
+
+  function handleGlobalCommandSearch(query) {
+    const dropdown = document.getElementById('admin-global-search-dropdown');
+    if (!dropdown) return;
+
+    const q = (query || '').trim().toLowerCase();
+    if (!q) {
+      dropdown.style.display = 'none';
+      dropdown.innerHTML = '';
+      return;
+    }
+
+    const prods = (db.products || []).filter(p => (p.title || '').toLowerCase().includes(q) || (p.sku || '').toLowerCase().includes(q) || (p.category || '').toLowerCase().includes(q)).slice(0, 4);
+    const orders = (db.orders || []).filter(o => (o.orderNumber || o.order_number || '').toLowerCase().includes(q) || (o.customerName || o.customer_name || '').toLowerCase().includes(q) || (o.customerPhone || o.customer_phone || '').includes(q)).slice(0, 3);
+    const cats = (db.categories || []).filter(c => (c.name || '').toLowerCase().includes(q)).slice(0, 2);
+    const custs = (db.customers || []).filter(c => (c.name || '').toLowerCase().includes(q) || (c.phone || '').includes(q) || (c.email || '').toLowerCase().includes(q)).slice(0, 2);
+
+    if (prods.length === 0 && orders.length === 0 && cats.length === 0 && custs.length === 0) {
+      dropdown.innerHTML = `
+        <div style="padding: 20px 16px; text-align: center; color: #64748B; font-size: 13px;">
+          <i class="ri-search-line" style="font-size: 24px; color: #94A3B8; display: block; margin-bottom: 4px;"></i>
+          No results found for "<strong>${query}</strong>"
+        </div>
+      `;
+      dropdown.style.display = 'block';
+      return;
+    }
+
+    let html = '';
+
+    // Products
+    if (prods.length > 0) {
+      html += `<div style="padding: 6px 14px 4px; font-size: 11px; font-weight: 800; text-transform: uppercase; color: #64748B; letter-spacing: 0.5px;">Products</div>`;
+      html += prods.map(p => `
+        <div class="cmd-result-item" onclick="AdminController.switchTab('products'); AdminController.openProductModal('${p.id}'); document.getElementById('admin-global-search-dropdown').style.display='none';">
+          <img src="${p.image || 'assets/prod_honey_studio.jpg'}" class="cmd-item-thumb" alt="${p.title}">
+          <div>
+            <div style="font-weight: 700; color: #1E293B;">${p.title}</div>
+            <div style="font-size: 11.5px; color: #64748B;">${p.category || 'General'} • Stock: ${p.stockQty}</div>
+          </div>
+          <div class="cmd-item-price">₹${p.price}</div>
+        </div>
+      `).join('');
+    }
+
+    // Orders
+    if (orders.length > 0) {
+      html += `<div style="padding: 6px 14px 4px; font-size: 11px; font-weight: 800; text-transform: uppercase; color: #64748B; letter-spacing: 0.5px;">Orders</div>`;
+      html += orders.map(o => `
+        <div class="cmd-result-item" onclick="AdminController.switchTab('orders'); AdminController.openOrderInspector('${o.id}'); document.getElementById('admin-global-search-dropdown').style.display='none';">
+          <div style="width: 28px; height: 28px; border-radius: 6px; background: #E2E8F0; display: flex; align-items: center; justify-content: center; font-size: 14px; color: #1E293B;"><i class="ri-shopping-bag-3-line"></i></div>
+          <div>
+            <div style="font-weight: 700; color: #1E293B;">${o.orderNumber || o.order_number || o.id}</div>
+            <div style="font-size: 11.5px; color: #64748B;">${o.customerName || o.customer_name} • ${o.customerPhone || o.customer_phone}</div>
+          </div>
+          <div class="cmd-item-price">₹${o.totalAmount || o.total_amount || 0}</div>
+        </div>
+      `).join('');
+    }
+
+    // Customers
+    if (custs.length > 0) {
+      html += `<div style="padding: 6px 14px 4px; font-size: 11px; font-weight: 800; text-transform: uppercase; color: #64748B; letter-spacing: 0.5px;">Customers</div>`;
+      html += custs.map(c => `
+        <div class="cmd-result-item" onclick="AdminController.switchTab('customers'); document.getElementById('admin-global-search-dropdown').style.display='none';">
+          <div style="width: 28px; height: 28px; border-radius: 6px; background: #386618; color: #FFFFFF; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 800;">${(c.name || 'C').charAt(0).toUpperCase()}</div>
+          <div>
+            <div style="font-weight: 700; color: #1E293B;">${c.name}</div>
+            <div style="font-size: 11.5px; color: #64748B;">${c.phone || c.email}</div>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    // Categories
+    if (cats.length > 0) {
+      html += `<div style="padding: 6px 14px 4px; font-size: 11px; font-weight: 800; text-transform: uppercase; color: #64748B; letter-spacing: 0.5px;">Categories</div>`;
+      html += cats.map(c => `
+        <div class="cmd-result-item" onclick="AdminController.switchTab('categories'); document.getElementById('admin-global-search-dropdown').style.display='none';">
+          <div style="width: 28px; height: 28px; border-radius: 6px; background: #F1F5F9; display: flex; align-items: center; justify-content: center; font-size: 14px;"><i class="ri-apps-2-line"></i></div>
+          <div>
+            <div style="font-weight: 700; color: #1E293B;">${c.name}</div>
+            <div style="font-size: 11.5px; color: #64748B;">Sort Order: ${c.sort_order || 1}</div>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    dropdown.innerHTML = html;
+    dropdown.style.display = 'block';
+  }
+
+  // =========================================================================
   // INITIALIZATION ON DOM READY
   // =========================================================================
   function init() {

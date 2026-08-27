@@ -642,6 +642,11 @@ window.CloudDB = (function() {
       } catch (err) {
         return { success: false, error: err };
       }
+    }
+    if (mock) mock.announcementItems = annList;
+    return { success: true, local: true };
+  }
+
   // 9. FRANCHISE INQUIRIES PIPELINE
   async function saveFranchiseInquiry(inquiry) {
     const ts = Date.now();
