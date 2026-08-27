@@ -164,7 +164,7 @@
      * User Login with Email and Password
      */
     async login(identifier, password) {
-      const cleanIdent = (identifier || '').trim();
+      const cleanIdent = (identifier || '').trim().toLowerCase();
       const cleanPass = (password || '').trim();
 
       if (!cleanIdent) {
@@ -174,7 +174,30 @@
         return { success: false, error: 'Please enter your password.' };
       }
 
-      // 1. Try Supabase Auth First
+      // 1. Check registered accounts DB first
+      try {
+        const users = JSON.parse(localStorage.getItem(STORAGE_KEYS.USERS_DB) || '[]');
+        const matched = users.find(u => u.email && u.email.toLowerCase() === cleanIdent);
+
+        if (matched) {
+          if (matched.password !== cleanPass) {
+            return { success: false, error: 'Incorrect password. Please try again.' };
+          }
+          const user = {
+            id: matched.id || 'usr_' + Date.now(),
+            fullName: matched.fullName || cleanIdent.split('@')[0],
+            email: matched.email || cleanIdent,
+            phone: matched.phone || '',
+            memberTier: 'Organic Club Member',
+            memberSince: 'Member 2026',
+            avatarInitials: this.getInitials(matched.fullName || cleanIdent)
+          };
+          this.setCurrentUser(user);
+          return { success: true, user };
+        }
+      } catch (err) {}
+
+      // 2. Try Supabase Auth as secondary check
       if (this.supabase && cleanIdent.includes('@')) {
         try {
           const { data, error } = await this.supabase.auth.signInWithPassword({
@@ -194,45 +217,11 @@
             };
             this.setCurrentUser(user);
             return { success: true, user };
-          } else if (error) {
-            console.warn('[AuthEngine] Supabase login error:', error.message);
-            if (error.message.includes('Invalid login credentials')) {
-              return { success: false, error: 'Invalid email or password. If you do not have an account, please click Sign Up.' };
-            } else if (error.message.includes('Email not confirmed')) {
-              return { success: false, error: 'Please confirm your email address or sign up again.' };
-            }
           }
-        } catch(e) {
-          console.warn('[AuthEngine] Supabase login error:', e);
-        }
+        } catch(e) {}
       }
 
-      // 2. Strict Verification against Registered Local Accounts DB
-      try {
-        const users = JSON.parse(localStorage.getItem(STORAGE_KEYS.USERS_DB) || '[]');
-        const matched = users.find(u => u.email && u.email.toLowerCase() === cleanIdent.toLowerCase());
-
-        if (matched) {
-          if (matched.password && matched.password !== cleanPass) {
-            return { success: false, error: 'Incorrect password. Please try again.' };
-          }
-          const user = {
-            id: matched.id || 'usr_' + Date.now(),
-            fullName: matched.fullName || cleanIdent.split('@')[0],
-            email: matched.email || cleanIdent,
-            phone: matched.phone || '',
-            memberTier: 'Organic Club Member',
-            memberSince: 'Member 2026',
-            avatarInitials: this.getInitials(matched.fullName || cleanIdent)
-          };
-          this.setCurrentUser(user);
-          return { success: true, user };
-        }
-
-        return { success: false, error: 'No account found with this email. Please click "Sign Up" to create an account.' };
-      } catch (err) {
-        return { success: false, error: 'Authentication failed. Please try again.' };
-      }
+      return { success: false, error: 'No account found with this email. Please click "Sign Up" to create an account.' };
     },
 
     /**
@@ -247,45 +236,31 @@
       if (!em || !em.includes('@')) return { success: false, error: 'Please enter a valid email address.' };
       if (!pass || pass.length < 6) return { success: false, error: 'Password must be at least 6 characters long.' };
 
-      let supabaseRegistered = false;
-      let userId = 'usr_' + Date.now();
+      // 1. Strict Duplicate Account Check
+      const users = JSON.parse(localStorage.getItem(STORAGE_KEYS.USERS_DB) || '[]');
+      const existing = users.find(u => u.email && u.email.toLowerCase() === em);
+      if (existing) {
+        return { success: false, error: 'An account with this email already exists. Please Log In.' };
+      }
 
-      // 1. Supabase Signup
+      const userId = 'usr_' + Date.now();
+
+      // 2. Try Supabase Signup in background
       if (this.supabase) {
         try {
-          const { data, error } = await this.supabase.auth.signUp({
+          await this.supabase.auth.signUp({
             email: em,
             password: pass,
             options: {
               data: { full_name: name, phone: ph }
             }
           });
-          if (error) {
-            if (error.message.toLowerCase().includes('already registered')) {
-              return { success: false, error: 'An account with this email already exists. Please Log In.' };
-            }
-            console.warn('[AuthEngine] Supabase signup notice:', error.message);
-          } else if (data && data.user) {
-            supabaseRegistered = true;
-            userId = data.user.id;
-          }
-        } catch(e) {
-          console.warn('[AuthEngine] Supabase signup error:', e);
-        }
+        } catch(e) {}
       }
 
-      // 2. Save in Local Users DB
-      try {
-        const users = JSON.parse(localStorage.getItem(STORAGE_KEYS.USERS_DB) || '[]');
-        const existingIdx = users.findIndex(u => u.email && u.email.toLowerCase() === em);
-        const newUserRecord = { id: userId, fullName: name, email: em, phone: ph, password: pass, createdAt: new Date().toISOString() };
-        if (existingIdx >= 0) {
-          users[existingIdx] = newUserRecord;
-        } else {
-          users.push(newUserRecord);
-        }
-        localStorage.setItem(STORAGE_KEYS.USERS_DB, JSON.stringify(users));
-      } catch(e) {}
+      // 3. Save new user in database
+      users.push({ id: userId, fullName: name, email: em, phone: ph, password: pass, createdAt: new Date().toISOString() });
+      localStorage.setItem(STORAGE_KEYS.USERS_DB, JSON.stringify(users));
 
       const user = {
         id: userId,
