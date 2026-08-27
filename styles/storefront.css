@@ -30,6 +30,91 @@ body {
 }
 
 /* ==========================================================================
+   SKELETON SHIMMER PLACEHOLDERS
+   ========================================================================== */
+@keyframes shimmerPulse {
+  0% { opacity: 0.9; }
+  50% { opacity: 0.4; }
+  100% { opacity: 0.9; }
+}
+
+.skeleton-pulse {
+  background: #E2E8F0;
+  border-radius: 8px;
+  animation: shimmerPulse 1.4s ease-in-out infinite;
+}
+
+.skeleton-cat-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+.skeleton-cat-circle {
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  background: #E2E8F0;
+  animation: shimmerPulse 1.4s ease-in-out infinite;
+}
+
+.skeleton-cat-label {
+  width: 50px;
+  height: 10px;
+  border-radius: 4px;
+  background: #E2E8F0;
+  animation: shimmerPulse 1.4s ease-in-out infinite;
+}
+
+.skeleton-rail-card {
+  min-width: 160px;
+  width: 160px;
+  background: #FFFFFF;
+  border: 1px solid #EAEFE8;
+  border-radius: 14px;
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.skeleton-card-img {
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  border-radius: 10px;
+  background: #E2E8F0;
+  animation: shimmerPulse 1.4s ease-in-out infinite;
+}
+
+.skeleton-card-title {
+  width: 80%;
+  height: 14px;
+  border-radius: 4px;
+  background: #E2E8F0;
+  animation: shimmerPulse 1.4s ease-in-out infinite;
+}
+
+.skeleton-card-price {
+  width: 50%;
+  height: 12px;
+  border-radius: 4px;
+  background: #E2E8F0;
+  animation: shimmerPulse 1.4s ease-in-out infinite;
+}
+
+.skeleton-showcase-card {
+  background: #FFFFFF;
+  border: 1px solid #EAEFE8;
+  border-radius: 14px;
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+/* ==========================================================================
    CONTAINER & RESPONSIVE LAYOUT
    ========================================================================== */
 .site-wrapper {
