@@ -108,14 +108,20 @@
           </ul>
         </div>
 
-        <!-- CUSTOMERS -->
+        <!-- CUSTOMERS & PARTNERS -->
         <div class="nav-group-block">
-          <div class="nav-group-title">Customers</div>
+          <div class="nav-group-title">Customers & Partners</div>
           <ul class="sidebar-nav-list">
             <li>
               <button class="sidebar-nav-btn" data-tab="customers" onclick="AdminController.switchTab('customers')">
                 <i class="ri-user-shared-line"></i>
                 <span>Customer Directory</span>
+              </button>
+            </li>
+            <li>
+              <button class="sidebar-nav-btn" data-tab="franchise" onclick="AdminController.switchTab('franchise')">
+                <i class="ri-store-3-line"></i>
+                <span>Franchise Requests</span>
               </button>
             </li>
           </ul>
@@ -731,6 +737,42 @@
                 </tr>
               </thead>
               <tbody id="customers-table-body"></tbody>
+            </table>
+          </div>
+
+        </section>
+
+        <!-- ================================================================= -->
+        <!-- VIEW: FRANCHISE INQUIRIES & PARTNERSHIP REQUESTS -->
+        <!-- ================================================================= -->
+        <section id="view-franchise" class="admin-view-panel">
+          
+          <div class="view-header-strip">
+            <div>
+              <h1 class="view-heading-title">Franchise & Retail Requests</h1>
+              <p class="view-heading-sub">Live inquiries from prospective partners, store locations, and retail applicants.</p>
+            </div>
+            <button class="btn btn-outline" onclick="AdminController.renderFranchiseView()">
+              <i class="ri-refresh-line"></i> Refresh Inquiries
+            </button>
+          </div>
+
+          <div class="table-responsive-wrapper">
+            <table class="admin-data-table">
+              <thead>
+                <tr>
+                  <th>Applicant Name</th>
+                  <th>Contact Info</th>
+                  <th>Proposed Location</th>
+                  <th>Note / Experience</th>
+                  <th>Application Date</th>
+                  <th>Status</th>
+                  <th style="text-align: right;">Direct Actions</th>
+                </tr>
+              </thead>
+              <tbody id="franchise-table-body">
+                <!-- Dynamically rendered -->
+              </tbody>
             </table>
           </div>
 

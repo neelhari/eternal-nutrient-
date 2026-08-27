@@ -1157,14 +1157,13 @@
         phone: mobile,
         location,
         note,
-        status: 'pending',
+        status: 'New Application',
         created_at: new Date().toISOString()
       };
 
       try {
-        if (window.CloudDB && window.CloudDB.isSupabaseActive() && window.CloudDB.getClient()) {
-          const client = window.CloudDB.getClient();
-          await client.from('franchise_inquiries').insert([payload]);
+        if (window.CloudDB) {
+          await window.CloudDB.saveFranchiseInquiry(payload);
         }
       } catch (err) {
         console.warn('Franchise save notice:', err);

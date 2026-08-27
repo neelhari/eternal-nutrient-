@@ -309,6 +309,9 @@ window.AdminController = (function() {
       case 'customers':
         renderCustomersView();
         break;
+      case 'franchise':
+        renderFranchiseView();
+        break;
       case 'settings':
         renderSettingsView();
         break;
@@ -2263,7 +2266,105 @@ window.AdminController = (function() {
   }
 
   // =========================================================================
-  // 14. STORE SETTINGS & SHIPPING
+  // 14. FRANCHISE INQUIRIES & PARTNERSHIP REQUESTS
+  // =========================================================================
+  async function renderFranchiseView() {
+    const tbody = document.getElementById('franchise-table-body');
+    if (!tbody) return;
+
+    tbody.innerHTML = `<tr><td colspan="7" class="table-empty-state"><i class="ri-loader-4-line ri-spin"></i><div>Loading franchise inquiries...</div></td></tr>`;
+
+    let inquiries = [];
+    if (window.CloudDB) {
+      try {
+        inquiries = await window.CloudDB.getFranchiseInquiries();
+      } catch (err) {
+        console.warn('Franchise fetch error:', err);
+      }
+    }
+
+    if (!inquiries || inquiries.length === 0) {
+      tbody.innerHTML = `
+        <tr>
+          <td colspan="7" class="table-empty-state">
+            <i class="ri-store-3-line"></i>
+            <div>No franchise inquiries yet. Prospective retail partners will appear here when they submit from the Account page.</div>
+          </td>
+        </tr>
+      `;
+      return;
+    }
+
+    tbody.innerHTML = inquiries.map(item => {
+      const name = item.customer_name || item.name || 'Anonymous';
+      const email = item.customer_email || item.email || 'N/A';
+      const rawPhone = item.customer_phone || item.phone || '';
+      const phone = String(rawPhone).replace(/[^0-9+]/g, '');
+      const cleanPhone = phone.replace(/[^0-9]/g, '');
+      const location = (item.delivery_address && (item.delivery_address.location || item.delivery_address.city)) || item.location || 'Not Specified';
+      const note = (item.items && item.items[0] && item.items[0].note) || item.admin_notes || item.note || 'No notes attached.';
+      const dateStr = item.created_at ? new Date(item.created_at).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' }) : 'Recent';
+      const status = item.payment_status || item.status || 'New Inquiry';
+
+      return `
+        <tr>
+          <td>
+            <div class="cust-avatar-lockup">
+              <div class="cust-initial-avatar" style="background: #386618; color: #FFFFFF;">${name.charAt(0).toUpperCase()}</div>
+              <div>
+                <div class="cust-tbl-name" style="font-weight: 800; color: #1E293B;">${name}</div>
+                <div class="cust-tbl-email" style="font-size: 11.5px; color: #64748B;">${email}</div>
+              </div>
+            </div>
+          </td>
+          <td>
+            <div style="display: flex; flex-direction: column; gap: 4px;">
+              <a href="tel:${phone}" class="cust-phone-link" style="color: #1E293B; font-weight: 700;">
+                <i class="ri-phone-fill" style="color: #386618;"></i> ${phone || 'N/A'}
+              </a>
+              ${phone ? `
+                <a href="https://wa.me/${cleanPhone}?text=${encodeURIComponent('Hello ' + name + ', thank you for your franchise inquiry with Eternal Nutricare!')}" target="_blank" style="display: inline-flex; align-items: center; gap: 4px; font-size: 11.5px; color: #16A34A; font-weight: 700; text-decoration: none;">
+                  <i class="ri-whatsapp-fill"></i> Chat on WhatsApp
+                </a>
+              ` : ''}
+            </div>
+          </td>
+          <td>
+            <div style="display: flex; align-items: center; gap: 6px; font-weight: 700; color: #334155;">
+              <i class="ri-map-pin-2-fill" style="color: #EF4444;"></i>
+              <span>${location}</span>
+            </div>
+          </td>
+          <td>
+            <div style="max-width: 260px; font-size: 12.5px; color: #475569; line-height: 1.4; white-space: normal;">
+              ${note}
+            </div>
+          </td>
+          <td style="font-size: 12px; color: #64748B; white-space: nowrap;">
+            ${dateStr}
+          </td>
+          <td>
+            <span class="pay-status-pill" style="background: #DCFCE7; color: #166534; font-weight: 800; font-size: 11px;">
+              <i class="ri-checkbox-circle-fill" style="font-size: 12px; margin-right: 2px;"></i> ${status}
+            </span>
+          </td>
+          <td style="text-align: right; white-space: nowrap;">
+            <a href="mailto:${email}?subject=Eternal%20Nutricare%20Franchise%20Inquiry" class="btn btn-sm btn-outline" style="padding: 5px 10px; margin-right: 4px;" title="Send Email">
+              <i class="ri-mail-send-line"></i> Email
+            </a>
+            ${phone ? `
+              <a href="https://wa.me/${cleanPhone}?text=${encodeURIComponent('Hello ' + name + ', thank you for your interest in partnering with Eternal Nutricare. When is a good time for a quick call regarding store expansion in ' + location + '?')}" target="_blank" class="btn btn-sm btn-primary" style="padding: 5px 10px; background: #16A34A; border-color: #16A34A;" title="WhatsApp">
+                <i class="ri-whatsapp-line"></i> Connect
+              </a>
+            ` : ''}
+          </td>
+        </tr>
+      `;
+    }).join('');
+  }
+
+  // =========================================================================
+  // 15. STORE SETTINGS & SHIPPING
   // =========================================================================
   function renderSettingsView() {
     const s = db.storeSettings;
@@ -2808,8 +2909,9 @@ window.AdminController = (function() {
     adjustStock,
     setStockDirect,
 
-    // Customers
+    // Customers & Franchise
     renderCustomersView,
+    renderFranchiseView,
 
     // Settings
     renderSettingsView,

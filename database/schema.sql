@@ -235,7 +235,24 @@ CREATE POLICY "User Own Profile" ON profiles
     FOR ALL TO authenticated
     USING (auth.uid() = id);
 
-CREATE POLICY "Admin All Profiles" ON profiles
+-- F) FRANCHISE INQUIRIES
+CREATE TABLE IF NOT EXISTS franchise_inquiries (
+    id TEXT PRIMARY KEY,
+    name TEXT NOT NULL,
+    email TEXT DEFAULT '',
+    phone TEXT NOT NULL,
+    location TEXT NOT NULL,
+    note TEXT DEFAULT '',
+    status TEXT DEFAULT 'New Application',
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL
+);
+
+ALTER TABLE franchise_inquiries ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY "Customer Insert Franchise" ON franchise_inquiries
+    FOR INSERT WITH CHECK (true);
+
+CREATE POLICY "Admin All Franchise" ON franchise_inquiries
     FOR ALL TO authenticated
     USING (auth.jwt() ->> 'email' = 'eternalncdm@gmail.com' OR (auth.jwt() -> 'user_metadata' ->> 'role') = 'admin');
 

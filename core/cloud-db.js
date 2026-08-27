@@ -643,8 +643,65 @@ window.CloudDB = (function() {
         return { success: false, error: err };
       }
     }
-    if (mock) mock.announcementItems = annList;
+  // 9. FRANCHISE INQUIRIES PIPELINE
+  async function saveFranchiseInquiry(inquiry) {
+    const ts = Date.now();
+    const payload = {
+      id: inquiry.id || ('fran_' + ts),
+      order_number: 'FRAN-' + ts.toString().slice(-6),
+      customer_name: inquiry.name,
+      customer_phone: inquiry.phone,
+      customer_email: inquiry.email || '',
+      delivery_address: { city: inquiry.location, location: inquiry.location },
+      items: [{ title: 'Franchise Partnership Application', note: inquiry.note || '' }],
+      subtotal: 0,
+      delivery_fee: 0,
+      discount_amount: 0,
+      total_amount: 0,
+      payment_method: 'FRANCHISE_INQUIRY',
+      payment_status: 'New',
+      order_status: 'Franchise Request',
+      admin_notes: `Location: ${inquiry.location} | Note: ${inquiry.note || 'None'}`
+    };
+
+    if (isSupabaseActive && supabaseClient) {
+      try {
+        const { data, error } = await supabaseClient.from('orders').insert([payload]).select();
+        if (!error && data) return { success: true, data };
+      } catch (err) {
+        console.warn('Franchise direct save notice:', err.message);
+      }
+    }
+
+    // Local in-memory / localStorage fallback
+    try {
+      const stored = JSON.parse(localStorage.getItem('en_franchise_inquiries') || '[]');
+      stored.unshift(payload);
+      localStorage.setItem('en_franchise_inquiries', JSON.stringify(stored));
+    } catch(e) {}
+
     return { success: true, local: true };
+  }
+
+  async function getFranchiseInquiries() {
+    if (isSupabaseActive && supabaseClient) {
+      try {
+        const { data, error } = await supabaseClient
+          .from('orders')
+          .select('*')
+          .eq('order_status', 'Franchise Request')
+          .order('created_at', { ascending: false });
+        if (!error && data && data.length > 0) return data;
+      } catch (err) {
+        console.warn('Franchise cloud fetch notice:', err.message);
+      }
+    }
+
+    try {
+      return JSON.parse(localStorage.getItem('en_franchise_inquiries') || '[]');
+    } catch(e) {
+      return [];
+    }
   }
 
   return {
@@ -677,7 +734,9 @@ window.CloudDB = (function() {
     getFestiveSpecials,
     saveFestiveSpecials,
     getAnnouncements,
-    saveAnnouncements
+    saveAnnouncements,
+    saveFranchiseInquiry,
+    getFranchiseInquiries
   };
 
 })();
