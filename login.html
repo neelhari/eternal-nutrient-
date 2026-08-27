@@ -80,6 +80,8 @@
                 <a href="javascript:void(0)" class="plantland-forgot-link" onclick="switchScreen('forgot')">Forgot Password</a>
               </div>
 
+              <div id="login-global-err" class="plantland-error-tip" style="text-align: center; margin-bottom: 12px; font-weight: 700; font-size: 13px;"></div>
+
               <!-- Primary Login Button -->
               <button type="submit" id="btn-login-submit" class="btn-plantland-submit">
                 <span>Login</span>
@@ -95,11 +97,19 @@
           <div id="fields-signup" class="auth-fields-block">
             <form id="form-signup" onsubmit="handleSignUp(event)">
               <div class="plantland-form-group">
+                <!-- Full Name -->
+                <div>
+                  <div class="plantland-input-pill-wrap">
+                    <i class="ri-user-line plantland-input-icon"></i>
+                    <input type="text" id="reg-name" class="plantland-input-pill" placeholder="Full Name" required autocomplete="name">
+                  </div>
+                </div>
+
                 <!-- Email -->
                 <div>
                   <div class="plantland-input-pill-wrap">
                     <i class="ri-mail-line plantland-input-icon"></i>
-                    <input type="email" id="reg-email" class="plantland-input-pill" placeholder="Email" required autocomplete="email">
+                    <input type="email" id="reg-email" class="plantland-input-pill" placeholder="Email Address" required autocomplete="email">
                   </div>
                   <div id="reg-email-err" class="plantland-error-tip">Please enter a valid email.</div>
                 </div>
@@ -108,7 +118,7 @@
                 <div>
                   <div class="plantland-input-pill-wrap">
                     <i class="ri-lock-line plantland-input-icon"></i>
-                    <input type="password" id="reg-pass" class="plantland-input-pill" placeholder="Password" required minlength="6" autocomplete="new-password">
+                    <input type="password" id="reg-pass" class="plantland-input-pill" placeholder="Password (Min 6 chars)" required minlength="6" autocomplete="new-password">
                     <button type="button" class="plantland-pass-toggle" onclick="togglePass('reg-pass', this)" aria-label="Toggle password">
                       <i class="ri-eye-line"></i>
                     </button>
@@ -125,6 +135,8 @@
                   <div id="reg-pass-confirm-err" class="plantland-error-tip">Passwords do not match.</div>
                 </div>
               </div>
+
+              <div id="signup-global-err" class="plantland-error-tip" style="text-align: center; margin-bottom: 12px; font-weight: 700; font-size: 13px;"></div>
 
               <!-- Primary Sign Up Button -->
               <button type="submit" id="btn-signup-submit" class="btn-plantland-submit">
@@ -269,12 +281,12 @@
       e.preventDefault();
       clearErrors();
 
-      const ident = document.getElementById('login-ident').value;
-      const pass = document.getElementById('login-pass').value;
+      const ident = document.getElementById('login-ident').value.trim();
+      const pass = document.getElementById('login-pass').value.trim();
       const btn = document.getElementById('btn-login-submit');
 
       btn.disabled = true;
-      btn.innerHTML = `<span>Logging in...</span>`;
+      btn.innerHTML = `<span>Verifying credentials...</span>`;
 
       const result = await AuthEngine.login(ident, pass);
 
@@ -283,9 +295,9 @@
 
       if (result.success) {
         showToast(`Welcome back, ${result.user.fullName}!`);
-        setTimeout(redirectSuccess, 600);
+        setTimeout(redirectSuccess, 500);
       } else {
-        showError('login-pass-err', 'login-pass', result.error);
+        showError('login-global-err', 'login-ident', result.error || 'Invalid credentials.');
       }
     }
 
@@ -293,30 +305,30 @@
       e.preventDefault();
       clearErrors();
 
-      const email = document.getElementById('reg-email').value;
-      const pass = document.getElementById('reg-pass').value;
-      const passConfirm = document.getElementById('reg-pass-confirm').value;
+      const name = document.getElementById('reg-name').value.trim();
+      const email = document.getElementById('reg-email').value.trim();
+      const pass = document.getElementById('reg-pass').value.trim();
+      const passConfirm = document.getElementById('reg-pass-confirm').value.trim();
       const btn = document.getElementById('btn-signup-submit');
 
       if (pass !== passConfirm) {
-        showError('reg-pass-confirm-err', 'reg-pass-confirm', 'Passwords do not match.');
+        showError('signup-global-err', 'reg-pass-confirm', 'Passwords do not match.');
         return;
       }
 
       btn.disabled = true;
-      btn.innerHTML = `<span>Signing up...</span>`;
+      btn.innerHTML = `<span>Creating account...</span>`;
 
-      const name = email.split('@')[0].replace(/[._]/g, ' ');
-      const result = await AuthEngine.signup({ fullName: name, email, phone: '', password: pass });
+      const result = await AuthEngine.signup({ fullName: name || email.split('@')[0], email, phone: '', password: pass });
 
       btn.disabled = false;
       btn.innerHTML = `<span>Sign Up</span>`;
 
       if (result.success) {
-        showToast(`Account created! Welcome to Eternal Nutricare`);
-        setTimeout(redirectSuccess, 700);
+        showToast(`Account created! Welcome, ${result.user.fullName}`);
+        setTimeout(redirectSuccess, 600);
       } else {
-        showError('reg-email-err', 'reg-email', result.error);
+        showError('signup-global-err', 'reg-email', result.error || 'Registration failed.');
       }
     }
 

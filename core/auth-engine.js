@@ -130,23 +130,16 @@
 
     seedLocalDatabases() {
       if (!localStorage.getItem(STORAGE_KEYS.ADDRESSES)) {
-        localStorage.setItem(STORAGE_KEYS.ADDRESSES, JSON.stringify(DEFAULT_SAMPLE_ADDRESSES));
+        localStorage.setItem(STORAGE_KEYS.ADDRESSES, JSON.stringify([]));
       }
       if (!localStorage.getItem(STORAGE_KEYS.ORDERS)) {
-        localStorage.setItem(STORAGE_KEYS.ORDERS, JSON.stringify(DEFAULT_SAMPLE_ORDERS));
+        localStorage.setItem(STORAGE_KEYS.ORDERS, JSON.stringify([]));
       }
       if (!localStorage.getItem(STORAGE_KEYS.WISHLIST)) {
-        localStorage.setItem(STORAGE_KEYS.WISHLIST, JSON.stringify(['prod_1', 'prod_4', 'prod_6']));
+        localStorage.setItem(STORAGE_KEYS.WISHLIST, JSON.stringify([]));
       }
       if (!localStorage.getItem(STORAGE_KEYS.USERS_DB)) {
-        localStorage.setItem(STORAGE_KEYS.USERS_DB, JSON.stringify([
-          {
-            email: 'anita.sharma@example.com',
-            phone: '9876543210',
-            password: 'Password@123',
-            fullName: 'Anita Sharma'
-          }
-        ]));
+        localStorage.setItem(STORAGE_KEYS.USERS_DB, JSON.stringify([]));
       }
     },
 
@@ -168,137 +161,138 @@
     },
 
     /**
-     * User Login with Email or 10-digit Phone
+     * User Login with Email and Password
      */
     async login(identifier, password) {
       const cleanIdent = (identifier || '').trim();
       const cleanPass = (password || '').trim();
 
       if (!cleanIdent) {
-        return { success: false, error: 'Please enter your email or 10-digit mobile number.' };
+        return { success: false, error: 'Please enter your registered email address.' };
       }
       if (!cleanPass) {
         return { success: false, error: 'Please enter your password.' };
       }
 
-      // Try Supabase Auth if email format
+      // 1. Try Supabase Auth First
       if (this.supabase && cleanIdent.includes('@')) {
         try {
           const { data, error } = await this.supabase.auth.signInWithPassword({
             email: cleanIdent,
             password: cleanPass
           });
-          if (data && data.user && !error) {
+          if (!error && data && data.user) {
+            const fullName = data.user.user_metadata?.full_name || cleanIdent.split('@')[0].replace(/[._]/g, ' ');
             const user = {
               id: data.user.id,
-              fullName: data.user.user_metadata?.full_name || cleanIdent.split('@')[0],
+              fullName: fullName,
               email: data.user.email,
               phone: data.user.user_metadata?.phone || '',
               memberTier: 'Organic Club Member',
               memberSince: 'Member 2026',
-              avatarInitials: this.getInitials(data.user.user_metadata?.full_name || cleanIdent)
+              avatarInitials: this.getInitials(fullName)
             };
             this.setCurrentUser(user);
             return { success: true, user };
+          } else if (error) {
+            console.warn('[AuthEngine] Supabase login error:', error.message);
+            if (error.message.includes('Invalid login credentials')) {
+              return { success: false, error: 'Invalid email or password. If you do not have an account, please click Sign Up.' };
+            } else if (error.message.includes('Email not confirmed')) {
+              return { success: false, error: 'Please confirm your email address or sign up again.' };
+            }
           }
         } catch(e) {
           console.warn('[AuthEngine] Supabase login error:', e);
         }
       }
 
-      // Fallback Local Auth Database Verification
+      // 2. Strict Verification against Registered Local Accounts DB
       try {
         const users = JSON.parse(localStorage.getItem(STORAGE_KEYS.USERS_DB) || '[]');
-        const cleanDigits = cleanIdent.replace(/\D/g, '');
-        
-        const matched = users.find(u => {
-          const isEmailMatch = u.email && u.email.toLowerCase() === cleanIdent.toLowerCase();
-          const isPhoneMatch = u.phone && (u.phone === cleanIdent || (cleanDigits.length >= 10 && u.phone.includes(cleanDigits.slice(-10))));
-          return isEmailMatch || isPhoneMatch;
-        });
+        const matched = users.find(u => u.email && u.email.toLowerCase() === cleanIdent.toLowerCase());
 
         if (matched) {
           if (matched.password && matched.password !== cleanPass) {
-            return { success: false, error: 'Incorrect password. Please try again or use Forgot Password.' };
+            return { success: false, error: 'Incorrect password. Please try again.' };
           }
           const user = {
             id: matched.id || 'usr_' + Date.now(),
-            fullName: matched.fullName || 'Valued Member',
-            email: matched.email || '',
+            fullName: matched.fullName || cleanIdent.split('@')[0],
+            email: matched.email || cleanIdent,
             phone: matched.phone || '',
             memberTier: 'Organic Club Member',
             memberSince: 'Member 2026',
-            avatarInitials: this.getInitials(matched.fullName || 'Valued Member')
+            avatarInitials: this.getInitials(matched.fullName || cleanIdent)
           };
           this.setCurrentUser(user);
           return { success: true, user };
         }
 
-        // If not found in DB, allow seamless demo sign-in for valid format
-        if (cleanIdent.length >= 4 && cleanPass.length >= 6) {
-          const isEmail = cleanIdent.includes('@');
-          const user = {
-            id: 'usr_' + Date.now(),
-            fullName: isEmail ? cleanIdent.split('@')[0].replace(/[._]/g, ' ') : 'Customer',
-            email: isEmail ? cleanIdent : 'member@eternalnutricare.com',
-            phone: isEmail ? '+91 98765 43210' : cleanIdent,
-            memberTier: 'Organic Club Member',
-            memberSince: 'Member 2026',
-            avatarInitials: this.getInitials(cleanIdent)
-          };
-          this.setCurrentUser(user);
-          return { success: true, user };
-        }
-
-        return { success: false, error: 'No account found with this email or mobile number.' };
+        return { success: false, error: 'No account found with this email. Please click "Sign Up" to create an account.' };
       } catch (err) {
         return { success: false, error: 'Authentication failed. Please try again.' };
       }
     },
 
     /**
-     * Create Account
+     * Create Account (Sign Up)
      */
     async signup({ fullName, email, phone, password }) {
-      const name = (fullName || em.split('@')[0]).trim();
-      const em = (email || '').trim();
+      const em = (email || '').trim().toLowerCase();
+      const name = (fullName || em.split('@')[0].replace(/[._]/g, ' ')).trim();
       const ph = (phone || '').trim();
       const pass = (password || '').trim();
 
       if (!em || !em.includes('@')) return { success: false, error: 'Please enter a valid email address.' };
       if (!pass || pass.length < 6) return { success: false, error: 'Password must be at least 6 characters long.' };
 
-      // Supabase Signup
+      let supabaseRegistered = false;
+      let userId = 'usr_' + Date.now();
+
+      // 1. Supabase Signup
       if (this.supabase) {
         try {
-          await this.supabase.auth.signUp({
+          const { data, error } = await this.supabase.auth.signUp({
             email: em,
             password: pass,
             options: {
               data: { full_name: name, phone: ph }
             }
           });
+          if (error) {
+            if (error.message.toLowerCase().includes('already registered')) {
+              return { success: false, error: 'An account with this email already exists. Please Log In.' };
+            }
+            console.warn('[AuthEngine] Supabase signup notice:', error.message);
+          } else if (data && data.user) {
+            supabaseRegistered = true;
+            userId = data.user.id;
+          }
         } catch(e) {
           console.warn('[AuthEngine] Supabase signup error:', e);
         }
       }
 
-      // Save to local Users DB
+      // 2. Save in Local Users DB
       try {
         const users = JSON.parse(localStorage.getItem(STORAGE_KEYS.USERS_DB) || '[]');
-        const existing = users.find(u => u.email === em || u.phone === ph);
-        if (!existing) {
-          users.push({ fullName: name, email: em, phone: ph, password: pass, id: 'usr_' + Date.now() });
-          localStorage.setItem(STORAGE_KEYS.USERS_DB, JSON.stringify(users));
+        const existingIdx = users.findIndex(u => u.email && u.email.toLowerCase() === em);
+        const newUserRecord = { id: userId, fullName: name, email: em, phone: ph, password: pass, createdAt: new Date().toISOString() };
+        if (existingIdx >= 0) {
+          users[existingIdx] = newUserRecord;
+        } else {
+          users.push(newUserRecord);
         }
+        localStorage.setItem(STORAGE_KEYS.USERS_DB, JSON.stringify(users));
       } catch(e) {}
 
       const user = {
-        id: 'usr_' + Date.now(),
+        id: userId,
         fullName: name,
         email: em,
         phone: ph,
-        memberTier: 'New Member',
+        memberTier: 'Organic Club Member',
         memberSince: 'Member 2026',
         avatarInitials: this.getInitials(name)
       };
