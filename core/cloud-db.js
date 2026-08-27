@@ -642,7 +642,6 @@ window.CloudDB = (function() {
       } catch (err) {
         return { success: false, error: err };
       }
-    }
   // 9. FRANCHISE INQUIRIES PIPELINE
   async function saveFranchiseInquiry(inquiry) {
     const ts = Date.now();
@@ -658,81 +657,23 @@ window.CloudDB = (function() {
     };
 
     if (isSupabaseActive && supabaseClient) {
-      // 1. Try dedicated franchise_inquiries table
-      try {
-        const { data, error } = await supabaseClient.from('franchise_inquiries').insert([cleanInquiry]).select();
-        if (!error && data) return { success: true, data };
-      } catch (err) {
-        console.warn('franchise_inquiries table notice:', err.message);
-      }
-
-      // 2. Fallback to orders table
-      try {
-        const orderPayload = {
-          id: cleanInquiry.id,
-          order_number: 'FRAN-' + ts.toString().slice(-6),
-          customer_name: cleanInquiry.name,
-          customer_phone: cleanInquiry.phone,
-          customer_email: cleanInquiry.email,
-          delivery_address: { city: cleanInquiry.location, location: cleanInquiry.location },
-          items: [{ title: 'Franchise Partnership Application', note: cleanInquiry.note }],
-          subtotal: 0,
-          delivery_fee: 0,
-          discount_amount: 0,
-          total_amount: 0,
-          payment_method: 'FRANCHISE_INQUIRY',
-          payment_status: 'New',
-          order_status: 'Franchise Request',
-          admin_notes: `Location: ${cleanInquiry.location} | Note: ${cleanInquiry.note || 'None'}`
-        };
-        const { data, error } = await supabaseClient.from('orders').insert([orderPayload]).select();
-        if (!error && data) return { success: true, data };
-      } catch (err) {
-        console.warn('Orders franchise save notice:', err.message);
-      }
+      const { data, error } = await supabaseClient.from('franchise_inquiries').insert([cleanInquiry]).select();
+      if (error) throw error;
+      return { success: true, data };
     }
-
-    // 3. Local in-memory / localStorage fallback
-    try {
-      const stored = JSON.parse(localStorage.getItem('en_franchise_inquiries') || '[]');
-      stored.unshift(cleanInquiry);
-      localStorage.setItem('en_franchise_inquiries', JSON.stringify(stored));
-    } catch(e) {}
-
-    return { success: true, local: true };
+    return { success: false, error: 'Supabase inactive' };
   }
 
   async function getFranchiseInquiries() {
     if (isSupabaseActive && supabaseClient) {
-      // 1. Check dedicated franchise_inquiries table
-      try {
-        const { data, error } = await supabaseClient
-          .from('franchise_inquiries')
-          .select('*')
-          .order('created_at', { ascending: false });
-        if (!error && data && data.length > 0) return data;
-      } catch (err) {
-        console.warn('franchise_inquiries fetch notice:', err.message);
-      }
-
-      // 2. Fallback to orders table
-      try {
-        const { data, error } = await supabaseClient
-          .from('orders')
-          .select('*')
-          .eq('order_status', 'Franchise Request')
-          .order('created_at', { ascending: false });
-        if (!error && data && data.length > 0) return data;
-      } catch (err) {
-        console.warn('Franchise cloud fetch notice:', err.message);
-      }
+      const { data, error } = await supabaseClient
+        .from('franchise_inquiries')
+        .select('*')
+        .order('created_at', { ascending: false });
+      if (!error && data) return data;
+      if (error) console.warn('franchise_inquiries query notice:', error.message);
     }
-
-    try {
-      return JSON.parse(localStorage.getItem('en_franchise_inquiries') || '[]');
-    } catch(e) {
-      return [];
-    }
+    return [];
   }
 
   return {
