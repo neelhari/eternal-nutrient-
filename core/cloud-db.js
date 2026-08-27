@@ -11,9 +11,15 @@ window.CloudDB = (function() {
 
   // Initialize Supabase if keys are provided and valid
   function initClient() {
+    if (window.__en_supabaseClient) {
+      supabaseClient = window.__en_supabaseClient;
+      isSupabaseActive = true;
+      return;
+    }
     if (typeof window.supabase !== 'undefined' && config.supabaseUrl && config.supabaseAnonKey && config.supabaseUrl.startsWith('https://')) {
       try {
         supabaseClient = window.supabase.createClient(config.supabaseUrl, config.supabaseAnonKey);
+        window.__en_supabaseClient = supabaseClient;
         isSupabaseActive = true;
         console.log('✅ Supabase Cloud DB Client initialized successfully.');
       } catch (err) {
@@ -22,6 +28,15 @@ window.CloudDB = (function() {
       }
     } else {
       isSupabaseActive = false;
+    }
+  }
+
+  function setClient(client) {
+    if (client) {
+      supabaseClient = client;
+      window.__en_supabaseClient = client;
+      isSupabaseActive = true;
+      console.log('✅ CloudDB client synchronized with active authenticated session.');
     }
   }
 
@@ -55,16 +70,46 @@ window.CloudDB = (function() {
     return mock ? mock.products.find(p => p.id === id) : null;
   }
 
+  const KNOWN_PRODUCT_COLUMNS = new Set([
+    'id', 'title', 'sku', 'category', 'image', 'gallery', 'price', 'original_price',
+    'discount', 'unit', 'badge', 'rating', 'reviews_count', 'highlights', 'in_stock',
+    'stock_qty', 'is_bestseller', 'is_featured', 'is_new_arrival', 'sort_order',
+    'short_summary', 'description', 'benefits', 'ingredients', 'nutritional_info',
+    'storage_instructions', 'created_at', 'updated_at'
+  ]);
+
+  function sanitizeProductForDB(prod) {
+    const payload = {};
+    for (const key of Object.keys(prod)) {
+      if (KNOWN_PRODUCT_COLUMNS.has(key)) {
+        payload[key] = prod[key];
+      }
+    }
+    return payload;
+  }
+
   async function saveProduct(prod) {
     if (isSupabaseActive && supabaseClient) {
       try {
-        const { data, error } = await supabaseClient.from('products').upsert(prod).select();
-        if (!error) return { success: true, data };
+        const dbPayload = sanitizeProductForDB(prod);
+        const { data, error } = await supabaseClient.from('products').upsert(dbPayload).select();
+        if (!error && data) {
+          if (mock) {
+            const idx = mock.products.findIndex(p => p.id === prod.id);
+            if (idx !== -1) mock.products[idx] = { ...mock.products[idx], ...prod };
+            else mock.products.unshift(prod);
+          }
+          return { success: true, data };
+        }
+
+        console.error('Supabase product save error:', error);
+        return { success: false, error };
       } catch (err) {
-        console.warn('Cloud save fallback to local state:', err.message);
+        console.error('Cloud save exception:', err);
+        return { success: false, error: err };
       }
     }
-    // In-memory fallback
+    // In-memory / local fallback when Supabase is not configured
     if (mock) {
       const idx = mock.products.findIndex(p => p.id === prod.id);
       if (idx !== -1) mock.products[idx] = prod;
@@ -77,9 +122,13 @@ window.CloudDB = (function() {
     if (isSupabaseActive && supabaseClient) {
       try {
         const { error } = await supabaseClient.from('products').delete().eq('id', id);
-        if (!error) return { success: true };
+        if (error) {
+          console.error('Supabase delete error:', error);
+          return { success: false, error };
+        }
       } catch (err) {
-        console.warn('Cloud delete fallback:', err.message);
+        console.error('Cloud delete fallback:', err.message);
+        return { success: false, error: err };
       }
     }
     if (mock) {
@@ -105,9 +154,18 @@ window.CloudDB = (function() {
     if (isSupabaseActive && supabaseClient) {
       try {
         const { data, error } = await supabaseClient.from('categories').upsert(cat).select();
-        if (!error) return { success: true, data };
+        if (!error && data) {
+          if (mock) {
+            const idx = mock.categories.findIndex(c => c.id === cat.id);
+            if (idx !== -1) mock.categories[idx] = cat;
+            else mock.categories.push(cat);
+          }
+          return { success: true, data };
+        }
+        return { success: false, error };
       } catch (err) {
-        console.warn('Cloud save fallback:', err.message);
+        console.error('Cloud save fallback:', err);
+        return { success: false, error: err };
       }
     }
     if (mock) {
@@ -115,7 +173,7 @@ window.CloudDB = (function() {
       if (idx !== -1) mock.categories[idx] = cat;
       else mock.categories.push(cat);
     }
-    return { success: true };
+    return { success: true, local: true };
   }
 
   // 3. ORDERS & INVENTORY PIPELINE
@@ -337,6 +395,7 @@ window.CloudDB = (function() {
     isSupabaseActive: () => isSupabaseActive,
     get supabase() { return supabaseClient; },
     getClient: () => supabaseClient,
+    setClient,
     init: initClient,
     getProducts,
     getProductById,

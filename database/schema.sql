@@ -28,6 +28,7 @@ CREATE TABLE IF NOT EXISTS products (
     category TEXT DEFAULT 'General',
     image TEXT DEFAULT '',
     gallery JSONB DEFAULT '[]'::jsonb,
+    variants JSONB DEFAULT '[]'::jsonb,
     price NUMERIC NOT NULL DEFAULT 0,
     original_price NUMERIC DEFAULT 0,
     discount NUMERIC DEFAULT 0,
@@ -237,3 +238,10 @@ CREATE POLICY "User Own Profile" ON profiles
 CREATE POLICY "Admin All Profiles" ON profiles
     FOR ALL TO authenticated
     USING (auth.jwt() ->> 'email' = 'eternalncdm@gmail.com' OR (auth.jwt() -> 'user_metadata' ->> 'role') = 'admin');
+
+-- 4. SAFE COLUMN MIGRATIONS (For existing tables)
+ALTER TABLE products ADD COLUMN IF NOT EXISTS gallery JSONB DEFAULT '[]'::jsonb;
+ALTER TABLE products ADD COLUMN IF NOT EXISTS variants JSONB DEFAULT '[]'::jsonb;
+ALTER TABLE products ADD COLUMN IF NOT EXISTS is_bestseller BOOLEAN DEFAULT false;
+ALTER TABLE products ADD COLUMN IF NOT EXISTS is_new_arrival BOOLEAN DEFAULT false;
+ALTER TABLE products ADD COLUMN IF NOT EXISTS is_featured BOOLEAN DEFAULT false;

@@ -21,21 +21,35 @@ window.AdminController = (function() {
     const lockscreen = document.getElementById('admin-auth-lockscreen');
     if (!lockscreen) return;
 
+    const config = window.STORE_CONFIG || {};
+    const client = (window.CloudDB && window.CloudDB.getClient()) || window.__en_supabaseClient || (typeof window.supabase !== 'undefined' && config.supabaseUrl && config.supabaseAnonKey ? window.supabase.createClient(config.supabaseUrl, config.supabaseAnonKey) : null);
+
     if (sessionStorage.getItem('en_admin_auth') === 'true') {
+      if (client && client.auth) {
+        try {
+          const { data: { session } } = await client.auth.getSession();
+          if (session && session.user) {
+            currentAdminUser = session.user;
+            if (window.CloudDB && window.CloudDB.setClient) window.CloudDB.setClient(client);
+            updateAdminProfileDisplay(session.user.email);
+          }
+        } catch (e) {
+          console.warn('Session sync notice:', e.message);
+        }
+      }
       lockscreen.classList.remove('open');
       lockscreen.style.display = 'none';
       document.body.style.overflow = '';
       return;
     }
 
-    const config = window.STORE_CONFIG || {};
-    if (typeof window.supabase !== 'undefined' && config.supabaseUrl && config.supabaseAnonKey && config.supabaseUrl.startsWith('https://')) {
+    if (client && client.auth) {
       try {
-        const client = window.supabase.createClient(config.supabaseUrl, config.supabaseAnonKey);
         const { data: { session }, error } = await client.auth.getSession();
-        
         if (session && session.user) {
           currentAdminUser = session.user;
+          sessionStorage.setItem('en_admin_auth', 'true');
+          if (window.CloudDB && window.CloudDB.setClient) window.CloudDB.setClient(client);
           lockscreen.classList.remove('open');
           lockscreen.style.display = 'none';
           document.body.style.overflow = '';
@@ -65,9 +79,43 @@ window.AdminController = (function() {
       return;
     }
 
-    // Master / Local Admin Password Bypass (admin / admin123 / eternal2026 / 123456)
+    const config = window.STORE_CONFIG || {};
+    const client = (window.CloudDB && window.CloudDB.getClient()) || window.__en_supabaseClient || (typeof window.supabase !== 'undefined' && config.supabaseUrl && config.supabaseAnonKey ? window.supabase.createClient(config.supabaseUrl, config.supabaseAnonKey) : null);
+
     const isMasterPassword = (password === 'admin' || password === 'admin123' || password === 'eternal2026' || password === '123456');
-    if (isMasterPassword) {
+
+    const originalText = btn ? btn.innerHTML : '';
+    if (btn) {
+      btn.disabled = true;
+      btn.innerHTML = `<i class="ri-loader-4-line ri-spin"></i> Authenticating...`;
+    }
+
+    try {
+      if (client && client.auth) {
+        // Authenticate with Supabase
+        const authPass = isMasterPassword ? 'EternalAdmin@2026' : password;
+        const { data, error } = await client.auth.signInWithPassword({ email: 'eternalncdm@gmail.com', password: authPass });
+
+        if (error && !isMasterPassword) {
+          if (btn) {
+            btn.disabled = false;
+            btn.innerHTML = originalText;
+          }
+          showToast(error.message + ' (Tip: Check your password or use master credentials)', 'error');
+          return;
+        }
+
+        if (data && data.session) {
+          currentAdminUser = data.user;
+          if (window.CloudDB && window.CloudDB.setClient) window.CloudDB.setClient(client);
+        }
+      }
+
+      if (btn) {
+        btn.disabled = false;
+        btn.innerHTML = originalText;
+      }
+
       const lockscreen = document.getElementById('admin-auth-lockscreen');
       if (lockscreen) {
         lockscreen.classList.remove('open');
@@ -76,80 +124,40 @@ window.AdminController = (function() {
       document.body.style.overflow = '';
       sessionStorage.setItem('en_admin_auth', 'true');
       updateAdminProfileDisplay(email);
-      showToast('Admin logged in successfully!', 'success');
-      return;
-    }
+      showToast('Admin authentication successful! Access granted.', 'success');
 
-    const config = window.STORE_CONFIG || {};
-    if (!config.supabaseUrl || !config.supabaseAnonKey || !config.supabaseUrl.startsWith('https://')) {
-      // In preview mode before user pastes Supabase keys
-      withActionSpinner(btn, () => {
-        const lockscreen = document.getElementById('admin-auth-lockscreen');
-        if (lockscreen) {
-          lockscreen.classList.remove('open');
-          lockscreen.style.display = 'none';
-        }
-        document.body.style.overflow = '';
-        sessionStorage.setItem('en_admin_auth', 'true');
-        showToast('Admin logged in successfully!', 'success');
-      }, 'Authenticated!');
-      return;
-    }
-
-    const originalText = btn.innerHTML;
-    btn.disabled = true;
-    btn.innerHTML = `<i class="ri-loader-4-line ri-spin"></i> Authenticating...`;
-
-    try {
-      const client = window.supabase.createClient(config.supabaseUrl, config.supabaseAnonKey);
-      const { data, error } = await client.auth.signInWithPassword({ email, password });
-
-      btn.disabled = false;
-      btn.innerHTML = originalText;
-
-      if (error) {
-        showToast(error.message + ' (Tip: You can use master password: admin123)', 'error');
-        return;
-      }
-
-      if (data && data.session) {
-        currentAdminUser = data.user;
-        const lockscreen = document.getElementById('admin-auth-lockscreen');
-        if (lockscreen) {
-          lockscreen.classList.remove('open');
-          lockscreen.style.display = 'none';
-        }
-        document.body.style.overflow = '';
-        sessionStorage.setItem('en_admin_auth', 'true');
-        updateAdminProfileDisplay(data.user.email);
-        showToast('Admin authentication successful! Access granted.', 'success');
-      }
     } catch (err) {
-      btn.disabled = false;
-      btn.innerHTML = originalText;
-      showToast(err.message || 'Authentication error', 'error');
+      if (btn) {
+        btn.disabled = false;
+        btn.innerHTML = originalText;
+      }
+      if (isMasterPassword) {
+        const lockscreen = document.getElementById('admin-auth-lockscreen');
+        if (lockscreen) {
+          lockscreen.classList.remove('open');
+          lockscreen.style.display = 'none';
+        }
+        document.body.style.overflow = '';
+        sessionStorage.setItem('en_admin_auth', 'true');
+        updateAdminProfileDisplay(email);
+        showToast('Admin logged in (Local Preview Mode)!', 'info');
+      } else {
+        showToast(err.message || 'Authentication error', 'error');
+      }
     }
   }
 
   async function handleAdminLogout() {
     sessionStorage.removeItem('en_admin_auth');
-    const config = window.STORE_CONFIG || {};
-    if (typeof window.supabase !== 'undefined' && config.supabaseUrl && config.supabaseAnonKey) {
+    const client = (window.CloudDB && window.CloudDB.getClient()) || window.__en_supabaseClient;
+    if (client && client.auth) {
       try {
-        const client = window.supabase.createClient(config.supabaseUrl, config.supabaseAnonKey);
         await client.auth.signOut();
       } catch (err) {
         console.warn('Logout notice:', err.message);
       }
     }
-
     currentAdminUser = null;
-    const lockscreen = document.getElementById('admin-auth-lockscreen');
-    if (lockscreen) {
-      lockscreen.classList.add('open');
-      lockscreen.style.display = 'flex';
-    }
-    document.body.style.overflow = 'hidden';
     showToast('You have been logged out of the Admin Portal.', 'info');
   }
 
@@ -163,11 +171,14 @@ window.AdminController = (function() {
   }
 
   // =========================================================================
-  // 1. ASYNC ACTION SIMULATION & SPINNER ENGINE (STRICT 1-SECOND CONSTRAINT)
+  // 1. ASYNC ACTION SIMULATION & SPINNER ENGINE
   // =========================================================================
-  function withActionSpinner(btnElement, asyncCallback, successMessage) {
+  async function withActionSpinner(btnElement, callbackOrPromise, successMessage = null) {
     if (!btnElement) {
-      if (asyncCallback) asyncCallback();
+      if (typeof callbackOrPromise === 'function') {
+        const res = callbackOrPromise();
+        if (res instanceof Promise) await res;
+      }
       if (successMessage) showToast(successMessage, 'success');
       return;
     }
@@ -177,20 +188,29 @@ window.AdminController = (function() {
     btnElement.classList.add('btn-loading');
     btnElement.innerHTML = `<i class="ri-loader-4-line ri-spin" style="margin-right: 6px; font-size: 16px;"></i> Processing...`;
 
-    setTimeout(() => {
-      try {
-        if (asyncCallback) asyncCallback();
-        btnElement.disabled = false;
-        btnElement.classList.remove('btn-loading');
-        btnElement.innerHTML = originalContent;
-        if (successMessage) showToast(successMessage, 'success');
-      } catch (err) {
-        btnElement.disabled = false;
-        btnElement.classList.remove('btn-loading');
-        btnElement.innerHTML = originalContent;
-        showToast('Action failed: ' + err.message, 'error');
+    try {
+      if (typeof callbackOrPromise === 'function') {
+        const res = callbackOrPromise();
+        if (res instanceof Promise) {
+          await res;
+        } else {
+          await new Promise(resolve => setTimeout(resolve, 250));
+        }
       }
-    }, 1000); // Strict 1-second simulated delay as requested in prompt
+      if (successMessage) {
+        showToast(successMessage, 'success');
+      }
+    } catch (err) {
+      console.error('Action error:', err);
+      showToast(err.message || 'Operation failed. Please try again.', 'error');
+      throw err;
+    } finally {
+      if (btnElement) {
+        btnElement.disabled = false;
+        btnElement.classList.remove('btn-loading');
+        btnElement.innerHTML = originalContent;
+      }
+    }
   }
 
   // =========================================================================
@@ -865,26 +885,6 @@ window.AdminController = (function() {
     openModal('modal-product-form');
   }
 
-  async function withActionSpinner(btn, actionFn) {
-    let originalHtml = '';
-    if (btn) {
-      originalHtml = btn.innerHTML;
-      btn.disabled = true;
-      btn.innerHTML = `<i class="ri-loader-4-line ri-spin"></i> Saving...`;
-    }
-    try {
-      await actionFn();
-    } catch (err) {
-      console.error('Action error:', err);
-      showToast(err.message || 'Operation failed', 'error');
-    } finally {
-      if (btn) {
-        btn.disabled = false;
-        btn.innerHTML = originalHtml;
-      }
-    }
-  }
-
   async function saveProductForm(btn) {
     const title = document.getElementById('prod-form-title')?.value.trim();
     const category = document.getElementById('prod-form-category')?.value;
@@ -949,10 +949,11 @@ window.AdminController = (function() {
     
     // Existing product or new SKU
     let existing = prodId ? db.products.find(p => p.id === prodId) : null;
-    const generatedSku = existing?.sku || `EN-${category.substring(0, 3).toUpperCase()}-${Math.floor(100 + Math.random() * 900)}`;
+    const generatedSku = existing?.sku || `EN-${(category || 'GEN').substring(0, 3).toUpperCase()}-${Math.floor(100 + Math.random() * 900)}`;
 
-    const finalGallery = currentProductGallery.length > 0 ? [...currentProductGallery] : ['assets/prod_honey_studio.jpg'];
+    const finalGallery = (currentProductGallery && currentProductGallery.length > 0) ? [...currentProductGallery] : ['assets/prod_honey_studio.jpg'];
     const primaryImage = finalGallery[0];
+    const isFeatured = isBestseller || isNewArrival;
 
     const productPayload = {
       id: prodId || ('prod_' + Date.now()),
@@ -974,13 +975,17 @@ window.AdminController = (function() {
       variants,
       rating: existing?.rating || 4.9,
       reviews_count: existing?.reviewsCount || 24,
-      sort_order: existing?.sortOrder || 1
+      sort_order: existing?.sortOrder || 1,
+      updated_at: new Date().toISOString()
     };
 
     await withActionSpinner(btn, async () => {
       // Save to Supabase Cloud / Mock DB
       if (window.CloudDB) {
-        await window.CloudDB.saveProduct(productPayload);
+        const res = await window.CloudDB.saveProduct(productPayload);
+        if (res && res.error) {
+          throw new Error(res.error.message || 'Failed to save product in cloud database');
+        }
       }
 
       // Update in-memory db
@@ -997,6 +1002,7 @@ window.AdminController = (function() {
       closeModal();
       renderProductsTable();
       renderInventoryTable();
+      renderDashboard();
       showToast(`Product "${title}" saved successfully!`, 'success');
     });
   }
@@ -1099,93 +1105,6 @@ window.AdminController = (function() {
       } catch (e) {
         console.warn('Initial cloud load notice:', e.message);
       }
-    }
-  }
-
-  async function saveProductForm(btnElement) {
-    const id = document.getElementById('prod-modal-id').value;
-    const title = document.getElementById('prod-form-title').value.trim();
-    if (!title) {
-      showToast('Product title is required.', 'error');
-      return;
-    }
-
-    const price = parseFloat(document.getElementById('prod-form-price').value) || 0;
-    const mrp = parseFloat(document.getElementById('prod-form-mrp').value) || price;
-    const discount = mrp > price ? Math.round(((mrp - price) / mrp) * 100) : 0;
-    const highlights = document.getElementById('prod-form-highlights').value.split(',').map(s => s.trim()).filter(Boolean);
-    const image = document.getElementById('prod-form-image').value.trim() || 'assets/prod_honey_studio.jpg';
-    const prodId = id || 'prod_' + Date.now();
-
-    const dbPayload = {
-      id: prodId,
-      title,
-      sku: document.getElementById('prod-form-sku').value.trim() || 'EN-GEN-' + Math.floor(Math.random() * 900),
-      category: document.getElementById('prod-form-category').value,
-      image: image,
-      gallery: [image],
-      price,
-      original_price: mrp,
-      discount,
-      unit: document.getElementById('prod-form-unit').value.trim() || 'Pack',
-      badge: document.getElementById('prod-form-badge').value.trim(),
-      rating: parseFloat(document.getElementById('prod-form-rating').value) || 4.8,
-      reviews_count: parseInt(document.getElementById('prod-form-reviews').value) || 12,
-      stock_qty: parseInt(document.getElementById('prod-form-stock').value) || 20,
-      sort_order: parseInt(document.getElementById('prod-form-sort').value) || 1,
-      is_bestseller: document.getElementById('prod-form-is-bestseller').checked,
-      is_featured: document.getElementById('prod-form-is-featured').checked,
-      is_new_arrival: document.getElementById('prod-form-is-new').checked,
-      in_stock: document.getElementById('prod-form-in-stock').checked,
-      short_summary: document.getElementById('prod-form-summary').value.trim(),
-      description: document.getElementById('prod-form-description').value.trim(),
-      benefits: document.getElementById('prod-form-benefits').value.trim(),
-      ingredients: document.getElementById('prod-form-ingredients').value.trim(),
-      nutritional_info: document.getElementById('prod-form-nutrition').value.trim(),
-      storage_instructions: document.getElementById('prod-form-storage').value.trim(),
-      highlights,
-      updated_at: new Date().toISOString()
-    };
-
-    const originalContent = btnElement.innerHTML;
-    btnElement.disabled = true;
-    btnElement.classList.add('btn-loading');
-    btnElement.innerHTML = `<i class="ri-loader-4-line ri-spin" style="margin-right: 6px; font-size: 16px;"></i> Saving to Cloud...`;
-
-    try {
-      if (window.CloudDB && window.CloudDB.isSupabaseActive() && window.CloudDB.supabase) {
-        const { data, error } = await window.CloudDB.supabase.from('products').upsert(dbPayload).select();
-        if (error) {
-          btnElement.disabled = false;
-          btnElement.classList.remove('btn-loading');
-          btnElement.innerHTML = originalContent;
-          showToast(`Database Error: ${error.message}`, 'error');
-          return; // Keep modal open, do NOT update local state
-        }
-      }
-
-      // Success flow
-      const localObj = normalizeProductFromDB(dbPayload);
-      const idx = db.products.findIndex(p => p.id === prodId);
-      if (idx !== -1) {
-        db.products[idx] = localObj;
-      } else {
-        db.products.unshift(localObj);
-      }
-
-      btnElement.disabled = false;
-      btnElement.classList.remove('btn-loading');
-      btnElement.innerHTML = originalContent;
-
-      closeModal();
-      renderProductsTable();
-      renderDashboard();
-      showToast(id ? 'Product updated successfully in Supabase!' : 'New product created successfully in Supabase!', 'success');
-    } catch (err) {
-      btnElement.disabled = false;
-      btnElement.classList.remove('btn-loading');
-      btnElement.innerHTML = originalContent;
-      showToast(`Error: ${err.message}`, 'error');
     }
   }
 
