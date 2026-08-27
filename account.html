@@ -982,6 +982,7 @@
   <div id="toast-wrapper" class="toast-floating-container"></div>
 
   <!-- Scripts -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="config/store.config.js"></script>
   <script src="core/cloud-db.js"></script>
   <script src="core/auth-engine.js"></script>
@@ -995,12 +996,12 @@
       setTimeout(() => toast.remove(), 2500);
     }
 
-    function openDrawer(drawerId) {
+    async function openDrawer(drawerId) {
       document.querySelectorAll('.myntra-drawer-overlay').forEach(d => d.classList.remove('open'));
       const d = document.getElementById(drawerId);
       if (d) {
         d.classList.add('open');
-        if (drawerId === 'drawer-orders') renderOrders();
+        if (drawerId === 'drawer-orders') await renderOrders();
         if (drawerId === 'drawer-wishlist') renderWishlist();
         if (drawerId === 'drawer-addresses') renderAddresses();
         if (drawerId === 'drawer-profile') loadProfileForm();
@@ -1040,10 +1041,41 @@
       }
     }
 
-    function renderOrders() {
-      const list = AuthEngine.getOrders();
+    async function renderOrders() {
       const cont = document.getElementById('drawer-orders-list');
       if (!cont) return;
+
+      cont.innerHTML = `<div style="text-align: center; padding: 24px; color: #8C7E77;"><i class="ri-loader-4-line ri-spin" style="font-size: 24px;"></i><br><span style="font-size: 13px;">Loading orders from database...</span></div>`;
+
+      const user = AuthEngine.getCurrentUser();
+      const email = user ? user.email : '';
+      let list = [];
+
+      if (email && window.CloudDB && window.CloudDB.getOrdersByEmail) {
+        try {
+          const cloudOrders = await window.CloudDB.getOrdersByEmail(email);
+          if (Array.isArray(cloudOrders) && cloudOrders.length > 0) {
+            list = cloudOrders.map(o => {
+              const itemsList = Array.isArray(o.items) ? o.items.map(i => `${i.title || i.name} (x${i.qty || 1})`).join(', ') : 'Organic items';
+              const dateStr = o.created_at ? new Date(o.created_at).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' }) : 'Recent';
+              return {
+                id: o.order_number || o.id,
+                status: o.order_status || 'Order Confirmed',
+                itemsSummary: itemsList,
+                date: dateStr,
+                totalAmount: Number(o.total_amount || 0).toLocaleString('en-IN'),
+                paymentMethod: o.payment_method || 'COD'
+              };
+            });
+          }
+        } catch(err) {
+          console.warn('Live order fetch notice:', err);
+        }
+      }
+
+      if (list.length === 0) {
+        list = AuthEngine.getOrders() || [];
+      }
 
       if (!list || list.length === 0) {
         cont.innerHTML = `
@@ -1058,7 +1090,7 @@
       }
 
       cont.innerHTML = list.map(o => `
-        <div style="border: 1px solid var(--myntra-border); border-radius: 10px; padding: 14px; margin-bottom: 12px;">
+        <div style="border: 1px solid var(--myntra-border); border-radius: 10px; padding: 14px; margin-bottom: 12px; background: #FFFFFF;">
           <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
             <strong style="font-size: 13.5px; color: #281612;">${o.id}</strong>
             <span style="font-size: 11px; font-weight: 700; background: #EAF3E6; color: #386618; padding: 2px 8px; border-radius: 4px;">${o.status}</span>
@@ -1066,7 +1098,7 @@
           <div style="font-size: 12.5px; color: #535766; margin-bottom: 4px;">${o.itemsSummary}</div>
           <div style="font-size: 11.5px; color: #94969F; margin-bottom: 10px;">${o.date} • ₹${o.totalAmount} (${o.paymentMethod})</div>
           <button type="button" class="myntra-edit-profile-btn" style="width: 100%; justify-content: center;" onclick="reorderItems('${o.id}')">
-            <i class="ri-refresh-line"></i> <span>Reorder Items</span>
+            <i class="ri-refresh-line"></i> <span>Shop Again</span>
           </button>
         </div>
       `).join('');

@@ -2330,38 +2330,31 @@ window.AdminController = (function() {
   }
 
   function renderShippingView() {
-    const s = db.storeSettings;
-    document.getElementById('ship-mov').value = s.minOrderValue;
-    document.getElementById('ship-free-threshold').value = s.freeShippingThreshold;
-    document.getElementById('ship-std-fee').value = s.standardShippingFee;
-    document.getElementById('ship-pincodes').value = s.serviceablePincodes;
-    document.getElementById('ship-store-live').checked = s.isStoreLive;
-    document.getElementById('ship-pause-msg').value = s.pauseNoticeMessage;
+    const s = db.storeSettings || {};
+    const movEl = document.getElementById('ship-mov');
+    const freeEl = document.getElementById('ship-free-threshold');
+    const feeEl = document.getElementById('ship-std-fee');
+
+    if (movEl) movEl.value = s.minOrderValue ?? 999;
+    if (freeEl) freeEl.value = s.freeShippingThreshold ?? 999;
+    if (feeEl) feeEl.value = s.standardShippingFee ?? 40;
   }
 
   async function saveShippingSettingsForm(btnElement) {
     await withActionSpinner(btnElement, async () => {
-      const s = db.storeSettings;
-      s.minOrderValue = parseFloat(document.getElementById('ship-mov').value) || 999;
-      s.freeShippingThreshold = parseFloat(document.getElementById('ship-free-threshold').value) || 999;
-      s.standardShippingFee = parseFloat(document.getElementById('ship-std-fee').value) || 40;
-      s.serviceablePincodes = document.getElementById('ship-pincodes').value.trim();
-      s.isStoreLive = document.getElementById('ship-store-live').checked;
-      s.pauseNoticeMessage = document.getElementById('ship-pause-msg').value.trim();
+      const s = db.storeSettings || {};
+      s.minOrderValue = parseFloat(document.getElementById('ship-mov')?.value) || 999;
+      s.freeShippingThreshold = parseFloat(document.getElementById('ship-free-threshold')?.value) || 999;
+      s.standardShippingFee = parseFloat(document.getElementById('ship-std-fee')?.value) || 40;
 
       if (window.CloudDB) {
         await window.CloudDB.saveStoreSettings({
           min_order_value: s.minOrderValue,
           free_shipping_threshold: s.freeShippingThreshold,
-          standard_shipping_fee: s.standardShippingFee,
-          serviceable_pincodes: s.serviceablePincodes,
-          is_store_live: s.isStoreLive,
-          pause_notice_message: s.pauseNoticeMessage
+          standard_shipping_fee: s.standardShippingFee
         });
       }
-
-      updateStoreStatusIndicator();
-    }, 'Shipping & store rules saved to Supabase!');
+    }, 'Shipping & delivery rules saved to Supabase!');
   }
 
   // =========================================================================

@@ -826,6 +826,45 @@
       }
 
       updateCartBadge();
+
+      if (window.CloudDB && window.CloudDB.getStoreSettings) {
+        try {
+          const settings = await window.CloudDB.getStoreSettings();
+          if (settings) hydrateFooterSettings(settings);
+        } catch(e) {}
+      }
+    }
+
+    function hydrateFooterSettings(settings) {
+      if (!settings || typeof settings !== 'object') return;
+      const phone = settings.primary_phone || '+91 6302017482';
+      const secPhone = settings.secondary_phone ? `, ${settings.secondary_phone}` : '';
+      const wa = settings.primary_whatsapp || '916302017482';
+      const email = settings.support_email || 'eternalncdm@gmail.com';
+      const address = settings.registered_address || '';
+
+      document.querySelectorAll('.footer-contact-row a[href^="tel:"]').forEach(a => {
+        a.href = `tel:${phone.replace(/\D/g, '')}`;
+        a.textContent = `${phone}${secPhone}`;
+      });
+
+      document.querySelectorAll('.footer-contact-row a[href*="wa.me"]').forEach(a => {
+        a.href = `https://wa.me/${wa.replace(/\D/g, '')}`;
+        a.textContent = phone;
+      });
+
+      document.querySelectorAll('.footer-contact-row a[href^="mailto:"]').forEach(a => {
+        a.href = `mailto:${email}`;
+        a.textContent = email;
+      });
+
+      if (address) {
+        document.querySelectorAll('.footer-contact-row span').forEach(s => {
+          if (s.textContent.includes('Crimson') || s.textContent.includes('Bangalore') || s.textContent.includes('Channasandra')) {
+            s.textContent = address;
+          }
+        });
+      }
     }
 
     window.addEventListener('DOMContentLoaded', loadProductDetail);

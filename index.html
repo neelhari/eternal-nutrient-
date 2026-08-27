@@ -977,18 +977,51 @@
             }
           }
 
-          // 5. Hydrate Store Settings (Shipping threshold & fees)
+          // 5. Hydrate Store Settings & Footer
           if (settings && Object.keys(settings).length > 0) {
             window.STORE_CONFIG = Object.assign(window.STORE_CONFIG || {}, {
               freeShippingThreshold: Number(settings.free_shipping_threshold ?? 999),
               standardDeliveryFee: Number(settings.standard_shipping_fee ?? 40),
               minOrderValue: Number(settings.min_order_value ?? 999)
             });
+            hydrateFooterSettings(settings);
             renderCart();
           }
         } catch (e) {
           console.warn('Supabase storefront sync notice:', e);
         }
+      }
+    }
+
+    function hydrateFooterSettings(settings) {
+      if (!settings || typeof settings !== 'object') return;
+      const phone = settings.primary_phone || '+91 6302017482';
+      const secPhone = settings.secondary_phone ? `, ${settings.secondary_phone}` : '';
+      const wa = settings.primary_whatsapp || '916302017482';
+      const email = settings.support_email || 'eternalncdm@gmail.com';
+      const address = settings.registered_address || '';
+
+      document.querySelectorAll('.footer-contact-row a[href^="tel:"]').forEach(a => {
+        a.href = `tel:${phone.replace(/\D/g, '')}`;
+        a.textContent = `${phone}${secPhone}`;
+      });
+
+      document.querySelectorAll('.footer-contact-row a[href*="wa.me"]').forEach(a => {
+        a.href = `https://wa.me/${wa.replace(/\D/g, '')}`;
+        a.textContent = phone;
+      });
+
+      document.querySelectorAll('.footer-contact-row a[href^="mailto:"]').forEach(a => {
+        a.href = `mailto:${email}`;
+        a.textContent = email;
+      });
+
+      if (address) {
+        document.querySelectorAll('.footer-contact-row span').forEach(s => {
+          if (s.textContent.includes('Crimson') || s.textContent.includes('Bangalore') || s.textContent.includes('Channasandra')) {
+            s.textContent = address;
+          }
+        });
       }
     }
 

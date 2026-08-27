@@ -797,37 +797,60 @@
     }
 
     async function applyCoupon() {
-      const code = document.getElementById('coupon-code-input').value.trim().toUpperCase();
+      const codeInput = document.getElementById('coupon-code-input');
+      const code = codeInput ? codeInput.value.trim().toUpperCase() : '';
       if (!code) {
         alert('Please enter a coupon code.');
         return;
       }
 
-      if (window.CloudDB && window.CloudDB.isSupabaseActive()) {
+      const subtotal = currentCart.reduce((sum, i) => sum + (Number(i.price) * (Number(i.qty) || 1)), 0);
+      if (subtotal === 0) {
+        alert('Your cart is empty.');
+        return;
+      }
+
+      if (window.CloudDB && window.CloudDB.validateCoupon) {
         try {
-          const valid = await window.CloudDB.validateCoupon(code, currentCart.reduce((sum, i) => sum + (Number(i.price) * (Number(i.qty) || 1)), 0));
-          if (valid && valid.discount) {
-            discountApplied = valid.discount;
-            document.getElementById('discount-row').style.display = 'flex';
-            document.getElementById('co-discount').textContent = `-₹${discountApplied}`;
+          const res = await window.CloudDB.validateCoupon(code, subtotal);
+          if (res.valid) {
+            discountApplied = res.discount;
+            appliedCouponCode = res.code;
+            const discountRow = document.getElementById('discount-row');
+            if (discountRow) {
+              discountRow.style.display = 'flex';
+              discountRow.firstElementChild.textContent = `🎉 Coupon ${res.code} Applied`;
+              document.getElementById('co-discount').textContent = `-₹${discountApplied}`;
+            }
             updateTotalsUI();
-            alert(`🎉 Coupon ${code} applied! Saved ₹${discountApplied}.`);
+            alert(`🎉 Coupon "${res.code}" applied! You saved ₹${discountApplied}.`);
+            return;
+          } else {
+            alert(res.error || 'Invalid or expired coupon code.');
             return;
           }
-        } catch(e) {}
+        } catch(e) {
+          console.warn('Coupon verification notice:', e);
+        }
       }
 
       if (code === 'ETERNAL10') {
-        const subtotal = currentCart.reduce((sum, i) => sum + (Number(i.price) * (Number(i.qty) || 1)), 0);
         discountApplied = Math.round(subtotal * 0.10);
-        document.getElementById('discount-row').style.display = 'flex';
-        document.getElementById('co-discount').textContent = `-₹${discountApplied}`;
+        appliedCouponCode = 'ETERNAL10';
+        const discountRow = document.getElementById('discount-row');
+        if (discountRow) {
+          discountRow.style.display = 'flex';
+          discountRow.firstElementChild.textContent = `🎉 Coupon ETERNAL10 (10%)`;
+          document.getElementById('co-discount').textContent = `-₹${discountApplied}`;
+        }
         updateTotalsUI();
         alert(`🎉 Coupon ETERNAL10 applied! Saved ₹${discountApplied}.`);
       } else {
         alert('Invalid or expired coupon code.');
       }
     }
+
+    let appliedCouponCode = '';
 
     async function placeOrderFinal() {
       const name = document.getElementById('cust-name').value.trim();
@@ -847,12 +870,16 @@
         return;
       }
 
+      const user = window.AuthEngine ? window.AuthEngine.getCurrentUser() : null;
+      const userEmail = (user && user.email) ? user.email : '';
+
       const fullAddress = `${address}, ${city} - ${pincode}`;
       const waNumber = (window.STORE_CONFIG && window.STORE_CONFIG.whatsAppNumber) ? window.STORE_CONFIG.whatsAppNumber : '916302017482';
       const orderNumber = `EN-${Math.floor(1000 + Math.random() * 9000)}`;
 
       const subtotal = currentCart.reduce((sum, i) => sum + (Number(i.price) * (Number(i.qty) || 1)), 0);
-      const deliveryFee = subtotal >= 999 ? 0 : 40;
+      const minFree = Number(checkoutStoreSettings.freeShippingThreshold) || 999;
+      const deliveryFee = subtotal >= minFree ? 0 : (Number(checkoutStoreSettings.standardShippingFee) || 40);
       const ecoDiscount = subtotal > 0 ? 20 : 0;
       const totalAmount = Math.max(0, subtotal + deliveryFee - discountApplied - ecoDiscount);
 
@@ -863,13 +890,14 @@
             order_number: orderNumber,
             customer_name: name,
             customer_phone: phone,
+            customer_email: userEmail,
             delivery_address: { address, city, pincode, fullAddress },
             items: currentCart,
             subtotal: subtotal,
             delivery_fee: deliveryFee,
             discount_amount: discountApplied + ecoDiscount,
             total_amount: totalAmount,
-            coupon_code: discountApplied > 0 ? 'ETERNAL10' : '',
+            coupon_code: appliedCouponCode || (discountApplied > 0 ? 'ETERNAL10' : ''),
             payment_method: selectedPaymentType.toUpperCase(),
             payment_status: 'Pending',
             order_status: 'Order Confirmed'

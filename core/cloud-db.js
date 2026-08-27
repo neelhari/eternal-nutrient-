@@ -242,6 +242,23 @@ window.CloudDB = (function() {
     return mock ? mock.orders : [];
   }
 
+  async function getOrdersByEmail(email) {
+    if (!email) return [];
+    if (isSupabaseActive && supabaseClient) {
+      try {
+        const { data, error } = await supabaseClient
+          .from('orders')
+          .select('*')
+          .ilike('customer_email', email.trim())
+          .order('created_at', { ascending: false });
+        if (!error && data) return data;
+      } catch (err) {
+        console.warn('Orders by email lookup notice:', err.message);
+      }
+    }
+    return [];
+  }
+
   async function createOrder(rawOrder) {
     const orderId = rawOrder.id || `ord_${Date.now()}_${Math.random().toString(36).substr(2, 4)}`;
     const orderNum = rawOrder.order_number || rawOrder.orderNumber || `EN-${Math.floor(1000 + Math.random() * 9000)}`;
@@ -387,6 +404,63 @@ window.CloudDB = (function() {
       }
     }
     return mock ? mock.coupons : [];
+  }
+
+  async function validateCoupon(code, subtotal) {
+    if (!code) return { valid: false, error: 'Please enter a coupon code' };
+    const upperCode = code.toUpperCase().trim();
+    let coupon = null;
+
+    if (isSupabaseActive && supabaseClient) {
+      try {
+        const { data, error } = await supabaseClient.from('coupons').select('*').eq('code', upperCode).single();
+        if (!error && data) coupon = data;
+      } catch (err) {
+        console.warn('Coupon lookup notice:', err.message);
+      }
+    }
+
+    if (!coupon && mock && Array.isArray(mock.coupons)) {
+      coupon = mock.coupons.find(c => (c.code || '').toUpperCase() === upperCode);
+    }
+
+    if (!coupon) {
+      if (upperCode === 'ETERNAL10') {
+        const discount = Math.round(subtotal * 0.10);
+        return { valid: true, code: 'ETERNAL10', discount, message: '10% Welcome Discount applied!' };
+      }
+      return { valid: false, error: `Coupon "${upperCode}" is invalid or does not exist.` };
+    }
+
+    if (coupon.is_active === false || coupon.isActive === false) {
+      return { valid: false, error: `Coupon "${upperCode}" is no longer active.` };
+    }
+
+    const minMOV = Number(coupon.min_order_value ?? coupon.minOrderValue ?? 0);
+    if (minMOV > 0 && subtotal < minMOV) {
+      return { valid: false, error: `Minimum order value of ₹${minMOV} required for coupon "${upperCode}".` };
+    }
+
+    if (coupon.expiry_date || coupon.expiryDate) {
+      const exp = new Date(coupon.expiry_date || coupon.expiryDate);
+      if (!isNaN(exp) && exp < new Date()) {
+        return { valid: false, error: `Coupon "${upperCode}" expired on ${exp.toLocaleDateString('en-IN')}.` };
+      }
+    }
+
+    const type = coupon.type || coupon.discount_type || coupon.discountType || 'percentage';
+    const val = Number(coupon.value ?? 10);
+    const maxDisc = Number(coupon.max_discount ?? coupon.maxDiscount ?? 0);
+
+    let discount = 0;
+    if (type === 'percentage') {
+      discount = Math.round((subtotal * val) / 100);
+      if (maxDisc > 0 && discount > maxDisc) discount = maxDisc;
+    } else {
+      discount = val;
+    }
+
+    return { valid: true, code: coupon.code, discount, type, value: val, message: `Coupon "${coupon.code}" applied!` };
   }
 
   async function saveCoupon(cpn) {
@@ -587,11 +661,13 @@ window.CloudDB = (function() {
     saveCategory,
     deleteCategory,
     getOrders,
+    getOrdersByEmail,
     createOrder,
     updateOrderStatus,
     deductInventory,
     getCustomers,
     getCoupons,
+    validateCoupon,
     saveCoupon,
     deleteCoupon,
     getStoreSettings,
