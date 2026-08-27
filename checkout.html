@@ -674,8 +674,70 @@
   <script>
     let selectedPaymentType = 'whatsapp';
     let discountApplied = 0;
+    let currentCart = [];
+
+    function loadCheckoutCart() {
+      try {
+        currentCart = JSON.parse(localStorage.getItem('em_cart_items') || '[]');
+      } catch(e) {
+        currentCart = [];
+      }
+
+      const previewContainer = document.querySelector('.order-items-preview-sec');
+      const titleHeading = document.querySelector('.card-sec-title span');
+
+      if (!currentCart || currentCart.length === 0) {
+        if (previewContainer) {
+          previewContainer.innerHTML = `<div style="padding: 16px; text-align: center; color: #8C7E77;">Your cart is empty. <a href="categories.html" style="color: #281612; font-weight: 700;">Add products</a></div>`;
+        }
+        updateTotalsUI(0);
+        return;
+      }
+
+      const totalQty = currentCart.reduce((sum, i) => sum + (Number(i.qty) || 1), 0);
+      if (titleHeading) titleHeading.textContent = `Order Summary (${totalQty} Item${totalQty > 1 ? 's' : ''})`;
+
+      if (previewContainer) {
+        previewContainer.innerHTML = currentCart.map(item => {
+          const qty = Number(item.qty) || 1;
+          const price = Number(item.price) || 0;
+          const lineTotal = price * qty;
+          return `
+            <div class="checkout-item-row">
+              <img src="${item.image || 'assets/prod_honey_studio.jpg'}" alt="${item.title}" class="checkout-thumb">
+              <div class="checkout-item-info">
+                <div class="checkout-item-name">${item.title}</div>
+                <div class="checkout-item-qty">${item.unit || 'Pack'} • Qty: ${qty}</div>
+              </div>
+              <div class="checkout-item-price">₹${lineTotal}</div>
+            </div>
+          `;
+        }).join('');
+      }
+
+      updateTotalsUI();
+    }
+
+    function updateTotalsUI(forcedSubtotal = null) {
+      const subtotal = forcedSubtotal !== null ? forcedSubtotal : currentCart.reduce((sum, i) => sum + ((Number(i.price) || 0) * (Number(i.qty) || 1)), 0);
+      const minFree = 999;
+      const isFree = subtotal >= minFree || subtotal === 0;
+      const delivery = isFree ? 0 : 40;
+      const ecoDiscount = subtotal > 0 ? 20 : 0;
+      const total = Math.max(0, subtotal + delivery - discountApplied - ecoDiscount);
+
+      const subEl = document.getElementById('co-subtotal');
+      const grandEl = document.getElementById('co-grand-total');
+      const ctaBtn = document.querySelector('.btn-place-order-brown span');
+
+      if (subEl) subEl.textContent = `₹${subtotal}`;
+      if (grandEl) grandEl.textContent = `₹${total}`;
+      if (ctaBtn) ctaBtn.textContent = `Place Order (₹${total})`;
+    }
 
     window.addEventListener('DOMContentLoaded', () => {
+      loadCheckoutCart();
+
       if (window.AuthEngine) {
         const isAuth = window.AuthEngine.isAuthenticated();
         const user = window.AuthEngine.getCurrentUser();
@@ -716,16 +778,36 @@
       alert('Filled with Bangalore store address demo!');
     }
 
-    function applyCoupon() {
+    async function applyCoupon() {
       const code = document.getElementById('coupon-code-input').value.trim().toUpperCase();
+      if (!code) {
+        alert('Please enter a coupon code.');
+        return;
+      }
+
+      if (window.CloudDB && window.CloudDB.isSupabaseActive()) {
+        try {
+          const valid = await window.CloudDB.validateCoupon(code, currentCart.reduce((sum, i) => sum + (Number(i.price) * (Number(i.qty) || 1)), 0));
+          if (valid && valid.discount) {
+            discountApplied = valid.discount;
+            document.getElementById('discount-row').style.display = 'flex';
+            document.getElementById('co-discount').textContent = `-₹${discountApplied}`;
+            updateTotalsUI();
+            alert(`🎉 Coupon ${code} applied! Saved ₹${discountApplied}.`);
+            return;
+          }
+        } catch(e) {}
+      }
+
       if (code === 'ETERNAL10') {
-        discountApplied = 88;
+        const subtotal = currentCart.reduce((sum, i) => sum + (Number(i.price) * (Number(i.qty) || 1)), 0);
+        discountApplied = Math.round(subtotal * 0.10);
         document.getElementById('discount-row').style.display = 'flex';
-        document.getElementById('co-discount').textContent = '-₹88';
-        document.getElementById('co-grand-total').textContent = '₹769';
-        alert('🎉 Coupon ETERNAL10 applied! ₹88 saved.');
+        document.getElementById('co-discount').textContent = `-₹${discountApplied}`;
+        updateTotalsUI();
+        alert(`🎉 Coupon ETERNAL10 applied! Saved ₹${discountApplied}.`);
       } else {
-        alert('Please enter valid coupon code "ETERNAL10"');
+        alert('Invalid or expired coupon code.');
       }
     }
 
@@ -741,35 +823,22 @@
         return;
       }
 
+      if (!currentCart || currentCart.length === 0) {
+        alert('Your cart is empty! Please add products before checking out.');
+        window.location.href = 'categories.html';
+        return;
+      }
+
       const fullAddress = `${address}, ${city} - ${pincode}`;
       const waNumber = (window.STORE_CONFIG && window.STORE_CONFIG.whatsAppNumber) ? window.STORE_CONFIG.whatsAppNumber : '916302017482';
       const orderNumber = `EN-${Math.floor(1000 + Math.random() * 9000)}`;
 
-      // Raw items to purchase
-      const rawItems = [
-        { id: 'prod_1', title: 'Organic Honey (500g Jar)', qty: 1, price: 499 },
-        { id: 'prod_3', title: 'Millet Breakfast Rava (500g Pack)', qty: 2, price: 189 }
-      ];
+      const subtotal = currentCart.reduce((sum, i) => sum + (Number(i.price) * (Number(i.qty) || 1)), 0);
+      const deliveryFee = subtotal >= 999 ? 0 : 40;
+      const ecoDiscount = subtotal > 0 ? 20 : 0;
+      const totalAmount = Math.max(0, subtotal + deliveryFee - discountApplied - ecoDiscount);
 
-      // Anti-Price-Tampering Recalculation
-      let orderTotals = {
-        subtotal: 877,
-        deliveryFee: 0,
-        discountAmount: discountApplied,
-        totalAmount: 877 - discountApplied,
-        verifiedItems: rawItems
-      };
-
-      if (window.PaymentVerifier) {
-        try {
-          const verified = await window.PaymentVerifier.recalculateOrderTotals(rawItems, discountApplied > 0 ? 'ETERNAL10' : '');
-          orderTotals = verified;
-        } catch (e) {
-          console.warn('Price verification fallback:', e);
-        }
-      }
-
-      // Save order to Supabase / CloudDB with Order Confirmed & stock deduction
+      // Save order to Supabase
       if (window.CloudDB) {
         try {
           await window.CloudDB.createOrder({
@@ -777,11 +846,11 @@
             customer_name: name,
             customer_phone: phone,
             delivery_address: { address, city, pincode, fullAddress },
-            items: orderTotals.verifiedItems || rawItems,
-            subtotal: orderTotals.subtotal,
-            delivery_fee: orderTotals.deliveryFee,
-            discount_amount: orderTotals.discountAmount,
-            total_amount: orderTotals.totalAmount,
+            items: currentCart,
+            subtotal: subtotal,
+            delivery_fee: deliveryFee,
+            discount_amount: discountApplied + ecoDiscount,
+            total_amount: totalAmount,
             coupon_code: discountApplied > 0 ? 'ETERNAL10' : '',
             payment_method: selectedPaymentType.toUpperCase(),
             payment_status: 'Pending',
@@ -792,6 +861,7 @@
         }
       }
 
+      // Format WhatsApp Message
       let msg = `🛍️ *NEW CONFIRMED ORDER - ETERNAL NUTRICARE*\n`;
       msg += `------------------------------------\n`;
       msg += `🆔 *Order Number:* ${orderNumber}\n`;
@@ -801,14 +871,21 @@
       msg += `💳 *Payment Method:* ${selectedPaymentType.toUpperCase()}\n`;
       msg += `------------------------------------\n`;
       msg += `*Ordered Items:*\n`;
-      msg += `1. Organic Honey (500g Jar) × 1 = ₹499\n`;
-      msg += `2. Millet Breakfast Rava (500g Pack) × 2 = ₹378\n`;
+      currentCart.forEach((i, idx) => {
+        msg += `${idx + 1}. ${i.title} (${i.unit || 'Pack'}) × ${i.qty || 1} = ₹${(Number(i.price) || 0) * (Number(i.qty) || 1)}\n`;
+      });
       msg += `------------------------------------\n`;
-      msg += `*Discount Applied:* -₹108 (VIP Club + Eco)\n`;
-      msg += `*Total Payable:* ₹769 (FREE Delivery)\n\n`;
+      if (discountApplied > 0 || ecoDiscount > 0) {
+        msg += `*Discount Applied:* -₹${discountApplied + ecoDiscount}\n`;
+      }
+      msg += `*Total Payable:* ₹${totalAmount} (${deliveryFee === 0 ? 'FREE Delivery' : `Delivery: ₹${deliveryFee}`})\n\n`;
       msg += `Please confirm my order and share dispatch tracking time!`;
 
+      // Clear Cart after successful placement
+      localStorage.removeItem('em_cart_items');
+
       window.open(`https://wa.me/${waNumber}?text=${encodeURIComponent(msg)}`, '_blank');
+      window.location.href = 'index.html';
     }
   </script>
 </body>

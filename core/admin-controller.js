@@ -1080,34 +1080,6 @@ window.AdminController = (function() {
     };
   }
 
-  async function loadCloudData() {
-    if (window.CloudDB && window.CloudDB.isSupabaseActive()) {
-      try {
-        const [cloudProds, cloudCats, cloudOrders, cloudCusts] = await Promise.all([
-          window.CloudDB.getProducts(),
-          window.CloudDB.getCategories(),
-          window.CloudDB.getOrders(),
-          window.CloudDB.getCustomers()
-        ]);
-        if (cloudProds) {
-          db.products = cloudProds.map(normalizeProductFromDB);
-        }
-        if (cloudCats) {
-          db.categories = cloudCats.map(normalizeCategoryFromDB);
-        }
-        if (cloudOrders) {
-          db.orders = cloudOrders.map(normalizeOrderFromDB);
-        }
-        if (cloudCusts) {
-          db.customers = cloudCusts;
-        }
-        renderActiveView(activeTab);
-      } catch (e) {
-        console.warn('Initial cloud load notice:', e.message);
-      }
-    }
-  }
-
   async function toggleProductStock(productId, checkbox) {
     const prod = db.products.find(p => p.id === productId);
     if (!prod) return;
