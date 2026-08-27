@@ -674,13 +674,31 @@
   <script>
     let selectedPaymentType = 'whatsapp';
     let discountApplied = 0;
+    let checkoutStoreSettings = {
+      freeShippingThreshold: 999,
+      standardShippingFee: 40,
+      minOrderValue: 999
+    };
     let currentCart = [];
 
-    function loadCheckoutCart() {
+    async function loadCheckoutCart() {
       try {
         currentCart = JSON.parse(localStorage.getItem('em_cart_items') || '[]');
       } catch(e) {
         currentCart = [];
+      }
+
+      if (window.CloudDB && window.CloudDB.isSupabaseActive()) {
+        try {
+          const settings = await window.CloudDB.getStoreSettings();
+          if (settings && Object.keys(settings).length > 0) {
+            checkoutStoreSettings.freeShippingThreshold = Number(settings.free_shipping_threshold ?? checkoutStoreSettings.freeShippingThreshold);
+            checkoutStoreSettings.standardShippingFee = Number(settings.standard_shipping_fee ?? checkoutStoreSettings.standardShippingFee);
+            checkoutStoreSettings.minOrderValue = Number(settings.min_order_value ?? checkoutStoreSettings.minOrderValue);
+          }
+        } catch(e) {
+          console.warn('Store settings sync notice in checkout:', e);
+        }
       }
 
       const previewContainer = document.querySelector('.order-items-preview-sec');
@@ -720,9 +738,9 @@
 
     function updateTotalsUI(forcedSubtotal = null) {
       const subtotal = forcedSubtotal !== null ? forcedSubtotal : currentCart.reduce((sum, i) => sum + ((Number(i.price) || 0) * (Number(i.qty) || 1)), 0);
-      const minFree = 999;
+      const minFree = Number(checkoutStoreSettings.freeShippingThreshold) || 999;
       const isFree = subtotal >= minFree || subtotal === 0;
-      const delivery = isFree ? 0 : 40;
+      const delivery = isFree ? 0 : (Number(checkoutStoreSettings.standardShippingFee) || 40);
       const ecoDiscount = subtotal > 0 ? 20 : 0;
       const total = Math.max(0, subtotal + delivery - discountApplied - ecoDiscount);
 

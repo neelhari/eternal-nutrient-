@@ -273,11 +273,21 @@
     async function syncCatalogFromSupabase() {
       if (window.CloudDB && window.CloudDB.isSupabaseActive()) {
         try {
-          const [prods, cats, festive] = await Promise.all([
+          const [prods, cats, festive, settings] = await Promise.all([
             window.CloudDB.getProducts(),
             window.CloudDB.getCategories(),
-            window.CloudDB.getFestiveSpecials()
+            window.CloudDB.getFestiveSpecials(),
+            window.CloudDB.getStoreSettings()
           ]);
+
+          if (settings && Object.keys(settings).length > 0) {
+            window.STORE_CONFIG = Object.assign(window.STORE_CONFIG || {}, {
+              freeShippingThreshold: Number(settings.free_shipping_threshold ?? 999),
+              standardDeliveryFee: Number(settings.standard_shipping_fee ?? 40),
+              minOrderValue: Number(settings.min_order_value ?? 999)
+            });
+            renderCart();
+          }
 
           // 1. Hydrate Festive Specials Banner
           if (festive && typeof festive === 'object') {

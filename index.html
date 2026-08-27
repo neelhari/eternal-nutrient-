@@ -976,6 +976,16 @@
               }
             }
           }
+
+          // 5. Hydrate Store Settings (Shipping threshold & fees)
+          if (settings && Object.keys(settings).length > 0) {
+            window.STORE_CONFIG = Object.assign(window.STORE_CONFIG || {}, {
+              freeShippingThreshold: Number(settings.free_shipping_threshold ?? 999),
+              standardDeliveryFee: Number(settings.standard_shipping_fee ?? 40),
+              minOrderValue: Number(settings.min_order_value ?? 999)
+            });
+            renderCart();
+          }
         } catch (e) {
           console.warn('Supabase storefront sync notice:', e);
         }

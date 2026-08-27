@@ -369,11 +369,11 @@
     
     <!-- Free Shipping Progress -->
     <div class="free-shipping-card">
-      <div class="free-shipping-title" id="free-ship-title">Add ₹123 more for Free Shipping!</div>
+      <div class="free-shipping-title" id="free-ship-title">Add items to unlock Free Shipping!</div>
       <div class="free-shipping-track">
-        <div class="free-shipping-fill" id="free-ship-bar" style="width: 88%;"></div>
+        <div class="free-shipping-fill" id="free-ship-bar" style="width: 0%;"></div>
       </div>
-      <div class="free-shipping-sub">Free shipping on orders above ₹1,000</div>
+      <div class="free-shipping-sub" id="free-ship-subtext">Free shipping on orders above ₹999</div>
     </div>
 
     <!-- Left: Cart Items List -->
@@ -419,21 +419,24 @@
 
   </main>
 
-  <!-- Mobile Bottom Navigation Dock (100% Width Fixed) -->
+  <!-- Mobile Bottom Dock (4 Core Icons) -->
   <nav class="mobile-bottom-dock">
-    <a href="index.html" class="mobile-dock-btn">
+    <a href="index.html" class="dock-item" aria-label="Home">
       <i class="ri-home-5-line"></i>
       <span>Home</span>
     </a>
-    <a href="categories.html" class="mobile-dock-btn">
-      <i class="ri-store-2-line"></i>
-      <span>Shop</span>
+    <a href="categories.html" class="dock-item" aria-label="Categories">
+      <i class="ri-apps-2-line"></i>
+      <span>Categories</span>
     </a>
-    <a href="cart.html" class="mobile-dock-btn active">
-      <i class="ri-shopping-bag-3-fill"></i>
+    <a href="cart.html" class="dock-item active" aria-label="Cart">
+      <div class="dock-badge-wrap">
+        <i class="ri-shopping-cart-2-fill"></i>
+        <span class="dock-badge-pill minimal-cart-badge" style="display: none;">0</span>
+      </div>
       <span>Cart</span>
     </a>
-    <a href="account.html" class="mobile-dock-btn">
+    <a href="account.html" class="dock-item" aria-label="Account">
       <i class="ri-user-3-line"></i>
       <span>Account</span>
     </a>
@@ -456,8 +459,13 @@
     };
 
     let cartList = [];
+    let storeSettings = {
+      freeShippingThreshold: 999,
+      standardShippingFee: 40,
+      minOrderValue: 999
+    };
 
-    function loadCartData() {
+    async function loadCartData() {
       try {
         const saved = localStorage.getItem('em_cart_items');
         if (saved) {
@@ -467,6 +475,30 @@
         cartList = [];
       }
       if (!Array.isArray(cartList)) cartList = [];
+
+      // Filter out invalid/orphaned items with missing details or zero price
+      cartList = cartList.filter(item => item && item.id && (Number(item.price) > 0 || (DEFAULT_CATALOG[item.id] && DEFAULT_CATALOG[item.id].price > 0)));
+      saveCartData();
+
+      // Hydrate live shipping settings from Supabase
+      if (window.CloudDB && window.CloudDB.isSupabaseActive()) {
+        try {
+          const settings = await window.CloudDB.getStoreSettings();
+          if (settings && Object.keys(settings).length > 0) {
+            storeSettings.freeShippingThreshold = Number(settings.free_shipping_threshold ?? storeSettings.freeShippingThreshold);
+            storeSettings.standardShippingFee = Number(settings.standard_shipping_fee ?? storeSettings.standardShippingFee);
+            storeSettings.minOrderValue = Number(settings.min_order_value ?? storeSettings.minOrderValue);
+          }
+        } catch(e) {
+          console.warn('Store settings sync notice:', e);
+        }
+      }
+
+      const subEl = document.getElementById('free-ship-subtext');
+      if (subEl) {
+        subEl.textContent = `Free shipping on orders above ₹${storeSettings.freeShippingThreshold.toLocaleString('en-IN')}`;
+      }
+
       renderCartView();
     }
 
@@ -495,8 +527,8 @@
         const cat = DEFAULT_CATALOG[item.id] || {};
         const title = item.title || cat.title || 'Organic Product';
         const unit = item.unit || cat.unit || 'Standard Pack';
-        const img = item.image || cat.image || 'assets/showcase_honey.png';
-        const price = item.price || cat.price || 0;
+        const img = item.image || cat.image || 'assets/prod_honey_studio.jpg';
+        const price = Number(item.price) || cat.price || 0;
 
         return `
           <div class="cart-product-card" id="card-item-${item.id}">
@@ -548,31 +580,41 @@
     function recalculateSummary() {
       let subtotal = 0;
       cartList.forEach(item => {
-        subtotal += (item.price * item.qty);
+        const cat = DEFAULT_CATALOG[item.id] || {};
+        const price = Number(item.price) || cat.price || 0;
+        subtotal += (price * (Number(item.qty) || 1));
       });
 
-      const freeThreshold = 1000;
+      const freeThreshold = Number(storeSettings.freeShippingThreshold) || 999;
       const isFree = subtotal >= freeThreshold;
-      const delivery = (subtotal === 0 || isFree) ? 0 : 40;
+      const deliveryFee = (subtotal === 0 || isFree) ? 0 : (Number(storeSettings.standardShippingFee) || 40);
       const ecoDiscount = subtotal > 0 ? 20 : 0;
-      const total = Math.max(0, subtotal + delivery - ecoDiscount);
+      const total = Math.max(0, subtotal + deliveryFee - ecoDiscount);
 
       const fill = document.getElementById('free-ship-bar');
       const title = document.getElementById('free-ship-title');
+      const subEl = document.getElementById('free-ship-subtext');
+
+      if (subEl) {
+        subEl.textContent = `Free shipping on orders above ₹${freeThreshold.toLocaleString('en-IN')}`;
+      }
 
       if (title && fill) {
-        if (isFree) {
+        if (subtotal === 0) {
+          title.innerHTML = `Add items to unlock Free Shipping!`;
+          fill.style.width = '0%';
+        } else if (isFree) {
           title.innerHTML = `🎉 <strong>Congratulations!</strong> You unlocked Free Shipping!`;
           fill.style.width = '100%';
         } else {
           const needed = freeThreshold - subtotal;
-          title.innerHTML = `Add <strong>₹${needed}</strong> more for Free Shipping!`;
+          title.innerHTML = `Add <strong>₹${needed.toLocaleString('en-IN')}</strong> more for Free Shipping!`;
           fill.style.width = `${Math.min(100, Math.round((subtotal / freeThreshold) * 100))}%`;
         }
       }
 
       document.getElementById('sum-subtotal').textContent = `₹${subtotal}`;
-      document.getElementById('sum-delivery').textContent = delivery === 0 ? 'FREE' : `₹${delivery}`;
+      document.getElementById('sum-delivery').textContent = deliveryFee === 0 ? 'FREE' : `₹${deliveryFee}`;
       document.getElementById('sum-grand-total').textContent = `₹${total}`;
     }
 
