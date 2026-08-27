@@ -923,6 +923,7 @@
                 unit: p.unit || 'Pack',
                 image: p.image || (Array.isArray(p.gallery) && p.gallery[0]) || 'assets/prod_honey_studio.jpg',
                 isBestseller: !!p.is_bestseller,
+                isFeatured: p.is_featured !== false,
                 isNewArrival: !!p.is_new_arrival,
                 stockQty: stock,
                 inStock: inStock
@@ -1187,10 +1188,12 @@
         }
       }
 
-      // 3. Our Organic Range (All active catalog products)
+      // 3. Our Organic Range (Featured showcase products)
       const grid = document.getElementById('products-grid-container');
       if (grid) {
-        grid.innerHTML = allProds.map(p => {
+        const featuredProds = allProds.filter(p => p.isFeatured !== false);
+        const listToRender = featuredProds.length > 0 ? featuredProds : allProds;
+        grid.innerHTML = listToRender.map(p => {
           const isOut = !p.inStock;
           return `
             <div class="product-showcase-card ${isOut ? 'card-out-of-stock' : ''}" onclick="openProductDetail('${p.id}')" style="position: relative;">

@@ -837,7 +837,7 @@ window.AdminController = (function() {
         document.getElementById('prod-form-in-stock').checked = prod.inStock !== false;
         document.getElementById('prod-form-is-bestseller').checked = !!prod.isBestseller;
         const featEl = document.getElementById('prod-form-is-featured');
-        if (featEl) featEl.checked = !!prod.isFeatured;
+        if (featEl) featEl.checked = prod.isFeatured !== false && prod.is_featured !== false;
         const newEl = document.getElementById('prod-form-is-new');
         if (newEl) newEl.checked = !!prod.isNewArrival;
 
@@ -864,6 +864,13 @@ window.AdminController = (function() {
       currentProductGallery = [];
       renderGalleryStrip();
       
+      const featEl = document.getElementById('prod-form-is-featured');
+      if (featEl) featEl.checked = true;
+      const bsEl = document.getElementById('prod-form-is-bestseller');
+      if (bsEl) bsEl.checked = false;
+      const newEl = document.getElementById('prod-form-is-new');
+      if (newEl) newEl.checked = false;
+
       // Default single variant row for new product
       addPackSizeRow('500g Glass Jar', '', '', 50);
     }
@@ -939,7 +946,7 @@ window.AdminController = (function() {
 
     const finalGallery = (currentProductGallery && currentProductGallery.length > 0) ? [...currentProductGallery] : ['assets/prod_honey_studio.jpg'];
     const primaryImage = finalGallery[0];
-    const isFeatured = isBestseller || isNewArrival;
+    const isFeatured = document.getElementById('prod-form-is-featured')?.checked !== false;
 
     const productPayload = {
       id: prodId || ('prod_' + Date.now()),
