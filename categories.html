@@ -237,64 +237,75 @@
   <script src="core/cloud-db.js"></script>
   <script src="core/auth-engine.js"></script>
   <script>
-    const CATALOG = {
-      'Honey': [
-        { id: 'prod_1', title: 'Organic Honey', category: 'Honey', price: 499, mrp: 599, discount: '₹100 OFF', unit: '500 g', badge: 'Pure & Unfiltered', image: 'assets/prod_honey_studio.jpg' },
-        { id: 'h2', title: 'Wild Forest Honey', category: 'Honey', price: 549, mrp: 650, discount: '₹101 OFF', unit: '500 g', badge: '100% Forest Pure', image: 'assets/prod_honey_studio.jpg' },
-        { id: 'h3', title: 'Acacia Blossom Honey', category: 'Honey', price: 599, mrp: 699, discount: '₹100 OFF', unit: '500 g', badge: 'Single Origin', image: 'assets/header_honey_float.jpg' }
-      ],
-      'Pickles': [
-        { id: 'prod_2', title: 'Handmade Lemon Pickle', category: 'Pickles', price: 249, mrp: 299, discount: '₹50 OFF', unit: '300 g', badge: 'No Preservatives', image: 'assets/prod_pickle_studio.jpg' },
-        { id: 'p2', title: 'Traditional Mango Pickle', category: 'Pickles', price: 269, mrp: 320, discount: '₹51 OFF', unit: '350 g', badge: 'Cold Pressed Oil', image: 'assets/prod_pickle_studio.jpg' },
-        { id: 'p3', title: 'Spicy Garlic Pickle', category: 'Pickles', price: 289, mrp: 340, discount: '₹51 OFF', unit: '300 g', badge: 'Country Garlic', image: 'assets/prod_pickle_studio.jpg' }
-      ],
-      'Millet Biscuits': [
-        { id: 'prod_4', title: 'Millet Digestive Biscuits', category: 'Millet Biscuits', price: 149, mrp: 180, discount: '₹31 OFF', unit: '200 g', badge: 'Zero Maida', image: 'assets/prod_cookie_studio.jpg' },
-        { id: 'b2', title: 'Ragi Crunch Cookies', category: 'Millet Biscuits', price: 159, mrp: 190, discount: '₹31 OFF', unit: '200 g', badge: 'Finger Millet', image: 'assets/prod_cookie_studio.jpg' },
-        { id: 'b3', title: 'Jowar Butter Biscuits', category: 'Millet Biscuits', price: 169, mrp: 200, discount: '₹31 OFF', unit: '200 g', badge: 'Desi Butter', image: 'assets/prod_cookie_studio.jpg' }
-      ],
-      "Dates Laddu's": [
-        { id: 'prod_5', title: 'Classic Dates Laddu', category: "Dates Laddu's", price: 349, mrp: 399, discount: '₹50 OFF', unit: '250 g', badge: 'Pure Desi Ghee', image: 'assets/prod_laddu_studio.jpg' },
-        { id: 'd2', title: 'Dry Fruit Dates Laddu', category: "Dates Laddu's", price: 399, mrp: 450, discount: '₹51 OFF', unit: '250 g', badge: 'Almonds & Pista', image: 'assets/prod_laddu_studio.jpg' }
-      ],
-      'Moringa Chikki': [
-        { id: 'prod_6', title: 'Moringa Peanut Chikki', category: 'Moringa Chikki', price: 129, mrp: 150, discount: '₹21 OFF', unit: '150 g', badge: 'Organic Jaggery', image: 'assets/prod_chikki_studio.jpg' },
-        { id: 'c2', title: 'Moringa Sesame Chikki', category: 'Moringa Chikki', price: 139, mrp: 160, discount: '₹21 OFF', unit: '150 g', badge: 'Calcium Rich', image: 'assets/prod_chikki_studio.jpg' }
-      ],
-      'Millet Breakfast Rava': [
-        { id: 'prod_3', title: 'Millet Breakfast Rava', category: 'Millet Rava', price: 189, mrp: 220, discount: '₹31 OFF', unit: '500 g', badge: '100% Unpolished', image: 'assets/prod_rava_studio.jpg' },
-        { id: 'r2', title: 'Little Millet Rava', category: 'Millet Rava', price: 199, mrp: 230, discount: '₹31 OFF', unit: '500 g', badge: 'Dietary Fiber', image: 'assets/prod_rava_studio.jpg' }
-      ],
-      'Millet Rava': [
-        { id: 'prod_3', title: 'Millet Breakfast Rava', category: 'Millet Rava', price: 189, mrp: 220, discount: '₹31 OFF', unit: '500 g', badge: '100% Unpolished', image: 'assets/prod_rava_studio.jpg' },
-        { id: 'r2', title: 'Little Millet Rava', category: 'Millet Rava', price: 199, mrp: 230, discount: '₹31 OFF', unit: '500 g', badge: 'Dietary Fiber', image: 'assets/prod_rava_studio.jpg' }
-      ]
-    };
-
+    let ALL_PRODUCTS = [];
     let activeCategory = 'All';
     let cart = []; 
 
     async function syncCatalogFromSupabase() {
       if (window.CloudDB && window.CloudDB.isSupabaseActive()) {
+        // 1. Fetch and Hydrate Products
         try {
-          const [prods, cats, festive, settings] = await Promise.all([
-            window.CloudDB.getProducts(),
-            window.CloudDB.getCategories(),
-            window.CloudDB.getFestiveSpecials(),
-            window.CloudDB.getStoreSettings()
-          ]);
-
-          if (settings && Object.keys(settings).length > 0) {
-            window.STORE_CONFIG = Object.assign(window.STORE_CONFIG || {}, {
-              freeShippingThreshold: Number(settings.free_shipping_threshold ?? 999),
-              standardDeliveryFee: Number(settings.standard_shipping_fee ?? 40),
-              minOrderValue: Number(settings.min_order_value ?? 999)
+          const prods = await window.CloudDB.getProducts();
+          if (prods && prods.length > 0) {
+            ALL_PRODUCTS = prods.map(p => {
+              const price = Number(p.price) || 0;
+              const mrp = Number(p.original_price || p.price || price);
+              const diff = mrp > price ? mrp - price : 0;
+              const stock = Number(p.stock_qty ?? 50);
+              const inStock = p.in_stock !== false && stock > 0;
+              return {
+                id: p.id,
+                title: p.title,
+                category: p.category || 'General',
+                price: price,
+                mrp: mrp,
+                discount: diff > 0 ? `₹${diff} OFF` : '',
+                unit: p.unit || 'Pack',
+                badge: p.badge || (p.is_bestseller ? '★ Bestseller' : (p.is_new_arrival ? '⚡ New Arrival' : '')),
+                image: p.image || (Array.isArray(p.gallery) && p.gallery[0]) || 'assets/prod_honey_studio.jpg',
+                isBestseller: !!p.is_bestseller,
+                isNewArrival: !!p.is_new_arrival,
+                stockQty: stock,
+                inStock: inStock
+              };
             });
-            hydrateFooterSettings(settings);
-            renderCart();
+            renderProducts();
           }
+        } catch (err) {
+          console.warn('Products sync notice:', err);
+        }
 
-          // 1. Hydrate Festive Specials Banner
+        // 2. Fetch and Hydrate Categories
+        try {
+          const cats = await window.CloudDB.getCategories();
+          if (cats && Array.isArray(cats) && cats.length > 0) {
+            const chipScroll = document.getElementById('categories-nav-strip') || document.querySelector('.cat-horizontal-scroll-bar');
+            if (chipScroll) {
+              const visibleCats = cats.filter(c => c.show_in_shop !== false).sort((a,b) => (Number(a.sort_order) || 1) - (Number(b.sort_order) || 1));
+              chipScroll.innerHTML = `
+                <div class="cat-chip-tab ${activeCategory === 'All' ? 'active' : ''}" onclick="selectCategory('All', this)">
+                  <div class="cat-chip-avatar">
+                    <img src="https://images.unsplash.com/photo-1542838132-92c53300491e?w=150&auto=format&fit=crop&q=80" alt="All">
+                  </div>
+                  <span class="cat-chip-name">All</span>
+                </div>
+              ` + visibleCats.map(c => `
+                <div class="cat-chip-tab ${activeCategory !== 'All' && isCategoryMatch(c.name, activeCategory) ? 'active' : ''}" onclick="selectCategory('${c.name.replace(/'/g, "\\'")}', this)">
+                  <div class="cat-chip-avatar">
+                    <img src="${c.image || 'assets/prod_honey_studio.jpg'}" alt="${c.name}">
+                  </div>
+                  <span class="cat-chip-name">${c.name}</span>
+                </div>
+              `).join('');
+            }
+          }
+        } catch (err) {
+          console.warn('Categories sync notice:', err);
+        }
+
+        // 3. Fetch and Hydrate Festive Banner
+        try {
+          const festive = await window.CloudDB.getFestiveSpecials();
           if (festive && typeof festive === 'object') {
             const festiveBanner = document.getElementById('festive-showcase-banner');
             if (festive.isActive === false) {
@@ -324,64 +335,24 @@
               }
             }
           }
+        } catch (err) {
+          console.warn('Festive banner sync notice:', err);
+        }
 
-          // 2. Hydrate Category Chips dynamically from Supabase
-          if (cats && Array.isArray(cats) && cats.length > 0) {
-            const chipScroll = document.getElementById('categories-nav-strip') || document.querySelector('.cat-horizontal-scroll-bar');
-            if (chipScroll) {
-              const visibleCats = cats.filter(c => c.show_in_shop !== false).sort((a,b) => (Number(a.sort_order) || 1) - (Number(b.sort_order) || 1));
-              chipScroll.innerHTML = `
-                <div class="cat-chip-tab ${activeCategory === 'All' ? 'active' : ''}" onclick="selectCategory('All', this)">
-                  <div class="cat-chip-avatar">
-                    <img src="https://images.unsplash.com/photo-1542838132-92c53300491e?w=150&auto=format&fit=crop&q=80" alt="All">
-                  </div>
-                  <span class="cat-chip-name">All</span>
-                </div>
-              ` + visibleCats.map(c => `
-                <div class="cat-chip-tab ${activeCategory !== 'All' && isCategoryMatch(c.name, activeCategory) ? 'active' : ''}" onclick="selectCategory('${c.name.replace(/'/g, "\\'")}', this)">
-                  <div class="cat-chip-avatar">
-                    <img src="${c.image || 'assets/prod_honey_studio.jpg'}" alt="${c.name}">
-                  </div>
-                  <span class="cat-chip-name">${c.name}</span>
-                </div>
-              `).join('');
-            }
-          }
-
-          // 3. Hydrate Products strictly from Supabase
-          if (prods && prods.length > 0) {
-            // Wipe out hardcoded catalog
-            for (let k in CATALOG) delete CATALOG[k];
-
-            prods.forEach(p => {
-              const cat = p.category || 'General';
-              if (!CATALOG[cat]) CATALOG[cat] = [];
-              const price = Number(p.price) || 0;
-              const mrp = Number(p.original_price || p.price || price);
-              const diff = mrp > price ? mrp - price : 0;
-              const stock = Number(p.stock_qty ?? 50);
-              const inStock = p.in_stock !== false && stock > 0;
-              CATALOG[cat].push({
-                id: p.id,
-                title: p.title,
-                category: cat,
-                price: price,
-                mrp: mrp,
-                discount: diff > 0 ? `₹${diff} OFF` : '',
-                unit: p.unit || 'Pack',
-                badge: p.badge || (p.is_bestseller ? '★ Bestseller' : (p.is_new_arrival ? '⚡ New Arrival' : '')),
-                image: p.image || (Array.isArray(p.gallery) && p.gallery[0]) || 'assets/prod_honey_studio.jpg',
-                isBestseller: !!p.is_bestseller,
-                isNewArrival: !!p.is_new_arrival,
-                stockQty: stock,
-                inStock: inStock
-              });
+        // 4. Fetch and Hydrate Settings
+        try {
+          const settings = await window.CloudDB.getStoreSettings();
+          if (settings && Object.keys(settings).length > 0) {
+            window.STORE_CONFIG = Object.assign(window.STORE_CONFIG || {}, {
+              freeShippingThreshold: Number(settings.free_shipping_threshold ?? 999),
+              standardDeliveryFee: Number(settings.standard_shipping_fee ?? 40),
+              minOrderValue: Number(settings.min_order_value ?? 999)
             });
-
-            renderProducts();
+            hydrateFooterSettings(settings);
+            renderCartUI();
           }
-        } catch(e) {
-          console.warn('Supabase catalog sync notice:', e);
+        } catch (err) {
+          console.warn('Settings sync notice:', err);
         }
       }
     }
@@ -468,7 +439,7 @@
       const q = (query || '').trim().toLowerCase();
       let items = [];
       if (q) {
-        items = Object.values(CATALOG).flat().filter(p => 
+        items = ALL_PRODUCTS.filter(p => 
           p.title.toLowerCase().includes(q) || 
           (p.badge && p.badge.toLowerCase().includes(q)) ||
           p.unit.toLowerCase().includes(q)
@@ -483,11 +454,10 @@
 
     function renderProducts() {
       let items = [];
-      const allProds = Object.values(CATALOG).flat();
       if (activeCategory === 'All') {
-        items = allProds;
+        items = ALL_PRODUCTS;
       } else {
-        items = allProds.filter(p => isCategoryMatch(p.category, activeCategory));
+        items = ALL_PRODUCTS.filter(p => isCategoryMatch(p.category, activeCategory));
       }
       renderProductsWithItems(items);
     }
