@@ -18,9 +18,6 @@
   <link rel="stylesheet" href="styles/theme.css">
   <link rel="stylesheet" href="styles/storefront.css">
 
-  <!-- AOS (Animate On Scroll) -->
-  <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
-
   <style>
     /* 4 Tabs in bottom dock */
     .mobile-bottom-dock {
@@ -120,7 +117,7 @@
     </div>
 
     <!-- 2. Hero Promo Banner (Exact Reference Match) -->
-    <section class="hero-section-wrap" data-aos="zoom-in-up">
+    <section class="hero-section-wrap">
       <div class="hero-banner-card">
         <img class="hero-banner-bg-img" src="assets/hero_banner.jpg" alt="Pure Organic Honey & Nature">
         <div class="hero-banner-text">
@@ -139,7 +136,7 @@
     </section>
 
     <!-- 3. Shop by Category (Clean 4-column Grid in White Bento Card) -->
-    <div class="category-bento-grid-card" data-aos="fade-up">
+    <div class="category-bento-grid-card">
       <div class="exact-mockup-header" style="margin-bottom: 16px;">
         <div class="mockup-header-left">
           <div class="mockup-title-row">
@@ -223,7 +220,7 @@
     </div>
 
     <!-- 4. Best Sellers (Exact Reference Curated Rail) -->
-    <section class="editorial-curated-section theme-bestsellers" data-aos="fade-up">
+    <section class="editorial-curated-section theme-bestsellers">
       <div class="exact-mockup-header">
         <div class="mockup-header-left">
           <div class="mockup-title-row">
@@ -480,7 +477,7 @@
     </section>
 
     <!-- 6. New Arrivals (Exact Reference Curated Rail) -->
-    <section id="newarrivals-section" class="editorial-curated-section theme-newarrivals" data-aos="fade-up">
+    <section id="newarrivals-section" class="editorial-curated-section theme-newarrivals">
       <div class="exact-mockup-header">
         <div class="mockup-header-left">
           <div class="mockup-title-row">
@@ -643,8 +640,8 @@
       </div>
     </section>
 
-    <!-- Live Trust Stats Strip (AOS Animated with Dynamic Count-Up) -->
-    <section class="stats-strip-container" id="trust-stats-section" data-aos="fade-up">
+    <!-- Live Trust Stats Strip (Animated with Dynamic Count-Up) -->
+    <section class="stats-strip-container" id="trust-stats-section">
       <div class="stat-box-card">
         <div class="stat-num-val stat-count-animated" data-target="10000" data-suffix="+" data-format="comma">0+</div>
         <div class="stat-desc-label">Happy Families</div>
@@ -883,7 +880,6 @@
   <script src="core/cloud-db.js"></script>
   <script src="core/payment-verifier.js"></script>
   <script src="core/auth-engine.js"></script>
-  <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
   
   <!-- Store Controller Logic -->
   <script>
@@ -1491,18 +1487,7 @@
       syncProductsFromSupabase();
       renderCart();
       initStatsCounter();
-      if (typeof AOS !== 'undefined') {
-        AOS.init({
-          duration: 650,
-          easing: 'ease-out-cubic',
-          once: true,
-          offset: 40
-        });
-      }
     });
   </script>
-
-  <!-- AOS Script CDN -->
-  <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
 </body>
 </html>
