@@ -899,13 +899,16 @@
     async function syncProductsFromSupabase() {
       if (window.CloudDB && window.CloudDB.isSupabaseActive()) {
         try {
-          const [prods, banners, festive, anns] = await Promise.all([
+          const [prods, cats, banners, festive, anns, settings] = await Promise.all([
             window.CloudDB.getProducts(),
+            window.CloudDB.getCategories(),
             window.CloudDB.getBanners(),
             window.CloudDB.getFestiveSpecials(),
-            window.CloudDB.getAnnouncements()
+            window.CloudDB.getAnnouncements(),
+            window.CloudDB.getStoreSettings()
           ]);
 
+          // 1. Hydrate Products
           if (prods && prods.length > 0) {
             prods.forEach(p => {
               const stock = Number(p.stock_qty ?? 50);
@@ -929,7 +932,32 @@
             renderCart();
           }
 
-          // Hydrate Hero Banners
+          // 2. Hydrate Categories Bento Grid
+          if (cats && Array.isArray(cats) && cats.length > 0) {
+            const catGrid = document.querySelector('.category-grid-4x4');
+            if (catGrid) {
+              const visibleCats = cats.filter(c => c.show_on_home !== false).sort((a,b) => (Number(a.sort_order) || 1) - (Number(b.sort_order) || 1));
+              if (visibleCats.length > 0) {
+                catGrid.innerHTML = visibleCats.map(c => `
+                  <a href="categories.html?cat=${encodeURIComponent(c.name)}" class="cat-grid-card-item">
+                    <div class="cat-grid-avatar-circle">
+                      <img src="${c.image || 'assets/prod_honey_studio.jpg'}" alt="${c.name}">
+                    </div>
+                    <span class="cat-grid-label-name">${c.name}</span>
+                  </a>
+                `).join('') + `
+                  <a href="categories.html" class="cat-grid-card-item">
+                    <div class="cat-grid-avatar-circle" style="background: #281612; border-color: #281612; color: #FFFFFF;">
+                      <i class="ri-grid-fill" style="font-size: 22px; color: #E2C095;"></i>
+                    </div>
+                    <span class="cat-grid-label-name">All Products</span>
+                  </a>
+                `;
+              }
+            }
+          }
+
+          // 3. Hydrate Hero Banners
           if (banners && Array.isArray(banners) && banners.length > 0) {
             const activeBanners = banners.filter(b => b.isActive !== false);
             if (activeBanners.length > 0) {
@@ -943,7 +971,7 @@
             }
           }
 
-          // Hydrate Marquee Ribbon
+          // 4. Hydrate Marquee Ribbon
           if (anns && Array.isArray(anns) && anns.length > 0) {
             const activeAnns = anns.filter(a => a.isActive !== false);
             if (activeAnns.length > 0) {
