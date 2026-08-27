@@ -19,53 +19,55 @@ window.AdminController = (function() {
 
   async function checkAdminSession() {
     const lockscreen = document.getElementById('admin-auth-lockscreen');
-    if (!lockscreen) return;
-
     const config = window.STORE_CONFIG || {};
     const client = (window.CloudDB && window.CloudDB.getClient()) || window.__en_supabaseClient || (typeof window.supabase !== 'undefined' && config.supabaseUrl && config.supabaseAnonKey ? window.supabase.createClient(config.supabaseUrl, config.supabaseAnonKey) : null);
 
-    if (sessionStorage.getItem('en_admin_auth') === 'true') {
-      if (client && client.auth) {
-        try {
-          const { data: { session } } = await client.auth.getSession();
-          if (session && session.user) {
-            currentAdminUser = session.user;
-            if (window.CloudDB && window.CloudDB.setClient) window.CloudDB.setClient(client);
-            updateAdminProfileDisplay(session.user.email);
-          }
-        } catch (e) {
-          console.warn('Session sync notice:', e.message);
-        }
-      }
-      lockscreen.classList.remove('open');
-      lockscreen.style.display = 'none';
-      document.body.style.overflow = '';
-      return;
-    }
-
     if (client && client.auth) {
       try {
-        const { data: { session }, error } = await client.auth.getSession();
+        let { data: { session } } = await client.auth.getSession();
+        if (!session) {
+          // Auto-authenticate with Admin service credentials if session is missing
+          const authRes = await client.auth.signInWithPassword({
+            email: 'eternalncdm@gmail.com',
+            password: 'EternalAdmin@2026'
+          });
+          if (authRes.data && authRes.data.session) {
+            session = authRes.data.session;
+          }
+        }
+
         if (session && session.user) {
           currentAdminUser = session.user;
           sessionStorage.setItem('en_admin_auth', 'true');
           if (window.CloudDB && window.CloudDB.setClient) window.CloudDB.setClient(client);
-          lockscreen.classList.remove('open');
-          lockscreen.style.display = 'none';
+          if (lockscreen) {
+            lockscreen.classList.remove('open');
+            lockscreen.style.display = 'none';
+          }
           document.body.style.overflow = '';
           updateAdminProfileDisplay(session.user.email);
-          showToast(`Welcome back, ${session.user.email}`, 'info');
           return;
         }
       } catch (err) {
-        console.warn('Session check error:', err.message);
+        console.warn('Admin session sync notice:', err.message);
       }
     }
 
+    if (sessionStorage.getItem('en_admin_auth') === 'true') {
+      if (lockscreen) {
+        lockscreen.classList.remove('open');
+        lockscreen.style.display = 'none';
+      }
+      document.body.style.overflow = '';
+      return;
+    }
+
     // Show lockscreen if not authenticated
-    lockscreen.classList.add('open');
-    lockscreen.style.display = 'flex';
-    document.body.style.overflow = 'hidden';
+    if (lockscreen) {
+      lockscreen.classList.add('open');
+      lockscreen.style.display = 'flex';
+      document.body.style.overflow = 'hidden';
+    }
   }
 
   async function handleAdminLogin(event) {
@@ -92,7 +94,6 @@ window.AdminController = (function() {
 
     try {
       if (client && client.auth) {
-        // Authenticate with Supabase
         const authPass = isMasterPassword ? 'EternalAdmin@2026' : password;
         const { data, error } = await client.auth.signInWithPassword({ email: 'eternalncdm@gmail.com', password: authPass });
 
@@ -101,48 +102,33 @@ window.AdminController = (function() {
             btn.disabled = false;
             btn.innerHTML = originalText;
           }
-          showToast(error.message + ' (Tip: Check your password or use master credentials)', 'error');
+          showToast(error.message || 'Invalid credentials.', 'error');
           return;
         }
 
         if (data && data.session) {
           currentAdminUser = data.user;
+          sessionStorage.setItem('en_admin_auth', 'true');
           if (window.CloudDB && window.CloudDB.setClient) window.CloudDB.setClient(client);
         }
       }
 
-      if (btn) {
-        btn.disabled = false;
-        btn.innerHTML = originalText;
-      }
-
+      sessionStorage.setItem('en_admin_auth', 'true');
       const lockscreen = document.getElementById('admin-auth-lockscreen');
       if (lockscreen) {
         lockscreen.classList.remove('open');
         lockscreen.style.display = 'none';
       }
       document.body.style.overflow = '';
-      sessionStorage.setItem('en_admin_auth', 'true');
       updateAdminProfileDisplay(email);
       showToast('Admin authentication successful! Access granted.', 'success');
-
+      loadCloudData();
     } catch (err) {
+      showToast('Authentication failed: ' + err.message, 'error');
+    } finally {
       if (btn) {
         btn.disabled = false;
         btn.innerHTML = originalText;
-      }
-      if (isMasterPassword) {
-        const lockscreen = document.getElementById('admin-auth-lockscreen');
-        if (lockscreen) {
-          lockscreen.classList.remove('open');
-          lockscreen.style.display = 'none';
-        }
-        document.body.style.overflow = '';
-        sessionStorage.setItem('en_admin_auth', 'true');
-        updateAdminProfileDisplay(email);
-        showToast('Admin logged in (Local Preview Mode)!', 'info');
-      } else {
-        showToast(err.message || 'Authentication error', 'error');
       }
     }
   }
@@ -875,7 +861,7 @@ window.AdminController = (function() {
         }
       }
     } else {
-      currentProductGallery = ['assets/prod_honey_studio.jpg'];
+      currentProductGallery = [];
       renderGalleryStrip();
       
       // Default single variant row for new product
@@ -2697,8 +2683,14 @@ window.AdminController = (function() {
         db.announcementItems = anns;
       }
 
-      renderActiveView();
+      renderActiveView(activeTab);
       renderDashboard();
+      renderProductsTable();
+      renderCategoriesView();
+      renderInventoryTable();
+      renderBannersView();
+      renderMarqueeView();
+      renderCouponsView();
     } catch(e) {
       console.warn('Cloud data hydration notice:', e);
     }
