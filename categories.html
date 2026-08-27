@@ -282,6 +282,8 @@
               const price = Number(p.price) || 0;
               const mrp = Number(p.original_price || p.price || price);
               const diff = mrp > price ? mrp - price : 0;
+              const stock = Number(p.stock_qty ?? 50);
+              const inStock = p.in_stock !== false && stock > 0;
               dynamicCatalog[cat].push({
                 id: p.id,
                 title: p.title,
@@ -292,7 +294,9 @@
                 badge: p.badge || (p.is_bestseller ? '★ Bestseller' : (p.is_new_arrival ? '⚡ New Arrival' : '')),
                 image: p.image || (Array.isArray(p.gallery) && p.gallery[0]) || 'assets/prod_honey_studio.jpg',
                 isBestseller: !!p.is_bestseller,
-                isNewArrival: !!p.is_new_arrival
+                isNewArrival: !!p.is_new_arrival,
+                stockQty: stock,
+                inStock: inStock
               });
             });
 
@@ -370,15 +374,17 @@
       grid.innerHTML = items.map(p => {
         const inCart = cart.find(c => c.id === p.id);
         const qty = inCart ? inCart.qty : 0;
+        const isOut = p.inStock === false;
         return `
-          <div class="zepto-item-box" onclick="openProductDetail('${p.id}')">
+          <div class="zepto-item-box ${isOut ? 'item-out-of-stock' : ''}" onclick="openProductDetail('${p.id}')" style="position: relative;">
+            ${isOut ? `<span style="position: absolute; top: 8px; left: 8px; background: #DC2626; color: #FFF; font-size: 9.5px; font-weight: 800; padding: 2px 6px; border-radius: 4px; z-index: 2;">SOLD OUT</span>` : ''}
             <div class="zepto-img-container">
-              <img src="${p.image}" alt="${p.title}" loading="lazy">
+              <img src="${p.image}" alt="${p.title}" loading="lazy" style="${isOut ? 'opacity: 0.55;' : ''}">
             </div>
             <div class="zepto-details-col">
               <div class="zepto-item-title" title="${p.title}">${p.title}</div>
               <div class="zepto-unit-info">${p.unit}</div>
-              <div class="zepto-badge-pill">${p.badge}</div>
+              <div class="zepto-badge-pill">${p.badge || ''}</div>
               
               <div class="zepto-card-bottom-row">
                 <div class="zepto-price-col">
@@ -390,7 +396,11 @@
                 </div>
                 
                 <div>
-                  ${qty === 0 ? `
+                  ${isOut ? `
+                    <button class="zepto-add-pill-btn" disabled style="opacity: 0.5; cursor: not-allowed; background: #E2E8F0; color: #64748B;">
+                      <span>Sold Out</span>
+                    </button>
+                  ` : (qty === 0 ? `
                     <button class="zepto-add-pill-btn" onclick="event.stopPropagation(); addToCartItem('${p.id}', '${p.title.replace(/'/g, "\\'")}', ${p.price}, '${p.image}')">
                       <i class="ri-shopping-cart-2-line"></i>
                       <span>Add</span>
@@ -401,7 +411,7 @@
                       <span class="zepto-step-val">${qty}</span>
                       <button class="zepto-step-btn" onclick="updateItemQty('${p.id}', 1)">+</button>
                     </div>
-                  `}
+                  `)}
                 </div>
               </div>
             </div>

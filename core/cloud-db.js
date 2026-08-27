@@ -138,6 +138,20 @@ window.CloudDB = (function() {
   }
 
   // 2. CATEGORIES API
+  const KNOWN_CATEGORY_COLUMNS = new Set([
+    'id', 'name', 'tagline', 'image', 'icon', 'sort_order', 'show_on_home', 'show_in_shop', 'created_at', 'updated_at'
+  ]);
+
+  function sanitizeCategoryForDB(cat) {
+    const payload = {};
+    for (const key of Object.keys(cat)) {
+      if (KNOWN_CATEGORY_COLUMNS.has(key)) {
+        payload[key] = cat[key];
+      }
+    }
+    return payload;
+  }
+
   async function getCategories() {
     if (isSupabaseActive && supabaseClient) {
       try {
@@ -151,13 +165,14 @@ window.CloudDB = (function() {
   }
 
   async function saveCategory(cat) {
+    const dbPayload = sanitizeCategoryForDB(cat);
     if (isSupabaseActive && supabaseClient) {
       try {
-        const { data, error } = await supabaseClient.from('categories').upsert(cat).select();
+        const { data, error } = await supabaseClient.from('categories').upsert(dbPayload).select();
         if (!error && data) {
           if (mock) {
             const idx = mock.categories.findIndex(c => c.id === cat.id);
-            if (idx !== -1) mock.categories[idx] = cat;
+            if (idx !== -1) mock.categories[idx] = { ...mock.categories[idx], ...cat };
             else mock.categories.push(cat);
           }
           return { success: true, data };
@@ -174,6 +189,21 @@ window.CloudDB = (function() {
       else mock.categories.push(cat);
     }
     return { success: true, local: true };
+  }
+
+  async function deleteCategory(id) {
+    if (isSupabaseActive && supabaseClient) {
+      try {
+        const { error } = await supabaseClient.from('categories').delete().eq('id', id);
+        if (error) return { success: false, error };
+      } catch (err) {
+        return { success: false, error: err };
+      }
+    }
+    if (mock) {
+      mock.categories = mock.categories.filter(c => c.id !== id);
+    }
+    return { success: true };
   }
 
   // 3. ORDERS & INVENTORY PIPELINE
@@ -247,7 +277,6 @@ window.CloudDB = (function() {
       try {
         const { data, error } = await supabaseClient.from('orders').insert(normalizedOrder).select();
         if (!error && data && data.length > 0) {
-          // Trigger stock deduction in database
           await deductInventory(normalizedOrder.items);
           return { success: true, data: data[0] };
         }
@@ -304,7 +333,6 @@ window.CloudDB = (function() {
 
     const map = new Map();
 
-    // Aggregate from profiles
     profilesList.forEach(p => {
       const key = p.phone || p.email || p.id;
       map.set(key, {
@@ -319,7 +347,6 @@ window.CloudDB = (function() {
       });
     });
 
-    // Aggregate from real orders
     ordersList.forEach(o => {
       const key = o.customer_phone || o.customer_email || o.customer_name;
       if (!key) return;
@@ -353,13 +380,66 @@ window.CloudDB = (function() {
   async function getCoupons() {
     if (isSupabaseActive && supabaseClient) {
       try {
-        const { data, error } = await supabaseClient.from('coupons').select('*');
-        if (!error && data) return data;
+        const { data, error } = await supabaseClient.from('coupons').select('*').order('created_at', { ascending: false });
+        if (!error && data && data.length > 0) return data;
       } catch (err) {
         console.warn('Falling back to local coupons:', err.message);
       }
     }
     return mock ? mock.coupons : [];
+  }
+
+  async function saveCoupon(cpn) {
+    const payload = {
+      id: cpn.id || ('cp_' + Date.now()),
+      code: (cpn.code || '').toUpperCase().trim(),
+      type: cpn.type || 'percentage',
+      value: Number(cpn.value) || 10,
+      min_order_value: Number(cpn.minOrderValue || cpn.min_order_value || 999),
+      max_discount: Number(cpn.maxDiscount || cpn.max_discount || 0),
+      expiry_date: cpn.expiryDate || cpn.expiry_date || null,
+      usage_limit: Number(cpn.usageLimit || cpn.usage_limit || 500),
+      total_used: Number(cpn.totalUsed || cpn.total_used || 0),
+      is_active: cpn.isActive !== false && cpn.is_active !== false
+    };
+
+    if (isSupabaseActive && supabaseClient) {
+      try {
+        const { data, error } = await supabaseClient.from('coupons').upsert(payload).select();
+        if (!error && data) {
+          if (mock) {
+            const idx = mock.coupons.findIndex(c => c.id === payload.id || c.code === payload.code);
+            if (idx !== -1) mock.coupons[idx] = { ...mock.coupons[idx], ...payload };
+            else mock.coupons.push(payload);
+          }
+          return { success: true, data };
+        }
+        return { success: false, error };
+      } catch (err) {
+        return { success: false, error: err };
+      }
+    }
+    if (mock) {
+      const idx = mock.coupons.findIndex(c => c.id === payload.id);
+      if (idx !== -1) mock.coupons[idx] = payload;
+      else mock.coupons.push(payload);
+    }
+    return { success: true, local: true };
+  }
+
+  async function deleteCoupon(id) {
+    if (isSupabaseActive && supabaseClient) {
+      try {
+        const { error } = await supabaseClient.from('coupons').delete().eq('id', id);
+        if (error) return { success: false, error };
+      } catch (err) {
+        return { success: false, error: err };
+      }
+    }
+    if (mock) {
+      mock.coupons = mock.coupons.filter(c => c.id !== id);
+    }
+    return { success: true };
   }
 
   // 6. STORE SETTINGS API
@@ -381,13 +461,115 @@ window.CloudDB = (function() {
       try {
         const { data, error } = await supabaseClient.from('store_settings').upsert(payload).select();
         if (!error) return { success: true, data };
+        return { success: false, error };
       } catch (err) {
         console.warn('Cloud settings save fallback:', err.message);
+        return { success: false, error: err };
       }
     }
     if (mock) {
       mock.storeSettings = Object.assign(mock.storeSettings || {}, settings);
     }
+    return { success: true, local: true };
+  }
+
+  // 7. CMS CONTENT API (Hero Banners, Festive Specials, Announcements)
+  async function getBanners() {
+    if (isSupabaseActive && supabaseClient) {
+      try {
+        const { data, error } = await supabaseClient.from('cms_content').select('*').eq('id', 'cms_hero_banners').single();
+        if (!error && data && Array.isArray(data.content_payload)) return data.content_payload;
+      } catch (err) {
+        console.warn('Falling back to local hero banners:', err.message);
+      }
+    }
+    return mock ? mock.heroBanners : [];
+  }
+
+  async function saveBanners(bannersList) {
+    const payload = {
+      id: 'cms_hero_banners',
+      section_type: 'hero_banners',
+      content_payload: bannersList,
+      is_active: true,
+      updated_at: new Date().toISOString()
+    };
+    if (isSupabaseActive && supabaseClient) {
+      try {
+        const { data, error } = await supabaseClient.from('cms_content').upsert(payload).select();
+        if (!error) return { success: true, data };
+        return { success: false, error };
+      } catch (err) {
+        return { success: false, error: err };
+      }
+    }
+    if (mock) mock.heroBanners = bannersList;
+    return { success: true, local: true };
+  }
+
+  async function getFestiveSpecials() {
+    if (isSupabaseActive && supabaseClient) {
+      try {
+        const { data, error } = await supabaseClient.from('cms_content').select('*').eq('id', 'cms_festive_specials').single();
+        if (!error && data && data.content_payload) return data.content_payload;
+      } catch (err) {
+        console.warn('Falling back to local festive specials:', err.message);
+      }
+    }
+    return mock ? mock.festiveSpecials : null;
+  }
+
+  async function saveFestiveSpecials(festiveData) {
+    const payload = {
+      id: 'cms_festive_specials',
+      section_type: 'festive_specials',
+      content_payload: festiveData,
+      is_active: true,
+      updated_at: new Date().toISOString()
+    };
+    if (isSupabaseActive && supabaseClient) {
+      try {
+        const { data, error } = await supabaseClient.from('cms_content').upsert(payload).select();
+        if (!error) return { success: true, data };
+        return { success: false, error };
+      } catch (err) {
+        return { success: false, error: err };
+      }
+    }
+    if (mock) mock.festiveSpecials = festiveData;
+    return { success: true, local: true };
+  }
+
+  async function getAnnouncements() {
+    if (isSupabaseActive && supabaseClient) {
+      try {
+        const { data, error } = await supabaseClient.from('cms_content').select('*').eq('id', 'cms_announcements').single();
+        if (!error && data && Array.isArray(data.content_payload)) return data.content_payload;
+      } catch (err) {
+        console.warn('Falling back to local announcements:', err.message);
+      }
+    }
+    return mock ? mock.announcementItems : [];
+  }
+
+  async function saveAnnouncements(annList) {
+    const payload = {
+      id: 'cms_announcements',
+      section_type: 'announcements',
+      content_payload: annList,
+      is_active: true,
+      updated_at: new Date().toISOString()
+    };
+    if (isSupabaseActive && supabaseClient) {
+      try {
+        const { data, error } = await supabaseClient.from('cms_content').upsert(payload).select();
+        if (!error) return { success: true, data };
+        return { success: false, error };
+      } catch (err) {
+        return { success: false, error: err };
+      }
+    }
+    if (mock) mock.announcementItems = annList;
     return { success: true, local: true };
   }
 
@@ -403,14 +585,23 @@ window.CloudDB = (function() {
     deleteProduct,
     getCategories,
     saveCategory,
+    deleteCategory,
     getOrders,
     createOrder,
     updateOrderStatus,
     deductInventory,
     getCustomers,
     getCoupons,
+    saveCoupon,
+    deleteCoupon,
     getStoreSettings,
-    saveStoreSettings
+    saveStoreSettings,
+    getBanners,
+    saveBanners,
+    getFestiveSpecials,
+    saveFestiveSpecials,
+    getAnnouncements,
+    saveAnnouncements
   };
 
 })();

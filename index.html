@@ -903,9 +903,17 @@
     async function syncProductsFromSupabase() {
       if (window.CloudDB && window.CloudDB.isSupabaseActive()) {
         try {
-          const prods = await window.CloudDB.getProducts();
+          const [prods, banners, festive, anns] = await Promise.all([
+            window.CloudDB.getProducts(),
+            window.CloudDB.getBanners(),
+            window.CloudDB.getFestiveSpecials(),
+            window.CloudDB.getAnnouncements()
+          ]);
+
           if (prods && prods.length > 0) {
             prods.forEach(p => {
+              const stock = Number(p.stock_qty ?? 50);
+              const inStock = p.in_stock !== false && stock > 0;
               PRODUCTS[p.id] = {
                 id: p.id,
                 title: p.title,
@@ -917,11 +925,38 @@
                 image: p.image || (Array.isArray(p.gallery) && p.gallery[0]) || 'assets/prod_honey_studio.jpg',
                 isBestseller: !!p.is_bestseller,
                 isNewArrival: !!p.is_new_arrival,
-                inStock: p.in_stock !== false
+                stockQty: stock,
+                inStock: inStock
               };
             });
             renderStorefrontSections();
             renderCart();
+          }
+
+          // Hydrate Hero Banners
+          if (banners && Array.isArray(banners) && banners.length > 0) {
+            const activeBanners = banners.filter(b => b.isActive !== false);
+            if (activeBanners.length > 0) {
+              const b = activeBanners[0];
+              const heroImg = document.querySelector('.hero-banner-bg-img');
+              const heroTitle = document.querySelector('.hero-title-main');
+              const heroSub = document.querySelector('.hero-sub-tag');
+              if (heroImg && b.desktopImage) heroImg.src = b.desktopImage;
+              if (heroTitle && b.headline) heroTitle.innerHTML = b.headline.replace(/\n/g, '<br>');
+              if (heroSub && (b.eyebrow || b.tagline)) heroSub.textContent = b.eyebrow || b.tagline;
+            }
+          }
+
+          // Hydrate Marquee Ribbon
+          if (anns && Array.isArray(anns) && anns.length > 0) {
+            const activeAnns = anns.filter(a => a.isActive !== false);
+            if (activeAnns.length > 0) {
+              const marqueeTrack = document.querySelector('.marquee-track');
+              if (marqueeTrack) {
+                const itemsHtml = activeAnns.map(a => `<span class="marquee-item"><i class="${a.icon || 'ri-leaf-fill'}"></i> ${a.text}</span>`).join('');
+                marqueeTrack.innerHTML = itemsHtml + itemsHtml; // duplicate for continuous loop
+              }
+            }
           }
         } catch (e) {
           console.warn('Supabase storefront sync notice:', e);
@@ -939,10 +974,12 @@
         const listToRender = bestSellers.length > 0 ? bestSellers : allProds.slice(0, 6);
         bsRail.innerHTML = listToRender.map(p => {
           const diff = p.originalPrice > p.price ? (p.originalPrice - p.price) : 0;
+          const isOut = !p.inStock;
           return `
-            <div class="mockup-product-card" onclick="openProductDetail('${p.id}')">
+            <div class="mockup-product-card ${isOut ? 'card-out-of-stock' : ''}" onclick="openProductDetail('${p.id}')" style="position: relative;">
+              ${isOut ? `<span style="position: absolute; top: 10px; left: 10px; background: #DC2626; color: #FFF; font-size: 10px; font-weight: 800; padding: 2px 7px; border-radius: 4px; z-index: 2;">SOLD OUT</span>` : ''}
               <div class="mockup-card-img-wrap">
-                <img src="${p.image}" alt="${p.title}" loading="lazy">
+                <img src="${p.image}" alt="${p.title}" loading="lazy" style="${isOut ? 'opacity: 0.6;' : ''}">
               </div>
               <h3 class="mockup-card-title">${p.title}</h3>
               <div class="mockup-card-unit">${p.unit}</div>
@@ -955,10 +992,16 @@
                   ${diff > 0 ? `<div class="mockup-discount-text">₹${diff} OFF</div>` : ''}
                 </div>
                 <div id="bs-actions-${p.id}">
-                  <button class="mockup-add-pill-btn" onclick="event.stopPropagation(); addToCart('${p.id}', event)">
-                    <i class="ri-shopping-cart-2-line"></i>
-                    <span>Add</span>
-                  </button>
+                  ${isOut ? `
+                    <button class="mockup-add-pill-btn" disabled style="opacity: 0.5; cursor: not-allowed; background: #E2E8F0; color: #64748B;">
+                      <span>Sold Out</span>
+                    </button>
+                  ` : `
+                    <button class="mockup-add-pill-btn" onclick="event.stopPropagation(); addToCart('${p.id}', event)">
+                      <i class="ri-shopping-cart-2-line"></i>
+                      <span>Add</span>
+                    </button>
+                  `}
                 </div>
               </div>
             </div>
@@ -975,10 +1018,12 @@
           if (naSection) naSection.style.display = 'block';
           naRail.innerHTML = newArrivals.map(p => {
             const diff = p.originalPrice > p.price ? (p.originalPrice - p.price) : 0;
+            const isOut = !p.inStock;
             return `
-              <div class="mockup-product-card" onclick="openProductDetail('${p.id}')">
+              <div class="mockup-product-card ${isOut ? 'card-out-of-stock' : ''}" onclick="openProductDetail('${p.id}')" style="position: relative;">
+                ${isOut ? `<span style="position: absolute; top: 10px; left: 10px; background: #DC2626; color: #FFF; font-size: 10px; font-weight: 800; padding: 2px 7px; border-radius: 4px; z-index: 2;">SOLD OUT</span>` : ''}
                 <div class="mockup-card-img-wrap">
-                  <img src="${p.image}" alt="${p.title}" loading="lazy">
+                  <img src="${p.image}" alt="${p.title}" loading="lazy" style="${isOut ? 'opacity: 0.6;' : ''}">
                 </div>
                 <h3 class="mockup-card-title">${p.title}</h3>
                 <div class="mockup-card-unit">${p.unit}</div>
@@ -991,10 +1036,16 @@
                     ${diff > 0 ? `<div class="mockup-discount-text">₹${diff} OFF</div>` : ''}
                   </div>
                   <div id="na-actions-${p.id}">
-                    <button class="mockup-add-pill-btn btn-green-theme" onclick="event.stopPropagation(); addToCart('${p.id}', event)">
-                      <i class="ri-shopping-cart-2-line"></i>
-                      <span>Add</span>
-                    </button>
+                    ${isOut ? `
+                      <button class="mockup-add-pill-btn btn-green-theme" disabled style="opacity: 0.5; cursor: not-allowed; background: #E2E8F0; color: #64748B;">
+                        <span>Sold Out</span>
+                      </button>
+                    ` : `
+                      <button class="mockup-add-pill-btn btn-green-theme" onclick="event.stopPropagation(); addToCart('${p.id}', event)">
+                        <i class="ri-shopping-cart-2-line"></i>
+                        <span>Add</span>
+                      </button>
+                    `}
                   </div>
                 </div>
               </div>
@@ -1009,10 +1060,12 @@
       const grid = document.getElementById('products-grid-container');
       if (grid) {
         grid.innerHTML = allProds.map(p => {
+          const isOut = !p.inStock;
           return `
-            <div class="product-showcase-card" onclick="openProductDetail('${p.id}')">
+            <div class="product-showcase-card ${isOut ? 'card-out-of-stock' : ''}" onclick="openProductDetail('${p.id}')" style="position: relative;">
+              ${isOut ? `<span style="position: absolute; top: 10px; left: 10px; background: #DC2626; color: #FFF; font-size: 10px; font-weight: 800; padding: 2px 7px; border-radius: 4px; z-index: 2;">SOLD OUT</span>` : ''}
               <div class="product-photo-wrap">
-                <img src="${p.image}" alt="${p.title}" loading="lazy">
+                <img src="${p.image}" alt="${p.title}" loading="lazy" style="${isOut ? 'opacity: 0.6;' : ''}">
               </div>
               <div class="product-text-details">
                 <h3 class="card-item-title">${p.title}</h3>
@@ -1021,14 +1074,21 @@
                   ${p.originalPrice > p.price ? `<span style="font-size: 11.5px; color: #94A3B8; text-decoration: line-through; margin-left: 6px;">₹${p.originalPrice}</span>` : ''}
                 </div>
                 <div class="card-dual-actions" id="sc-actions-${p.id}">
-                  <button class="btn-daksha-add" onclick="event.stopPropagation(); addToCart('${p.id}', event)">ADD</button>
-                  <button class="btn-daksha-buy" onclick="event.stopPropagation(); buyNowDirect('${p.id}')">BUY</button>
+                  ${isOut ? `
+                    <button class="btn-daksha-add" disabled style="opacity: 0.5; cursor: not-allowed; background: #E2E8F0; color: #64748B; width: 100%;">OUT OF STOCK</button>
+                  ` : `
+                    <button class="btn-daksha-add" onclick="event.stopPropagation(); addToCart('${p.id}', event)">ADD</button>
+                    <button class="btn-daksha-buy" onclick="event.stopPropagation(); buyNowDirect('${p.id}')">BUY</button>
+                  `}
                 </div>
               </div>
             </div>
           `;
         }).join('');
       }
+
+      updateCardSteppersUI();
+    }
 
       updateCardSteppersUI();
     }

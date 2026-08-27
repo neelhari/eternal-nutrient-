@@ -1278,7 +1278,7 @@ window.AdminController = (function() {
       icon: 'ri-apps-2-line',
       sort_order: parseInt(document.getElementById('cat-form-sort').value) || 1,
       show_on_home: isActive,
-      is_active: isActive,
+      show_in_shop: isActive,
       updated_at: new Date().toISOString()
     };
 
@@ -1288,20 +1288,28 @@ window.AdminController = (function() {
     btnElement.innerHTML = `<i class="ri-loader-4-line ri-spin" style="margin-right: 6px; font-size: 16px;"></i> Saving to Cloud...`;
 
     try {
-      if (window.CloudDB && window.CloudDB.isSupabaseActive() && window.CloudDB.supabase) {
-        const { data, error } = await window.CloudDB.supabase.from('categories').upsert(dbPayload).select();
-        if (error) {
+      if (window.CloudDB) {
+        const res = await window.CloudDB.saveCategory(dbPayload);
+        if (res && res.error) {
           btnElement.disabled = false;
           btnElement.classList.remove('btn-loading');
           btnElement.innerHTML = originalContent;
-          showToast(`Database Error: ${error.message}`, 'error');
+          showToast(`Database Error: ${res.error.message || 'Failed to save category'}`, 'error');
           return;
         }
       }
 
-      const localObj = normalizeCategoryFromDB(dbPayload);
-      localObj.isActive = isActive;
-      localObj.showOnHome = isActive;
+      const localObj = {
+        id: catId,
+        name: dbPayload.name,
+        tagline: dbPayload.tagline,
+        image: dbPayload.image,
+        icon: dbPayload.icon,
+        sortOrder: dbPayload.sort_order,
+        showOnHome: isActive,
+        showInShop: isActive,
+        isActive: isActive
+      };
 
       const idx = db.categories.findIndex(c => c.id === catId);
       if (idx !== -1) {
@@ -1331,11 +1339,12 @@ window.AdminController = (function() {
     if (!cat) return;
     cat.isActive = isChecked;
     cat.showOnHome = isChecked;
+    cat.showInShop = isChecked;
 
     if (window.CloudDB && window.CloudDB.isSupabaseActive() && window.CloudDB.supabase) {
       await window.CloudDB.supabase.from('categories').update({
-        is_active: isChecked,
         show_on_home: isChecked,
+        show_in_shop: isChecked,
         updated_at: new Date().toISOString()
       }).eq('id', catId);
     }
@@ -1527,6 +1536,9 @@ window.AdminController = (function() {
     const b = banners.find(x => String(x.id) === String(bannerId));
     if (!b) return;
     b.isActive = isChecked;
+    if (window.CloudDB) {
+      await window.CloudDB.saveBanners(db.heroBanners);
+    }
     showToast(`Banner #${b.displayOrder} is now ${isChecked ? 'Active' : 'Draft'}`, 'info');
   }
 
@@ -1576,12 +1588,16 @@ window.AdminController = (function() {
       }
     }
 
+    if (window.CloudDB) {
+      await window.CloudDB.saveBanners(db.heroBanners);
+    }
+
     renderBannersView();
-    showToast(`Successfully added ${successCount} new hero banners!`, 'success');
+    showToast(`Successfully added ${successCount} new hero banners to Supabase!`, 'success');
     input.value = '';
   }
 
-  function saveBannerForm(btnElement) {
+  async function saveBannerForm(btnElement) {
     const id = document.getElementById('banner-modal-id')?.value;
     const headline = document.getElementById('banner-form-headline')?.value.trim();
     if (!headline) {
@@ -1589,7 +1605,7 @@ window.AdminController = (function() {
       return;
     }
 
-    withActionSpinner(btnElement, () => {
+    await withActionSpinner(btnElement, async () => {
       const img = document.getElementById('banner-form-desktop-img')?.value.trim() || 'assets/hero_banner.jpg';
       const selectedCat = document.getElementById('banner-form-category')?.value || 'All';
       const targetLink = selectedCat === 'All' ? 'categories.html' : `categories.html?cat=${encodeURIComponent(selectedCat)}`;
@@ -1615,9 +1631,13 @@ window.AdminController = (function() {
         db.heroBanners.push(payload);
       }
 
+      if (window.CloudDB) {
+        await window.CloudDB.saveBanners(db.heroBanners);
+      }
+
       closeModal();
       renderBannersView();
-    }, id ? 'Hero banner updated successfully!' : 'New hero banner created!');
+    }, id ? 'Hero banner updated and saved to Supabase!' : 'New hero banner saved to Supabase!');
   }
 
   function promptDeleteBanner(bannerId) {
@@ -1725,13 +1745,16 @@ window.AdminController = (function() {
     }
   }
 
-  function toggleFestiveActive(isActive) {
+  async function toggleFestiveActive(isActive) {
     if (!db.festiveSpecials) db.festiveSpecials = {};
     db.festiveSpecials.isActive = isActive;
+    if (window.CloudDB) {
+      await window.CloudDB.saveFestiveSpecials(db.festiveSpecials);
+    }
     showToast(`Dual promo banner is now ${isActive ? 'ACTIVE' : 'HIDDEN'} on store.`, isActive ? 'success' : 'warning');
   }
 
-  function saveFestiveSpecialsForm(btnElement) {
+  async function saveFestiveSpecialsForm(btnElement) {
     const card1Img = document.getElementById('promo-slot1-img')?.value.trim() || 'assets/prod_laddu_studio.jpg';
     const cat1 = document.getElementById('promo-slot1-category')?.value || "Dates Laddu's";
     const card1Link = cat1 === 'All' ? 'categories.html' : `categories.html?cat=${encodeURIComponent(cat1)}`;
@@ -1750,11 +1773,11 @@ window.AdminController = (function() {
       ]
     };
 
-    try {
-      localStorage.setItem('en_festive_specials', JSON.stringify(db.festiveSpecials));
-    } catch(e) {}
-
-    showToast('Dual Promo Banners updated successfully!', 'success');
+    await withActionSpinner(btnElement, async () => {
+      if (window.CloudDB) {
+        await window.CloudDB.saveFestiveSpecials(db.festiveSpecials);
+      }
+    }, 'Dual Promo Banners saved to Supabase!');
   }
 
   // =========================================================================
@@ -1778,23 +1801,25 @@ window.AdminController = (function() {
     `).join('');
   }
 
-  function updateMarqueeText(id, text) {
+  async function updateMarqueeText(id, text) {
     const item = db.announcementItems.find(a => a.id === id);
     if (item) {
       item.text = text;
-      showToast('Announcement text updated.', 'info');
+      if (window.CloudDB) await window.CloudDB.saveAnnouncements(db.announcementItems);
+      showToast('Announcement text saved to cloud.', 'info');
     }
   }
 
-  function toggleMarqueeActive(id, isActive) {
+  async function toggleMarqueeActive(id, isActive) {
     const item = db.announcementItems.find(a => a.id === id);
     if (item) {
       item.isActive = isActive;
+      if (window.CloudDB) await window.CloudDB.saveAnnouncements(db.announcementItems);
       showToast(`Announcement ${isActive ? 'enabled' : 'disabled'}.`, 'info');
     }
   }
 
-  function addMarqueeItem() {
+  async function addMarqueeItem() {
     const newItem = {
       id: 'ann_' + Date.now(),
       text: 'New organic store announcement...',
@@ -1803,12 +1828,14 @@ window.AdminController = (function() {
       sortOrder: db.announcementItems.length + 1
     };
     db.announcementItems.push(newItem);
+    if (window.CloudDB) await window.CloudDB.saveAnnouncements(db.announcementItems);
     renderMarqueeView();
-    showToast('New announcement ticker item added!', 'success');
+    showToast('New announcement ticker item added to Supabase!', 'success');
   }
 
-  function deleteMarqueeItem(id) {
+  async function deleteMarqueeItem(id) {
     db.announcementItems = db.announcementItems.filter(a => a.id !== id);
+    if (window.CloudDB) await window.CloudDB.saveAnnouncements(db.announcementItems);
     renderMarqueeView();
     showToast('Announcement item removed.', 'info');
   }
@@ -2029,7 +2056,7 @@ window.AdminController = (function() {
     openModal('modal-coupon-form');
   }
 
-  function saveCouponForm(btnElement) {
+  async function saveCouponForm(btnElement) {
     const id = document.getElementById('coupon-modal-id').value;
     const code = document.getElementById('coupon-form-code').value.toUpperCase().trim();
     if (!code) {
@@ -2037,7 +2064,7 @@ window.AdminController = (function() {
       return;
     }
 
-    withActionSpinner(btnElement, () => {
+    await withActionSpinner(btnElement, async () => {
       const payload = {
         id: id || 'cp_' + Date.now(),
         code,
@@ -2045,28 +2072,35 @@ window.AdminController = (function() {
         value: parseFloat(document.getElementById('coupon-form-val').value) || 10,
         minOrderValue: parseFloat(document.getElementById('coupon-form-mov').value) || 999,
         maxDiscount: parseFloat(document.getElementById('coupon-form-cap').value) || 0,
-        expiryDate: document.getElementById('coupon-form-expiry').value,
+        expiryDate: document.getElementById('coupon-form-expiry').value || null,
         usageLimit: parseInt(document.getElementById('coupon-form-limit').value) || 500,
         totalUsed: id ? (db.coupons.find(x => x.id === id)?.totalUsed || 0) : 0,
-        isActive: document.getElementById('coupon-form-active').checked
+        isActive: document.getElementById('coupon-form-active')?.checked !== false
       };
+
+      if (window.CloudDB) {
+        const res = await window.CloudDB.saveCoupon(payload);
+        if (res && res.error) throw new Error(res.error.message || 'Failed to save coupon in Supabase');
+      }
 
       if (id) {
         const idx = db.coupons.findIndex(x => x.id === id);
         if (idx !== -1) db.coupons[idx] = payload;
+        else db.coupons.push(payload);
       } else {
         db.coupons.push(payload);
       }
 
       closeModal();
       renderCouponsView();
-    }, id ? 'Coupon updated!' : 'Coupon created!');
+    }, id ? 'Coupon updated in Supabase!' : 'Coupon created in Supabase!');
   }
 
-  function toggleCouponActive(id, isActive) {
+  async function toggleCouponActive(id, isActive) {
     const c = db.coupons.find(x => x.id === id);
     if (c) {
       c.isActive = isActive;
+      if (window.CloudDB) await window.CloudDB.saveCoupon(c);
       showToast(`Coupon ${c.code} is now ${isActive ? 'Active' : 'Inactive'}.`, 'info');
     }
   }
@@ -2291,8 +2325,8 @@ window.AdminController = (function() {
     });
   }
 
-  function saveBusinessSettingsForm(btnElement) {
-    withActionSpinner(btnElement, () => {
+  async function saveBusinessSettingsForm(btnElement) {
+    await withActionSpinner(btnElement, async () => {
       const s = db.storeSettings;
       s.businessName = document.getElementById('set-biz-name').value.trim();
       s.brandName = document.getElementById('set-brand-name').value.trim();
@@ -2315,7 +2349,26 @@ window.AdminController = (function() {
         if (countEl) ts.count = countEl.value.trim();
         if (labelEl) ts.label = labelEl.value.trim();
       });
-    }, 'Business & legal settings saved successfully!');
+
+      if (window.CloudDB) {
+        await window.CloudDB.saveStoreSettings({
+          business_name: s.businessName,
+          brand_name: s.brandName,
+          tagline: s.tagline,
+          owner_name: s.ownerName,
+          primary_phone: s.primaryPhone,
+          secondary_phone: s.secondaryPhone,
+          primary_whatsapp: s.primaryWhatsApp,
+          secondary_whatsapp: s.secondaryWhatsApp,
+          support_email: s.supportEmail,
+          registered_address: s.registeredAddress,
+          gstin: s.gstin,
+          udyam_number: s.udyamNumber,
+          fssai_number: s.fssaiNumber,
+          trust_stats: s.trustStats
+        });
+      }
+    }, 'Business & legal settings saved to Supabase!');
   }
 
   function renderShippingView() {
@@ -2328,8 +2381,8 @@ window.AdminController = (function() {
     document.getElementById('ship-pause-msg').value = s.pauseNoticeMessage;
   }
 
-  function saveShippingSettingsForm(btnElement) {
-    withActionSpinner(btnElement, () => {
+  async function saveShippingSettingsForm(btnElement) {
+    await withActionSpinner(btnElement, async () => {
       const s = db.storeSettings;
       s.minOrderValue = parseFloat(document.getElementById('ship-mov').value) || 999;
       s.freeShippingThreshold = parseFloat(document.getElementById('ship-free-threshold').value) || 999;
@@ -2338,8 +2391,19 @@ window.AdminController = (function() {
       s.isStoreLive = document.getElementById('ship-store-live').checked;
       s.pauseNoticeMessage = document.getElementById('ship-pause-msg').value.trim();
 
+      if (window.CloudDB) {
+        await window.CloudDB.saveStoreSettings({
+          min_order_value: s.minOrderValue,
+          free_shipping_threshold: s.freeShippingThreshold,
+          standard_shipping_fee: s.standardShippingFee,
+          serviceable_pincodes: s.serviceablePincodes,
+          is_store_live: s.isStoreLive,
+          pause_notice_message: s.pauseNoticeMessage
+        });
+      }
+
       updateStoreStatusIndicator();
-    }, 'Shipping & store rules saved successfully!');
+    }, 'Shipping & store rules saved to Supabase!');
   }
 
   // =========================================================================
@@ -2533,6 +2597,139 @@ window.AdminController = (function() {
     }
 
     resultsContainer.innerHTML = html;
+  }
+
+  async function loadCloudData() {
+    if (!window.CloudDB) return;
+    try {
+      const [prods, cats, ords, cPns, settings, banners, festive, anns] = await Promise.all([
+        window.CloudDB.getProducts(),
+        window.CloudDB.getCategories(),
+        window.CloudDB.getOrders(),
+        window.CloudDB.getCoupons(),
+        window.CloudDB.getStoreSettings(),
+        window.CloudDB.getBanners(),
+        window.CloudDB.getFestiveSpecials(),
+        window.CloudDB.getAnnouncements()
+      ]);
+
+      if (prods && prods.length > 0) {
+        db.products = prods.map(p => ({
+          id: p.id,
+          title: p.title,
+          sku: p.sku || `EN-${(p.category || 'GEN').substring(0, 3).toUpperCase()}-${p.id.replace(/[^0-9]/g, '').slice(-3) || '101'}`,
+          category: p.category || 'General',
+          image: p.image || (Array.isArray(p.gallery) && p.gallery[0]) || 'assets/prod_honey_studio.jpg',
+          gallery: Array.isArray(p.gallery) ? p.gallery : (p.image ? [p.image] : ['assets/prod_honey_studio.jpg']),
+          price: Number(p.price) || 0,
+          originalPrice: Number(p.original_price || p.price || 0),
+          discount: Number(p.discount) || 0,
+          unit: p.unit || 'Pack',
+          stockQty: Number(p.stock_qty ?? 50),
+          inStock: p.in_stock !== false && (p.stock_qty ?? 50) > 0,
+          isBestseller: !!p.is_bestseller,
+          isFeatured: !!p.is_featured,
+          isNewArrival: !!p.is_new_arrival,
+          description: p.description || '',
+          variants: Array.isArray(p.variants) ? p.variants : [],
+          rating: Number(p.rating) || 4.9,
+          reviewsCount: Number(p.reviews_count) || 12,
+          sortOrder: Number(p.sort_order) || 1
+        }));
+      }
+
+      if (cats && cats.length > 0) {
+        db.categories = cats.map(c => ({
+          id: c.id,
+          name: c.name,
+          tagline: c.tagline || '',
+          image: c.image || 'assets/prod_cookie_studio.jpg',
+          icon: c.icon || 'ri-apps-2-line',
+          sortOrder: Number(c.sort_order) || 1,
+          showOnHome: c.show_on_home !== false,
+          showInShop: c.show_in_shop !== false,
+          isActive: c.show_on_home !== false
+        }));
+      }
+
+      if (ords && ords.length > 0) {
+        db.orders = ords.map(o => ({
+          id: o.id,
+          orderNumber: o.order_number || o.id,
+          customerName: o.customer_name || 'Guest',
+          customerPhone: o.customer_phone || '',
+          customerEmail: o.customer_email || '',
+          deliveryAddress: typeof o.delivery_address === 'string' ? { address: o.delivery_address } : (o.delivery_address || {}),
+          items: Array.isArray(o.items) ? o.items : [],
+          subtotal: Number(o.subtotal) || 0,
+          deliveryFee: Number(o.delivery_fee) || 0,
+          discountAmount: Number(o.discount_amount) || 0,
+          totalAmount: Number(o.total_amount) || 0,
+          paymentMethod: o.payment_method || 'COD',
+          paymentStatus: o.payment_status || 'Pending',
+          orderStatus: o.order_status || 'Placed',
+          trackingId: o.tracking_id || '',
+          adminNotes: o.admin_notes || '',
+          date: o.created_at || new Date().toISOString()
+        }));
+      }
+
+      if (cPns && cPns.length > 0) {
+        db.coupons = cPns.map(c => ({
+          id: c.id,
+          code: c.code,
+          type: c.type || 'percentage',
+          value: Number(c.value) || 10,
+          minOrderValue: Number(c.min_order_value) || 999,
+          maxDiscount: Number(c.max_discount) || 0,
+          expiryDate: c.expiry_date || '2026-12-31',
+          usageLimit: Number(c.usage_limit) || 500,
+          totalUsed: Number(c.total_used) || 0,
+          isActive: c.is_active !== false
+        }));
+      }
+
+      if (settings && Object.keys(settings).length > 0) {
+        db.storeSettings = Object.assign(db.storeSettings || {}, {
+          businessName: settings.business_name || db.storeSettings.businessName,
+          brandName: settings.brand_name || db.storeSettings.brandName,
+          tagline: settings.tagline || db.storeSettings.tagline,
+          ownerName: settings.owner_name || db.storeSettings.ownerName,
+          primaryPhone: settings.primary_phone || db.storeSettings.primaryPhone,
+          secondaryPhone: settings.secondary_phone || db.storeSettings.secondaryPhone,
+          primaryWhatsApp: settings.primary_whatsapp || db.storeSettings.primaryWhatsApp,
+          secondaryWhatsApp: settings.secondary_whatsapp || db.storeSettings.secondaryWhatsApp,
+          supportEmail: settings.support_email || db.storeSettings.supportEmail,
+          registeredAddress: settings.registered_address || db.storeSettings.registeredAddress,
+          gstin: settings.gstin || db.storeSettings.gstin,
+          udyamNumber: settings.udyam_number || db.storeSettings.udyamNumber,
+          fssaiNumber: settings.fssai_number || db.storeSettings.fssaiNumber,
+          minOrderValue: Number(settings.min_order_value ?? db.storeSettings.minOrderValue),
+          freeShippingThreshold: Number(settings.free_shipping_threshold ?? db.storeSettings.freeShippingThreshold),
+          standardShippingFee: Number(settings.standard_shipping_fee ?? db.storeSettings.standardShippingFee),
+          serviceablePincodes: settings.serviceable_pincodes || db.storeSettings.serviceablePincodes,
+          isStoreLive: settings.is_store_live !== false,
+          pauseNoticeMessage: settings.pause_notice_message || db.storeSettings.pauseNoticeMessage
+        });
+      }
+
+      if (banners && Array.isArray(banners) && banners.length > 0) {
+        db.heroBanners = banners;
+      }
+
+      if (festive && typeof festive === 'object' && festive.cards) {
+        db.festiveSpecials = festive;
+      }
+
+      if (anns && Array.isArray(anns) && anns.length > 0) {
+        db.announcementItems = anns;
+      }
+
+      renderActiveView();
+      renderDashboard();
+    } catch(e) {
+      console.warn('Cloud data hydration notice:', e);
+    }
   }
 
   // =========================================================================

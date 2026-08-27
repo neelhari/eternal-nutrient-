@@ -787,6 +787,44 @@
         }
       }
 
+      // Check Stock Availability & Out of Stock Protection
+      const stock = Number(item.stock_qty ?? 50);
+      const isOutOfStock = item.in_stock === false || stock <= 0;
+
+      const actionButtons = document.querySelectorAll('.p-sticky-bottom-bar button');
+      const packSection = document.querySelector('.p-pack-select-sec');
+      const qtySection = document.querySelector('.p-qty-inline-sec');
+
+      // Stock status banner
+      let stockBadge = document.getElementById('p-stock-status-badge');
+      if (!stockBadge) {
+        stockBadge = document.createElement('div');
+        stockBadge.id = 'p-stock-status-badge';
+        stockBadge.style.margin = '10px 0';
+        stockBadge.style.fontSize = '13px';
+        stockBadge.style.fontWeight = '700';
+        document.querySelector('.p-meta-box')?.appendChild(stockBadge);
+      }
+
+      if (isOutOfStock) {
+        stockBadge.innerHTML = `<span style="color: #DC2626; background: #FEE2E2; padding: 4px 10px; border-radius: 6px; display: inline-flex; align-items: center; gap: 6px;"><i class="ri-close-circle-fill"></i> Currently Out of Stock — Restocking Soon</span>`;
+        if (qtySection) qtySection.style.display = 'none';
+        actionButtons.forEach(btn => {
+          btn.disabled = true;
+          btn.style.opacity = '0.5';
+          btn.style.cursor = 'not-allowed';
+          btn.style.background = '#94A3B8';
+          btn.innerHTML = `<span>OUT OF STOCK</span>`;
+        });
+      } else {
+        if (stock <= 5) {
+          stockBadge.innerHTML = `<span style="color: #D97706; background: #FEF3C7; padding: 4px 10px; border-radius: 6px; display: inline-flex; align-items: center; gap: 6px;"><i class="ri-alarm-warning-fill"></i> Only ${stock} units left in stock!</span>`;
+        } else {
+          stockBadge.innerHTML = `<span style="color: #16A34A; background: #DCFCE7; padding: 4px 10px; border-radius: 6px; display: inline-flex; align-items: center; gap: 6px;"><i class="ri-checkbox-circle-fill"></i> In Stock & Ready to Ship</span>`;
+        }
+        if (qtySection) qtySection.style.display = 'flex';
+      }
+
       updateCartBadge();
     }
 
@@ -824,7 +862,8 @@
     }
 
     function adjustQty(delta) {
-      qty = Math.max(1, qty + delta);
+      const maxStock = currentItem ? Number(currentItem.stock_qty ?? 50) : 50;
+      qty = Math.min(maxStock, Math.max(1, qty + delta));
       document.getElementById('qty-val').textContent = qty;
       updatePricingUI();
     }
