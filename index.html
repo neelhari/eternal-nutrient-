@@ -555,28 +555,42 @@
             renderCart();
           }
 
-          // 2. Hydrate Categories Bento Grid
+          // 2. Hydrate Categories Bento Grid & Desktop Quick Nav
           if (cats && Array.isArray(cats) && cats.length > 0) {
+            const visibleCats = cats.filter(c => c.show_on_home !== false).sort((a,b) => (Number(a.sort_order) || 1) - (Number(b.sort_order) || 1));
+            
+            // Bento Grid
             const catGrid = document.querySelector('.category-grid-4x4');
-            if (catGrid) {
-              const visibleCats = cats.filter(c => c.show_on_home !== false).sort((a,b) => (Number(a.sort_order) || 1) - (Number(b.sort_order) || 1));
-              if (visibleCats.length > 0) {
-                catGrid.innerHTML = visibleCats.map(c => `
-                  <a href="categories.html?cat=${encodeURIComponent(c.name)}" class="cat-grid-card-item">
-                    <div class="cat-grid-avatar-circle">
-                      <img src="${c.image || 'assets/prod_honey_studio.jpg'}" alt="${c.name}">
-                    </div>
-                    <span class="cat-grid-label-name">${c.name}</span>
-                  </a>
-                `).join('') + `
-                  <a href="categories.html" class="cat-grid-card-item">
-                    <div class="cat-grid-avatar-circle" style="background: #281612; border-color: #281612; color: #FFFFFF;">
-                      <i class="ri-grid-fill" style="font-size: 22px; color: #E2C095;"></i>
-                    </div>
-                    <span class="cat-grid-label-name">All Products</span>
-                  </a>
-                `;
-              }
+            if (catGrid && visibleCats.length > 0) {
+              catGrid.innerHTML = visibleCats.map(c => `
+                <a href="categories.html?cat=${encodeURIComponent(c.name)}" class="cat-grid-card-item">
+                  <div class="cat-grid-avatar-circle">
+                    <img src="${c.image || 'assets/prod_honey_studio.jpg'}" alt="${c.name}">
+                  </div>
+                  <span class="cat-grid-label-name">${c.name}</span>
+                </a>
+              `).join('') + `
+                <a href="categories.html" class="cat-grid-card-item">
+                  <div class="cat-grid-avatar-circle" style="background: #281612; border-color: #281612; color: #FFFFFF;">
+                    <i class="ri-grid-fill" style="font-size: 22px; color: #E2C095;"></i>
+                  </div>
+                  <span class="cat-grid-label-name">All Products</span>
+                </a>
+              `;
+            }
+
+            // Desktop Category Pills Navigation Bar
+            const desktopNav = document.querySelector('.desktop-category-nav-bar');
+            if (desktopNav && visibleCats.length > 0) {
+              desktopNav.innerHTML = `
+                <a href="index.html" class="desktop-nav-pill active"><i class="ri-home-4-line"></i> Home</a>
+                <a href="categories.html" class="desktop-nav-pill"><i class="ri-store-2-line"></i> All Products</a>
+              ` + visibleCats.map(c => `
+                <a href="categories.html?cat=${encodeURIComponent(c.name)}" class="desktop-nav-pill">${c.name}</a>
+              `).join('') + `
+                <a href="account.html" class="desktop-nav-pill"><i class="ri-heart-line"></i> Wishlist</a>
+                <a href="cart.html" class="desktop-nav-pill"><i class="ri-shopping-cart-2-line"></i> Cart</a>
+              `;
             }
           }
 
