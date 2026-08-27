@@ -2300,34 +2300,114 @@ input:checked + .slider:before {
     top: 0;
     bottom: 0;
     left: 0;
+    width: 290px;
+    max-width: 86vw;
+    z-index: 10000;
     transform: translateX(-100%);
-    box-shadow: 0 0 40px rgba(0,0,0,0.3);
+    box-shadow: 0 0 50px rgba(0, 0, 0, 0.5);
+    transition: transform 0.28s cubic-bezier(0.2, 0.8, 0.2, 1);
   }
 
   .admin-sidebar.mobile-open {
     transform: translateX(0);
   }
 
+  .sidebar-mobile-close-btn {
+    display: flex !important;
+  }
+
   .admin-mobile-header {
     display: flex;
+    height: 62px;
+    padding: 0 16px;
+    background: #FFFFFF;
+    border-bottom: 1px solid #E2E8F0;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+  }
+
+  .mobile-menu-trigger {
+    width: 42px;
+    height: 42px;
+    border-radius: 10px;
+    background: #F1F5F9;
+    color: #1E293B;
+    font-size: 22px;
+    transition: background 0.15s ease;
+  }
+
+  .mobile-menu-trigger:active {
+    background: #E2E8F0;
+    transform: scale(0.95);
   }
 
   .admin-views-container {
-    padding: 20px 16px;
+    padding: 16px 14px 40px;
+  }
+
+  .view-header-bar {
+    flex-direction: column !important;
+    align-items: stretch !important;
+    gap: 12px !important;
+    margin-bottom: 16px !important;
+  }
+
+  .view-title-main {
+    font-size: 20px !important;
+  }
+
+  .view-actions-right {
+    width: 100% !important;
+    display: flex !important;
+    flex-wrap: wrap !important;
+    gap: 8px !important;
+  }
+
+  .view-actions-right .btn {
+    flex: 1 1 calc(50% - 4px);
+    justify-content: center;
+    min-height: 42px;
   }
 
   .dashboard-split-grid {
     grid-template-columns: 1fr;
   }
 
+  .kpi-grid-4 {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 10px !important;
+  }
+
   .form-grid-2,
   .form-grid-3 {
-    grid-template-columns: 1fr;
+    grid-template-columns: 1fr !important;
   }
 
   .form-field-block.col-span-2,
   .form-field-block.col-span-3 {
-    grid-column: span 1;
+    grid-column: span 1 !important;
+  }
+
+  .admin-modal-overlay {
+    padding: 0 !important;
+    align-items: flex-end !important;
+  }
+
+  .admin-modal-sheet {
+    width: 100% !important;
+    max-width: 100% !important;
+    max-height: 92vh !important;
+    border-radius: 20px 20px 0 0 !important;
+    margin: 0 !important;
+  }
+
+  .admin-modal-sheet.modal-lg {
+    max-width: 100% !important;
+  }
+
+  .admin-table-container {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    border-radius: 12px;
   }
 }
 

@@ -680,6 +680,18 @@
         <i class="ri-arrow-right-s-line myntra-row-arrow"></i>
       </div>
 
+      <!-- Row: Request for Franchise -->
+      <div class="myntra-row-item" onclick="openDrawer('drawer-franchise')">
+        <div class="myntra-row-left">
+          <i class="ri-store-3-line myntra-row-icon" style="color: #2E7D32;"></i>
+          <div class="myntra-row-text">
+            <span class="myntra-row-title">Request for Franchise</span>
+            <span class="myntra-row-sub">Partner with Eternal Nutricare & grow</span>
+          </div>
+        </div>
+        <i class="ri-arrow-right-s-line myntra-row-arrow"></i>
+      </div>
+
       <!-- Row 5: Log Out (Conditional) -->
       <div id="row-logout-action" class="myntra-row-item myntra-logout-row" style="display: none;" onclick="handleLogout()">
         <div class="myntra-row-left">
@@ -702,7 +714,7 @@
   </main>
 
   <!-- --------------------------------------------------------------------------
-       5. Interactive Drawers (Orders, Wishlist, Addresses, Profile)
+       5. Interactive Drawers (Orders, Wishlist, Addresses, Profile, Franchise)
        -------------------------------------------------------------------------- -->
 
   <!-- Drawer 1: Orders -->
@@ -728,7 +740,7 @@
         <button class="myntra-drawer-close" onclick="closeAllDrawers()"><i class="ri-close-line"></i></button>
       </div>
       <div class="myntra-drawer-body">
-        <div id="drawer-wishlist-list">
+        <div id="drawer-wishlist-list" style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
           <!-- Dynamic Wishlist -->
         </div>
       </div>
@@ -783,6 +795,43 @@
           <input type="tel" id="prof-phone" class="myntra-form-input">
 
           <button type="submit" class="myntra-btn-primary">Save Changes</button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Drawer 5: Request for Franchise -->
+  <div id="drawer-franchise" class="myntra-drawer-overlay" onclick="closeAllDrawers(event)">
+    <div class="myntra-drawer-content" onclick="event.stopPropagation()">
+      <div class="myntra-drawer-header">
+        <h2 class="myntra-drawer-title">Request for Franchise</h2>
+        <button class="myntra-drawer-close" onclick="closeAllDrawers()"><i class="ri-close-line"></i></button>
+      </div>
+      <div class="myntra-drawer-body">
+        <div style="margin-bottom: 16px; background: #F4F8F1; padding: 12px 14px; border-radius: 10px; border-left: 4px solid #386618;">
+          <div style="font-size: 13px; font-weight: 700; color: #281612;">Join the Eternal Nutricare Family</div>
+          <div style="font-size: 11.5px; color: #556B48; margin-top: 2px;">Expand organic, pure wellness in your region. Fill out this quick application and our franchise team will connect with you within 24 hours.</div>
+        </div>
+
+        <form id="franchise-inquiry-form" onsubmit="submitFranchiseRequest(event)">
+          <label style="font-size: 12px; font-weight: 700; color: #535766; display: block; margin-bottom: 4px;">Full Name *</label>
+          <input type="text" id="fran-name" class="myntra-form-input" placeholder="e.g. Rahul Sharma" required>
+
+          <label style="font-size: 12px; font-weight: 700; color: #535766; display: block; margin-bottom: 4px;">Email Address *</label>
+          <input type="email" id="fran-email" class="myntra-form-input" placeholder="e.g. rahul@example.com" required>
+
+          <label style="font-size: 12px; font-weight: 700; color: #535766; display: block; margin-bottom: 4px;">Mobile Number *</label>
+          <input type="tel" id="fran-mobile" class="myntra-form-input" placeholder="10-digit Phone Number" required>
+
+          <label style="font-size: 12px; font-weight: 700; color: #535766; display: block; margin-bottom: 4px;">Location Address / City *</label>
+          <input type="text" id="fran-location" class="myntra-form-input" placeholder="City, State, Area (e.g. Indiranagar, Bengaluru)" required>
+
+          <label style="font-size: 12px; font-weight: 700; color: #535766; display: block; margin-bottom: 4px;">Note / Business Background</label>
+          <textarea id="fran-note" class="myntra-form-input" style="height: 80px; padding: 10px 14px; resize: vertical;" placeholder="Tell us about your retail experience, proposed store size, or specific queries..."></textarea>
+
+          <button type="submit" id="btn-franchise-submit" class="myntra-btn-primary" style="margin-top: 8px;">
+            <i class="ri-send-plane-fill"></i> <span>Apply Now</span>
+          </button>
         </form>
       </div>
     </div>
@@ -1081,6 +1130,58 @@
         showToast('Logged out successfully');
         renderAuthState();
       }
+    }
+
+    async function submitFranchiseRequest(event) {
+      if (event) event.preventDefault();
+      const btn = document.getElementById('btn-franchise-submit');
+      const name = document.getElementById('fran-name')?.value.trim();
+      const email = document.getElementById('fran-email')?.value.trim();
+      const mobile = document.getElementById('fran-mobile')?.value.trim();
+      const location = document.getElementById('fran-location')?.value.trim();
+      const note = document.getElementById('fran-note')?.value.trim() || '';
+
+      if (!name || !email || !mobile || !location) {
+        showToast('Please fill out all required fields.');
+        return;
+      }
+
+      if (btn) {
+        btn.disabled = true;
+        btn.innerHTML = `<i class="ri-loader-4-line ri-spin"></i> Submitting...`;
+      }
+
+      const payload = {
+        name,
+        email,
+        phone: mobile,
+        location,
+        note,
+        status: 'pending',
+        created_at: new Date().toISOString()
+      };
+
+      try {
+        if (window.CloudDB && window.CloudDB.isSupabaseActive() && window.CloudDB.getClient()) {
+          const client = window.CloudDB.getClient();
+          await client.from('franchise_inquiries').insert([payload]);
+        }
+      } catch (err) {
+        console.warn('Franchise save notice:', err);
+      }
+
+      showToast('🎉 Franchise application submitted! Our team will contact you.');
+
+      if (btn) {
+        btn.disabled = false;
+        btn.innerHTML = `<i class="ri-checkbox-circle-line"></i> Application Received!`;
+      }
+
+      setTimeout(() => {
+        document.getElementById('franchise-inquiry-form')?.reset();
+        closeAllDrawers();
+        if (btn) btn.innerHTML = `<i class="ri-send-plane-fill"></i> <span>Apply Now</span>`;
+      }, 2000);
     }
 
     window.addEventListener('DOMContentLoaded', () => {
