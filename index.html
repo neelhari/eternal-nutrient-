@@ -116,22 +116,26 @@
       </div>
     </div>
 
-    <!-- 2. Hero Promo Banner (Exact Reference Match) -->
-    <section class="hero-section-wrap">
-      <div class="hero-banner-card">
-        <img class="hero-banner-bg-img" src="assets/hero_banner.jpg" alt="Pure Organic Honey & Nature">
-        <div class="hero-banner-text">
-          <span class="hero-sub-tag">Pure. Natural. Eternal.</span>
-          <h1 class="hero-title-main">Goodness from nature<br>for a healthier you.</h1>
-          <button class="hero-cta-btn" onclick="scrollToProducts()">
-            <span>Shop Now</span>
-          </button>
+    <!-- 2. Hero Promo Banner (Dynamic Slider from Supabase) -->
+    <section class="hero-section-wrap" id="hero-slider-section">
+      <div class="hero-slider-wrapper">
+        <div class="hero-slider-track" id="hero-slider-track">
+          <div class="hero-slide-item">
+            <div class="hero-banner-card">
+              <img class="hero-banner-bg-img" src="assets/hero_banner.jpg" alt="Pure Organic Honey & Nature">
+              <div class="hero-banner-text">
+                <span class="hero-sub-tag">Pure. Natural. Eternal.</span>
+                <h1 class="hero-title-main">Goodness from nature<br>for a healthier you.</h1>
+                <a href="categories.html" class="hero-cta-btn">
+                  <span>Shop Now</span>
+                </a>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
-      <div class="hero-dots-row">
+      <div class="hero-dots-row" id="hero-dots-row">
         <span class="hero-dot active"></span>
-        <span class="hero-dot"></span>
-        <span class="hero-dot"></span>
       </div>
     </section>
 
@@ -887,6 +891,10 @@
       'prod_1': { id: 'prod_1', title: 'Organic Honey', category: 'Organic Honey', price: 499, originalPrice: 599, badge: 'Raw & Unfiltered • 500g', unit: '500g', image: 'assets/prod_honey_studio.jpg', isBestseller: true, isNewArrival: false, stockQty: 50, inStock: true }
     };
 
+    let currentHeroIndex = 0;
+    let heroSliderTimer = null;
+    let heroBannersList = [];
+
     async function syncProductsFromSupabase() {
       if (window.CloudDB && window.CloudDB.isSupabaseActive()) {
         try {
@@ -949,17 +957,11 @@
             }
           }
 
-          // 3. Hydrate Hero Banners
+          // 3. Hydrate Hero Banners & Slider
           if (banners && Array.isArray(banners) && banners.length > 0) {
             const activeBanners = banners.filter(b => b.isActive !== false);
             if (activeBanners.length > 0) {
-              const b = activeBanners[0];
-              const heroImg = document.querySelector('.hero-banner-bg-img');
-              const heroTitle = document.querySelector('.hero-title-main');
-              const heroSub = document.querySelector('.hero-sub-tag');
-              if (heroImg && b.desktopImage) heroImg.src = b.desktopImage;
-              if (heroTitle && b.headline) heroTitle.innerHTML = b.headline.replace(/\n/g, '<br>');
-              if (heroSub && (b.eyebrow || b.tagline)) heroSub.textContent = b.eyebrow || b.tagline;
+              renderHeroSlider(activeBanners);
             }
           }
 
@@ -978,6 +980,76 @@
           console.warn('Supabase storefront sync notice:', e);
         }
       }
+    }
+
+    function renderHeroSlider(banners) {
+      heroBannersList = banners;
+      const track = document.getElementById('hero-slider-track');
+      const dotsRow = document.getElementById('hero-dots-row');
+      if (!track) return;
+
+      track.innerHTML = banners.map((b) => {
+        const link = b.targetLink || (b.targetCategory && b.targetCategory !== 'All' ? `categories.html?cat=${encodeURIComponent(b.targetCategory)}` : 'categories.html');
+        const headline = (b.headline || 'Goodness from nature for a healthier you.').replace(/\n/g, '<br>');
+        const eyebrow = b.eyebrow || b.tagline || 'Pure. Natural. Eternal.';
+        const img = b.desktopImage || b.image || 'assets/hero_banner.jpg';
+        return `
+          <div class="hero-slide-item">
+            <div class="hero-banner-card">
+              <img class="hero-banner-bg-img" src="${img}" alt="${b.headline || 'Hero Banner'}" loading="lazy">
+              <div class="hero-banner-text">
+                <span class="hero-sub-tag">${eyebrow}</span>
+                <h1 class="hero-title-main">${headline}</h1>
+                <a href="${link}" class="hero-cta-btn">
+                  <span>Shop Now</span>
+                </a>
+              </div>
+            </div>
+          </div>
+        `;
+      }).join('');
+
+      if (dotsRow) {
+        if (banners.length > 1) {
+          dotsRow.style.display = 'flex';
+          dotsRow.innerHTML = banners.map((_, idx) => `
+            <span class="hero-dot ${idx === 0 ? 'active' : ''}" onclick="goToHeroSlide(${idx})"></span>
+          `).join('');
+        } else {
+          dotsRow.style.display = 'none';
+        }
+      }
+
+      currentHeroIndex = 0;
+      updateHeroSlidePosition();
+      startHeroAutoPlay();
+    }
+
+    function goToHeroSlide(idx) {
+      if (!heroBannersList.length) return;
+      currentHeroIndex = (idx + heroBannersList.length) % heroBannersList.length;
+      updateHeroSlidePosition();
+      startHeroAutoPlay();
+    }
+
+    function updateHeroSlidePosition() {
+      const track = document.getElementById('hero-slider-track');
+      if (track) {
+        track.style.transform = `translateX(-${currentHeroIndex * 100}%)`;
+      }
+      const dots = document.querySelectorAll('#hero-dots-row .hero-dot');
+      dots.forEach((d, idx) => {
+        d.classList.toggle('active', idx === currentHeroIndex);
+      });
+    }
+
+    function startHeroAutoPlay() {
+      if (heroSliderTimer) clearInterval(heroSliderTimer);
+      if (heroBannersList.length <= 1) return;
+      heroSliderTimer = setInterval(() => {
+        currentHeroIndex = (currentHeroIndex + 1) % heroBannersList.length;
+        updateHeroSlidePosition();
+      }, 5000);
     }
 
     function renderStorefrontSections() {

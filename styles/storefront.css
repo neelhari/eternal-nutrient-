@@ -276,6 +276,25 @@ body {
   }
 }
 
+.hero-slider-wrapper {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+  border-radius: 20px;
+}
+
+.hero-slider-track {
+  display: flex;
+  transition: transform 0.5s cubic-bezier(0.25, 1, 0.5, 1);
+  width: 100%;
+}
+
+.hero-slide-item {
+  min-width: 100%;
+  width: 100%;
+  flex-shrink: 0;
+}
+
 .hero-banner-card {
   position: relative;
   border-radius: 20px;
@@ -284,8 +303,6 @@ body {
   background: #E8EFE3;
   display: flex;
   padding: 24px 20px 28px;
-  min-height: 190px;
-  display: flex;
   align-items: center;
   box-shadow: 0 4px 16px rgba(56, 36, 15, 0.05);
 }
@@ -352,6 +369,7 @@ body {
   justify-content: center;
   box-shadow: 0 3px 10px rgba(85, 53, 24, 0.25);
   transition: all 0.2s ease;
+  text-decoration: none;
 }
 
 .hero-cta-btn:hover {
@@ -361,18 +379,22 @@ body {
 .hero-dots-row {
   display: flex;
   justify-content: center;
-  gap: 5px;
-  margin-top: 8px;
+  gap: 6px;
+  margin-top: 10px;
 }
 
 .hero-dot {
-  width: 6px;
-  height: 6px;
+  width: 8px;
+  height: 8px;
   border-radius: 50%;
   background: #D5E0CD;
+  cursor: pointer;
+  transition: all 0.3s ease;
 }
 
 .hero-dot.active {
+  width: 22px;
+  border-radius: 999px;
   background: #553518;
 }
 

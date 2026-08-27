@@ -273,12 +273,44 @@
     async function syncCatalogFromSupabase() {
       if (window.CloudDB && window.CloudDB.isSupabaseActive()) {
         try {
-          const [prods, cats] = await Promise.all([
+          const [prods, cats, festive] = await Promise.all([
             window.CloudDB.getProducts(),
-            window.CloudDB.getCategories()
+            window.CloudDB.getCategories(),
+            window.CloudDB.getFestiveSpecials()
           ]);
 
-          // 1. Hydrate Category Chips
+          // 1. Hydrate Festive Specials Banner
+          if (festive && typeof festive === 'object') {
+            const festiveBanner = document.getElementById('festive-showcase-banner');
+            if (festive.isActive === false) {
+              if (festiveBanner) festiveBanner.style.display = 'none';
+            } else if (festiveBanner) {
+              festiveBanner.style.display = 'block';
+              if (festive.headline) {
+                const headEl = document.getElementById('festive-headline-text');
+                if (headEl) headEl.textContent = festive.headline;
+              }
+              if (festive.eyebrow) {
+                const eyeEl = document.getElementById('festive-eyebrow-text');
+                if (eyeEl) eyeEl.textContent = festive.eyebrow;
+              }
+              if (Array.isArray(festive.cards) && festive.cards.length > 0) {
+                const row = festiveBanner.querySelector('.festive-spotlight-cards-row');
+                if (row) {
+                  row.innerHTML = festive.cards.map((c, idx) => `
+                    <div class="festive-mini-card" id="festive-card-${idx+1}" onclick="selectCategory('${(c.targetCategory || 'All').replace(/'/g, "\\'")}')">
+                      <div class="festive-mini-thumb">
+                        <img id="festive-card-img-${idx+1}" src="${c.image || 'assets/prod_honey_studio.jpg'}" alt="${c.targetCategory || 'Special'}">
+                      </div>
+                      <div class="festive-mini-title" id="festive-card-title-${idx+1}">${c.targetCategory || 'Special'}</div>
+                    </div>
+                  `).join('');
+                }
+              }
+            }
+          }
+
+          // 2. Hydrate Category Chips
           if (cats && Array.isArray(cats) && cats.length > 0) {
             const chipScroll = document.querySelector('.categories-chips-scroll');
             if (chipScroll) {
@@ -301,7 +333,7 @@
             }
           }
 
-          // 2. Hydrate Products strictly from Supabase
+          // 3. Hydrate Products strictly from Supabase
           if (prods && prods.length > 0) {
             // Wipe out hardcoded catalog
             for (let k in CATALOG) delete CATALOG[k];
