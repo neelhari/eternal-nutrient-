@@ -51,13 +51,13 @@
 
           <!-- 1. LOGIN FIELDS BLOCK -->
           <div id="fields-login" class="auth-fields-block active">
-            <form id="form-login" onsubmit="handleLogin(event)">
+            <form id="form-login" onsubmit="handleLogin(event)" autocomplete="off">
               <div class="plantland-form-group">
                 <!-- Email -->
                 <div>
                   <div class="plantland-input-pill-wrap">
                     <i class="ri-mail-line plantland-input-icon"></i>
-                    <input type="email" id="login-ident" class="plantland-input-pill" placeholder="Email" required autocomplete="email">
+                    <input type="email" id="login-ident" class="plantland-input-pill" placeholder="Email" required autocomplete="off">
                   </div>
                   <div id="login-ident-err" class="plantland-error-tip">Please enter a valid email.</div>
                 </div>
@@ -66,7 +66,7 @@
                 <div>
                   <div class="plantland-input-pill-wrap">
                     <i class="ri-lock-line plantland-input-icon"></i>
-                    <input type="password" id="login-pass" class="plantland-input-pill" placeholder="Password" required autocomplete="current-password">
+                    <input type="password" id="login-pass" class="plantland-input-pill" placeholder="Password" required autocomplete="new-password">
                     <button type="button" class="plantland-pass-toggle" onclick="togglePass('login-pass', this)" aria-label="Toggle password">
                       <i class="ri-eye-line"></i>
                     </button>
@@ -359,6 +359,11 @@
     }
 
     window.addEventListener('DOMContentLoaded', () => {
+      const formLog = document.getElementById('form-login');
+      const formSign = document.getElementById('form-signup');
+      if (formLog) formLog.reset();
+      if (formSign) formSign.reset();
+
       const params = new URLSearchParams(window.location.search);
       const mode = params.get('mode');
       if (mode === 'signup') {
