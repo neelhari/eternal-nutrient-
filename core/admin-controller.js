@@ -2137,14 +2137,14 @@ window.AdminController = (function() {
       <tr>
         <td>
           <div class="table-product-lockup">
-            <img src="${p.image}" alt="${p.title}" class="table-prod-img">
+            <img src="${p.image || 'assets/prod_honey_studio.jpg'}" alt="${p.title}" class="table-prod-img" style="width: 44px; height: 44px; min-width: 44px; max-width: 44px; object-fit: cover; border-radius: 10px; border: 1px solid #E2E8F0; background: #F8FAFC;">
             <div>
               <div class="table-prod-title">${p.title}</div>
-              <div class="table-prod-sku">SKU: ${p.sku} • ${p.unit}</div>
+              <div class="table-prod-sku">SKU: ${p.sku || 'N/A'} • ${p.unit || 'Pack'}</div>
             </div>
           </div>
         </td>
-        <td><span class="table-category-badge">${p.category}</span></td>
+        <td><span class="table-category-badge">${p.category || 'General'}</span></td>
         <td>
           <div class="stock-counter-badge ${p.stockQty > 10 ? 'in-stock' : (p.stockQty > 0 ? 'low-stock' : 'out-of-stock')}">
             <span class="stock-dot"></span>
