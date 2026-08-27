@@ -273,18 +273,48 @@
     async function syncCatalogFromSupabase() {
       if (window.CloudDB && window.CloudDB.isSupabaseActive()) {
         try {
-          const prods = await window.CloudDB.getProducts();
+          const [prods, cats] = await Promise.all([
+            window.CloudDB.getProducts(),
+            window.CloudDB.getCategories()
+          ]);
+
+          // 1. Hydrate Category Chips
+          if (cats && Array.isArray(cats) && cats.length > 0) {
+            const chipScroll = document.querySelector('.categories-chips-scroll');
+            if (chipScroll) {
+              const visibleCats = cats.filter(c => c.show_in_shop !== false).sort((a,b) => (Number(a.sort_order) || 1) - (Number(b.sort_order) || 1));
+              chipScroll.innerHTML = `
+                <div class="cat-chip-tab ${activeCategory === 'All' ? 'active' : ''}" onclick="selectCategory('All', this)">
+                  <div class="cat-chip-avatar">
+                    <i class="ri-apps-2-fill"></i>
+                  </div>
+                  <span class="cat-chip-name">All</span>
+                </div>
+              ` + visibleCats.map(c => `
+                <div class="cat-chip-tab ${activeCategory.toLowerCase() === c.name.toLowerCase() ? 'active' : ''}" onclick="selectCategory('${c.name.replace(/'/g, "\\'")}', this)">
+                  <div class="cat-chip-avatar">
+                    <img src="${c.image || 'assets/prod_honey_studio.jpg'}" alt="${c.name}">
+                  </div>
+                  <span class="cat-chip-name">${c.name}</span>
+                </div>
+              `).join('');
+            }
+          }
+
+          // 2. Hydrate Products strictly from Supabase
           if (prods && prods.length > 0) {
-            const dynamicCatalog = {};
+            // Wipe out hardcoded catalog
+            for (let k in CATALOG) delete CATALOG[k];
+
             prods.forEach(p => {
               const cat = p.category || 'General';
-              if (!dynamicCatalog[cat]) dynamicCatalog[cat] = [];
+              if (!CATALOG[cat]) CATALOG[cat] = [];
               const price = Number(p.price) || 0;
               const mrp = Number(p.original_price || p.price || price);
               const diff = mrp > price ? mrp - price : 0;
               const stock = Number(p.stock_qty ?? 50);
               const inStock = p.in_stock !== false && stock > 0;
-              dynamicCatalog[cat].push({
+              CATALOG[cat].push({
                 id: p.id,
                 title: p.title,
                 price: price,
@@ -298,11 +328,6 @@
                 stockQty: stock,
                 inStock: inStock
               });
-            });
-
-            // Merge dynamic products into CATALOG
-            Object.keys(dynamicCatalog).forEach(cat => {
-              CATALOG[cat] = dynamicCatalog[cat];
             });
 
             renderProducts();

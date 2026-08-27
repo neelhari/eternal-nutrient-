@@ -883,17 +883,8 @@
   
   <!-- Store Controller Logic -->
   <script>
-    const PRODUCTS = {
-      'prod_1': { id: 'prod_1', title: 'Organic Honey', category: 'Organic Honey', price: 499, originalPrice: 599, badge: 'Raw & Unfiltered • 500g', unit: '500g', image: 'assets/prod_honey_studio.jpg' },
-      'prod_2': { id: 'prod_2', title: 'Lemon Pickle', category: 'Pickles', price: 249, originalPrice: 299, badge: 'Handmade | No Preservatives • 300g', unit: '300g', image: 'assets/prod_pickle_studio.jpg' },
-      'prod_3': { id: 'prod_3', title: 'Millet Breakfast Rava', category: 'Millet Breakfast Rava', price: 189, originalPrice: 220, badge: '100% Organic • 500g', unit: '500g', image: 'assets/prod_rava_studio.jpg' },
-      'prod_4': { id: 'prod_4', title: 'Millet Biscuits', category: 'Millet Biscuits', price: 149, originalPrice: 180, badge: 'No Maida • No Preservatives • 200g', unit: '200g', image: 'assets/prod_cookie_studio.jpg' },
-      'prod_5': { id: 'prod_5', title: "Dates Laddu's", category: "Dates Laddu's", price: 349, originalPrice: 399, badge: 'Sugar Free | Pure Desi Ghee • 250g', unit: '250g', image: 'assets/prod_laddu_studio.jpg' },
-      'prod_6': { id: 'prod_6', title: 'Moringa Chikki', category: 'Moringa Chikki', price: 129, originalPrice: 150, badge: 'Immunity Superfood Snack • 150g', unit: '150g', image: 'assets/prod_chikki_studio.jpg' },
-      'na_1': { id: 'na_1', title: 'Ragi Crunch Cookies', category: 'Millet Biscuits', price: 159, originalPrice: 190, badge: 'Finger Millet • 200g', unit: '200g', image: 'assets/prod_cookie_studio.jpg' },
-      'na_2': { id: 'na_2', title: 'Wild Forest Honey', category: 'Organic Honey', price: 549, originalPrice: 650, badge: '100% Forest Pure • 500g', unit: '500g', image: 'assets/prod_honey_studio.jpg' },
-      'na_3': { id: 'na_3', title: 'Acacia Blossom Honey', category: 'Organic Honey', price: 599, originalPrice: 699, badge: 'Single Origin • 500g', unit: '500g', image: 'assets/header_honey_float.jpg' },
-      'na_4': { id: 'na_4', title: 'Little Millet Rava', category: 'Millet Breakfast Rava', price: 199, originalPrice: 230, badge: 'Dietary Fiber • 500g', unit: '500g', image: 'assets/prod_rava_studio.jpg' }
+    let PRODUCTS = {
+      'prod_1': { id: 'prod_1', title: 'Organic Honey', category: 'Organic Honey', price: 499, originalPrice: 599, badge: 'Raw & Unfiltered • 500g', unit: '500g', image: 'assets/prod_honey_studio.jpg', isBestseller: true, isNewArrival: false, stockQty: 50, inStock: true }
     };
 
     async function syncProductsFromSupabase() {
@@ -908,8 +899,9 @@
             window.CloudDB.getStoreSettings()
           ]);
 
-          // 1. Hydrate Products
+          // 1. Hydrate Products strictly from Supabase
           if (prods && prods.length > 0) {
+            PRODUCTS = {}; // Wipe out any initial dummy items
             prods.forEach(p => {
               const stock = Number(p.stock_qty ?? 50);
               const inStock = p.in_stock !== false && stock > 0;
