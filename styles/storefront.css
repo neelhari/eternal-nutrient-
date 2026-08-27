@@ -743,24 +743,25 @@ body {
 .mockup-card-img-wrap {
   width: 100%;
   aspect-ratio: 1 / 1;
-  height: 120px;
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-bottom: 8px;
+  margin-bottom: 10px;
   overflow: hidden;
-  border-radius: 8px;
+  border-radius: 12px;
+  background: #F8F5F0;
 }
 
 .mockup-card-img-wrap img {
   width: 100%;
   height: 100%;
-  object-fit: contain;
-  transition: transform 0.2s ease;
+  object-fit: cover;
+  object-position: center;
+  transition: transform 0.3s ease;
 }
 
 .mockup-product-card:hover .mockup-card-img-wrap img {
-  transform: scale(1.04);
+  transform: scale(1.05);
 }
 
 /* Product Title & Unit */
