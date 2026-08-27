@@ -315,7 +315,7 @@
                   row.innerHTML = festive.cards.map((c, idx) => `
                     <div class="festive-mini-card" id="festive-card-${idx+1}" onclick="selectCategory('${(c.targetCategory || 'All').replace(/'/g, "\\'")}')">
                       <div class="festive-mini-thumb">
-                        <img id="festive-card-img-${idx+1}" src="${c.image || 'assets/prod_honey_studio.jpg'}" alt="${c.targetCategory || 'Special'}">
+          <img id="festive-card-img-${idx+1}" src="${c.image || 'assets/prod_honey_studio.jpg'}" alt="${c.targetCategory || 'Special'}">
                       </div>
                       <div class="festive-mini-title" id="festive-card-title-${idx+1}">${c.targetCategory || 'Special'}</div>
                     </div>
@@ -327,18 +327,18 @@
 
           // 2. Hydrate Category Chips
           if (cats && Array.isArray(cats) && cats.length > 0) {
-            const chipScroll = document.querySelector('.categories-chips-scroll');
+            const chipScroll = document.getElementById('categories-nav-strip') || document.querySelector('.cat-horizontal-scroll-bar');
             if (chipScroll) {
               const visibleCats = cats.filter(c => c.show_in_shop !== false).sort((a,b) => (Number(a.sort_order) || 1) - (Number(b.sort_order) || 1));
               chipScroll.innerHTML = `
                 <div class="cat-chip-tab ${activeCategory === 'All' ? 'active' : ''}" onclick="selectCategory('All', this)">
                   <div class="cat-chip-avatar">
-                    <i class="ri-apps-2-fill"></i>
+                    <img src="https://images.unsplash.com/photo-1542838132-92c53300491e?w=150&auto=format&fit=crop&q=80" alt="All">
                   </div>
                   <span class="cat-chip-name">All</span>
                 </div>
               ` + visibleCats.map(c => `
-                <div class="cat-chip-tab ${activeCategory.toLowerCase() === c.name.toLowerCase() ? 'active' : ''}" onclick="selectCategory('${c.name.replace(/'/g, "\\'")}', this)">
+                <div class="cat-chip-tab ${isCategoryMatch(c.name, activeCategory) ? 'active' : ''}" onclick="selectCategory('${c.name.replace(/'/g, "\\'")}', this)">
                   <div class="cat-chip-avatar">
                     <img src="${c.image || 'assets/prod_honey_studio.jpg'}" alt="${c.name}">
                   </div>
@@ -364,6 +364,7 @@
               CATALOG[cat].push({
                 id: p.id,
                 title: p.title,
+                category: cat,
                 price: price,
                 mrp: mrp,
                 discount: diff > 0 ? `₹${diff} OFF` : '',
@@ -383,6 +384,14 @@
           console.warn('Supabase catalog sync notice:', e);
         }
       }
+    }
+
+    function isCategoryMatch(cat1, cat2) {
+      if (!cat1 || !cat2) return false;
+      if (cat1 === 'All' || cat2 === 'All') return true;
+      const clean1 = String(cat1).toLowerCase().replace(/[^a-z0-9]/g, '');
+      const clean2 = String(cat2).toLowerCase().replace(/[^a-z0-9]/g, '');
+      return clean1 === clean2 || clean1.includes(clean2) || clean2.includes(clean1);
     }
 
     function openProductDetail(id) {
@@ -427,8 +436,8 @@
         i.classList.remove('active');
         const nameEl = i.querySelector('.cat-chip-name');
         if (nameEl) {
-          const txt = nameEl.textContent.trim().toLowerCase();
-          if (catName.toLowerCase().includes(txt) || txt.includes(catName.toLowerCase())) {
+          const txt = nameEl.textContent.trim();
+          if (isCategoryMatch(txt, catName)) {
             i.classList.add('active');
           }
         }
@@ -449,22 +458,19 @@
         );
         document.getElementById('top-cat-header-title').textContent = `Search: "${query}"`;
       } else {
-        if (activeCategory === 'All') {
-          items = Object.values(CATALOG).flat();
-        } else {
-          items = CATALOG[activeCategory] || [];
-        }
-        document.getElementById('top-cat-header-title').textContent = activeCategory === 'All' ? 'All Organic Products' : activeCategory;
+        renderProducts();
+        return;
       }
       renderProductsWithItems(items);
     }
 
     function renderProducts() {
       let items = [];
+      const allProds = Object.values(CATALOG).flat();
       if (activeCategory === 'All') {
-        items = Object.values(CATALOG).flat();
+        items = allProds;
       } else {
-        items = CATALOG[activeCategory] || [];
+        items = allProds.filter(p => isCategoryMatch(p.category, activeCategory));
       }
       renderProductsWithItems(items);
     }
