@@ -2195,15 +2195,16 @@ body {
 
 @media (min-width: 900px) {
   .site-wrapper {
-    max-width: 1320px !important;
+    max-width: 1480px !important;
+    width: 100% !important;
     margin: 0 auto !important;
-    padding: 0 28px 60px !important;
+    padding: 0 40px 60px !important;
   }
 
   .main-header {
-    padding: 14px 0 !important;
+    padding: 16px 0 !important;
     border-bottom: 1px solid #ECEEE8 !important;
-    margin-bottom: 4px !important;
+    margin-bottom: 6px !important;
   }
 
   /* Desktop Quick Category & Store Nav Bar */
@@ -2211,9 +2212,9 @@ body {
     display: flex;
     align-items: center;
     gap: 8px;
-    padding: 10px 0 16px;
+    padding: 8px 0 12px;
     border-bottom: 1px solid #F0F3ED;
-    margin-bottom: 16px;
+    margin-bottom: 12px;
     overflow-x: auto;
   }
 
@@ -2243,11 +2244,11 @@ body {
   }
 
   .content-section {
-    padding: 24px 0 !important;
+    padding: 12px 0 18px !important;
   }
 
   .section-container {
-    padding: 24px 0 !important;
+    padding: 12px 0 18px !important;
   }
 
   .section-main-title.serif-title,
@@ -2259,145 +2260,189 @@ body {
 
   /* Desktop 1:1 Hero Promo Banner */
   .hero-section-wrap {
-    padding: 12px 0 20px !important;
+    padding: 8px 0 16px !important;
   }
 
   .hero-banner-card {
     min-height: 280px !important;
-    padding: 44px 52px !important;
-    border-radius: 24px !important;
+    padding: 40px 50px !important;
+    border-radius: 22px !important;
   }
 
   .hero-title-main {
     font-size: 30px !important;
     line-height: 1.25 !important;
-    margin-bottom: 16px !important;
+    margin-bottom: 14px !important;
   }
 
   .hero-sub-tag {
     font-size: 14px !important;
-    margin-bottom: 8px !important;
+    margin-bottom: 6px !important;
   }
 
   .hero-cta-btn {
     font-size: 14px !important;
-    padding: 11px 26px !important;
+    padding: 10px 24px !important;
     border-radius: 10px !important;
   }
 
-  /* Desktop Shop by Category (Neatly Grouped Shelf) */
-  .category-row-container {
-    display: flex !important;
-    align-items: flex-start !important;
-    justify-content: flex-start !important;
-    gap: 32px !important;
-    overflow: visible !important;
-    padding: 8px 0 16px !important;
-    flex-wrap: wrap !important;
+  /* Desktop Category Shelf (Auto-Fit Full Row Distribution) */
+  .category-bento-grid-card {
+    padding: 18px 22px !important;
+    border-radius: 20px !important;
+    margin-bottom: 20px !important;
   }
 
-  .cat-circle-card {
-    flex: none !important;
-    width: 96px !important;
-    max-width: 96px !important;
+  .category-grid-4x4 {
+    display: grid !important;
+    grid-template-columns: repeat(auto-fit, minmax(110px, 1fr)) !important;
+    gap: 20px 16px !important;
+    justify-items: center !important;
+    width: 100% !important;
+  }
+
+  .cat-grid-card-item {
+    max-width: 110px !important;
     transition: transform 0.2s ease;
   }
 
-  .cat-circle-card:hover {
+  .cat-grid-card-item:hover {
     transform: translateY(-4px);
   }
 
-  .cat-circle-frame {
-    width: 86px !important;
-    height: 86px !important;
+  .cat-grid-avatar-circle {
+    width: 80px !important;
+    height: 80px !important;
     border-width: 2px !important;
+    margin-bottom: 8px !important;
   }
 
-  .cat-circle-title {
-    font-size: 13px !important;
-    margin-top: 8px !important;
+  .cat-grid-title {
+    font-size: 13.5px !important;
     font-weight: 700 !important;
   }
 
-  /* Desktop Best Sellers Shelf (Proportional Auto-Fill Grid) */
-  .zepto-rail-container {
-    display: grid !important;
-    grid-template-columns: repeat(auto-fill, minmax(210px, 1fr)) !important;
-    gap: 18px !important;
-    overflow: visible !important;
-    padding: 8px 0 16px !important;
+  /* Desktop Curated Editorial Rails (Single-Line Horizontal Scrolling with Sleek Bar) */
+  .editorial-curated-section {
+    border-radius: 20px !important;
+    padding: 22px 24px !important;
+    margin-bottom: 24px !important;
   }
 
-  .zepto-item-card {
-    width: 100% !important;
-    min-width: 0 !important;
-    padding: 12px !important;
-    border-radius: 16px !important;
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  .exact-mockup-track {
+    display: flex !important;
+    flex-wrap: nowrap !important;
+    overflow-x: auto !important;
+    gap: 16px !important;
+    padding: 6px 2px 14px !important;
+    scroll-behavior: smooth !important;
+    -webkit-overflow-scrolling: touch !important;
+    scrollbar-width: thin !important;
+    scrollbar-color: #CBD8BE transparent !important;
   }
 
-  .zepto-item-card:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 10px 24px rgba(0, 0, 0, 0.08) !important;
+  .exact-mockup-track::-webkit-scrollbar {
+    height: 6px !important;
+    display: block !important;
   }
 
-  .zepto-img-box {
+  .exact-mockup-track::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.04) !important;
+    border-radius: 999px !important;
+  }
+
+  .exact-mockup-track::-webkit-scrollbar-thumb {
+    background: #CBD8BE !important;
+    border-radius: 999px !important;
+  }
+
+  .exact-mockup-track::-webkit-scrollbar-thumb:hover {
+    background: #4A7A25 !important;
+  }
+
+  .mockup-item-card {
+    flex: 0 0 205px !important;
+    width: 205px !important;
+    max-width: 205px !important;
+    min-width: 205px !important;
+    padding: 10px !important;
+    border-radius: 14px !important;
+    transition: transform 0.28s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.28s ease !important;
+    background: #FFFFFF !important;
+  }
+
+  .mockup-item-card:hover {
+    transform: translateY(-6px) !important;
+    box-shadow: 0 14px 30px rgba(0, 0, 0, 0.1) !important;
+  }
+
+  .mockup-img-box {
     aspect-ratio: 1.05 / 1 !important;
-    border-radius: 12px !important;
-    margin-bottom: 10px !important;
+    border-radius: 10px !important;
+    margin-bottom: 8px !important;
+    overflow: hidden !important;
   }
 
-  .zepto-card-title {
-    font-size: 14.5px !important;
+  .mockup-img-box img {
+    transition: transform 0.35s cubic-bezier(0.2, 0.8, 0.2, 1) !important;
   }
 
-  .zepto-card-badge {
-    font-size: 11px !important;
+  .mockup-item-card:hover .mockup-img-box img {
+    transform: scale(1.07) !important;
   }
 
-  .zepto-price-num {
-    font-size: 16px !important;
+  .mockup-card-title {
+    font-size: 14px !important;
   }
 
-  .zepto-btn-buynow {
-    font-size: 12px !important;
-    padding: 8px 6px !important;
-    border-radius: 8px !important;
+  .mockup-card-badge {
+    font-size: 10.5px !important;
   }
 
-  .zepto-btn-cart-icon {
-    width: 32px !important;
-    height: 32px !important;
-    border-radius: 8px !important;
+  .mockup-price-num {
+    font-size: 15.5px !important;
   }
 
-  /* Desktop Showcase Product Grid (4-5 Column Auto-Fill Grid) */
+  /* Desktop Showcase Product Grid (Reduced Padding & Compact Tight Grid) */
+  .content-section {
+    padding: 14px 0 24px !important;
+  }
+
   .showcase-grid-responsive {
     display: grid !important;
-    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)) !important;
-    gap: 22px !important;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)) !important;
+    gap: 16px !important;
     width: 100% !important;
   }
 
   .product-showcase-card {
-    padding: 14px !important;
-    border-radius: 16px !important;
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    padding: 10px !important;
+    border-radius: 14px !important;
+    transition: transform 0.28s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.28s ease !important;
   }
 
   .product-showcase-card:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 12px 28px rgba(0, 0, 0, 0.08) !important;
+    transform: translateY(-6px) !important;
+    box-shadow: 0 14px 30px rgba(0, 0, 0, 0.1) !important;
   }
 
   .product-photo-wrap {
     aspect-ratio: 1.08 / 1 !important;
-    border-radius: 12px !important;
-    margin-bottom: 12px !important;
+    border-radius: 10px !important;
+    margin-bottom: 8px !important;
+    overflow: hidden !important;
+  }
+
+  .product-photo-wrap img {
+    transition: transform 0.35s cubic-bezier(0.2, 0.8, 0.2, 1) !important;
+  }
+
+  .product-showcase-card:hover .product-photo-wrap img {
+    transform: scale(1.07) !important;
   }
 
   .card-item-title {
-    font-size: 16px !important;
+    font-size: 15px !important;
   }
 
   .card-item-badge {

@@ -309,5 +309,28 @@ a[x-apple-data-detectors] {
   color: #281612;
 }
 
+/* ==========================================================================
+   SMOOTH PAGE ENTRY & CARD MICRO-INTERACTIONS
+   ========================================================================== */
+@keyframes fadeInScale {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
 
+.hero-section-wrap,
+.category-bento-grid-card,
+.editorial-curated-section,
+.content-section {
+  animation: fadeInScale 0.45s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
 
+.category-bento-grid-card { animation-delay: 0.05s; }
+.theme-bestsellers { animation-delay: 0.1s; }
+.content-section { animation-delay: 0.15s; }
+.theme-newarrivals { animation-delay: 0.2s; }
