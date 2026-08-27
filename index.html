@@ -364,6 +364,27 @@
       </div>
     </section>
 
+    <!-- 4b. New Arrivals (Curated Rail) -->
+    <section id="newarrivals-section" class="editorial-curated-section theme-bestsellers" data-aos="fade-up" style="display: none;">
+      <div class="exact-mockup-header">
+        <div class="mockup-header-left">
+          <div class="mockup-title-row">
+            <span class="mockup-header-icon" style="background: rgba(43, 107, 45, 0.12); color: #2B6B2D;"><i class="ri-flashlight-fill"></i></span>
+            <h2 class="mockup-main-title">New Arrivals</h2>
+          </div>
+          <span class="mockup-sub-title">Freshly Harvested & Crafted</span>
+        </div>
+        <a href="categories.html" class="mockup-top-pill-btn">
+          <span>See all</span>
+          <i class="ri-arrow-right-line"></i>
+        </a>
+      </div>
+
+      <!-- Horizontal Curated Rail Track -->
+      <div class="exact-mockup-track" id="newarrivals-rail">
+      </div>
+    </section>
+
     <!-- 5. All Products Showcase Grid (Our Organic Range) -->
     <section id="bestsellers-section" class="content-section">
       <div class="section-header-bar">
@@ -914,15 +935,123 @@
                 originalPrice: Number(p.original_price || p.price || 0),
                 badge: p.badge || '',
                 unit: p.unit || 'Pack',
-                image: p.image || (Array.isArray(p.gallery) && p.gallery[0]) || 'assets/prod_honey_studio.jpg'
+                image: p.image || (Array.isArray(p.gallery) && p.gallery[0]) || 'assets/prod_honey_studio.jpg',
+                isBestseller: !!p.is_bestseller,
+                isNewArrival: !!p.is_new_arrival,
+                inStock: p.in_stock !== false
               };
             });
+            renderStorefrontSections();
             renderCart();
           }
         } catch (e) {
           console.warn('Supabase storefront sync notice:', e);
         }
       }
+    }
+
+    function renderStorefrontSections() {
+      const allProds = Object.values(PRODUCTS);
+
+      // 1. Best Sellers Rail
+      const bsRail = document.getElementById('bestsellers-rail');
+      if (bsRail) {
+        const bestSellers = allProds.filter(p => p.isBestseller);
+        const listToRender = bestSellers.length > 0 ? bestSellers : allProds.slice(0, 6);
+        bsRail.innerHTML = listToRender.map(p => {
+          const diff = p.originalPrice > p.price ? (p.originalPrice - p.price) : 0;
+          return `
+            <div class="mockup-product-card" onclick="openProductDetail('${p.id}')">
+              <div class="mockup-card-img-wrap">
+                <img src="${p.image}" alt="${p.title}" loading="lazy">
+              </div>
+              <h3 class="mockup-card-title">${p.title}</h3>
+              <div class="mockup-card-unit">${p.unit}</div>
+              <div class="mockup-card-bottom-row">
+                <div class="mockup-price-col">
+                  <div class="mockup-price-line">
+                    <span class="mockup-current-price">₹${p.price}</span>
+                    ${p.originalPrice > p.price ? `<span class="mockup-mrp-struck">₹${p.originalPrice}</span>` : ''}
+                  </div>
+                  ${diff > 0 ? `<div class="mockup-discount-text">₹${diff} OFF</div>` : ''}
+                </div>
+                <div id="bs-actions-${p.id}">
+                  <button class="mockup-add-pill-btn" onclick="event.stopPropagation(); addToCart('${p.id}', event)">
+                    <i class="ri-shopping-cart-2-line"></i>
+                    <span>Add</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+          `;
+        }).join('');
+      }
+
+      // 2. New Arrivals Rail
+      const naRail = document.getElementById('newarrivals-rail');
+      const naSection = document.getElementById('newarrivals-section');
+      if (naRail) {
+        const newArrivals = allProds.filter(p => p.isNewArrival);
+        if (newArrivals.length > 0) {
+          if (naSection) naSection.style.display = 'block';
+          naRail.innerHTML = newArrivals.map(p => {
+            const diff = p.originalPrice > p.price ? (p.originalPrice - p.price) : 0;
+            return `
+              <div class="mockup-product-card" onclick="openProductDetail('${p.id}')">
+                <div class="mockup-card-img-wrap">
+                  <img src="${p.image}" alt="${p.title}" loading="lazy">
+                </div>
+                <h3 class="mockup-card-title">${p.title}</h3>
+                <div class="mockup-card-unit">${p.unit}</div>
+                <div class="mockup-card-bottom-row">
+                  <div class="mockup-price-col">
+                    <div class="mockup-price-line">
+                      <span class="mockup-current-price">₹${p.price}</span>
+                      ${p.originalPrice > p.price ? `<span class="mockup-mrp-struck">₹${p.originalPrice}</span>` : ''}
+                    </div>
+                    ${diff > 0 ? `<div class="mockup-discount-text">₹${diff} OFF</div>` : ''}
+                  </div>
+                  <div id="na-actions-${p.id}">
+                    <button class="mockup-add-pill-btn btn-green-theme" onclick="event.stopPropagation(); addToCart('${p.id}', event)">
+                      <i class="ri-shopping-cart-2-line"></i>
+                      <span>Add</span>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            `;
+          }).join('');
+        } else {
+          if (naSection) naSection.style.display = 'none';
+        }
+      }
+
+      // 3. Our Organic Range (All active catalog products)
+      const grid = document.getElementById('products-grid-container');
+      if (grid) {
+        grid.innerHTML = allProds.map(p => {
+          return `
+            <div class="product-showcase-card" onclick="openProductDetail('${p.id}')">
+              <div class="product-photo-wrap">
+                <img src="${p.image}" alt="${p.title}" loading="lazy">
+              </div>
+              <div class="product-text-details">
+                <h3 class="card-item-title">${p.title}</h3>
+                <div class="card-item-pricing">
+                  <span class="card-price-current">₹${p.price}</span>
+                  ${p.originalPrice > p.price ? `<span style="font-size: 11.5px; color: #94A3B8; text-decoration: line-through; margin-left: 6px;">₹${p.originalPrice}</span>` : ''}
+                </div>
+                <div class="card-dual-actions" id="sc-actions-${p.id}">
+                  <button class="btn-daksha-add" onclick="event.stopPropagation(); addToCart('${p.id}', event)">ADD</button>
+                  <button class="btn-daksha-buy" onclick="event.stopPropagation(); buyNowDirect('${p.id}')">BUY</button>
+                </div>
+              </div>
+            </div>
+          `;
+        }).join('');
+      }
+
+      updateCardSteppersUI();
     }
 
     let cart = [];

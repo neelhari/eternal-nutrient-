@@ -270,6 +270,45 @@
     let activeCategory = 'All';
     let cart = []; 
 
+    async function syncCatalogFromSupabase() {
+      if (window.CloudDB && window.CloudDB.isSupabaseActive()) {
+        try {
+          const prods = await window.CloudDB.getProducts();
+          if (prods && prods.length > 0) {
+            const dynamicCatalog = {};
+            prods.forEach(p => {
+              const cat = p.category || 'General';
+              if (!dynamicCatalog[cat]) dynamicCatalog[cat] = [];
+              const price = Number(p.price) || 0;
+              const mrp = Number(p.original_price || p.price || price);
+              const diff = mrp > price ? mrp - price : 0;
+              dynamicCatalog[cat].push({
+                id: p.id,
+                title: p.title,
+                price: price,
+                mrp: mrp,
+                discount: diff > 0 ? `₹${diff} OFF` : '',
+                unit: p.unit || 'Pack',
+                badge: p.badge || (p.is_bestseller ? '★ Bestseller' : (p.is_new_arrival ? '⚡ New Arrival' : '')),
+                image: p.image || (Array.isArray(p.gallery) && p.gallery[0]) || 'assets/prod_honey_studio.jpg',
+                isBestseller: !!p.is_bestseller,
+                isNewArrival: !!p.is_new_arrival
+              });
+            });
+
+            // Merge dynamic products into CATALOG
+            Object.keys(dynamicCatalog).forEach(cat => {
+              CATALOG[cat] = dynamicCatalog[cat];
+            });
+
+            renderProducts();
+          }
+        } catch(e) {
+          console.warn('Supabase catalog sync notice:', e);
+        }
+      }
+    }
+
     function openProductDetail(id) {
       window.location.href = 'product.html?id=' + id;
     }
@@ -546,8 +585,10 @@
       }
     }
 
-    window.addEventListener('DOMContentLoaded', () => {
+    window.addEventListener('DOMContentLoaded', async () => {
       syncDualBannersUI();
+      renderCartUI();
+      await syncCatalogFromSupabase();
       const params = new URLSearchParams(window.location.search);
       const catParam = params.get('cat');
       if (catParam && CATALOG[catParam]) {
@@ -556,7 +597,6 @@
       } else {
         renderProducts();
       }
-      renderCartUI();
     });
   </script>
 </body>
