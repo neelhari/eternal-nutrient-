@@ -17,77 +17,10 @@
     WISHLIST: 'en_auth_wishlist'
   };
 
-  // Sample default starter profile if testing logged-in state
-  const DEFAULT_SAMPLE_USER = {
-    id: 'usr_sample_8842',
-    fullName: 'Anita Sharma',
-    email: 'anita.sharma@example.com',
-    phone: '+91 98765 43210',
-    memberTier: 'Gold Member',
-    memberSince: 'August 2025',
-    avatarInitials: 'AS'
-  };
-
-  // Default sample starter addresses
-  const DEFAULT_SAMPLE_ADDRESSES = [
-    {
-      id: 'addr_1',
-      title: 'Home',
-      isDefault: true,
-      fullName: 'Anita Sharma',
-      phone: '+91 98765 43210',
-      flat: 'Flat 402, Green Glen Apartments',
-      street: '12th Main, 4th Cross, Indiranagar',
-      city: 'Bangalore',
-      state: 'Karnataka',
-      pincode: '560038'
-    },
-    {
-      id: 'addr_2',
-      title: 'Work / Office',
-      isDefault: false,
-      fullName: 'Anita Sharma',
-      phone: '+91 98765 43210',
-      flat: 'Building 3B, Tech Park Campus',
-      street: 'Outer Ring Road, Bellandur',
-      city: 'Bangalore',
-      state: 'Karnataka',
-      pincode: '560103'
-    }
-  ];
-
-  // Default sample starter orders
-  const DEFAULT_SAMPLE_ORDERS = [
-    {
-      id: 'EN-8842',
-      date: 'Today, 2:30 PM',
-      isoDate: new Date().toISOString(),
-      status: 'Delivered',
-      statusCode: 'delivered',
-      totalAmount: 848,
-      paymentMethod: 'UPI (PhonePe)',
-      items: [
-        { id: 'prod_1', title: 'Organic Honey (500g)', qty: 1, price: 499, image: 'assets/prod_honey_studio.jpg' },
-        { id: 'prod_5', title: "Dates Laddu's (250g)", qty: 1, price: 349, image: 'assets/prod_laddu_studio.jpg' }
-      ]
-    },
-    {
-      id: 'EN-8719',
-      date: '15 Aug 2026',
-      isoDate: '2026-08-15T10:00:00Z',
-      status: 'Delivered',
-      statusCode: 'delivered',
-      totalAmount: 249,
-      paymentMethod: 'Cash on Delivery',
-      items: [
-        { id: 'prod_2', title: 'Handmade Lemon Pickle (300g)', qty: 1, price: 249, image: 'assets/prod_pickle_studio.jpg' }
-      ]
-    }
-  ];
-
   const AuthEngine = {
     supabase: null,
     isInitialized: false,
+    currentUser: null,
     currentUser: null,
 
     init() {
@@ -362,9 +295,10 @@
      */
     getAddresses() {
       try {
-        return JSON.parse(localStorage.getItem(STORAGE_KEYS.ADDRESSES) || '[]');
+        const data = localStorage.getItem(STORAGE_KEYS.ADDRESSES);
+        return data ? JSON.parse(data) : [];
       } catch (e) {
-        return DEFAULT_SAMPLE_ADDRESSES;
+        return [];
       }
     },
 
@@ -396,9 +330,10 @@
      */
     getOrders() {
       try {
-        return JSON.parse(localStorage.getItem(STORAGE_KEYS.ORDERS) || '[]');
+        const data = localStorage.getItem(STORAGE_KEYS.ORDERS);
+        return data ? JSON.parse(data) : [];
       } catch(e) {
-        return DEFAULT_SAMPLE_ORDERS;
+        return [];
       }
     },
 
@@ -469,11 +404,11 @@
         }
       });
 
-      // 2. Mobile Bottom Dock
+      // 2. Mobile Bottom Dock - Keep label clean as 'Profile' without layout stretching
       document.querySelectorAll('.mobile-bottom-dock a[href*="account"]').forEach(tab => {
         const span = tab.querySelector('span');
         if (span) {
-          span.textContent = isAuth && user ? user.fullName.split(' ')[0] : 'Account';
+          span.textContent = 'Profile';
         }
       });
     },

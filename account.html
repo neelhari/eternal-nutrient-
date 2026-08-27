@@ -875,10 +875,11 @@
       const cont = document.getElementById('drawer-orders-list');
       if (!cont) return;
 
-      cont.innerHTML = `<div style="text-align: center; padding: 24px; color: #8C7E77;"><i class="ri-loader-4-line ri-spin" style="font-size: 24px;"></i><br><span style="font-size: 13px;">Loading orders from database...</span></div>`;
-
       const user = AuthEngine.getCurrentUser();
       const email = user ? user.email : '';
+
+      cont.innerHTML = `<div style="text-align: center; padding: 24px; color: #8C7E77;"><i class="ri-loader-4-line ri-spin" style="font-size: 24px;"></i><br><span style="font-size: 13px;">Checking database for orders...</span></div>`;
+
       let list = [];
 
       if (email && window.CloudDB && window.CloudDB.getOrdersByEmail) {
@@ -903,17 +904,15 @@
         }
       }
 
-      if (list.length === 0) {
-        list = AuthEngine.getOrders() || [];
-      }
-
       if (!list || list.length === 0) {
         cont.innerHTML = `
-          <div style="text-align: center; padding: 30px 10px; color: #94969F;">
-            <i class="ri-box-3-line" style="font-size: 40px; margin-bottom: 8px; display: block;"></i>
-            <strong style="color: #282C3F;">No orders yet</strong>
-            <p style="font-size: 12px; margin-top: 4px;">Your past purchases will show up here.</p>
-            <a href="categories.html" class="myntra-btn-primary" style="text-decoration: none; margin-top: 14px;">Start Shopping</a>
+          <div style="text-align: center; padding: 36px 16px; color: #94969F;">
+            <div style="width: 56px; height: 56px; border-radius: 50%; background: #EAF3E6; color: #386618; display: inline-flex; align-items: center; justify-content: center; font-size: 26px; margin-bottom: 12px;">
+              <i class="ri-shopping-bag-3-line"></i>
+            </div>
+            <h4 style="color: #281612; margin: 0 0 6px; font-size: 16px; font-weight: 800;">No Orders Placed Yet</h4>
+            <p style="font-size: 13px; color: #726259; margin: 0 0 16px; line-height: 1.4;">When you place an order with <strong>${email || 'your account'}</strong>, it will automatically track here in real time.</p>
+            <a href="categories.html" class="myntra-btn-primary" style="text-decoration: none; display: inline-flex; align-items: center; justify-content: center; width: auto; padding: 10px 24px;">Start Shopping</a>
           </div>
         `;
         return;
@@ -946,11 +945,13 @@
 
       if (!items || items.length === 0) {
         cont.innerHTML = `
-          <div style="text-align: center; padding: 30px 10px; color: #94969F;">
-            <i class="ri-heart-3-line" style="font-size: 40px; margin-bottom: 8px; display: block;"></i>
-            <strong style="color: #282C3F;">Your wishlist is empty</strong>
-            <p style="font-size: 12px; margin-top: 4px;">Explore our raw organic honey and natural millets.</p>
-            <a href="categories.html" class="myntra-btn-primary" style="text-decoration: none; margin-top: 14px;">Browse Catalog</a>
+          <div style="text-align: center; padding: 36px 16px; color: #94969F;">
+            <div style="width: 56px; height: 56px; border-radius: 50%; background: #FDE8E8; color: #E53935; display: inline-flex; align-items: center; justify-content: center; font-size: 26px; margin-bottom: 12px;">
+              <i class="ri-heart-3-line"></i>
+            </div>
+            <h4 style="color: #281612; margin: 0 0 6px; font-size: 16px; font-weight: 800;">Your Wishlist is Empty</h4>
+            <p style="font-size: 13px; color: #726259; margin: 0 0 16px; line-height: 1.4;">Explore our raw organic honey, laddus, and snacks to save your favourites.</p>
+            <a href="categories.html" class="myntra-btn-primary" style="text-decoration: none; display: inline-flex; align-items: center; justify-content: center; width: auto; padding: 10px 24px;">Browse Catalog</a>
           </div>
         `;
         return;
@@ -961,7 +962,7 @@
         <div style="display: flex; flex-direction: column; gap: 8px;">
           ${items.map(id => `
             <div style="display: flex; justify-content: space-between; align-items: center; border: 1px solid var(--myntra-border); border-radius: 8px; padding: 10px 12px;">
-              <span style="font-size: 13px; font-weight: 700;">${id.replace('prod_', 'Organic Product ')}</span>
+              <span style="font-size: 13px; font-weight: 700; color: #281612;">${id.replace('prod_', 'Organic Product ')}</span>
               <button class="myntra-edit-profile-btn" onclick="removeFromWishlist('${id}')">Remove</button>
             </div>
           `).join('')}
@@ -979,11 +980,26 @@
       const cont = document.getElementById('drawer-address-list');
       if (!cont) return;
 
+      if (!list || list.length === 0) {
+        cont.innerHTML = `
+          <div style="text-align: center; padding: 28px 12px; color: #94969F;">
+            <div style="width: 52px; height: 52px; border-radius: 50%; background: #EBF4E5; color: #386618; display: inline-flex; align-items: center; justify-content: center; font-size: 24px; margin-bottom: 10px;">
+              <i class="ri-map-pin-line"></i>
+            </div>
+            <h4 style="color: #281612; margin: 0 0 4px; font-size: 15px; font-weight: 800;">No Saved Addresses Yet</h4>
+            <p style="font-size: 12.5px; color: #726259; margin: 0 0 10px; line-height: 1.4;">Add your delivery address below for fast 1-click checkout.</p>
+          </div>
+        `;
+        return;
+      }
+
       cont.innerHTML = list.map(a => `
         <div style="border: 1px solid var(--myntra-border); border-radius: 10px; padding: 12px 14px; margin-bottom: 10px; background: ${a.isDefault ? '#FAFDF8' : '#FFFFFF'};">
           <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
-            <strong style="font-size: 13.5px; color: #281612;">${a.name} <span style="font-size: 11px; color: #94969F;">(${a.tag})</span></strong>
-            ${a.isDefault ? '<span style="font-size: 10px; font-weight: 800; background: #EAF3E6; color: #386618; padding: 2px 6px; border-radius: 4px;">DEFAULT</span>' : ''}
+            <strong style="font-size: 13.5px; color: #281612;">${a.name || 'Delivery Address'} <span style="font-size: 11px; color: #94969F;">(${a.tag || 'Home'})</span></strong>
+            <button type="button" class="myntra-drawer-close" style="font-size: 16px; width: 26px; height: 26px; color: #E53935;" onclick="deleteSavedAddress('${a.id}')" title="Delete Address">
+              <i class="ri-delete-bin-line"></i>
+            </button>
           </div>
           <div style="font-size: 12.5px; color: #535766; line-height: 1.4;">${a.street}, ${a.city} - ${a.pincode}</div>
           <div style="font-size: 12px; color: #94969F; margin-top: 4px;">Phone: ${a.phone}</div>
@@ -991,20 +1007,34 @@
       `).join('');
     }
 
+    function deleteSavedAddress(id) {
+      AuthEngine.deleteAddress(id);
+      showToast('Address removed');
+      renderAddresses();
+    }
+
     function showAddAddressForm() {
       const form = document.getElementById('form-new-address');
-      if (form) form.style.display = form.style.display === 'none' ? 'block' : 'none';
+      if (!form) return;
+      form.style.display = form.style.display === 'none' ? 'block' : 'none';
+      if (form.style.display === 'block') {
+        const user = AuthEngine.getCurrentUser();
+        if (user) {
+          if (!document.getElementById('new-addr-name').value) document.getElementById('new-addr-name').value = user.fullName || '';
+          if (!document.getElementById('new-addr-phone').value) document.getElementById('new-addr-phone').value = user.phone || '';
+        }
+      }
     }
 
     function saveNewAddress() {
-      const name = document.getElementById('new-addr-name').value;
-      const phone = document.getElementById('new-addr-phone').value;
-      const street = document.getElementById('new-addr-street').value;
-      const city = document.getElementById('new-addr-city').value;
-      const pincode = document.getElementById('new-addr-pincode').value;
+      const name = document.getElementById('new-addr-name').value.trim();
+      const phone = document.getElementById('new-addr-phone').value.trim();
+      const street = document.getElementById('new-addr-street').value.trim();
+      const city = document.getElementById('new-addr-city').value.trim();
+      const pincode = document.getElementById('new-addr-pincode').value.trim();
 
       if (!name || !street) {
-        alert('Please enter name and street address');
+        alert('Please enter your name and street address.');
         return;
       }
 
@@ -1016,10 +1046,10 @@
         street,
         city: city || 'Bengaluru',
         pincode: pincode || '560064',
-        isDefault: false
+        isDefault: true
       });
 
-      showToast('Address saved successfully!');
+      showToast('Delivery address saved successfully!');
       document.getElementById('form-new-address').style.display = 'none';
       renderAddresses();
     }
