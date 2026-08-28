@@ -405,17 +405,16 @@ html, body {
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(15, 23, 42, 0.7);
-  backdrop-filter: blur(6px);
-  -webkit-backdrop-filter: blur(6px);
-  z-index: 99990;
-  opacity: 0;
-  transition: opacity 0.25s ease;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  z-index: 999990;
 }
 
 #mobile-sidebar-backdrop.open {
   display: block !important;
-  opacity: 1;
 }
 
 .admin-mobile-header {
@@ -492,24 +491,24 @@ html, body {
   .admin-sidebar {
     position: fixed !important;
     top: 0 !important;
-    left: 0 !important;
+    left: -320px !important;
     bottom: 0 !important;
-    width: 290px !important;
+    width: 280px !important;
     max-width: 85vw !important;
     height: 100vh !important;
-    z-index: 99999 !important;
+    z-index: 999999 !important;
     background: #111C24 !important;
-    transform: translateX(-100%) !important;
-    box-shadow: none;
-    transition: transform 0.28s cubic-bezier(0.16, 1, 0.3, 1) !important;
     display: flex !important;
-    visibility: hidden;
+    flex-direction: column !important;
+    transition: left 0.3s cubic-bezier(0.16, 1, 0.3, 1) !important;
+    box-shadow: none !important;
+    transform: none !important;
+    visibility: visible !important;
   }
 
   .admin-sidebar.open {
-    transform: translateX(0) !important;
-    visibility: visible !important;
-    box-shadow: 8px 0 32px rgba(0, 0, 0, 0.45) !important;
+    left: 0 !important;
+    box-shadow: 12px 0 40px rgba(0, 0, 0, 0.6) !important;
   }
 
   .sidebar-mobile-close-btn {
