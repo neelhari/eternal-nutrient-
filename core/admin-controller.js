@@ -851,46 +851,32 @@ window.AdminController = (function() {
     if (!input || !input.files || input.files.length === 0) return;
     const files = Array.from(input.files);
     
-    showToast(`Uploading ${files.length} photo(s) to Cloudinary...`, 'info');
-
-    const config = window.STORE_CONFIG || {};
-    const cloudName = config.cloudinaryCloudName || 'ewrpjo2g';
-    const uploadPreset = config.cloudinaryUploadPreset || 'eternal_products';
+    showToast(`Processing & uploading ${files.length} photo(s)...`, 'info');
 
     for (const file of files) {
       try {
-        const formData = new FormData();
-        formData.append('file', file);
-        formData.append('upload_preset', uploadPreset);
-
-        const res = await fetch(`https://api.cloudinary.com/v1_1/${cloudName}/image/upload`, {
-          method: 'POST',
-          body: formData
-        });
-
-        const data = await res.json();
-        if (data.secure_url) {
-          const optimizedUrl = data.secure_url.replace('/upload/', '/upload/f_auto,q_auto,w_800/');
-          currentProductGallery.push(optimizedUrl);
+        if (window.ImageUploader) {
+          const url = await window.ImageUploader.upload(file);
+          if (url) currentProductGallery.push(url);
+        } else if (window.CloudinaryUpload) {
+          const res = await window.CloudinaryUpload.uploadImageFile(file);
+          if (res && res.url) currentProductGallery.push(res.url);
         } else {
-          currentProductGallery.push(await new Promise(r => {
-            const rd = new FileReader();
+          const rd = new FileReader();
+          const base64 = await new Promise(r => {
             rd.onload = e => r(e.target.result);
             rd.readAsDataURL(file);
-          }));
+          });
+          currentProductGallery.push(base64);
         }
       } catch (err) {
-        console.warn('Cloudinary upload notice:', err.message);
-        currentProductGallery.push(await new Promise(r => {
-          const rd = new FileReader();
-          rd.onload = e => r(e.target.result);
-          rd.readAsDataURL(file);
-        }));
+        console.warn('Image processing notice:', err.message);
+        showToast('Image notice: ' + err.message, 'warning');
       }
     }
 
     renderGalleryStrip();
-    showToast(`${files.length} photo(s) added to gallery!`, 'success');
+    showToast(`${files.length} photo(s) added to gallery! Remember to click "Save Product" to update the database.`, 'success');
     input.value = '';
   }
 

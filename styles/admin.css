@@ -566,6 +566,14 @@ html, body {
 }
 
 @media (max-width: 900px) {
+  html, body {
+    height: auto !important;
+    min-height: 100vh !important;
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+    -webkit-overflow-scrolling: touch !important;
+  }
+
   .admin-app-wrapper {
     overflow: visible !important;
     height: auto !important;
@@ -577,6 +585,7 @@ html, body {
     height: auto !important;
     max-height: none !important;
     overflow: visible !important;
+    overflow-y: visible !important;
   }
 
   .admin-desktop-topbar {
@@ -603,9 +612,9 @@ html, body {
   }
 
   .admin-views-container {
-    padding: 16px 14px 60px !important;
+    padding: 16px 14px 100px !important;
     width: 100% !important;
-    overflow-x: hidden !important;
+    overflow: visible !important;
   }
 
   .view-header-strip {
