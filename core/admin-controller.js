@@ -19,55 +19,44 @@ window.AdminController = (function() {
 
   async function checkAdminSession() {
     const lockscreen = document.getElementById('admin-auth-lockscreen');
+    const appWrapper = document.querySelector('.admin-app-wrapper');
     const config = window.STORE_CONFIG || {};
     const client = (window.CloudDB && window.CloudDB.getClient()) || window.__en_supabaseClient || (typeof window.supabase !== 'undefined' && config.supabaseUrl && config.supabaseAnonKey ? window.supabase.createClient(config.supabaseUrl, config.supabaseAnonKey) : null);
 
-    if (client && client.auth) {
-      try {
-        let { data: { session } } = await client.auth.getSession();
-        if (!session) {
-          // Auto-authenticate with Admin service credentials if session is missing
-          const authRes = await client.auth.signInWithPassword({
-            email: 'eternalncdm@gmail.com',
-            password: 'EternalAdmin@2026'
-          });
-          if (authRes.data && authRes.data.session) {
-            session = authRes.data.session;
-          }
-        }
+    const isAuthed = sessionStorage.getItem('en_admin_auth') === 'true';
 
+    if (isAuthed && client && client.auth) {
+      try {
+        const { data: { session } } = await client.auth.getSession();
         if (session && session.user) {
           currentAdminUser = session.user;
-          sessionStorage.setItem('en_admin_auth', 'true');
-          if (window.CloudDB && window.CloudDB.setClient) window.CloudDB.setClient(client);
-          if (lockscreen) {
-            lockscreen.classList.remove('open');
-            lockscreen.style.display = 'none';
-          }
-          document.body.style.overflow = '';
           updateAdminProfileDisplay(session.user.email);
-          return;
         }
       } catch (err) {
-        console.warn('Admin session sync notice:', err.message);
+        console.warn('Session check notice:', err.message);
       }
     }
 
-    if (sessionStorage.getItem('en_admin_auth') === 'true') {
+    if (isAuthed) {
+      // Authenticated: show admin portal, hide login gate
       if (lockscreen) {
         lockscreen.classList.remove('open');
         lockscreen.style.display = 'none';
       }
+      if (appWrapper) appWrapper.style.display = '';
       document.body.style.overflow = '';
       return;
     }
 
-    // Show lockscreen if not authenticated
+    // Not authenticated: hide admin portal completely, show dedicated solid login gate
+    if (appWrapper) appWrapper.style.display = 'none';
     if (lockscreen) {
       lockscreen.classList.add('open');
       lockscreen.style.display = 'flex';
-      document.body.style.overflow = 'hidden';
+      const passInput = document.getElementById('admin-login-password');
+      if (passInput) passInput.value = '';
     }
+    document.body.style.overflow = 'hidden';
   }
 
   async function handleAdminLogin(event) {
@@ -115,10 +104,12 @@ window.AdminController = (function() {
 
       sessionStorage.setItem('en_admin_auth', 'true');
       const lockscreen = document.getElementById('admin-auth-lockscreen');
+      const appWrapper = document.querySelector('.admin-app-wrapper');
       if (lockscreen) {
         lockscreen.classList.remove('open');
         lockscreen.style.display = 'none';
       }
+      if (appWrapper) appWrapper.style.display = '';
       document.body.style.overflow = '';
       updateAdminProfileDisplay(email);
       showToast('Admin authentication successful! Access granted.', 'success');
@@ -185,15 +176,21 @@ window.AdminController = (function() {
     currentAdminUser = null;
     showToast('You have been logged out of the Admin Portal.', 'info');
 
-    // Immediately display the lockscreen login modal
+    // Close any open mobile navigation
+    if (typeof closeMobileNav === 'function') closeMobileNav();
+
+    // Hide admin portal completely and show solid login page
+    const appWrapper = document.querySelector('.admin-app-wrapper');
+    if (appWrapper) appWrapper.style.display = 'none';
+
     const lockscreen = document.getElementById('admin-auth-lockscreen');
     if (lockscreen) {
       lockscreen.classList.add('open');
       lockscreen.style.display = 'flex';
-      document.body.style.overflow = 'hidden';
       const passInput = document.getElementById('admin-login-password');
       if (passInput) passInput.value = '';
     }
+    document.body.style.overflow = 'hidden';
   }
 
   function updateAdminProfileDisplay(email) {
