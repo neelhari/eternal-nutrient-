@@ -133,6 +133,44 @@ window.AdminController = (function() {
     }
   }
 
+  const VERIFIED_ADMIN_EMAIL = 'eternalncdm@gmail.com';
+
+  async function handleAdminForgotPassword() {
+    const emailInput = document.getElementById('admin-login-email');
+    const email = (emailInput ? emailInput.value : '').trim().toLowerCase();
+
+    if (!email) {
+      showToast('Please enter your admin email address.', 'error');
+      return;
+    }
+
+    // STRICT WHITELIST SECURITY BARRIER: Only eternalncdm@gmail.com is allowed
+    if (email !== VERIFIED_ADMIN_EMAIL.toLowerCase()) {
+      showToast('Access Denied: Password reset is strictly restricted to the verified store administrator.', 'error');
+      return;
+    }
+
+    const config = window.STORE_CONFIG || {};
+    const client = (window.CloudDB && window.CloudDB.getClient()) || window.__en_supabaseClient || (typeof window.supabase !== 'undefined' && config.supabaseUrl && config.supabaseAnonKey ? window.supabase.createClient(config.supabaseUrl, config.supabaseAnonKey) : null);
+
+    showToast(`Sending secure reset link to ${VERIFIED_ADMIN_EMAIL}...`, 'info');
+
+    try {
+      if (client && client.auth) {
+        const { error } = await client.auth.resetPasswordForEmail(VERIFIED_ADMIN_EMAIL, {
+          redirectTo: window.location.origin + '/admin.html'
+        });
+        if (error) {
+          showToast(`Password reset error: ${error.message}`, 'error');
+          return;
+        }
+      }
+      showToast(`🔐 Password recovery link sent to ${VERIFIED_ADMIN_EMAIL}! Check your inbox.`, 'success');
+    } catch (err) {
+      showToast(`Recovery request notice: ${err.message}`, 'error');
+    }
+  }
+
   async function handleAdminLogout() {
     sessionStorage.removeItem('en_admin_auth');
     const client = (window.CloudDB && window.CloudDB.getClient()) || window.__en_supabaseClient;
@@ -2945,6 +2983,7 @@ window.AdminController = (function() {
     checkAdminSession,
     handleAdminLogin,
     handleAdminLogout,
+    handleAdminForgotPassword,
 
     loadCloudData,
     switchTab,

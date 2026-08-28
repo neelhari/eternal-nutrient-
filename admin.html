@@ -1419,9 +1419,15 @@
             <input type="email" id="admin-login-email" class="form-input" placeholder="eternalncdm@gmail.com" required value="eternalncdm@gmail.com">
           </div>
 
-          <div class="form-field-block" style="margin-bottom: 24px;">
+          <div class="form-field-block" style="margin-bottom: 8px;">
             <label class="form-label">Admin Password</label>
             <input type="password" id="admin-login-password" class="form-input" placeholder="••••••••••••" required>
+          </div>
+
+          <div style="text-align: right; margin-bottom: 20px;">
+            <a href="javascript:void(0)" onclick="AdminController.handleAdminForgotPassword()" style="font-size: 12px; font-weight: 700; color: #386618; text-decoration: none;">
+              Forgot Password?
+            </a>
           </div>
 
           <button id="btn-admin-login" type="submit" class="btn btn-primary" style="width: 100%; padding: 12px; font-size: 14px;">
