@@ -179,9 +179,9 @@ body {
 }
 
 .brand-logo-official-img {
-  height: 58px;
+  height: 64px;
   width: auto;
-  max-width: 120px;
+  max-width: 130px;
   object-fit: contain;
   display: block;
 }
@@ -192,8 +192,8 @@ body {
     min-height: 68px;
   }
   .brand-logo-official-img {
-    height: 54px;
-    max-width: 110px;
+    height: 58px;
+    max-width: 120px;
   }
 }
 
