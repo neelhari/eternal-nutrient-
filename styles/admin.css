@@ -2763,13 +2763,31 @@ input:checked + .slider:before {
   .admin-modal-sheet {
     width: 100% !important;
     max-width: 100% !important;
-    max-height: 92vh !important;
+    max-height: 94vh !important;
     border-radius: 20px 20px 0 0 !important;
     margin: 0 !important;
+    display: flex !important;
+    flex-direction: column !important;
+    overflow: hidden !important;
   }
 
   .admin-modal-sheet.modal-lg {
     max-width: 100% !important;
+  }
+
+  .modal-scroll-body {
+    flex: 1 !important;
+    overflow-y: auto !important;
+    -webkit-overflow-scrolling: touch !important;
+    max-height: calc(90vh - 120px) !important;
+    padding: 16px 16px 30px !important;
+  }
+
+  .modal-footer-actions {
+    padding: 12px 16px !important;
+    background: #FFFFFF !important;
+    border-top: 1px solid #E2E8F0 !important;
+    flex-shrink: 0 !important;
   }
 
   .admin-table-container {
