@@ -289,12 +289,31 @@ window.AdminController = (function() {
     const backdrop = document.getElementById('mobile-sidebar-backdrop');
     if (!sidebar) return;
 
-    const isOpen = sidebar.classList.contains('open');
+    const isOpen = sidebar.classList.contains('open') || sidebar.style.left === '0px';
     if (isOpen) {
       closeMobileSidebar();
     } else {
       sidebar.classList.add('open');
-      if (backdrop) backdrop.classList.add('open');
+      sidebar.style.position = 'fixed';
+      sidebar.style.top = '0px';
+      sidebar.style.left = '0px';
+      sidebar.style.bottom = '0px';
+      sidebar.style.width = '285px';
+      sidebar.style.maxWidth = '85vw';
+      sidebar.style.height = '100vh';
+      sidebar.style.zIndex = '999999';
+      sidebar.style.background = '#111C24';
+      sidebar.style.display = 'flex';
+      sidebar.style.flexDirection = 'column';
+      sidebar.style.visibility = 'visible';
+      sidebar.style.boxShadow = '12px 0 40px rgba(0, 0, 0, 0.7)';
+
+      if (backdrop) {
+        backdrop.classList.add('open');
+        backdrop.style.display = 'block';
+        backdrop.style.opacity = '1';
+        backdrop.style.zIndex = '999990';
+      }
       document.body.style.overflow = 'hidden';
     }
   }
@@ -302,8 +321,22 @@ window.AdminController = (function() {
   function closeMobileSidebar() {
     const sidebar = document.querySelector('.admin-sidebar');
     const backdrop = document.getElementById('mobile-sidebar-backdrop');
-    if (sidebar) sidebar.classList.remove('open');
-    if (backdrop) backdrop.classList.remove('open');
+    if (sidebar) {
+      sidebar.classList.remove('open');
+      if (window.innerWidth <= 900) {
+        sidebar.style.left = '-320px';
+      } else {
+        sidebar.style.left = '';
+        sidebar.style.position = '';
+        sidebar.style.zIndex = '';
+        sidebar.style.boxShadow = '';
+      }
+    }
+    if (backdrop) {
+      backdrop.classList.remove('open');
+      backdrop.style.display = 'none';
+      backdrop.style.opacity = '0';
+    }
     document.body.style.overflow = '';
   }
 

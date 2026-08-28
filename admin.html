@@ -13,8 +13,8 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
-  <!-- Enterprise Admin Styles -->
-  <link rel="stylesheet" href="styles/admin.css">
+  <!-- Enterprise Admin Styles (Cache-Busted v2.5.0) -->
+  <link rel="stylesheet" href="styles/admin.css?v=2.5.0">
 
   <!-- Supabase JS CDN SDK -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -22,11 +22,11 @@
 </head>
 <body>
 
-  <!-- Mobile Sidebar Backdrop Overlay -->
-  <div id="mobile-sidebar-backdrop" onclick="AdminController.closeMobileSidebar()"></div>
-
   <!-- Admin Application Wrapper -->
   <div class="admin-app-wrapper">
+
+    <!-- Mobile Sidebar Backdrop Overlay -->
+    <div id="mobile-sidebar-backdrop" onclick="AdminController.closeMobileSidebar()"></div>
     
     <!-- 1. DEEP SLATE SIDEBAR NAVIGATION -->
     <aside class="admin-sidebar">
