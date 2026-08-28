@@ -398,12 +398,32 @@ html, body {
   padding: 8px 0;
 }
 
+#mobile-sidebar-backdrop {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(15, 23, 42, 0.6);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  z-index: 1050;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+#mobile-sidebar-backdrop.open {
+  display: block !important;
+  opacity: 1;
+}
+
 .admin-mobile-header {
   display: none;
   height: 60px;
   background: #FFFFFF;
   border-bottom: 1px solid var(--border-subtle);
-  padding: 0 20px;
+  padding: 0 16px;
   align-items: center;
   justify-content: space-between;
   position: sticky;
@@ -418,14 +438,71 @@ html, body {
 }
 
 .mobile-menu-trigger {
-  background: none;
-  border: none;
-  font-size: 24px;
-  color: var(--text-main);
+  background: #F1F5F9;
+  border: 1px solid #E2E8F0;
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  font-size: 22px;
+  color: #1E293B;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
+  transition: all 0.2s ease;
+}
+
+.mobile-menu-trigger:active {
+  transform: scale(0.92);
+  background: #E2E8F0;
+}
+
+@media (max-width: 900px) {
+  .admin-desktop-topbar {
+    display: none !important;
+  }
+
+  .admin-mobile-header {
+    display: flex !important;
+  }
+
+  .admin-sidebar {
+    position: fixed !important;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    width: 290px !important;
+    max-width: 85vw;
+    height: 100vh !important;
+    z-index: 1100 !important;
+    transform: translateX(-100%) !important;
+    box-shadow: none;
+    transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1) !important;
+  }
+
+  .admin-sidebar.open {
+    transform: translateX(0) !important;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3) !important;
+  }
+
+  .sidebar-mobile-close-btn {
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .admin-views-container {
+    padding: 16px 14px 40px !important;
+  }
+
+  .metrics-grid-10 {
+    grid-template-columns: 1fr !important;
+    gap: 12px !important;
+  }
+
+  .dashboard-split-grid {
+    grid-template-columns: 1fr !important;
+  }
 }
 
 .header-status-pill {

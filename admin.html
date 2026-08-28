@@ -196,6 +196,21 @@
         </div>
       </header>
 
+      <!-- Mobile-Only Header Bar (With 3-Line Hamburger Menu) -->
+      <header class="admin-mobile-header">
+        <button class="mobile-menu-trigger" onclick="AdminController.toggleMobileSidebar()" aria-label="Open Navigation Menu">
+          <i class="ri-menu-2-line"></i>
+        </button>
+        <div class="mobile-brand-title" style="display: flex; align-items: center; gap: 8px;">
+          <img src="assets/brand_logo.svg" alt="Eternal Nutricare" style="height: 28px;">
+          <span>Admin Portal</span>
+        </div>
+        <div id="header-store-status-pill-mobile" class="header-status-pill status-live" onclick="AdminController.toggleStoreStatusHeader()">
+          <span class="pulse-dot"></span>
+          <span>Open</span>
+        </div>
+      </header>
+
       <!-- Dynamic Views Container -->
       <div class="admin-views-container">
         

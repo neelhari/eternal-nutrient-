@@ -282,6 +282,32 @@ window.AdminController = (function() {
   }
 
   // =========================================================================
+  // MOBILE SIDEBAR DRAWER CONTROLLER
+  // =========================================================================
+  function toggleMobileSidebar() {
+    const sidebar = document.querySelector('.admin-sidebar');
+    const backdrop = document.getElementById('mobile-sidebar-backdrop');
+    if (!sidebar) return;
+
+    const isOpen = sidebar.classList.contains('open');
+    if (isOpen) {
+      closeMobileSidebar();
+    } else {
+      sidebar.classList.add('open');
+      if (backdrop) backdrop.classList.add('open');
+      document.body.style.overflow = 'hidden';
+    }
+  }
+
+  function closeMobileSidebar() {
+    const sidebar = document.querySelector('.admin-sidebar');
+    const backdrop = document.getElementById('mobile-sidebar-backdrop');
+    if (sidebar) sidebar.classList.remove('open');
+    if (backdrop) backdrop.classList.remove('open');
+    document.body.style.overflow = '';
+  }
+
+  // =========================================================================
   // 3. TAB ROUTER & NAVIGATION
   // =========================================================================
   function switchTab(tabId) {
