@@ -173,6 +173,7 @@ window.AdminController = (function() {
 
   async function handleAdminLogout() {
     sessionStorage.removeItem('en_admin_auth');
+    localStorage.removeItem('en_admin_auth');
     const client = (window.CloudDB && window.CloudDB.getClient()) || window.__en_supabaseClient;
     if (client && client.auth) {
       try {
@@ -183,6 +184,16 @@ window.AdminController = (function() {
     }
     currentAdminUser = null;
     showToast('You have been logged out of the Admin Portal.', 'info');
+
+    // Immediately display the lockscreen login modal
+    const lockscreen = document.getElementById('admin-auth-lockscreen');
+    if (lockscreen) {
+      lockscreen.classList.add('open');
+      lockscreen.style.display = 'flex';
+      document.body.style.overflow = 'hidden';
+      const passInput = document.getElementById('admin-login-password');
+      if (passInput) passInput.value = '';
+    }
   }
 
   function updateAdminProfileDisplay(email) {
