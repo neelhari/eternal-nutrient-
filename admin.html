@@ -24,11 +24,8 @@
 
   <!-- Admin Application Wrapper -->
   <div class="admin-app-wrapper">
-
-    <!-- Mobile Sidebar Backdrop Overlay -->
-    <div id="mobile-sidebar-backdrop" onclick="AdminController.closeMobileSidebar()"></div>
     
-    <!-- 1. DEEP SLATE SIDEBAR NAVIGATION -->
+    <!-- 1. DEEP SLATE SIDEBAR NAVIGATION (Desktop Only >= 900px) -->
     <aside class="admin-sidebar">
       
       <!-- Brand Lockup -->
@@ -198,7 +195,7 @@
 
       <!-- Mobile-Only Header Bar (With 3-Line Hamburger Menu) -->
       <header class="admin-mobile-header">
-        <button class="mobile-menu-trigger" onclick="AdminController.toggleMobileSidebar()" aria-label="Open Navigation Menu">
+        <button class="mobile-menu-trigger" onclick="AdminController.openMobileNav()" aria-label="Open Navigation Menu">
           <i class="ri-menu-2-line"></i>
         </button>
         <div class="mobile-brand-title" style="display: flex; align-items: center; gap: 8px;">
@@ -1457,6 +1454,125 @@
       <div style="padding: 14px 28px; background: #F1F5F9; border-top: 1px solid var(--border-subtle); text-align: center; font-size: 11.5px; color: var(--text-muted);">
         <i class="ri-lock-2-line"></i> Protected by Supabase JWT & Row Level Security (RLS)
       </div>
+    </div>
+  </div>
+
+  <!-- ======================================================================= -->
+  <!-- NATIVE MOBILE FULL-SCREEN NAVIGATION MODAL (OPTION 2) -->
+  <!-- ======================================================================= -->
+  <div id="admin-mobile-nav-modal" class="mobile-nav-modal" style="display: none;">
+    
+    <!-- Top Modal Header -->
+    <div class="mobile-nav-header">
+      <div style="display: flex; align-items: center; gap: 10px;">
+        <img src="assets/brand_logo.svg" alt="Eternal Nutricare" style="height: 32px;">
+        <div>
+          <div style="font-size: 15px; font-weight: 800; color: #FFFFFF; line-height: 1.2;">Admin Navigation</div>
+          <span style="font-size: 10.5px; font-weight: 700; color: #A3E635;">Enterprise v2.0</span>
+        </div>
+      </div>
+      <button class="mobile-nav-close-btn" onclick="AdminController.closeMobileNav()" aria-label="Close menu">
+        <i class="ri-close-line"></i>
+      </button>
+    </div>
+
+    <!-- Scrollable Menu Content -->
+    <div class="mobile-nav-body">
+      
+      <!-- Section: Core Operations -->
+      <div class="mobile-nav-section-title">Core Operations</div>
+      <div class="mobile-nav-grid">
+        <button class="mobile-nav-card active" data-tab="dashboard" onclick="AdminController.navToTab('dashboard')">
+          <div class="mobile-nav-card-icon" style="background: #1E293B; color: #38BDF8;"><i class="ri-dashboard-3-fill"></i></div>
+          <div class="mobile-nav-card-label">Dashboard</div>
+          <div class="mobile-nav-card-sub">Metrics & revenue</div>
+        </button>
+
+        <button class="mobile-nav-card" data-tab="orders" onclick="AdminController.navToTab('orders')">
+          <div class="mobile-nav-card-icon" style="background: #1E293B; color: #4ADE80;"><i class="ri-shopping-bag-3-fill"></i></div>
+          <div class="mobile-nav-card-label">Orders</div>
+          <div class="mobile-nav-card-sub">Fulfillment & dispatch</div>
+        </button>
+
+        <button class="mobile-nav-card" data-tab="products" onclick="AdminController.navToTab('products')">
+          <div class="mobile-nav-card-icon" style="background: #1E293B; color: #FACC15;"><i class="ri-box-3-fill"></i></div>
+          <div class="mobile-nav-card-label">Products</div>
+          <div class="mobile-nav-card-sub">Catalog & pricing</div>
+        </button>
+
+        <button class="mobile-nav-card" data-tab="inventory" onclick="AdminController.navToTab('inventory')">
+          <div class="mobile-nav-card-icon" style="background: #1E293B; color: #FB923C;"><i class="ri-stack-fill"></i></div>
+          <div class="mobile-nav-card-label">Inventory</div>
+          <div class="mobile-nav-card-sub">Stock ledger & alerts</div>
+        </button>
+      </div>
+
+      <!-- Section: Growth & Customers -->
+      <div class="mobile-nav-section-title">Growth & Partners</div>
+      <div class="mobile-nav-grid">
+        <button class="mobile-nav-card" data-tab="franchise" onclick="AdminController.navToTab('franchise')">
+          <div class="mobile-nav-card-icon" style="background: #1E293B; color: #A78BFA;"><i class="ri-hand-heart-fill"></i></div>
+          <div class="mobile-nav-card-label">Franchise Requests</div>
+          <div class="mobile-nav-card-sub">Partner inquiries CRM</div>
+        </button>
+
+        <button class="mobile-nav-card" data-tab="customers" onclick="AdminController.navToTab('customers')">
+          <div class="mobile-nav-card-icon" style="background: #1E293B; color: #F472B6;"><i class="ri-user-smile-fill"></i></div>
+          <div class="mobile-nav-card-label">Customers</div>
+          <div class="mobile-nav-card-sub">Profiles & spend</div>
+        </button>
+
+        <button class="mobile-nav-card" data-tab="categories" onclick="AdminController.navToTab('categories')">
+          <div class="mobile-nav-card-icon" style="background: #1E293B; color: #34D399;"><i class="ri-apps-2-fill"></i></div>
+          <div class="mobile-nav-card-label">Categories</div>
+          <div class="mobile-nav-card-sub">Store collections</div>
+        </button>
+
+        <button class="mobile-nav-card" data-tab="coupons" onclick="AdminController.navToTab('coupons')">
+          <div class="mobile-nav-card-icon" style="background: #1E293B; color: #F87171;"><i class="ri-coupon-3-fill"></i></div>
+          <div class="mobile-nav-card-label">Coupons</div>
+          <div class="mobile-nav-card-sub">Discounts & promos</div>
+        </button>
+      </div>
+
+      <!-- Section: Storefront CMS & Settings -->
+      <div class="mobile-nav-section-title">Storefront & CMS</div>
+      <div class="mobile-nav-grid">
+        <button class="mobile-nav-card" data-tab="festive" onclick="AdminController.navToTab('festive')">
+          <div class="mobile-nav-card-icon" style="background: #1E293B; color: #E879F9;"><i class="ri-sparkling-fill"></i></div>
+          <div class="mobile-nav-card-label">Festive Specials</div>
+          <div class="mobile-nav-card-sub">Curated spotlights</div>
+        </button>
+
+        <button class="mobile-nav-card" data-tab="banners" onclick="AdminController.navToTab('banners')">
+          <div class="mobile-nav-card-icon" style="background: #1E293B; color: #60A5FA;"><i class="ri-image-edit-fill"></i></div>
+          <div class="mobile-nav-card-label">Banners</div>
+          <div class="mobile-nav-card-sub">Hero slider CMS</div>
+        </button>
+
+        <button class="mobile-nav-card" data-tab="marquee" onclick="AdminController.navToTab('marquee')">
+          <div class="mobile-nav-card-icon" style="background: #1E293B; color: #FBBF24;"><i class="ri-megaphone-fill"></i></div>
+          <div class="mobile-nav-card-label">Announcements</div>
+          <div class="mobile-nav-card-sub">Top ticker text</div>
+        </button>
+
+        <button class="mobile-nav-card" data-tab="settings" onclick="AdminController.navToTab('settings')">
+          <div class="mobile-nav-card-icon" style="background: #1E293B; color: #94A3B8;"><i class="ri-settings-4-fill"></i></div>
+          <div class="mobile-nav-card-label">Settings</div>
+          <div class="mobile-nav-card-sub">Store & security</div>
+        </button>
+      </div>
+
+      <!-- Live Store & Logout Actions -->
+      <div style="display: flex; flex-direction: column; gap: 10px; margin-top: 20px; padding-top: 16px; border-top: 1px solid #1E293B;">
+        <a href="index.html" target="_blank" class="btn btn-outline" style="width: 100%; justify-content: center; padding: 12px; font-size: 13.5px; text-decoration: none; color: #FFFFFF; border-color: #334155; background: #1E293B;">
+          <i class="ri-external-link-line"></i> View Live Store
+        </a>
+        <button class="btn btn-outline" onclick="AdminController.handleAdminLogout()" style="width: 100%; justify-content: center; padding: 12px; font-size: 13.5px; color: #F87171; border-color: #7F1D1D; background: rgba(127, 29, 29, 0.2);">
+          <i class="ri-logout-box-r-line"></i> Exit / Sign Out
+        </button>
+      </div>
+
     </div>
   </div>
 
