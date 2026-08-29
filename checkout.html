@@ -620,11 +620,6 @@
           <span id="co-discount">-₹0</span>
         </div>
 
-        <div class="price-line-row" id="eco-discount-row" style="color:#2B6618; font-weight:700; display: none;">
-          <span>🌱 Eco-Packaging Discount</span>
-          <span id="co-eco-discount">-₹20</span>
-        </div>
-
         <div class="price-line-row grand-total">
           <span>Total Payable</span>
           <span id="co-grand-total">₹0</span>
@@ -723,15 +718,12 @@
       const minFree = Number(checkoutStoreSettings.freeShippingThreshold) || 999;
       const isFree = subtotal >= minFree || subtotal === 0;
       const delivery = isFree ? 0 : (Number(checkoutStoreSettings.standardShippingFee) || 40);
-      const ecoDiscount = subtotal > 0 ? 20 : 0;
-      const total = Math.max(0, subtotal + delivery - discountApplied - ecoDiscount);
+      const total = Math.max(0, subtotal + delivery - discountApplied);
 
       const subEl = document.getElementById('co-subtotal');
       const delEl = document.getElementById('co-delivery-fee');
       const discRow = document.getElementById('discount-row');
       const discEl = document.getElementById('co-discount');
-      const ecoRow = document.getElementById('eco-discount-row');
-      const ecoEl = document.getElementById('co-eco-discount');
       const grandEl = document.getElementById('co-grand-total');
       const ctaBtn = document.getElementById('co-btn-text') || document.querySelector('.btn-place-order-brown span');
 
@@ -756,15 +748,6 @@
           if (discEl) discEl.textContent = `-₹${discountApplied}`;
         } else {
           discRow.style.display = 'none';
-        }
-      }
-
-      if (ecoRow) {
-        if (ecoDiscount > 0) {
-          ecoRow.style.display = 'flex';
-          if (ecoEl) ecoEl.textContent = `-₹${ecoDiscount}`;
-        } else {
-          ecoRow.style.display = 'none';
         }
       }
 
@@ -914,8 +897,7 @@
       const subtotal = currentCart.reduce((sum, i) => sum + (Number(i.price) * (Number(i.qty) || 1)), 0);
       const minFree = Number(checkoutStoreSettings.freeShippingThreshold) || 999;
       const deliveryFee = subtotal >= minFree ? 0 : (Number(checkoutStoreSettings.standardShippingFee) || 40);
-      const ecoDiscount = subtotal > 0 ? 20 : 0;
-      const totalAmount = Math.max(0, subtotal + deliveryFee - discountApplied - ecoDiscount);
+      const totalAmount = Math.max(0, subtotal + deliveryFee - discountApplied);
 
       // Save order to Supabase
       if (window.CloudDB) {
@@ -929,7 +911,7 @@
             items: currentCart,
             subtotal: subtotal,
             delivery_fee: deliveryFee,
-            discount_amount: discountApplied + ecoDiscount,
+            discount_amount: discountApplied,
             total_amount: totalAmount,
             coupon_code: appliedCouponCode || (discountApplied > 0 ? 'ETERNAL10' : ''),
             payment_method: selectedPaymentType.toUpperCase(),
@@ -955,8 +937,8 @@
         msg += `${idx + 1}. ${i.title} (${i.unit || 'Pack'}) × ${i.qty || 1} = ₹${(Number(i.price) || 0) * (Number(i.qty) || 1)}\n`;
       });
       msg += `------------------------------------\n`;
-      if (discountApplied > 0 || ecoDiscount > 0) {
-        msg += `*Discount Applied:* -₹${discountApplied + ecoDiscount}\n`;
+      if (discountApplied > 0) {
+        msg += `*Discount Applied:* -₹${discountApplied}\n`;
       }
       msg += `*Total Payable:* ₹${totalAmount} (${deliveryFee === 0 ? 'FREE Delivery' : `Delivery: ₹${deliveryFee}`})\n\n`;
       msg += `Please confirm my order and share dispatch tracking time!`;

@@ -393,11 +393,6 @@
         <span id="sum-delivery">₹40</span>
       </div>
 
-      <div class="summary-line-row eco-discount-text">
-        <span>🌱 Eco-Packaging Discount</span>
-        <span id="sum-eco-discount">-₹20</span>
-      </div>
-
       <div class="summary-divider"></div>
 
       <div class="summary-total-row">
@@ -591,8 +586,7 @@
       const freeThreshold = Number(storeSettings.freeShippingThreshold) || 999;
       const isFree = subtotal >= freeThreshold;
       const deliveryFee = (subtotal === 0 || isFree) ? 0 : (Number(storeSettings.standardShippingFee) || 40);
-      const ecoDiscount = subtotal > 0 ? 20 : 0;
-      const total = Math.max(0, subtotal + deliveryFee - ecoDiscount);
+      const total = Math.max(0, subtotal + deliveryFee);
 
       const fill = document.getElementById('free-ship-bar');
       const title = document.getElementById('free-ship-title');
@@ -629,13 +623,6 @@
           sumDel.textContent = `₹${deliveryFee}`;
           sumDel.style.color = '#1E1A17';
         }
-      }
-
-      const ecoRow = document.querySelector('.eco-discount-text');
-      if (ecoRow) {
-        ecoRow.style.display = ecoDiscount > 0 ? 'flex' : 'none';
-        const ecoEl = document.getElementById('sum-eco-discount');
-        if (ecoEl) ecoEl.textContent = `-₹${ecoDiscount}`;
       }
 
       document.getElementById('sum-grand-total').textContent = `₹${total}`;
