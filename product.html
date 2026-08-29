@@ -525,9 +525,7 @@
       <div class="p-pack-select-sec">
         <span class="p-pack-label">Select Pack Size</span>
         <div class="p-pack-pills-row">
-          <button class="p-pack-pill" onclick="selectPack(this, 250, 0.6)">250g</button>
-          <button class="p-pack-pill active" onclick="selectPack(this, 500, 1.0)">500g</button>
-          <button class="p-pack-pill" onclick="selectPack(this, 1000, 1.85)">1kg</button>
+          <!-- Dynamically populated from product variants/pack sizes -->
         </div>
       </div>
 
@@ -548,31 +546,18 @@
           <i class="ri-arrow-up-s-line"></i>
         </div>
         <div class="p-acc-body" id="acc-desc">
-          Sourced directly from deep forest wild hives, our organic honey is cold-extracted and entirely unfiltered. It retains all natural pollen, enzymes, and raw vitality. The rich amber hue and floral notes reflect the diverse wild blossoms our bees visit.
+          100% pure and natural product.
         </div>
       </div>
 
       <!-- Accordion: Ingredients -->
-      <div class="p-accordion-card">
+      <div class="p-accordion-card" id="acc-ing-card">
         <div class="p-acc-header" onclick="toggleAcc('acc-ing', this)">
           <span>Ingredients</span>
           <i class="ri-arrow-down-s-line"></i>
         </div>
         <div class="p-acc-body hidden" id="acc-ing">
-          100% Pure, Unpasteurized Natural Organic Forest Honey. Zero added sugar, zero artificial flavoring, zero chemical preservatives.
-        </div>
-      </div>
-
-      <!-- Accordion: Health Benefits -->
-      <div class="p-accordion-card">
-        <div class="p-acc-header" onclick="toggleAcc('acc-ben', this)">
-          <span>Health Benefits</span>
-          <i class="ri-arrow-down-s-line"></i>
-        </div>
-        <div class="p-acc-body hidden" id="acc-ben">
-          • Natural immunity booster & antioxidant powerhouse.<br>
-          • Supports digestive wellness and throat soothing.<br>
-          • Low-GI natural energy nourishment.
+          100% Pure & Natural Organic Ingredients. Zero chemical preservatives.
         </div>
       </div>
 
@@ -650,20 +635,21 @@
         <div class="footer-col-header">Customer Support</div>
         <div class="footer-contact-row">
           <i class="ri-phone-fill"></i>
-          <div><a href="tel:6302017482">+91 6302017482</a>, <a href="tel:9392235693">9392235693</a></div>
-        </div>
-        <div class="footer-contact-row">
-          <i class="ri-whatsapp-line"></i>
-          <div><a href="https://wa.me/916302017482" target="_blank">+91 6302017482</a>, <a href="https://wa.me/919392235693" target="_blank">+91 9392235693</a></div>
+          <div>
+            <div style="font-size: 11px; color: #8C756C; margin-bottom: 2px;">Contact Us</div>
+            <span id="footer-phone-links">
+              <a href="tel:6302017482">+91 6302017482</a>, <a href="tel:9392235693">+91 9392235693</a>
+            </span>
+          </div>
         </div>
         <div class="footer-contact-row">
           <i class="ri-mail-line"></i>
-          <div><a href="mailto:eternalncdm@gmail.com">eternalncdm@gmail.com</a></div>
+          <div><a href="mailto:eternalncdm@gmail.com" id="footer-email-link">eternalncdm@gmail.com</a></div>
         </div>
         <div class="footer-contact-row">
           <i class="ri-map-pin-2-line"></i>
-          <span style="font-size: 12px; color: #C2B0A6; line-height: 1.4;">
-            3g Crimson Layout, Channasandra, opp Krishnakuteer Phase 2, Bangalore East, Bangalore Urban, Karnataka - 560067
+          <span id="footer-address-text" style="font-size: 12px; color: #C2B0A6; line-height: 1.4;">
+            Eternal Sales<br>Flat No.A1, Eco greens layout, hegondanahalli, Gunjur, Bangalore - 560087
           </span>
         </div>
       </div>
@@ -699,6 +685,7 @@
   <script src="core/cloud-db.js"></script>
   <script src="core/auth-engine.js"></script>
   <script src="core/amazon-search.js"></script>
+  <script src="core/distribution-drawer.js"></script>
   <script>
     const CATALOG = {
       'prod_1': { title: 'Organic Honey', sub: 'Raw & Unfiltered • 500g', price: 499, mrp: 599, img: 'assets/showcase_honey.png', desc: 'Sourced directly from deep forest wild hives, our organic honey is cold-extracted and entirely unfiltered. It retains all natural pollen, enzymes, and raw vitality.' },
@@ -770,22 +757,44 @@
         }
       }
 
+      // Render Ingredients dynamically
+      const accIngBody = document.getElementById('acc-ing');
+      if (accIngBody) {
+        if (item.ingredients) {
+          accIngBody.innerHTML = item.ingredients;
+        } else if (item.title && (item.title.toLowerCase().includes('honey') || item.title.toLowerCase().includes('forest'))) {
+          accIngBody.innerHTML = '100% Pure, Unpasteurized Natural Organic Forest Honey. Zero added sugar, zero artificial flavoring, zero chemical preservatives.';
+        } else if (item.title && item.title.toLowerCase().includes('pickle')) {
+          accIngBody.innerHTML = 'Farm-fresh raw produce, cold-pressed mustard/sesame oil, natural rock salt, authentic roasted Indian whole spices. Zero chemical preservatives.';
+        } else if (item.title && item.title.toLowerCase().includes('chikki')) {
+          accIngBody.innerHTML = 'Roasted peanuts, organic moringa leaf powder, pure organic jaggery, cardamom. Zero artificial additives.';
+        } else if (item.title && item.title.toLowerCase().includes('laddu')) {
+          accIngBody.innerHTML = 'Premium Arabian dates, roasted almonds, cashews, pure desi cow ghee, cardamom. Zero added white sugar.';
+        } else {
+          accIngBody.innerHTML = `100% pure & natural organic ingredients selected for ${item.title || 'this product'}. Zero chemical preservatives.`;
+        }
+      }
+
+      // Prepare Variants Dynamically
+      let variants = [];
+      if (Array.isArray(item.variants) && item.variants.length > 0) {
+        variants = item.variants;
+      } else {
+        const u = item.unit || 'Standard Pack';
+        const p = Number(item.price) || 0;
+        const m = Number(item.original_price ?? item.originalPrice ?? item.mrp ?? p);
+        variants = [{ size: u, price: p, mrp: m, stock: item.stock_qty ?? 50 }];
+      }
+      item.variants = variants;
+
       // Render Pack Size Variant Pills
       const pillsContainer = document.querySelector('.p-pack-pills-row');
+      const packSection = document.querySelector('.p-pack-select-sec');
       if (pillsContainer) {
-        if (Array.isArray(item.variants) && item.variants.length > 0) {
-          pillsContainer.innerHTML = item.variants.map((v, index) => `
-            <button class="p-pack-pill ${index === 0 ? 'active' : ''}" onclick="selectExactVariant(${index})">${v.size || v.unit}</button>
-          `).join('');
-          selectExactVariant(0);
-        } else {
-          // Default fallbacks
-          basePrice = item.price || 499;
-          currentMRP = item.original_price || item.originalPrice || item.mrp || (basePrice + 100);
-          currentPrice = basePrice;
-          selectedUnit = item.unit || '500g';
-          updatePricingUI();
-        }
+        pillsContainer.innerHTML = variants.map((v, index) => `
+          <button class="p-pack-pill ${index === 0 ? 'active' : ''}" onclick="selectExactVariant(${index})">${v.size || v.unit}</button>
+        `).join('');
+        selectExactVariant(0);
       }
 
       // Check Stock Availability & Out of Stock Protection
@@ -793,7 +802,6 @@
       const isOutOfStock = item.in_stock === false || stock <= 0;
 
       const actionButtons = document.querySelectorAll('.p-sticky-bottom-bar button');
-      const packSection = document.querySelector('.p-pack-select-sec');
       const qtySection = document.querySelector('.p-qty-inline-sec');
 
       // Stock status banner
@@ -838,34 +846,30 @@
 
     function hydrateFooterSettings(settings) {
       if (!settings || typeof settings !== 'object') return;
-      const phone = settings.primary_phone || '+91 6302017482';
-      const secPhone = settings.secondary_phone ? `, ${settings.secondary_phone}` : '';
-      const wa = settings.primary_whatsapp || '916302017482';
+      const phone1 = settings.primary_phone || '+91 6302017482';
+      const phone2 = settings.secondary_phone || '+91 9392235693';
       const email = settings.support_email || 'eternalncdm@gmail.com';
-      const address = settings.registered_address || '';
+      const address = settings.registered_address || 'Eternal Sales\nFlat No.A1, Eco greens layout, hegondanahalli, Gunjur, Bangalore - 560087';
 
-      document.querySelectorAll('.footer-contact-row a[href^="tel:"]').forEach(a => {
-        a.href = `tel:${phone.replace(/\D/g, '')}`;
-        a.textContent = `${phone}${secPhone}`;
+      const phoneContainers = document.querySelectorAll('#footer-phone-links');
+      phoneContainers.forEach(container => {
+        const p1Clean = phone1.replace(/\D/g, '');
+        const p2Clean = phone2 ? phone2.replace(/\D/g, '') : '';
+        let linksHtml = `<a href="tel:${p1Clean}">${phone1}</a>`;
+        if (phone2 && phone2.trim() && phone2.trim() !== phone1.trim()) {
+          linksHtml += `, <a href="tel:${p2Clean}">${phone2}</a>`;
+        }
+        container.innerHTML = linksHtml;
       });
 
-      document.querySelectorAll('.footer-contact-row a[href*="wa.me"]').forEach(a => {
-        a.href = `https://wa.me/${wa.replace(/\D/g, '')}`;
-        a.textContent = phone;
+      document.querySelectorAll('#footer-email-link, .footer-contact-row a[href^="mailto:"]').forEach(emailLink => {
+        emailLink.href = `mailto:${email}`;
+        emailLink.textContent = email;
       });
 
-      document.querySelectorAll('.footer-contact-row a[href^="mailto:"]').forEach(a => {
-        a.href = `mailto:${email}`;
-        a.textContent = email;
+      document.querySelectorAll('#footer-address-text').forEach(addrEl => {
+        addrEl.innerHTML = address.replace(/\n/g, '<br>');
       });
-
-      if (address) {
-        document.querySelectorAll('.footer-contact-row span').forEach(s => {
-          if (s.textContent.includes('Crimson') || s.textContent.includes('Bangalore') || s.textContent.includes('Channasandra')) {
-            s.textContent = address;
-          }
-        });
-      }
     }
 
     window.addEventListener('DOMContentLoaded', loadProductDetail);
@@ -878,12 +882,17 @@
     }
 
     function selectExactVariant(index) {
-      if (!currentItem || !currentItem.variants || !currentItem.variants[index]) return;
+      if (!currentItem || !Array.isArray(currentItem.variants) || !currentItem.variants[index]) return;
       const v = currentItem.variants[index];
       selectedVariant = v;
       currentPrice = Number(v.price) || 0;
-      currentMRP = Number(v.mrp) || currentPrice;
+      currentMRP = Number(v.mrp ?? v.originalPrice ?? currentPrice);
       selectedUnit = v.size || v.unit || 'Pack';
+
+      const subTitleEl = document.getElementById('p-subtitle');
+      if (subTitleEl) {
+        subTitleEl.textContent = `${currentItem.title || currentItem.name} • ${selectedUnit}`;
+      }
 
       document.querySelectorAll('.p-pack-pill').forEach((p, idx) => {
         p.classList.toggle('active', idx === index);
@@ -893,11 +902,17 @@
     }
 
     function selectPack(el, weight, mult) {
+      // Retained for legacy compatibility if called directly
       document.querySelectorAll('.p-pack-pill').forEach(p => p.classList.remove('active'));
       el.classList.add('active');
       currentPrice = Math.round(basePrice * mult);
-      currentMRP = Math.round((currentItem?.mrp || (basePrice + 100)) * mult);
+      const rawMRP = Number(currentItem?.original_price ?? currentItem?.originalPrice ?? currentItem?.mrp ?? basePrice);
+      currentMRP = Math.round(rawMRP * mult);
       selectedUnit = `${weight}g`;
+      const subTitleEl = document.getElementById('p-subtitle');
+      if (subTitleEl) {
+        subTitleEl.textContent = `${currentItem?.title || currentItem?.name || 'Product'} • ${selectedUnit}`;
+      }
       updatePricingUI();
     }
 

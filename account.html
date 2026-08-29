@@ -680,18 +680,6 @@
         <i class="ri-arrow-right-s-line myntra-row-arrow"></i>
       </div>
 
-      <!-- Row: Request for Franchise -->
-      <div class="myntra-row-item" onclick="openDrawer('drawer-franchise')">
-        <div class="myntra-row-left">
-          <i class="ri-store-3-line myntra-row-icon" style="color: #2E7D32;"></i>
-          <div class="myntra-row-text">
-            <span class="myntra-row-title">Request for Franchise</span>
-            <span class="myntra-row-sub">Partner with Eternal Nutricare & grow</span>
-          </div>
-        </div>
-        <i class="ri-arrow-right-s-line myntra-row-arrow"></i>
-      </div>
-
       <!-- Row 5: Log Out (Conditional) -->
       <div id="row-logout-action" class="myntra-row-item myntra-logout-row" style="display: none;" onclick="handleLogout()">
         <div class="myntra-row-left">
@@ -837,8 +825,8 @@
     </div>
   </div>
 
-  <!-- 8. Mobile Bottom Navigation Dock (4 Tabs: Home, Shop, Cart, Account) -->
-  <nav class="mobile-bottom-dock" style="grid-template-columns: repeat(4, 1fr) !important;">
+  <!-- 8. Mobile Bottom Navigation Dock (5 Tabs: Home, Shop, Cart, Distribute, Profile) -->
+  <nav class="mobile-bottom-dock">
     <a href="index.html" class="mobile-dock-btn">
       <i class="ri-home-5-line"></i>
       <span>Home</span>
@@ -849,7 +837,12 @@
     </a>
     <a href="cart.html" class="mobile-dock-btn">
       <i class="ri-shopping-bag-3-line"></i>
+      <span class="dock-badge-pill minimal-cart-badge cart-badge" style="display: none;">0</span>
       <span>Cart</span>
+    </a>
+    <a href="javascript:void(0)" class="mobile-dock-btn" onclick="openDistributionDrawer()">
+      <i class="ri-shake-hands-line"></i>
+      <span>Distribute</span>
     </a>
     <a href="account.html" class="mobile-dock-btn active">
       <i class="ri-user-3-fill"></i>
@@ -866,6 +859,7 @@
   <script src="core/cloud-db.js"></script>
   <script src="core/auth-engine.js"></script>
   <script src="core/amazon-search.js"></script>
+  <script src="core/distribution-drawer.js"></script>
   <script>
     function showToast(msg) {
       const wrap = document.getElementById('toast-wrapper');

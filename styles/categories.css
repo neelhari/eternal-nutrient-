@@ -194,18 +194,12 @@ body {
   font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
   font-size: 12px;
   font-weight: 800;
-  color: #281612;
+  color: #FFFFFF;
   line-height: 1.2;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
   width: 100%;
-}
-  font-weight: 700;
-  color: #FFFFFF;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
 }
 
 .festive-mini-sub {
@@ -353,66 +347,28 @@ body {
 }
 
 /* 3. 2-Column Product Catalog Grid (Bottom) */
-.zepto-products-grid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 12px;
-  width: 100%;
-}
-
-@media (min-width: 600px) {
-  .zepto-products-grid {
-    grid-template-columns: repeat(3, 1fr);
-    gap: 14px;
-  }
-}
-
-@media (min-width: 800px) {
-  .zepto-products-grid {
-    grid-template-columns: repeat(4, 1fr);
-    gap: 16px;
-  }
-}
-
-/* Right Content Area (Zepto Product Grid) */
-.zepto-content-area {
-  flex: 1;
-  background: #FFFFFF;
-  overflow-y: auto;
-  padding: 10px 10px 100px;
-  display: flex;
-  flex-direction: column;
-}
-
-@media (min-width: 768px) {
-  .zepto-content-area {
-    padding: 16px 20px 80px;
-  }
-}
-
-/* End of Navigation Layout */
-
 /* ==========================================================================
    UNIFIED 2-COLUMN PRODUCT GRID & CARDS (BOTTOM-ALIGNED ADD BUTTON)
    ========================================================================== */
 .zepto-products-grid {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 12px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
   align-items: stretch;
   width: 100%;
+  box-sizing: border-box;
 }
 
 @media (min-width: 600px) {
   .zepto-products-grid {
-    grid-template-columns: repeat(3, 1fr);
-    gap: 14px;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 12px;
   }
 }
 
 @media (min-width: 850px) {
   .zepto-products-grid {
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(4, minmax(0, 1fr));
     gap: 16px;
   }
 }
@@ -422,14 +378,17 @@ body {
   display: flex;
   flex-direction: column;
   background: #FFFFFF;
-  border-radius: 16px;
-  padding: 12px;
+  border-radius: 14px;
+  padding: 10px;
   position: relative;
   cursor: pointer;
-  border: 1px solid rgba(0, 0, 0, 0.04);
+  border: 1px solid rgba(0, 0, 0, 0.05);
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
   transition: transform 0.2s ease, box-shadow 0.2s ease;
   box-sizing: border-box;
+  min-width: 0;
+  width: 100%;
+  overflow: hidden;
 }
 
 .zepto-item-box:hover {
@@ -437,18 +396,18 @@ body {
   box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
 }
 
-/* Image Container (Full-Bleed Studio Display matching Homepage Best Sellers) */
+/* Image Container */
 .zepto-img-container {
   width: 100%;
   aspect-ratio: 1 / 1;
   height: auto;
-  min-height: 140px;
+  min-height: 120px;
   background: #F8F5F0;
-  border-radius: 12px;
+  border-radius: 10px;
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-bottom: 10px;
+  margin-bottom: 8px;
   overflow: hidden;
 }
 
@@ -469,11 +428,13 @@ body {
   display: flex;
   flex-direction: column;
   flex: 1;
+  min-width: 0;
+  width: 100%;
 }
 
 .zepto-item-title {
   font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
-  font-size: 13px;
+  font-size: 12.5px;
   font-weight: 700;
   color: #1E1A17;
   line-height: 1.25;
@@ -481,6 +442,7 @@ body {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  width: 100%;
 }
 
 .zepto-unit-info {
@@ -488,19 +450,26 @@ body {
   font-size: 11px;
   font-weight: 500;
   color: #8A7E78;
-  margin-bottom: 6px;
+  margin-bottom: 4px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .zepto-badge-pill {
   display: inline-block;
   background: #F0F7EC;
   color: #2F7D26;
-  font-size: 9.5px;
+  font-size: 9px;
   font-weight: 700;
-  padding: 1px 6px;
+  padding: 1px 5px;
   border-radius: 4px;
-  margin-bottom: 8px;
+  margin-bottom: 6px;
   width: fit-content;
+  max-width: 100%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 /* Bottom Split Row: Price on Left, Add Button on Right */
@@ -509,44 +478,54 @@ body {
   align-items: flex-end;
   justify-content: space-between;
   margin-top: auto;
-  gap: 6px;
+  gap: 4px;
   padding-top: 4px;
+  width: 100%;
+  min-width: 0;
 }
 
 .zepto-price-col {
   display: flex;
   flex-direction: column;
+  min-width: 0;
+  flex: 1;
+  overflow: hidden;
 }
 
 .zepto-price-row {
   display: flex;
   align-items: baseline;
-  gap: 4px;
-  line-height: 1;
+  flex-wrap: wrap;
+  gap: 3px;
+  line-height: 1.1;
+  min-width: 0;
 }
 
 .zepto-selling-price {
   font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
-  font-size: 14.5px;
+  font-size: 13.5px;
   font-weight: 800;
   color: #1E1A17;
+  white-space: nowrap;
 }
 
 .zepto-mrp-price {
   font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
-  font-size: 11px;
+  font-size: 10.5px;
   font-weight: 500;
   color: #9C918B;
   text-decoration: line-through;
+  white-space: nowrap;
 }
 
 .zepto-discount-tag {
   font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
-  font-size: 10.5px;
+  font-size: 10px;
   font-weight: 700;
   color: #2F7D26;
-  margin-top: 3px;
+  margin-top: 2px;
   line-height: 1;
+  white-space: nowrap;
 }
 
 /* Add Button Settled at Bottom Right */
@@ -555,19 +534,21 @@ body {
   color: #FFFFFF;
   border: none;
   border-radius: 8px;
-  padding: 6px 12px;
+  padding: 5px 9px;
   font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
-  font-size: 11.5px;
+  font-size: 11px;
   font-weight: 700;
   cursor: pointer;
   display: inline-flex;
   align-items: center;
-  gap: 4px;
+  justify-content: center;
+  gap: 3px;
   box-shadow: 0 2px 6px rgba(40, 22, 18, 0.2);
   transition: all 0.15s ease;
   white-space: nowrap;
-  height: 28px;
+  height: 27px;
   box-sizing: border-box;
+  flex-shrink: 0;
 }
 
 .zepto-add-pill-btn:hover {
@@ -587,11 +568,12 @@ body {
   background: #281612;
   color: #FFFFFF;
   border-radius: 8px;
-  height: 28px;
+  height: 27px;
   padding: 0 4px;
-  width: 68px;
+  width: 60px;
   box-shadow: 0 2px 6px rgba(40, 22, 18, 0.2);
   box-sizing: border-box;
+  flex-shrink: 0;
 }
 
 .zepto-step-btn {

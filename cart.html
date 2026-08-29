@@ -419,23 +419,27 @@
 
   </main>
 
-  <!-- Mobile Bottom Dock (4 Core Icons) -->
+  <!-- Mobile Bottom Dock (5 Core Icons) -->
   <nav class="mobile-bottom-dock">
     <a href="index.html" class="mobile-dock-btn" aria-label="Home">
       <i class="ri-home-5-line"></i>
       <span>Home</span>
     </a>
-    <a href="categories.html" class="mobile-dock-btn" aria-label="Categories">
-      <i class="ri-apps-2-line"></i>
-      <span>Categories</span>
+    <a href="categories.html" class="mobile-dock-btn" aria-label="Shop">
+      <i class="ri-store-2-line"></i>
+      <span>Shop</span>
     </a>
     <a href="cart.html" class="mobile-dock-btn active" aria-label="Cart">
-      <i class="ri-shopping-cart-2-fill"></i>
+      <i class="ri-shopping-bag-3-fill"></i>
       <span>Cart</span>
     </a>
-    <a href="account.html" class="mobile-dock-btn" aria-label="Account">
+    <a href="javascript:void(0)" class="mobile-dock-btn" onclick="openDistributionDrawer()" aria-label="Distribute">
+      <i class="ri-shake-hands-line"></i>
+      <span>Distribute</span>
+    </a>
+    <a href="account.html" class="mobile-dock-btn" aria-label="Profile">
       <i class="ri-user-3-line"></i>
-      <span>Account</span>
+      <span>Profile</span>
     </a>
   </nav>
 
@@ -446,6 +450,7 @@
   <script src="core/payment-verifier.js"></script>
   <script src="core/auth-engine.js"></script>
   <script src="core/amazon-search.js"></script>
+  <script src="core/distribution-drawer.js"></script>
   <script>
     const DEFAULT_CATALOG = {
       'prod_1': { title: 'Organic Honey', unit: '500g Glass Jar', price: 499, image: 'assets/prod_honey_studio.jpg' },
@@ -612,7 +617,27 @@
       }
 
       document.getElementById('sum-subtotal').textContent = `₹${subtotal}`;
-      document.getElementById('sum-delivery').textContent = deliveryFee === 0 ? 'FREE' : `₹${deliveryFee}`;
+      const sumDel = document.getElementById('sum-delivery');
+      if (sumDel) {
+        if (subtotal === 0) {
+          sumDel.textContent = '₹0';
+          sumDel.style.color = '#1E1A17';
+        } else if (deliveryFee === 0) {
+          sumDel.textContent = 'FREE';
+          sumDel.style.color = '#2B6618';
+        } else {
+          sumDel.textContent = `₹${deliveryFee}`;
+          sumDel.style.color = '#1E1A17';
+        }
+      }
+
+      const ecoRow = document.querySelector('.eco-discount-text');
+      if (ecoRow) {
+        ecoRow.style.display = ecoDiscount > 0 ? 'flex' : 'none';
+        const ecoEl = document.getElementById('sum-eco-discount');
+        if (ecoEl) ecoEl.textContent = `-₹${ecoDiscount}`;
+      }
+
       document.getElementById('sum-grand-total').textContent = `₹${total}`;
     }
 

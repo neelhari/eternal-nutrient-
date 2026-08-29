@@ -595,62 +595,44 @@
 
         <!-- Items Preview -->
         <div class="order-items-preview-sec">
-          
-          <div class="checkout-item-row">
-            <img src="assets/prod_honey_studio.jpg" alt="Organic Honey" class="checkout-thumb">
-            <div class="checkout-item-info">
-              <div class="checkout-item-name">Organic Honey</div>
-              <div class="checkout-item-qty">500g Jar • Qty: 1</div>
-            </div>
-            <div class="checkout-item-price">₹499</div>
-          </div>
-
-          <div class="checkout-item-row">
-            <img src="assets/prod_rava_studio.jpg" alt="Millet Breakfast Rava" class="checkout-thumb">
-            <div class="checkout-item-info">
-              <div class="checkout-item-name">Millet Breakfast Rava</div>
-              <div class="checkout-item-qty">500g Pack • Qty: 2</div>
-            </div>
-            <div class="checkout-item-price">₹378</div>
-          </div>
-
+          <!-- Dynamically populated from active cart -->
         </div>
 
         <!-- Promo Code -->
         <div class="coupon-box-row">
-          <input type="text" id="coupon-code-input" class="coupon-input" placeholder="COUPON (e.g. ETERNAL10)" value="ETERNAL10">
-          <button class="coupon-btn" onclick="applyCoupon()">Apply</button>
+          <input type="text" id="coupon-code-input" class="coupon-input" placeholder="COUPON (e.g. ETERNAL10)" value="">
+          <button class="coupon-btn" id="coupon-apply-btn" onclick="handleCouponAction()">Apply</button>
         </div>
 
         <!-- Bill Breakdown -->
         <div class="price-line-row">
           <span>Items Subtotal</span>
-          <span id="co-subtotal">₹877</span>
+          <span id="co-subtotal">₹0</span>
         </div>
 
         <div class="price-line-row">
           <span>Delivery Fee</span>
-          <span style="color:#281612; font-weight:700;">FREE</span>
+          <span id="co-delivery-fee" style="color:#281612; font-weight:700;">₹0</span>
         </div>
 
-        <div class="price-line-row" id="discount-row" style="color:#2B6618; font-weight:700;">
-          <span>🎉 VIP Club Discount (10%)</span>
-          <span id="co-discount">-₹88</span>
+        <div class="price-line-row" id="discount-row" style="color:#2B6618; font-weight:700; display: none;">
+          <span id="co-discount-label">🎉 Coupon Discount</span>
+          <span id="co-discount">-₹0</span>
         </div>
 
-        <div class="price-line-row" style="color:#2B6618; font-weight:700;">
+        <div class="price-line-row" id="eco-discount-row" style="color:#2B6618; font-weight:700; display: none;">
           <span>🌱 Eco-Packaging Discount</span>
-          <span>-₹20</span>
+          <span id="co-eco-discount">-₹20</span>
         </div>
 
         <div class="price-line-row grand-total">
           <span>Total Payable</span>
-          <span id="co-grand-total">₹769</span>
+          <span id="co-grand-total">₹0</span>
         </div>
 
         <!-- Place Order CTA Button (Solid Brand Brown) -->
         <button class="btn-place-order-brown" onclick="placeOrderFinal()">
-          <span>Place Order (₹769)</span>
+          <span id="co-btn-text">Place Order (₹0)</span>
           <i class="ri-arrow-right-line"></i>
         </button>
 
@@ -745,10 +727,47 @@
       const total = Math.max(0, subtotal + delivery - discountApplied - ecoDiscount);
 
       const subEl = document.getElementById('co-subtotal');
+      const delEl = document.getElementById('co-delivery-fee');
+      const discRow = document.getElementById('discount-row');
+      const discEl = document.getElementById('co-discount');
+      const ecoRow = document.getElementById('eco-discount-row');
+      const ecoEl = document.getElementById('co-eco-discount');
       const grandEl = document.getElementById('co-grand-total');
-      const ctaBtn = document.querySelector('.btn-place-order-brown span');
+      const ctaBtn = document.getElementById('co-btn-text') || document.querySelector('.btn-place-order-brown span');
 
       if (subEl) subEl.textContent = `₹${subtotal}`;
+      
+      if (delEl) {
+        if (subtotal === 0) {
+          delEl.textContent = '₹0';
+          delEl.style.color = '#281612';
+        } else if (delivery === 0) {
+          delEl.textContent = 'FREE';
+          delEl.style.color = '#2B6618';
+        } else {
+          delEl.textContent = `₹${delivery}`;
+          delEl.style.color = '#281612';
+        }
+      }
+
+      if (discRow) {
+        if (discountApplied > 0) {
+          discRow.style.display = 'flex';
+          if (discEl) discEl.textContent = `-₹${discountApplied}`;
+        } else {
+          discRow.style.display = 'none';
+        }
+      }
+
+      if (ecoRow) {
+        if (ecoDiscount > 0) {
+          ecoRow.style.display = 'flex';
+          if (ecoEl) ecoEl.textContent = `-₹${ecoDiscount}`;
+        } else {
+          ecoRow.style.display = 'none';
+        }
+      }
+
       if (grandEl) grandEl.textContent = `₹${total}`;
       if (ctaBtn) ctaBtn.textContent = `Place Order (₹${total})`;
     }
@@ -796,8 +815,28 @@
       alert('Filled with Bangalore store address demo!');
     }
 
-    async function applyCoupon() {
+    let appliedCouponCode = '';
+
+    async function handleCouponAction() {
       const codeInput = document.getElementById('coupon-code-input');
+      const applyBtn = document.getElementById('coupon-apply-btn');
+
+      if (appliedCouponCode) {
+        // Remove active coupon
+        discountApplied = 0;
+        appliedCouponCode = '';
+        if (codeInput) {
+          codeInput.value = '';
+          codeInput.disabled = false;
+        }
+        if (applyBtn) {
+          applyBtn.textContent = 'Apply';
+          applyBtn.style.background = '#281612';
+        }
+        updateTotalsUI();
+        return;
+      }
+
       const code = codeInput ? codeInput.value.trim().toUpperCase() : '';
       if (!code) {
         alert('Please enter a coupon code.');
@@ -810,47 +849,42 @@
         return;
       }
 
+      let res = null;
       if (window.CloudDB && window.CloudDB.validateCoupon) {
         try {
-          const res = await window.CloudDB.validateCoupon(code, subtotal);
-          if (res.valid) {
-            discountApplied = res.discount;
-            appliedCouponCode = res.code;
-            const discountRow = document.getElementById('discount-row');
-            if (discountRow) {
-              discountRow.style.display = 'flex';
-              discountRow.firstElementChild.textContent = `🎉 Coupon ${res.code} Applied`;
-              document.getElementById('co-discount').textContent = `-₹${discountApplied}`;
-            }
-            updateTotalsUI();
-            alert(`🎉 Coupon "${res.code}" applied! You saved ₹${discountApplied}.`);
-            return;
-          } else {
-            alert(res.error || 'Invalid or expired coupon code.');
-            return;
-          }
+          res = await window.CloudDB.validateCoupon(code, subtotal);
         } catch(e) {
           console.warn('Coupon verification notice:', e);
         }
       }
 
-      if (code === 'ETERNAL10') {
-        discountApplied = Math.round(subtotal * 0.10);
-        appliedCouponCode = 'ETERNAL10';
-        const discountRow = document.getElementById('discount-row');
-        if (discountRow) {
-          discountRow.style.display = 'flex';
-          discountRow.firstElementChild.textContent = `🎉 Coupon ETERNAL10 (10%)`;
-          document.getElementById('co-discount').textContent = `-₹${discountApplied}`;
+      if (!res && code === 'ETERNAL10') {
+        const discount = Math.round(subtotal * 0.10);
+        res = { valid: true, code: 'ETERNAL10', discount, message: '10% Welcome Discount applied!' };
+      }
+
+      if (res && res.valid) {
+        discountApplied = res.discount;
+        appliedCouponCode = res.code;
+        const discountLabel = document.getElementById('co-discount-label');
+        if (discountLabel) {
+          discountLabel.textContent = `🎉 Coupon (${res.code})`;
         }
+        if (applyBtn) {
+          applyBtn.textContent = 'Remove';
+          applyBtn.style.background = '#B03A2E';
+        }
+        if (codeInput) codeInput.disabled = true;
         updateTotalsUI();
-        alert(`🎉 Coupon ETERNAL10 applied! Saved ₹${discountApplied}.`);
+        alert(`🎉 Coupon "${res.code}" applied! You saved ₹${discountApplied}.`);
       } else {
-        alert('Invalid or expired coupon code.');
+        alert(res?.error || 'Invalid or expired coupon code.');
       }
     }
 
-    let appliedCouponCode = '';
+    function applyCoupon() {
+      return handleCouponAction();
+    }
 
     async function placeOrderFinal() {
       const name = document.getElementById('cust-name').value.trim();

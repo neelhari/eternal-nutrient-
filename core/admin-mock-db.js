@@ -727,7 +727,7 @@ window.ADMIN_MOCK_DB = (function() {
     primaryWhatsApp: '916302017482',
     secondaryWhatsApp: '919392235693',
     supportEmail: 'eternalncdm@gmail.com',
-    registeredAddress: '3g Crimson Layout, Channasandra, opp Krishnakuteer Phase 2, Bangalore East, Bangalore Urban, Karnataka - 560067',
+    registeredAddress: 'Eternal Sales\nFlat No.A1, Eco greens layout, hegondanahalli, Gunjur, Bangalore - 560087',
     
     // Legal & Government Licenses
     gstin: '29ABCDE1234F1Z5',

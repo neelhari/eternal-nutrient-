@@ -211,7 +211,7 @@
   <!-- Toast Notification -->
   <div id="toast-wrapper" class="toast-floating-container"></div>
 
-  <!-- Mobile Bottom Navigation Dock (4 Tabs: Home, Shop, Cart, Account) -->
+  <!-- Mobile Bottom Navigation Dock (5 Tabs: Home, Shop, Cart, Distribute, Profile) -->
   <nav class="mobile-bottom-dock">
     <a href="index.html" class="mobile-dock-btn">
       <i class="ri-home-5-line"></i>
@@ -223,11 +223,16 @@
     </a>
     <a href="cart.html" class="mobile-dock-btn">
       <i class="ri-shopping-bag-3-line"></i>
+      <span class="dock-badge-pill minimal-cart-badge cart-badge" style="display: none;">0</span>
       <span>Cart</span>
+    </a>
+    <a href="javascript:void(0)" class="mobile-dock-btn" onclick="openDistributionDrawer()">
+      <i class="ri-shake-hands-line"></i>
+      <span>Distribute</span>
     </a>
     <a href="account.html" class="mobile-dock-btn">
       <i class="ri-user-3-line"></i>
-      <span>Account</span>
+      <span>Profile</span>
     </a>
   </nav>
 
@@ -237,6 +242,7 @@
   <script src="core/cloud-db.js"></script>
   <script src="core/auth-engine.js"></script>
   <script src="core/amazon-search.js"></script>
+  <script src="core/distribution-drawer.js"></script>
   <script>
     let ALL_PRODUCTS = [];
     let activeCategory = 'All';
@@ -250,8 +256,9 @@
           if (prods && prods.length > 0) {
             ALL_PRODUCTS = prods.map(p => {
               const price = Number(p.price) || 0;
-              const mrp = Number(p.original_price || p.price || price);
+              const mrp = Number(p.original_price ?? p.originalPrice ?? p.mrp ?? p.price ?? price);
               const diff = mrp > price ? mrp - price : 0;
+              const percent = mrp > price ? Math.round((diff / mrp) * 100) : 0;
               const stock = Number(p.stock_qty ?? 50);
               const inStock = p.in_stock !== false && stock > 0;
               return {
@@ -260,7 +267,7 @@
                 category: p.category || 'General',
                 price: price,
                 mrp: mrp,
-                discount: diff > 0 ? `₹${diff} OFF` : '',
+                discount: percent > 0 ? `${percent}% OFF` : '',
                 unit: p.unit || 'Pack',
                 badge: p.badge || (p.is_bestseller ? '★ Bestseller' : (p.is_new_arrival ? '⚡ New Arrival' : '')),
                 image: p.image || (Array.isArray(p.gallery) && p.gallery[0]) || 'assets/prod_honey_studio.jpg',
@@ -384,34 +391,30 @@
 
     function hydrateFooterSettings(settings) {
       if (!settings || typeof settings !== 'object') return;
-      const phone = settings.primary_phone || '+91 6302017482';
-      const secPhone = settings.secondary_phone ? `, ${settings.secondary_phone}` : '';
-      const wa = settings.primary_whatsapp || '916302017482';
+      const phone1 = settings.primary_phone || '+91 6302017482';
+      const phone2 = settings.secondary_phone || '+91 9392235693';
       const email = settings.support_email || 'eternalncdm@gmail.com';
-      const address = settings.registered_address || '';
+      const address = settings.registered_address || 'Eternal Sales\nFlat No.A1, Eco greens layout, hegondanahalli, Gunjur, Bangalore - 560087';
 
-      document.querySelectorAll('.footer-contact-row a[href^="tel:"]').forEach(a => {
-        a.href = `tel:${phone.replace(/\D/g, '')}`;
-        a.textContent = `${phone}${secPhone}`;
+      const phoneContainers = document.querySelectorAll('#footer-phone-links');
+      phoneContainers.forEach(container => {
+        const p1Clean = phone1.replace(/\D/g, '');
+        const p2Clean = phone2 ? phone2.replace(/\D/g, '') : '';
+        let linksHtml = `<a href="tel:${p1Clean}">${phone1}</a>`;
+        if (phone2 && phone2.trim() && phone2.trim() !== phone1.trim()) {
+          linksHtml += `, <a href="tel:${p2Clean}">${phone2}</a>`;
+        }
+        container.innerHTML = linksHtml;
       });
 
-      document.querySelectorAll('.footer-contact-row a[href*="wa.me"]').forEach(a => {
-        a.href = `https://wa.me/${wa.replace(/\D/g, '')}`;
-        a.textContent = phone;
+      document.querySelectorAll('#footer-email-link, .footer-contact-row a[href^="mailto:"]').forEach(emailLink => {
+        emailLink.href = `mailto:${email}`;
+        emailLink.textContent = email;
       });
 
-      document.querySelectorAll('.footer-contact-row a[href^="mailto:"]').forEach(a => {
-        a.href = `mailto:${email}`;
-        a.textContent = email;
+      document.querySelectorAll('#footer-address-text').forEach(addrEl => {
+        addrEl.innerHTML = address.replace(/\n/g, '<br>');
       });
-
-      if (address) {
-        document.querySelectorAll('.footer-contact-row span').forEach(s => {
-          if (s.textContent.includes('Crimson') || s.textContent.includes('Bangalore') || s.textContent.includes('Channasandra')) {
-            s.textContent = address;
-          }
-        });
-      }
     }
 
     function selectCategory(catName, el) {
@@ -488,9 +491,9 @@
                 <div class="zepto-price-col">
                   <div class="zepto-price-row">
                     <span class="zepto-selling-price">₹${p.price}</span>
-                    <span class="zepto-mrp-price">₹${p.mrp}</span>
+                    ${p.mrp > p.price ? `<span class="zepto-mrp-price">₹${p.mrp}</span>` : ''}
                   </div>
-                  <span class="zepto-discount-tag">${p.discount}</span>
+                  ${p.discount ? `<span class="zepto-discount-tag">${p.discount}</span>` : ''}
                 </div>
                 
                 <div>
