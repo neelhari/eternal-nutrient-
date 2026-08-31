@@ -117,6 +117,7 @@
       <a href="categories.html?category=Laddus" class="desktop-nav-pill">🌰 Dates Laddus</a>
       <a href="categories.html?category=Snacks" class="desktop-nav-pill">🌿 Millet Snacks</a>
       <a href="categories.html?category=Pickles" class="desktop-nav-pill">🍋 Handmade Pickles</a>
+      <a href="shipping-delivery.html" class="desktop-nav-pill"><i class="ri-truck-line"></i> Shipping & Delivery</a>
       <a href="account.html" class="desktop-nav-pill"><i class="ri-heart-line"></i> Wishlist</a>
       <a href="cart.html" class="desktop-nav-pill"><i class="ri-shopping-cart-2-line"></i> Cart</a>
     </nav>
@@ -293,7 +294,7 @@
         <span class="marquee-item"><i class="ri-truck-fill"></i> Free Express Delivery on All Orders Above ₹999</span>
         <span class="marquee-item"><i class="ri-leaf-fill"></i> 100% Certified Organic</span>
         <span class="marquee-item"><i class="ri-drop-fill"></i> Pure Raw Forest Honey</span>
-        <span class="marquee-item"><i class="ri-shield-check-fill"></i> 100% Safe UPI & COD Checkout</span>
+        <span class="marquee-item"><i class="ri-shield-check-fill"></i> 100% Secure Online Payment (UPI, Cards & NetBanking)</span>
         <span class="marquee-item"><i class="ri-heart-3-fill"></i> Zero Preservatives • Zero Maida</span>
         <span class="marquee-item"><i class="ri-plant-fill"></i> Handcrafted in Small Batches</span>
         <!-- Duplicate for infinite seamless loop -->
@@ -301,7 +302,7 @@
         <span class="marquee-item"><i class="ri-truck-fill"></i> Free Express Delivery on All Orders Above ₹999</span>
         <span class="marquee-item"><i class="ri-leaf-fill"></i> 100% Certified Organic</span>
         <span class="marquee-item"><i class="ri-drop-fill"></i> Pure Raw Forest Honey</span>
-        <span class="marquee-item"><i class="ri-shield-check-fill"></i> 100% Safe UPI & COD Checkout</span>
+        <span class="marquee-item"><i class="ri-shield-check-fill"></i> 100% Secure Online Payment (UPI, Cards & NetBanking)</span>
         <span class="marquee-item"><i class="ri-heart-3-fill"></i> Zero Preservatives • Zero Maida</span>
         <span class="marquee-item"><i class="ri-plant-fill"></i> Handcrafted in Small Batches</span>
       </div>
@@ -389,6 +390,16 @@
             <span id="footer-address-text" style="font-size: 12px; color: #C2B0A6; line-height: 1.4;">
               Eternal Sales<br>Flat No.A1, Eco greens layout, hegondanahalli, Gunjur, Bangalore - 560087
             </span>
+          </div>
+
+          <div class="footer-contact-row" style="margin-top: 10px;">
+            <i class="ri-truck-line"></i>
+            <div>
+              <a href="shipping-delivery.html" style="color: #E2C095; font-size: 12px; font-weight: 700; text-decoration: none; display: flex; align-items: center; gap: 4px;">
+                <span>Shipping & Delivery Policy</span>
+                <i class="ri-arrow-right-s-line"></i>
+              </a>
+            </div>
           </div>
         </div>
 
@@ -1159,23 +1170,9 @@
       }).join('');
     }
 
-    function proceedToWhatsAppCheckout() {
-      if (cart.length === 0) return alert('Cart is empty');
-      const storeName = window.STORE_CONFIG ? window.STORE_CONFIG.brandName : 'Eternal Nutricare';
-      const waNumber = window.STORE_CONFIG ? window.STORE_CONFIG.whatsAppNumber : '916302017482';
-      
-      let msg = `🛍️ *NEW ORDER - ${storeName.toUpperCase()}*\n----------------------------------\n`;
-      let total = 0;
-      cart.forEach((i, idx) => {
-        const p = PRODUCTS[i.id];
-        msg += `${idx + 1}. *${p.title}* (${p.unit}) × ${i.qty} = ₹${p.price * i.qty}\n`;
-        total += (p.price * i.qty);
-      });
-      msg += `----------------------------------\n`;
-      msg += `*Total Amount:* ₹${total}\n\n`;
-      msg += `Please confirm my order and share delivery estimate. Thank you!`;
-
-      window.open(`https://wa.me/${waNumber}?text=${encodeURIComponent(msg)}`, '_blank');
+    function proceedToCheckout() {
+      if (!cart || cart.length === 0) return alert('Your cart is empty! Please add products before checking out.');
+      window.location.href = 'checkout.html';
     }
 
     function scrollToProducts() {

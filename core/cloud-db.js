@@ -279,7 +279,7 @@ window.CloudDB = (function() {
       discount_amount: Number(rawOrder.discount_amount ?? rawOrder.discountAmount ?? 0),
       total_amount: Number(rawOrder.total_amount ?? rawOrder.totalAmount ?? rawOrder.grandTotal ?? 0),
       coupon_code: rawOrder.coupon_code || rawOrder.couponCode || '',
-      payment_method: rawOrder.payment_method || rawOrder.paymentMethod || 'COD',
+      payment_method: rawOrder.payment_method || rawOrder.paymentMethod || 'ONLINE',
       payment_status: rawOrder.payment_status || rawOrder.paymentStatus || (isPaid ? 'Paid' : 'Pending'),
       razorpay_order_id: rawOrder.razorpay_order_id || rawOrder.razorpayOrderId || '',
       razorpay_payment_id: rawOrder.razorpay_payment_id || rawOrder.razorpayPaymentId || '',

@@ -1218,55 +1218,6 @@ body {
   }
 }
 
-/* Floating Exact Zepto Stepper Pill for Rail Cards */
-.zepto-stepper-pill-active {
-  position: absolute !important;
-  bottom: -10px !important;
-  left: 50% !important;
-  transform: translateX(-50%) !important;
-  background: #281612 !important;
-  color: #FFFFFF !important;
-  border-radius: 5px !important;
-  width: 70px !important;
-  height: 21px !important;
-  display: flex !important;
-  align-items: center !important;
-  justify-content: space-between !important;
-  padding: 0 4px !important;
-  box-shadow: 0 2px 6px rgba(40, 22, 18, 0.25) !important;
-  z-index: 10 !important;
-}
-
-.zepto-step-btn {
-  background: none !important;
-  border: none !important;
-  color: #FFFFFF !important;
-  font-size: 13.5px !important;
-  font-weight: 800 !important;
-  cursor: pointer !important;
-  width: 18px !important;
-  height: 18px !important;
-  display: flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-  line-height: 1 !important;
-  border-radius: 3px !important;
-}
-
-.zepto-step-btn:hover {
-  background: rgba(255, 255, 255, 0.2) !important;
-}
-
-.zepto-step-val {
-  font-family: 'Plus Jakarta Sans', system-ui, sans-serif !important;
-  font-size: 11px !important;
-  font-weight: 800 !important;
-  color: #FFFFFF !important;
-  min-width: 12px !important;
-  text-align: center !important;
-  line-height: 1 !important;
-}
-
 /* Daksha Exact Dual Action Buttons: ADD and BUY (Sleek Modern Mobile Sizing) */
 .card-dual-actions {
   display: flex;
@@ -1733,27 +1684,30 @@ body {
   margin-top: 8px;
 }
 
+.btn-drawer-checkout,
 .whatsapp-checkout-btn {
   width: 100%;
-  background: #25D366;
+  background: #281612;
   color: #FFFFFF;
   border: none;
   font-size: 14.5px;
   font-weight: 800;
-  padding: 13px;
-  border-radius: 10px;
+  padding: 14px;
+  border-radius: 999px;
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 8px;
   cursor: pointer;
   margin-top: 12px;
-  box-shadow: 0 4px 14px rgba(37, 211, 102, 0.25);
+  box-shadow: 0 4px 14px rgba(40, 22, 18, 0.25);
   transition: all 0.2s ease;
 }
 
+.btn-drawer-checkout:hover,
 .whatsapp-checkout-btn:hover {
-  background: #1EBE5D;
+  background: #3E241E;
+  transform: translateY(-1px);
 }
 
 /* ==========================================================================

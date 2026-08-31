@@ -388,7 +388,7 @@ body {
   box-sizing: border-box;
   min-width: 0;
   width: 100%;
-  overflow: hidden;
+  overflow: visible;
 }
 
 .zepto-item-box:hover {
@@ -475,11 +475,11 @@ body {
 /* Bottom Split Row: Price on Left, Add Button on Right */
 .zepto-card-bottom-row {
   display: flex;
-  align-items: flex-end;
+  align-items: center;
   justify-content: space-between;
   margin-top: auto;
-  gap: 4px;
-  padding-top: 4px;
+  gap: 6px;
+  padding-top: 6px;
   width: 100%;
   min-width: 0;
 }
@@ -530,29 +530,30 @@ body {
 
 /* Add Button Settled at Bottom Right */
 .zepto-add-pill-btn {
-  background: #281612;
-  color: #FFFFFF;
-  border: none;
-  border-radius: 8px;
-  padding: 5px 9px;
-  font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
-  font-size: 11px;
-  font-weight: 700;
-  cursor: pointer;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 3px;
-  box-shadow: 0 2px 6px rgba(40, 22, 18, 0.2);
-  transition: all 0.15s ease;
-  white-space: nowrap;
-  height: 27px;
-  box-sizing: border-box;
-  flex-shrink: 0;
+  position: static !important;
+  background: #281612 !important;
+  color: #FFFFFF !important;
+  border: none !important;
+  border-radius: 8px !important;
+  padding: 0 10px !important;
+  font-family: 'Plus Jakarta Sans', system-ui, sans-serif !important;
+  font-size: 11px !important;
+  font-weight: 700 !important;
+  cursor: pointer !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 4px !important;
+  box-shadow: 0 2px 6px rgba(40, 22, 18, 0.2) !important;
+  transition: all 0.15s ease !important;
+  white-space: nowrap !important;
+  height: 28px !important;
+  box-sizing: border-box !important;
+  flex-shrink: 0 !important;
 }
 
 .zepto-add-pill-btn:hover {
-  background: #3E241E;
+  background: #3E241E !important;
   transform: translateY(-1px);
 }
 
@@ -560,48 +561,55 @@ body {
   transform: scale(0.95);
 }
 
-/* Stepper inside Card Bottom Row */
+/* Stepper inside Card Bottom Row (Exact Same In-Place Position as Add Button) */
 .zepto-stepper-pill-active {
-  display: inline-flex;
-  align-items: center;
-  justify-content: space-between;
-  background: #281612;
-  color: #FFFFFF;
-  border-radius: 8px;
-  height: 27px;
-  padding: 0 4px;
-  width: 60px;
-  box-shadow: 0 2px 6px rgba(40, 22, 18, 0.2);
-  box-sizing: border-box;
-  flex-shrink: 0;
+  position: static !important;
+  bottom: auto !important;
+  left: auto !important;
+  transform: none !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  background: #281612 !important;
+  color: #FFFFFF !important;
+  border-radius: 8px !important;
+  height: 28px !important;
+  padding: 0 4px !important;
+  width: 66px !important;
+  box-shadow: 0 2px 6px rgba(40, 22, 18, 0.2) !important;
+  box-sizing: border-box !important;
+  flex-shrink: 0 !important;
 }
 
 .zepto-step-btn {
-  background: none;
-  border: none;
-  color: #FFFFFF;
-  font-size: 14px;
-  font-weight: 800;
-  cursor: pointer;
-  width: 20px;
-  height: 20px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 4px;
+  background: none !important;
+  border: none !important;
+  color: #FFFFFF !important;
+  font-size: 14px !important;
+  font-weight: 800 !important;
+  cursor: pointer !important;
+  width: 20px !important;
+  height: 20px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  border-radius: 4px !important;
+  padding: 0 !important;
+  line-height: 1 !important;
 }
 
 .zepto-step-btn:hover {
-  background: rgba(255, 255, 255, 0.2);
+  background: rgba(255, 255, 255, 0.2) !important;
 }
 
 .zepto-step-val {
-  font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
-  font-size: 11.5px;
-  font-weight: 800;
-  color: #FFFFFF;
-  min-width: 14px;
-  text-align: center;
+  font-family: 'Plus Jakarta Sans', system-ui, sans-serif !important;
+  font-size: 11.5px !important;
+  font-weight: 800 !important;
+  color: #FFFFFF !important;
+  min-width: 14px !important;
+  text-align: center !important;
+  line-height: 1 !important;
 }
 
 .zepto-price-badge {

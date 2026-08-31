@@ -148,7 +148,7 @@ const CartEngine = {
           subtotal: totals.subtotal,
           deliveryFee: totals.deliveryFee,
           totalAmount: totals.grandTotal,
-          paymentMethod: customerData.paymentMethod || 'WhatsApp / COD',
+          paymentMethod: customerData.paymentMethod || 'ONLINE',
           notes: customerData.notes || ''
         });
       }

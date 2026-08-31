@@ -324,7 +324,22 @@
     .checkout-item-row {
       display: flex;
       align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 10px 0;
+      border-bottom: 1px dashed #EAEFE6;
+    }
+
+    .checkout-item-row:last-child {
+      border-bottom: none;
+    }
+
+    .checkout-item-left {
+      display: flex;
+      align-items: center;
       gap: 10px;
+      flex: 1;
+      min-width: 0;
     }
 
     .checkout-thumb {
@@ -339,24 +354,246 @@
 
     .checkout-item-info {
       flex: 1;
+      min-width: 0;
     }
 
     .checkout-item-name {
-      font-size: 13px;
+      font-size: 13.5px;
       font-weight: 700;
       color: #1E2519;
-      line-height: 1.2;
+      line-height: 1.25;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
 
     .checkout-item-qty {
       font-size: 11px;
       color: #7A8C73;
+      margin-top: 2px;
+    }
+
+    /* Modern Stepper Pill matching reference design ([-] Qty [+]) */
+    .checkout-item-right {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-shrink: 0;
+    }
+
+    .checkout-stepper-pill {
+      display: inline-flex;
+      align-items: center;
+      justify-content: space-between;
+      background: #FFFFFF;
+      border: 1px solid #D1D5DB;
+      border-radius: 8px;
+      padding: 2px 4px;
+      height: 30px;
+      min-width: 78px;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+    }
+
+    .checkout-step-btn {
+      background: none;
+      border: none;
+      font-size: 15px;
+      font-weight: 700;
+      color: #4B5563;
+      cursor: pointer;
+      width: 24px;
+      height: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 4px;
+      transition: all 0.15s ease;
+      user-select: none;
+      padding: 0;
+      line-height: 1;
+    }
+
+    .checkout-step-btn:hover {
+      background: #F3F4F6;
+      color: #111827;
+    }
+
+    .checkout-step-btn.plus {
+      color: #2B6618;
+      font-weight: 800;
+    }
+
+    .checkout-step-btn.plus:hover {
+      background: #EBF5E6;
+      color: #1E4E10;
+    }
+
+    .checkout-step-btn:active {
+      transform: scale(0.9);
+    }
+
+    .checkout-step-num {
+      font-family: inherit;
+      font-size: 13px;
+      font-weight: 800;
+      color: #1F2937;
+      min-width: 18px;
+      text-align: center;
+      user-select: none;
     }
 
     .checkout-item-price {
-      font-size: 13.5px;
+      font-size: 14.5px;
       font-weight: 800;
       color: #1E2519;
+      min-width: 54px;
+      text-align: right;
+    }
+
+    /* Payment Badges */
+    .pay-secure-tag {
+      background: #EBF5E6;
+      color: #2B6618;
+      font-size: 10px;
+      font-weight: 800;
+      padding: 2px 7px;
+      border-radius: 4px;
+      display: inline-flex;
+      align-items: center;
+      gap: 3px;
+    }
+
+    .pay-chip {
+      background: #F4F7F2;
+      border: 1px solid #E2EAD8;
+      color: #3B5233;
+      font-size: 11px;
+      font-weight: 700;
+      padding: 3px 8px;
+      border-radius: 6px;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    /* Order Confirmation Success Modal */
+    .order-modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.65);
+      backdrop-filter: blur(5px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+      z-index: 1000;
+    }
+
+    .order-modal-card {
+      background: #FFFFFF;
+      border-radius: 20px;
+      max-width: 440px;
+      width: 100%;
+      padding: 28px 24px;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+      text-align: center;
+      animation: modalSlideUp 0.3s ease-out;
+    }
+
+    @keyframes modalSlideUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .order-success-icon {
+      width: 64px;
+      height: 64px;
+      background: #EBF5E6;
+      color: #2B6618;
+      font-size: 38px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 16px;
+    }
+
+    .order-modal-title {
+      font-size: 20px;
+      font-weight: 800;
+      color: #1E2519;
+      margin-bottom: 6px;
+    }
+
+    .order-modal-sub {
+      font-size: 13.5px;
+      color: #6B7280;
+      line-height: 1.45;
+      margin-bottom: 20px;
+    }
+
+    .order-modal-details {
+      background: #FAF8F5;
+      border: 1px solid #ECE4DA;
+      border-radius: 12px;
+      padding: 14px;
+      margin-bottom: 22px;
+      text-align: left;
+      font-size: 13px;
+    }
+
+    .order-detail-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 6px 0;
+      border-bottom: 1px dashed #E5DDD3;
+      color: #4B5563;
+    }
+
+    .order-detail-row:last-child {
+      border-bottom: none;
+      padding-bottom: 0;
+    }
+
+    .order-modal-actions {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .btn-modal-primary {
+      background: #281612;
+      color: #FFFFFF;
+      padding: 13px;
+      border-radius: 999px;
+      font-weight: 800;
+      font-size: 14px;
+      text-decoration: none;
+      display: block;
+      transition: background 0.2s;
+    }
+
+    .btn-modal-primary:hover {
+      background: #3E241E;
+    }
+
+    .btn-modal-secondary {
+      background: #F3F4F6;
+      color: #374151;
+      padding: 11px;
+      border-radius: 999px;
+      font-weight: 700;
+      font-size: 13.5px;
+      text-decoration: none;
+      display: block;
+    }
+
+    .btn-modal-secondary:hover {
+      background: #E5E7EB;
     }
 
     /* Promo Coupon Box */
@@ -546,38 +783,33 @@
       <!-- 2. Payment Method Selector -->
       <div class="checkout-card">
         <h2 class="card-sec-title" style="margin-bottom: 14px;">
-          <i class="ri-wallet-3-line"></i>
+          <i class="ri-bank-card-line"></i>
           <span>2. Payment Method</span>
         </h2>
 
-        <!-- Option A: WhatsApp Dispatch -->
-        <div class="payment-option-card selected" onclick="selectPayment(this, 'whatsapp')">
+        <!-- Online Payment (UPI, Cards, NetBanking, Wallets) -->
+        <div class="payment-option-card selected" onclick="selectPayment(this, 'online')">
           <div class="pay-radio-circle"></div>
           <div style="flex:1;">
-            <div style="font-size:14px; font-weight:800; color:#1E2519;">Order via WhatsApp (COD / Pay on Delivery)</div>
-            <div style="font-size:11.5px; color:#556B4E;">Instant receipt & dispatch with manager Siddaiah</div>
+            <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
+              <span style="font-size:14.5px; font-weight:800; color:#1E2519;">Online Payment</span>
+              <span class="pay-secure-tag"><i class="ri-shield-check-fill"></i> 100% SECURE</span>
+            </div>
+            <div style="font-size:12px; color:#556B4E; margin-top:3px;">
+              UPI (Google Pay, PhonePe, Paytm), Credit / Debit Cards & NetBanking
+            </div>
+            <div style="display:flex; gap:6px; margin-top:8px; flex-wrap:wrap;">
+              <span class="pay-chip"><i class="ri-qr-code-line"></i> UPI</span>
+              <span class="pay-chip"><i class="ri-bank-card-line"></i> Cards</span>
+              <span class="pay-chip"><i class="ri-bank-line"></i> NetBanking</span>
+            </div>
           </div>
-          <i class="ri-whatsapp-fill" style="color:#25D366; font-size:24px;"></i>
+          <i class="ri-lock-2-fill" style="color:#2B6618; font-size:22px;"></i>
         </div>
 
-        <!-- Option B: Instant UPI -->
-        <div class="payment-option-card" onclick="selectPayment(this, 'upi')">
-          <div class="pay-radio-circle"></div>
-          <div style="flex:1;">
-            <div style="font-size:14px; font-weight:800; color:#1E2519;">Instant UPI (GPay, PhonePe, Paytm)</div>
-            <div style="font-size:11.5px; color:#556B4E;">UPI ID: 6302017482@ybl (Scan & Pay)</div>
-          </div>
-          <i class="ri-qr-code-line" style="color:#281612; font-size:22px;"></i>
-        </div>
-
-        <!-- Option C: Card / NetBanking -->
-        <div class="payment-option-card" onclick="selectPayment(this, 'card')">
-          <div class="pay-radio-circle"></div>
-          <div style="flex:1;">
-            <div style="font-size:14px; font-weight:800; color:#1E2519;">Credit / Debit Card & NetBanking</div>
-            <div style="font-size:11.5px; color:#556B4E;">All major Indian banks supported</div>
-          </div>
-          <i class="ri-bank-card-line" style="color:#281612; font-size:22px;"></i>
+        <div style="margin-top: 10px; padding: 10px 12px; background: #FAF7F2; border: 1px dashed #D6C2B0; border-radius: 10px; font-size: 11.5px; color: #735D52; display: flex; align-items: center; gap: 8px;">
+          <i class="ri-secure-payment-line" style="font-size: 18px; color: #281612; flex-shrink:0;"></i>
+          <span>100% Encrypted & Safe Farm-Direct Checkout. Razorpay gateway online processing enabled.</span>
         </div>
 
       </div>
@@ -611,7 +843,7 @@
         </div>
 
         <div class="price-line-row">
-          <span>Delivery Fee</span>
+          <span>Delivery Fee <a href="shipping-delivery.html" target="_blank" style="color:#7A8C73; font-size:11px; text-decoration:underline;">(Policy)</a></span>
           <span id="co-delivery-fee" style="color:#281612; font-weight:700;">₹0</span>
         </div>
 
@@ -627,7 +859,7 @@
 
         <!-- Place Order CTA Button (Solid Brand Brown) -->
         <button class="btn-place-order-brown" onclick="placeOrderFinal()">
-          <span id="co-btn-text">Place Order (₹0)</span>
+          <span id="co-btn-text">Proceed to Online Payment (₹0)</span>
           <i class="ri-arrow-right-line"></i>
         </button>
 
@@ -649,7 +881,7 @@
   <script src="core/payment-verifier.js"></script>
   <script src="core/auth-engine.js"></script>
   <script>
-    let selectedPaymentType = 'whatsapp';
+    let selectedPaymentType = 'online';
     let discountApplied = 0;
     let checkoutStoreSettings = {
       freeShippingThreshold: 999,
@@ -683,8 +915,11 @@
 
       if (!currentCart || currentCart.length === 0) {
         if (previewContainer) {
-          previewContainer.innerHTML = `<div style="padding: 16px; text-align: center; color: #8C7E77;">Your cart is empty. <a href="categories.html" style="color: #281612; font-weight: 700;">Add products</a></div>`;
+          previewContainer.innerHTML = `<div style="padding: 24px 16px; text-align: center; color: #8C7E77;"><i class="ri-shopping-bag-3-line" style="font-size: 32px; display:block; margin-bottom: 8px; color: #B5A89E;"></i>Your cart is empty.<br><a href="categories.html" style="color: #281612; font-weight: 700; text-decoration: underline; display: inline-block; margin-top: 8px;">Add organic products</a></div>`;
         }
+        if (titleHeading) titleHeading.textContent = `Order Summary (0 Items)`;
+        discountApplied = 0;
+        appliedCouponCode = '';
         updateTotalsUI(0);
         return;
       }
@@ -698,19 +933,51 @@
           const price = Number(item.price) || 0;
           const lineTotal = price * qty;
           return `
-            <div class="checkout-item-row">
-              <img src="${item.image || 'assets/prod_honey_studio.jpg'}" alt="${item.title}" class="checkout-thumb">
-              <div class="checkout-item-info">
-                <div class="checkout-item-name">${item.title}</div>
-                <div class="checkout-item-qty">${item.unit || 'Pack'} • Qty: ${qty}</div>
+            <div class="checkout-item-row" id="co-item-${item.id}">
+              <div class="checkout-item-left">
+                <img src="${item.image || 'assets/prod_honey_studio.jpg'}" alt="${item.title}" class="checkout-thumb">
+                <div class="checkout-item-info">
+                  <div class="checkout-item-name" title="${item.title}">${item.title}</div>
+                  <div class="checkout-item-qty">${item.unit || 'Standard Pack'}</div>
+                </div>
               </div>
-              <div class="checkout-item-price">₹${lineTotal}</div>
+              <div class="checkout-item-right">
+                <div class="checkout-stepper-pill">
+                  <button type="button" class="checkout-step-btn minus" onclick="updateCheckoutQty('${item.id}', -1)" aria-label="Decrease quantity">−</button>
+                  <span class="checkout-step-num">${qty}</span>
+                  <button type="button" class="checkout-step-btn plus" onclick="updateCheckoutQty('${item.id}', 1)" aria-label="Increase quantity">+</button>
+                </div>
+                <div class="checkout-item-price">₹${lineTotal}</div>
+              </div>
             </div>
           `;
         }).join('');
       }
 
       updateTotalsUI();
+    }
+
+    function updateCheckoutQty(id, delta) {
+      const item = currentCart.find(i => i.id === id);
+      if (!item) return;
+
+      const newQty = (Number(item.qty) || 1) + delta;
+      if (newQty <= 0) {
+        currentCart = currentCart.filter(i => i.id !== id);
+      } else {
+        item.qty = newQty;
+      }
+
+      try {
+        localStorage.setItem('em_cart_items', JSON.stringify(currentCart));
+      } catch (e) {}
+
+      if (appliedCouponCode === 'ETERNAL10') {
+        const subtotal = currentCart.reduce((sum, i) => sum + (Number(i.price) * (Number(i.qty) || 1)), 0);
+        discountApplied = Math.round(subtotal * 0.10);
+      }
+
+      loadCheckoutCart();
     }
 
     function updateTotalsUI(forcedSubtotal = null) {
@@ -752,7 +1019,7 @@
       }
 
       if (grandEl) grandEl.textContent = `₹${total}`;
-      if (ctaBtn) ctaBtn.textContent = `Place Order (₹${total})`;
+      if (ctaBtn) ctaBtn.textContent = `Proceed to Online Payment (₹${total})`;
     }
 
     window.addEventListener('DOMContentLoaded', () => {
@@ -790,12 +1057,11 @@
     }
 
     function fillBangaloreDemo() {
-      document.getElementById('cust-name').value = 'Siddaiah Customer';
-      document.getElementById('cust-phone').value = '6302017482';
-      document.getElementById('cust-address').value = 'Flat No. A1, Eco Greens Layout, Hegondanahalli, Gunjur';
+      document.getElementById('cust-name').value = 'Anita Sharma';
+      document.getElementById('cust-phone').value = '9876543210';
+      document.getElementById('cust-address').value = 'Flat No. 402, Green Valley Apartments, Indiranagar';
       document.getElementById('cust-city').value = 'Bangalore';
-      document.getElementById('cust-pincode').value = '560087';
-      alert('Filled with Bangalore store address demo!');
+      document.getElementById('cust-pincode').value = '560038';
     }
 
     let appliedCouponCode = '';
@@ -891,7 +1157,6 @@
       const userEmail = (user && user.email) ? user.email : '';
 
       const fullAddress = `${address}, ${city} - ${pincode}`;
-      const waNumber = (window.STORE_CONFIG && window.STORE_CONFIG.whatsAppNumber) ? window.STORE_CONFIG.whatsAppNumber : '916302017482';
       const orderNumber = `EN-${Math.floor(1000 + Math.random() * 9000)}`;
 
       const subtotal = currentCart.reduce((sum, i) => sum + (Number(i.price) * (Number(i.qty) || 1)), 0);
@@ -914,7 +1179,7 @@
             discount_amount: discountApplied,
             total_amount: totalAmount,
             coupon_code: appliedCouponCode || (discountApplied > 0 ? 'ETERNAL10' : ''),
-            payment_method: selectedPaymentType.toUpperCase(),
+            payment_method: 'ONLINE',
             payment_status: 'Pending',
             order_status: 'Order Confirmed'
           });
@@ -923,32 +1188,85 @@
         }
       }
 
-      // Format WhatsApp Message
-      let msg = `🛍️ *NEW CONFIRMED ORDER - ETERNAL NUTRICARE*\n`;
-      msg += `------------------------------------\n`;
-      msg += `🆔 *Order Number:* ${orderNumber}\n`;
-      msg += `👤 *Customer Name:* ${name}\n`;
-      msg += `📞 *Phone Number:* ${phone}\n`;
-      msg += `📍 *Delivery Address:* ${fullAddress}\n`;
-      msg += `💳 *Payment Method:* ${selectedPaymentType.toUpperCase()}\n`;
-      msg += `------------------------------------\n`;
-      msg += `*Ordered Items:*\n`;
-      currentCart.forEach((i, idx) => {
-        msg += `${idx + 1}. ${i.title} (${i.unit || 'Pack'}) × ${i.qty || 1} = ₹${(Number(i.price) || 0) * (Number(i.qty) || 1)}\n`;
-      });
-      msg += `------------------------------------\n`;
-      if (discountApplied > 0) {
-        msg += `*Discount Applied:* -₹${discountApplied}\n`;
-      }
-      msg += `*Total Payable:* ₹${totalAmount} (${deliveryFee === 0 ? 'FREE Delivery' : `Delivery: ₹${deliveryFee}`})\n\n`;
-      msg += `Please confirm my order and share dispatch tracking time!`;
+      // Also record to local user orders for immediate visibility in account.html
+      try {
+        const localOrders = JSON.parse(localStorage.getItem('em_user_orders') || '[]');
+        localOrders.unshift({
+          order_number: orderNumber,
+          customer_name: name,
+          customer_phone: phone,
+          items: currentCart,
+          subtotal: subtotal,
+          delivery_fee: deliveryFee,
+          discount_amount: discountApplied,
+          total_amount: totalAmount,
+          payment_method: 'ONLINE',
+          order_status: 'Order Confirmed',
+          created_at: new Date().toISOString()
+        });
+        localStorage.setItem('em_user_orders', JSON.stringify(localOrders));
+      } catch (e) {}
 
       // Clear Cart after successful placement
       localStorage.removeItem('em_cart_items');
 
-      window.open(`https://wa.me/${waNumber}?text=${encodeURIComponent(msg)}`, '_blank');
-      window.location.href = 'index.html';
+      // Populate & Display Order Confirmation Modal
+      document.getElementById('conf-order-num').textContent = orderNumber;
+      document.getElementById('conf-order-amount').textContent = `₹${totalAmount}`;
+      document.getElementById('conf-order-cust').textContent = `${name} (${phone})`;
+      document.getElementById('conf-order-addr').textContent = fullAddress;
+      
+      const modal = document.getElementById('order-success-modal');
+      if (modal) {
+        modal.style.display = 'flex';
+      } else {
+        alert(`🎉 Order Confirmed! Your Order ID is ${orderNumber}. Total: ₹${totalAmount}.`);
+        window.location.href = 'account.html';
+      }
     }
   </script>
+
+  <!-- Order Confirmation Modal -->
+  <div id="order-success-modal" class="order-modal-overlay">
+    <div class="order-modal-card">
+      <div class="order-success-icon">
+        <i class="ri-checkbox-circle-fill"></i>
+      </div>
+      <h2 class="order-modal-title">Order Confirmed!</h2>
+      <p class="order-modal-sub">Your pure & farm-fresh organic order has been successfully placed. Online payment integration will initiate on dispatch.</p>
+      
+      <div class="order-modal-details">
+        <div class="order-detail-row">
+          <span>Order ID</span>
+          <strong id="conf-order-num" style="color: #281612;">#EN-1000</strong>
+        </div>
+        <div class="order-detail-row">
+          <span>Total Payable</span>
+          <strong id="conf-order-amount" style="color: #2B6618; font-size: 15px;">₹0</strong>
+        </div>
+        <div class="order-detail-row">
+          <span>Payment Option</span>
+          <span style="font-weight: 700; color: #2B6618;"><i class="ri-shield-check-fill"></i> Online Payment</span>
+        </div>
+        <div class="order-detail-row">
+          <span>Customer</span>
+          <span id="conf-order-cust" style="max-width: 220px; text-align: right; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">Anita Sharma</span>
+        </div>
+        <div class="order-detail-row">
+          <span>Delivery Address</span>
+          <span id="conf-order-addr" style="max-width: 220px; text-align: right; font-size: 11.5px; line-height: 1.3;">Bangalore</span>
+        </div>
+      </div>
+
+      <div class="order-modal-actions">
+        <a href="account.html" class="btn-modal-primary">
+          <i class="ri-box-3-line"></i> View in My Orders
+        </a>
+        <a href="index.html" class="btn-modal-secondary">
+          Continue Shopping
+        </a>
+      </div>
+    </div>
+  </div>
 </body>
 </html>

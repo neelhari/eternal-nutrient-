@@ -200,9 +200,9 @@
           <span id="cart-total-val">₹648</span>
         </div>
 
-        <button class="whatsapp-checkout-btn" onclick="proceedToWhatsAppCheckout()">
-          <i class="ri-whatsapp-line" style="font-size:20px;"></i>
-          <span>Order via WhatsApp</span>
+        <button class="btn-drawer-checkout" onclick="proceedToCheckout()">
+          <span>Proceed to Checkout</span>
+          <i class="ri-arrow-right-line"></i>
         </button>
       </div>
     </div>
@@ -246,7 +246,15 @@
   <script>
     let ALL_PRODUCTS = [];
     let activeCategory = 'All';
-    let cart = []; 
+    let cart = [];
+    try {
+      const saved = localStorage.getItem('em_cart_items');
+      if (saved) {
+        cart = JSON.parse(saved);
+      }
+    } catch(e) {
+      cart = [];
+    }
 
     async function syncCatalogFromSupabase() {
       if (window.CloudDB && window.CloudDB.isSupabaseActive()) {
@@ -485,7 +493,7 @@
             <div class="zepto-details-col">
               <div class="zepto-item-title" title="${p.title}">${p.title}</div>
               <div class="zepto-unit-info">${p.unit}</div>
-              <div class="zepto-badge-pill">${p.badge || ''}</div>
+              ${(p.badge && p.badge.trim()) ? `<div class="zepto-badge-pill">${p.badge}</div>` : ''}
               
               <div class="zepto-card-bottom-row">
                 <div class="zepto-price-col">
@@ -502,7 +510,7 @@
                       <span>Sold Out</span>
                     </button>
                   ` : (qty === 0 ? `
-                    <button class="zepto-add-pill-btn" onclick="event.stopPropagation(); addToCartItem('${p.id}', '${p.title.replace(/'/g, "\\'")}', ${p.price}, '${p.image}')">
+                    <button class="zepto-add-pill-btn" onclick="event.stopPropagation(); addToCartItem('${p.id}', '${p.title.replace(/'/g, "\\'")}', ${p.price}, '${p.image}', '${(p.unit || 'Standard Pack').replace(/'/g, "\\'")}')">
                       <i class="ri-shopping-cart-2-line"></i>
                       <span>Add</span>
                     </button>
@@ -521,23 +529,42 @@
       }).join('');
     }
 
-    function addToCartItem(id, title, price, image) {
+    function saveCartToStorage() {
+      try {
+        localStorage.setItem('em_cart_items', JSON.stringify(cart));
+      } catch(e) {
+        console.error('Error saving cart to localStorage:', e);
+      }
+      const totalCount = cart.reduce((sum, i) => sum + (Number(i.qty) || 1), 0);
+      document.querySelectorAll('.cart-badge, .minimal-cart-badge').forEach(b => {
+        b.textContent = totalCount;
+        b.style.display = totalCount > 0 ? 'flex' : 'none';
+      });
+    }
+
+    function addToCartItem(id, title, price, image, unit) {
+      const prod = ALL_PRODUCTS.find(p => p.id === id);
+      const itemUnit = unit || (prod ? prod.unit : 'Standard Pack');
       const existing = cart.find(i => i.id === id);
       if (existing) {
         existing.qty += 1;
       } else {
-        cart.push({ id, title, price, image, qty: 1 });
+        cart.push({ id, title, price: Number(price), image, unit: itemUnit, qty: 1 });
       }
+      saveCartToStorage();
       renderProducts();
       renderCartUI();
       showToast(`Added ${title} to bag!`);
     }
 
-    function buyNowDirectItem(id, title, price, image) {
+    function buyNowDirectItem(id, title, price, image, unit) {
+      const prod = ALL_PRODUCTS.find(p => p.id === id);
+      const itemUnit = unit || (prod ? prod.unit : 'Standard Pack');
       const existing = cart.find(i => i.id === id);
       if (!existing) {
-        cart.push({ id, title, price, image, qty: 1 });
+        cart.push({ id, title, price: Number(price), image, unit: itemUnit, qty: 1 });
       }
+      saveCartToStorage();
       renderCartUI();
       window.location.href = 'checkout.html';
     }
@@ -549,6 +576,7 @@
       if (item.qty <= 0) {
         cart = cart.filter(i => i.id !== id);
       }
+      saveCartToStorage();
       renderProducts();
       renderCartUI();
     }
@@ -636,22 +664,10 @@
       setTimeout(() => toast.remove(), 2500);
     }
 
-    function proceedToWhatsAppCheckout() {
-      if (cart.length === 0) return alert('Cart is empty');
-      const storeName = window.STORE_CONFIG ? window.STORE_CONFIG.brandName : 'Eternal Nutricare';
-      const waNumber = window.STORE_CONFIG ? window.STORE_CONFIG.whatsAppNumber : '916302017482';
-      
-      let msg = `🛍️ *NEW ORDER - ${storeName.toUpperCase()}*\n----------------------------------\n`;
-      let total = 0;
-      cart.forEach((i, idx) => {
-        msg += `${idx + 1}. *${i.title}* × ${i.qty} = ₹${i.price * i.qty}\n`;
-        total += (i.price * i.qty);
-      });
-      msg += `----------------------------------\n`;
-      msg += `*Total Amount:* ₹${total}\n\n`;
-      msg += `Please confirm my order and share delivery estimate. Thank you!`;
-
-      window.open(`https://wa.me/${waNumber}?text=${encodeURIComponent(msg)}`, '_blank');
+    function proceedToCheckout() {
+      if (!cart || cart.length === 0) return alert('Your cart is empty! Please add products before checking out.');
+      saveCartToStorage();
+      window.location.href = 'checkout.html';
     }
 
     function syncDualBannersUI() {
@@ -697,6 +713,7 @@
     }
 
     window.addEventListener('DOMContentLoaded', async () => {
+      saveCartToStorage();
       syncDualBannersUI();
       renderCartUI();
       await syncCatalogFromSupabase();

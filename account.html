@@ -680,6 +680,18 @@
         <i class="ri-arrow-right-s-line myntra-row-arrow"></i>
       </div>
 
+      <!-- Row 5: Shipping & Delivery -->
+      <div class="myntra-row-item" onclick="openDrawer('drawer-shipping')">
+        <div class="myntra-row-left">
+          <i class="ri-truck-line myntra-row-icon" style="color: #2E7D32;"></i>
+          <div class="myntra-row-text">
+            <span class="myntra-row-title">Shipping & Delivery</span>
+            <span class="myntra-row-sub">Timelines, delivery charges & policies</span>
+          </div>
+        </div>
+        <i class="ri-arrow-right-s-line myntra-row-arrow"></i>
+      </div>
+
       <!-- Row 5: Log Out (Conditional) -->
       <div id="row-logout-action" class="myntra-row-item myntra-logout-row" style="display: none;" onclick="handleLogout()">
         <div class="myntra-row-left">
@@ -821,6 +833,78 @@
             <i class="ri-send-plane-fill"></i> <span>Apply Now</span>
           </button>
         </form>
+      </div>
+    </div>
+  <!-- Drawer 6: Shipping & Delivery -->
+  <div id="drawer-shipping" class="myntra-drawer-overlay" onclick="closeAllDrawers(event)">
+    <div class="myntra-drawer-content" onclick="event.stopPropagation()">
+      <div class="myntra-drawer-header">
+        <h2 class="myntra-drawer-title"><i class="ri-truck-line" style="color: #2E7D32; margin-right: 6px;"></i> Shipping & Delivery</h2>
+        <button class="myntra-drawer-close" onclick="closeAllDrawers()"><i class="ri-close-line"></i></button>
+      </div>
+      <div class="myntra-drawer-body">
+        
+        <!-- Express Delivery Highlight -->
+        <div style="background: #EBF5E6; border: 1px solid #CDE6C2; border-radius: 14px; padding: 16px; margin-bottom: 16px;">
+          <div style="display:flex; align-items:center; gap:8px; margin-bottom:6px;">
+            <i class="ri-flashlight-fill" style="color:#2B6618; font-size:20px;"></i>
+            <strong style="color:#1E2519; font-size:15px;">Express Bangalore Delivery</strong>
+          </div>
+          <p style="font-size:13px; color:#4A5B45; line-height:1.45; margin:0;">
+            All Bangalore orders are dispatched fresh from our Gunjur fulfillment hub within 24 to 48 hours.
+          </p>
+        </div>
+
+        <!-- Key Policy Cards -->
+        <div style="display:flex; flex-direction:column; gap:12px; margin-bottom:20px;">
+          
+          <div style="background:#FFFFFF; border:1px solid #EAEFE6; border-radius:12px; padding:14px;">
+            <div style="display:flex; align-items:center; gap:10px; margin-bottom:4px;">
+              <i class="ri-gift-line" style="color:#281612; font-size:18px;"></i>
+              <strong style="font-size:14px; color:#1E2519;">FREE Shipping on Orders ₹999+</strong>
+            </div>
+            <div style="font-size:12.5px; color:#6C7E64; line-height:1.4;">
+              Enjoy 100% free doorstep delivery across all orders of ₹999 or more. For orders below ₹999, a flat nominal delivery fee of ₹40 applies.
+            </div>
+          </div>
+
+          <div style="background:#FFFFFF; border:1px solid #EAEFE6; border-radius:12px; padding:14px;">
+            <div style="display:flex; align-items:center; gap:10px; margin-bottom:4px;">
+              <i class="ri-map-pin-time-line" style="color:#281612; font-size:18px;"></i>
+              <strong style="font-size:14px; color:#1E2519;">Pan-India Coverage</strong>
+            </div>
+            <div style="font-size:12.5px; color:#6C7E64; line-height:1.4;">
+              Pan-India deliveries arrive within 3 to 5 business days via trusted express courier partners with live SMS & WhatsApp tracking updates.
+            </div>
+          </div>
+
+          <div style="background:#FFFFFF; border:1px solid #EAEFE6; border-radius:12px; padding:14px;">
+            <div style="display:flex; align-items:center; gap:10px; margin-bottom:4px;">
+              <i class="ri-shield-check-line" style="color:#281612; font-size:18px;"></i>
+              <strong style="font-size:14px; color:#1E2519;">Safe & Eco-Insulated Packaging</strong>
+            </div>
+            <div style="font-size:12.5px; color:#6C7E64; line-height:1.4;">
+              Every glass jar of honey, pickle, and organic laddu is secured with food-grade protective cushioning ensuring zero transit breakage.
+            </div>
+          </div>
+
+          <div style="background:#FFFFFF; border:1px solid #EAEFE6; border-radius:12px; padding:14px;">
+            <div style="display:flex; align-items:center; gap:10px; margin-bottom:4px;">
+              <i class="ri-customer-service-2-line" style="color:#281612; font-size:18px;"></i>
+              <strong style="font-size:14px; color:#1E2519;">Customer Delivery Helpline</strong>
+            </div>
+            <div style="font-size:12.5px; color:#6C7E64; line-height:1.4;">
+              Questions about delivery? Call us at <a href="tel:6302017482" style="color:#281612; font-weight:700;">+91 6302017482</a> or <a href="tel:9392235693" style="color:#281612; font-weight:700;">+91 9392235693</a>.
+            </div>
+          </div>
+
+        </div>
+
+        <a href="shipping-delivery.html" style="display:flex; align-items:center; justify-content:center; gap:6px; background:#281612; color:#FFFFFF; padding:13px; border-radius:999px; font-weight:700; font-size:13.5px; text-decoration:none;">
+          <span>Read Complete Shipping Policy</span>
+          <i class="ri-arrow-right-line"></i>
+        </a>
+
       </div>
     </div>
   </div>
