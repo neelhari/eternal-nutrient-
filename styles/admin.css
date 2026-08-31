@@ -2017,6 +2017,13 @@ input:checked + .slider:before {
   gap: 16px;
 }
 
+@media (max-width: 650px) {
+  .form-grid-2,
+  .form-grid-3 {
+    grid-template-columns: 1fr !important;
+  }
+}
+
 .form-field-block {
   display: flex;
   flex-direction: column;

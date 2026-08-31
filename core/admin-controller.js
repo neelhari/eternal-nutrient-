@@ -2501,7 +2501,22 @@ window.AdminController = (function() {
     }, 'Business & legal settings saved to Supabase!');
   }
 
-  function renderShippingView() {
+  async function renderShippingView() {
+    if (window.CloudDB && window.CloudDB.isSupabaseActive()) {
+      try {
+        const cloudSettings = await window.CloudDB.getStoreSettings();
+        if (cloudSettings && Object.keys(cloudSettings).length > 0) {
+          db.storeSettings = {
+            ...db.storeSettings,
+            minOrderValue: cloudSettings.min_order_value ?? db.storeSettings.minOrderValue,
+            freeShippingThreshold: cloudSettings.free_shipping_threshold ?? db.storeSettings.freeShippingThreshold,
+            standardShippingFee: cloudSettings.standard_shipping_fee ?? db.storeSettings.standardShippingFee
+          };
+        }
+      } catch (err) {
+        console.warn('Shipping settings live sync notice:', err);
+      }
+    }
     const s = db.storeSettings || {};
     const movEl = document.getElementById('ship-mov');
     const freeEl = document.getElementById('ship-free-threshold');
