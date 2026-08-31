@@ -399,6 +399,17 @@ body {
   }
 }
 
+.hero-banner-card.hero-banner-graphic-only {
+  padding: 0;
+  min-height: clamp(180px, 28vw, 360px);
+}
+
+@media (max-width: 768px) {
+  .hero-banner-card.hero-banner-graphic-only {
+    min-height: clamp(150px, 42vw, 240px);
+  }
+}
+
 .hero-banner-bg-img {
   position: absolute;
   inset: 0;

@@ -677,21 +677,24 @@
 
       track.innerHTML = banners.map((b) => {
         const link = b.targetLink || (b.targetCategory && b.targetCategory !== 'All' ? `categories.html?cat=${encodeURIComponent(b.targetCategory)}` : 'categories.html');
-        const headline = (b.headline || 'Goodness from nature for a healthier you.').replace(/\n/g, '<br>');
-        const eyebrow = b.eyebrow || b.tagline || 'Pure. Natural. Eternal.';
+        const hasHeadline = !!(b.headline && b.headline.trim());
+        const headline = hasHeadline ? b.headline.trim().replace(/\n/g, '<br>') : '';
+        const eyebrow = b.eyebrow || b.tagline || '';
         const img = b.desktopImage || b.image || 'assets/hero_banner.jpg';
         return `
           <div class="hero-slide-item">
-            <div class="hero-banner-card">
+            <a href="${link}" class="hero-banner-card ${!hasHeadline ? 'hero-banner-graphic-only' : ''}" style="text-decoration: none; color: inherit; display: flex; cursor: pointer;">
               <img class="hero-banner-bg-img" src="${img}" alt="${b.headline || 'Hero Banner'}" loading="lazy">
-              <div class="hero-banner-text">
-                <span class="hero-sub-tag">${eyebrow}</span>
-                <h1 class="hero-title-main">${headline}</h1>
-                <a href="${link}" class="hero-cta-btn">
-                  <span>Shop Now</span>
-                </a>
-              </div>
-            </div>
+              ${hasHeadline ? `
+                <div class="hero-banner-text">
+                  ${eyebrow ? `<span class="hero-sub-tag">${eyebrow}</span>` : ''}
+                  <h1 class="hero-title-main">${headline}</h1>
+                  <span class="hero-cta-btn">
+                    <span>Shop Now</span>
+                  </span>
+                </div>
+              ` : ''}
+            </a>
           </div>
         `;
       }).join('');

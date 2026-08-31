@@ -1443,8 +1443,15 @@ window.AdminController = (function() {
               </div>
             </td>
             <td>
-              <div style="font-weight: 700; color: #1C1917; font-size: 13.5px; max-width: 280px;">${b.headline || 'Banner'}</div>
-              <div style="font-size: 11.5px; color: #78716C; margin-top: 2px;">${b.eyebrow || b.tagline || 'Hero Slide'}</div>
+              ${b.headline ? `
+                <div style="font-weight: 700; color: #1C1917; font-size: 13.5px; max-width: 280px;">${b.headline}</div>
+                <div style="font-size: 11.5px; color: #78716C; margin-top: 2px;">${b.eyebrow || b.tagline || 'Hero Slide'}</div>
+              ` : `
+                <div style="font-weight: 700; color: #1E293B; font-size: 13px; display: inline-flex; align-items: center; gap: 5px;">
+                  <i class="ri-image-line" style="color: #2D5213;"></i> Graphic-Only Banner
+                </div>
+                <div style="font-size: 11px; color: #64748B; margin-top: 2px;">No text overlay • Full graphic visible</div>
+              `}
             </td>
             <td>
               <span style="display: inline-flex; align-items: center; gap: 5px; background: #F1F5F9; color: #1E293B; font-weight: 700; padding: 4px 10px; border-radius: 6px; font-size: 12px;"><i class="ri-folder-open-line text-muted"></i> ${b.targetCategory || (b.targetLink && b.targetLink.includes('cat=') ? decodeURIComponent(b.targetLink.split('cat=')[1]) : 'All Products')}</span>
@@ -1631,14 +1638,15 @@ window.AdminController = (function() {
 
   async function saveBannerForm(btnElement) {
     const id = document.getElementById('banner-modal-id')?.value;
-    const headline = document.getElementById('banner-form-headline')?.value.trim();
-    if (!headline) {
-      showToast('Banner headline is required.', 'error');
+    const headline = document.getElementById('banner-form-headline')?.value.trim() || '';
+    const img = document.getElementById('banner-form-desktop-img')?.value.trim() || 'assets/hero_banner.jpg';
+
+    if (!img) {
+      showToast('Banner image URL or file is required.', 'error');
       return;
     }
 
     await withActionSpinner(btnElement, async () => {
-      const img = document.getElementById('banner-form-desktop-img')?.value.trim() || 'assets/hero_banner.jpg';
       const selectedCat = document.getElementById('banner-form-category')?.value || 'All';
       const targetLink = selectedCat === 'All' ? 'categories.html' : `categories.html?cat=${encodeURIComponent(selectedCat)}`;
 
@@ -1675,8 +1683,9 @@ window.AdminController = (function() {
   function promptDeleteBanner(bannerId) {
     const b = db.heroBanners.find(x => x.id === bannerId);
     if (!b) return;
-    pendingDeleteTarget = { type: 'banner', id: bannerId, name: b.headline };
-    document.getElementById('confirm-delete-msg').innerHTML = `Are you sure you want to delete banner <strong>${b.headline}</strong>?`;
+    const bannerLabel = b.headline ? `banner "${b.headline}"` : `Banner #${b.displayOrder || 1} (Graphic Only)`;
+    pendingDeleteTarget = { type: 'banner', id: bannerId, name: bannerLabel };
+    document.getElementById('confirm-delete-msg').innerHTML = `Are you sure you want to delete <strong>${bannerLabel}</strong>?`;
     openModal('modal-confirm-delete');
   }
 
@@ -2626,6 +2635,9 @@ window.AdminController = (function() {
         showToast(`Category "${name}" permanently deleted from Supabase.`, 'success');
       } else if (type === 'banner') {
         db.heroBanners = db.heroBanners.filter(b => b.id !== id);
+        if (window.CloudDB) {
+          await window.CloudDB.saveBanners(db.heroBanners);
+        }
         renderBannersView();
         showToast('Banner deleted.', 'success');
       } else if (type === 'coupon') {
