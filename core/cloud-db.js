@@ -45,33 +45,67 @@ window.CloudDB = (function() {
   // Helper for mock data fallback
   const mock = window.ADMIN_MOCK_DB;
 
+  function hydrateProductVariants(p) {
+    if (!p) return p;
+    if (Array.isArray(p.variants) && p.variants.length > 0) return p;
+    if (typeof p.variants === 'string') {
+      try {
+        const parsed = JSON.parse(p.variants);
+        if (Array.isArray(parsed) && parsed.length > 0) {
+          p.variants = parsed;
+          return p;
+        }
+      } catch(e) {}
+    }
+    if (typeof window !== 'undefined' && window.localStorage && p.id) {
+      try {
+        const cached = localStorage.getItem('en_prod_variants_' + p.id);
+        if (cached) {
+          const parsed = JSON.parse(cached);
+          if (Array.isArray(parsed) && parsed.length > 0) {
+            p.variants = parsed;
+            return p;
+          }
+        }
+      } catch(e) {}
+    }
+    if (mock && p.id) {
+      const mockItem = mock.products.find(m => m.id === p.id);
+      if (mockItem && Array.isArray(mockItem.variants) && mockItem.variants.length > 0) {
+        p.variants = mockItem.variants;
+        return p;
+      }
+    }
+    return p;
+  }
+
   // 1. PRODUCTS API
   async function getProducts() {
     if (isSupabaseActive && supabaseClient) {
       try {
         const { data, error } = await supabaseClient.from('products').select('*').order('sort_order', { ascending: true });
-        if (!error && data && data.length > 0) return data;
+        if (!error && data && data.length > 0) return data.map(hydrateProductVariants);
       } catch (err) {
         console.warn('Falling back to local products seed:', err.message);
       }
     }
-    return mock ? mock.products : [];
+    return mock ? mock.products.map(hydrateProductVariants) : [];
   }
 
   async function getProductById(id) {
     if (isSupabaseActive && supabaseClient) {
       try {
         const { data, error } = await supabaseClient.from('products').select('*').eq('id', id).single();
-        if (!error && data) return data;
+        if (!error && data) return hydrateProductVariants(data);
       } catch (err) {
         console.warn('Falling back to local product seed:', err.message);
       }
     }
-    return mock ? mock.products.find(p => p.id === id) : null;
+    return mock ? hydrateProductVariants(mock.products.find(p => p.id === id)) : null;
   }
 
   const KNOWN_PRODUCT_COLUMNS = new Set([
-    'id', 'title', 'sku', 'category', 'image', 'gallery', 'price', 'original_price',
+    'id', 'title', 'sku', 'category', 'image', 'gallery', 'variants', 'price', 'original_price',
     'discount', 'unit', 'badge', 'rating', 'reviews_count', 'highlights', 'in_stock',
     'stock_qty', 'is_bestseller', 'is_featured', 'is_new_arrival', 'sort_order',
     'short_summary', 'description', 'benefits', 'ingredients', 'nutritional_info',
@@ -89,10 +123,27 @@ window.CloudDB = (function() {
   }
 
   async function saveProduct(prod) {
+    // Resilient local caching for instant multi-size preview
+    if (prod && prod.id && Array.isArray(prod.variants) && typeof window !== 'undefined' && window.localStorage) {
+      try {
+        localStorage.setItem('en_prod_variants_' + prod.id, JSON.stringify(prod.variants));
+      } catch (e) {}
+    }
+
     if (isSupabaseActive && supabaseClient) {
       try {
         const dbPayload = sanitizeProductForDB(prod);
-        const { data, error } = await supabaseClient.from('products').upsert(dbPayload).select();
+        let { data, error } = await supabaseClient.from('products').upsert(dbPayload).select();
+
+        // Gracefully handle missing 'variants' column in Supabase schema if user hasn't run the migration yet
+        if (error && (error.code === 'PGRST204' || (error.message && error.message.includes('variants')))) {
+          console.warn('⚠️ Supabase schema note: products.variants column not found. Retrying save with standard fields while preserving variants in cache.');
+          delete dbPayload.variants;
+          const retry = await supabaseClient.from('products').upsert(dbPayload).select();
+          data = retry.data;
+          error = retry.error;
+        }
+
         if (!error && data) {
           if (mock) {
             const idx = mock.products.findIndex(p => p.id === prod.id);

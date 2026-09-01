@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <meta name="format-detection" content="telephone=no">
   <title>Eternal Nutricare - Pure. Natural. Eternal.</title>
   
@@ -713,6 +713,135 @@
       currentHeroIndex = 0;
       updateHeroSlidePosition();
       startHeroAutoPlay();
+      attachHeroTouchListeners();
+    }
+
+    let heroTouchStartX = 0;
+    let heroTouchStartY = 0;
+    let heroTouchDeltaX = 0;
+    let heroTouchDeltaY = 0;
+    let isHeroDragging = false;
+    let heroDirectionLocked = false;
+    let heroDragPreventClick = false;
+
+    function attachHeroTouchListeners() {
+      const sliderWrap = document.querySelector('.hero-slider-wrapper');
+      const track = document.getElementById('hero-slider-track');
+      if (!sliderWrap || !track) return;
+      if (sliderWrap._hasHeroTouchListeners) return;
+      sliderWrap._hasHeroTouchListeners = true;
+
+      track.addEventListener('dragstart', (e) => e.preventDefault());
+
+      const getCoord = (e) => {
+        if (e.touches && e.touches.length > 0) {
+          return { x: e.touches[0].clientX, y: e.touches[0].clientY };
+        }
+        return { x: e.clientX, y: e.clientY };
+      };
+
+      const handleTouchStart = (e) => {
+        if (!heroBannersList || heroBannersList.length <= 1) return;
+        const c = getCoord(e);
+        heroTouchStartX = c.x;
+        heroTouchStartY = c.y;
+        heroTouchDeltaX = 0;
+        heroTouchDeltaY = 0;
+        isHeroDragging = true;
+        heroDirectionLocked = false;
+        heroDragPreventClick = false;
+        sliderWrap.classList.add('is-dragging');
+        if (heroSliderTimer) clearInterval(heroSliderTimer);
+      };
+
+      const handleTouchMove = (e) => {
+        if (!isHeroDragging) return;
+        const c = getCoord(e);
+        heroTouchDeltaX = c.x - heroTouchStartX;
+        heroTouchDeltaY = c.y - heroTouchStartY;
+
+        if (!heroDirectionLocked) {
+          if (Math.abs(heroTouchDeltaX) > 6 || Math.abs(heroTouchDeltaY) > 6) {
+            if (Math.abs(heroTouchDeltaX) >= Math.abs(heroTouchDeltaY)) {
+              heroDirectionLocked = 'h';
+            } else {
+              heroDirectionLocked = 'v';
+            }
+          }
+        }
+
+        // If user is scrolling the page vertically, allow normal browser scrolling
+        if (heroDirectionLocked === 'v') return;
+
+        if (heroDirectionLocked === 'h') {
+          if (e.cancelable && e.touches) e.preventDefault();
+          if (Math.abs(heroTouchDeltaX) > 8) {
+            heroDragPreventClick = true;
+          }
+
+          const wrapWidth = sliderWrap.offsetWidth || window.innerWidth;
+          let dragOffset = heroTouchDeltaX;
+
+          // Elastic friction at start and end
+          if ((currentHeroIndex === 0 && heroTouchDeltaX > 0) ||
+              (currentHeroIndex === heroBannersList.length - 1 && heroTouchDeltaX < 0)) {
+            dragOffset = heroTouchDeltaX * 0.3;
+          }
+
+          track.style.transition = 'none';
+          const basePx = -(currentHeroIndex * wrapWidth);
+          track.style.transform = `translateX(${basePx + dragOffset}px)`;
+        }
+      };
+
+      const handleTouchEnd = () => {
+        if (!isHeroDragging) return;
+        isHeroDragging = false;
+        sliderWrap.classList.remove('is-dragging');
+
+        const wrapWidth = sliderWrap.offsetWidth || window.innerWidth;
+        track.style.transition = 'transform 0.38s cubic-bezier(0.25, 1, 0.5, 1)';
+
+        if (heroDirectionLocked === 'h') {
+          const swipeThreshold = Math.min(wrapWidth * 0.18, 60);
+          if (heroTouchDeltaX < -swipeThreshold) {
+            if (currentHeroIndex < heroBannersList.length - 1) {
+              currentHeroIndex++;
+            } else {
+              currentHeroIndex = 0; // wrap around
+            }
+          } else if (heroTouchDeltaX > swipeThreshold) {
+            if (currentHeroIndex > 0) {
+              currentHeroIndex--;
+            } else {
+              currentHeroIndex = heroBannersList.length - 1; // wrap around
+            }
+          }
+        }
+
+        updateHeroSlidePosition();
+        startHeroAutoPlay();
+
+        setTimeout(() => {
+          heroDragPreventClick = false;
+        }, 100);
+      };
+
+      sliderWrap.addEventListener('touchstart', handleTouchStart, { passive: true });
+      sliderWrap.addEventListener('touchmove', handleTouchMove, { passive: false });
+      sliderWrap.addEventListener('touchend', handleTouchEnd, { passive: true });
+      sliderWrap.addEventListener('touchcancel', handleTouchEnd, { passive: true });
+
+      sliderWrap.addEventListener('mousedown', handleTouchStart);
+      window.addEventListener('mousemove', handleTouchMove);
+      window.addEventListener('mouseup', handleTouchEnd);
+
+      sliderWrap.addEventListener('click', (e) => {
+        if (heroDragPreventClick) {
+          e.preventDefault();
+          e.stopPropagation();
+        }
+      }, true);
     }
 
     function goToHeroSlide(idx) {
@@ -725,6 +854,7 @@
     function updateHeroSlidePosition() {
       const track = document.getElementById('hero-slider-track');
       if (track) {
+        track.style.transition = 'transform 0.38s cubic-bezier(0.25, 1, 0.5, 1)';
         track.style.transform = `translateX(-${currentHeroIndex * 100}%)`;
       }
       const dots = document.querySelectorAll('#hero-dots-row .hero-dot');

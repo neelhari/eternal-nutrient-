@@ -366,12 +366,21 @@ body {
   width: 100%;
   overflow: hidden;
   border-radius: 20px;
+  touch-action: pan-y;
+  user-select: none;
+  -webkit-user-select: none;
+  cursor: grab;
+}
+
+.hero-slider-wrapper.is-dragging {
+  cursor: grabbing;
 }
 
 .hero-slider-track {
   display: flex;
   transition: transform 0.5s cubic-bezier(0.25, 1, 0.5, 1);
   width: 100%;
+  will-change: transform;
 }
 
 .hero-slide-item {

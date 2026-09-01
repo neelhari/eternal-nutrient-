@@ -1091,6 +1091,7 @@ window.AdminController = (function() {
       sortOrder: Number(p.sort_order || 1),
       shortSummary: p.short_summary || '',
       description: p.description || '',
+      variants: Array.isArray(p.variants) ? p.variants : (typeof p.variants === 'string' ? JSON.parse(p.variants || '[]') : []),
       benefits: p.benefits || '',
       ingredients: p.ingredients || '',
       nutritionalInfo: p.nutritional_info || '',

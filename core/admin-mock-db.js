@@ -101,6 +101,10 @@ window.ADMIN_MOCK_DB = (function() {
       sortOrder: 1,
       shortSummary: 'Pure, unprocessed nectar gathered from wild forest bees in Western Ghats.',
       description: 'Raw, unprocessed honey harvested from wild forest blooms. Retains all natural pollen, enzymes, and medicinal antioxidants with zero added sugar or heat processing.',
+      variants: [
+        { size: '500g Glass Jar', price: 349, mrp: 420, stock: 48 },
+        { size: '1kg Family Jar', price: 649, mrp: 799, stock: 30 }
+      ],
       benefits: 'Rich in antioxidants, aids digestion, boosts immunity, natural soothing remedy.',
       ingredients: '100% Raw Wild Forest Honey.',
       nutritionalInfo: 'Energy: 304 kcal, Carbs: 82.4g, Natural Sugars: 80g, Protein: 0.3g per 100g.',
@@ -129,6 +133,10 @@ window.ADMIN_MOCK_DB = (function() {
       sortOrder: 2,
       shortSummary: 'Nutrient-rich power energy bites packed with Medjoul dates, almonds, and pistachios.',
       description: 'Traditional handcrafted laddus made from premium Saudi dates, roasted cashews, California almonds, and pure A2 cow ghee. A wholesome guilt-free dessert.',
+      variants: [
+        { size: '400g Artisanal Box', price: 299, mrp: 360, stock: 32 },
+        { size: '800g Grand Gift Box', price: 549, mrp: 680, stock: 20 }
+      ],
       benefits: 'High dietary fiber, sustained natural energy, rich in iron and magnesium.',
       ingredients: 'Medjoul Dates (65%), Roasted Almonds (15%), Cashews (10%), Pure Cow Ghee, Cardamom.',
       nutritionalInfo: 'Energy: 380 kcal, Protein: 7.2g, Fiber: 6.8g, Natural Sugars: 52g per 100g.',

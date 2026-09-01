@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <meta name="format-detection" content="telephone=no">
   <title>Product Details - Eternal Nutricare</title>
   
@@ -125,7 +125,7 @@
       }
     }
 
-    /* Hero Image Showcase */
+    /* Hero Image Showcase & Touch Zoom */
     .p-hero-img-wrap {
       width: 100%;
       aspect-ratio: 1.05 / 1;
@@ -136,13 +136,89 @@
       position: relative;
       margin-bottom: 14px;
       box-shadow: 0 2px 14px rgba(0, 0, 0, 0.03);
+      touch-action: pan-y;
+      user-select: none;
+      -webkit-user-select: none;
     }
 
-    .p-hero-img-wrap img {
+    .p-gallery-swipe-track {
+      display: flex;
+      width: 100%;
+      height: 100%;
+      transition: transform 0.38s cubic-bezier(0.25, 1, 0.5, 1);
+      will-change: transform;
+    }
+
+    .p-gallery-slide {
+      min-width: 100%;
+      width: 100%;
+      height: 100%;
+      flex-shrink: 0;
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #F8FAF6;
+    }
+
+    .p-zoomable-img {
       width: 100%;
       height: 100%;
       object-fit: cover;
       display: block;
+      transform-origin: center center;
+      will-change: transform;
+      transition: transform 0.15s ease-out;
+      pointer-events: auto;
+      cursor: zoom-in;
+    }
+
+    .p-zoomable-img.is-zoomed {
+      cursor: grab;
+      object-fit: contain;
+    }
+
+    .p-zoomable-img.is-panning {
+      cursor: grabbing;
+      transition: none;
+    }
+
+    .p-gallery-counter-badge {
+      position: absolute;
+      bottom: 12px;
+      right: 14px;
+      background: rgba(30, 37, 25, 0.72);
+      backdrop-filter: blur(8px);
+      color: #FFFFFF;
+      font-size: 11px;
+      font-weight: 700;
+      padding: 3px 9px;
+      border-radius: 999px;
+      z-index: 10;
+      pointer-events: none;
+      transition: opacity 0.3s ease;
+    }
+
+    .p-zoom-hint {
+      position: absolute;
+      bottom: 12px;
+      left: 14px;
+      background: rgba(255, 255, 255, 0.92);
+      backdrop-filter: blur(8px);
+      color: #386618;
+      border: 1px solid rgba(56, 102, 24, 0.18);
+      font-size: 11px;
+      font-weight: 700;
+      padding: 3px 9px;
+      border-radius: 999px;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      z-index: 10;
+      pointer-events: none;
+      transition: opacity 0.5s ease;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
     }
 
     .p-wishlist-float-btn {
@@ -493,8 +569,14 @@
     
     <!-- Left Column: Hero Image Card & Gallery -->
     <div>
-      <div class="p-hero-img-wrap">
-        <img id="p-hero-img" src="assets/showcase_honey.png" alt="Product Image">
+      <div class="p-hero-img-wrap" id="p-hero-img-wrap">
+        <div class="p-gallery-swipe-track" id="p-gallery-track">
+          <div class="p-gallery-slide" data-index="0">
+            <img class="p-zoomable-img" id="p-hero-img" src="assets/showcase_honey.png" alt="Product Image">
+          </div>
+        </div>
+        <div class="p-gallery-counter-badge" id="p-gallery-counter" style="display: none;">1 / 1</div>
+        <div class="p-zoom-hint" id="p-zoom-hint"><i class="ri-zoom-in-line"></i> Double-tap / pinch to zoom</div>
         <button class="p-wishlist-float-btn" id="p-wish-btn" onclick="handleProductWishlistClick()" aria-label="Wishlist">
           <i class="ri-heart-line" id="p-wish-icon"></i>
         </button>
@@ -697,12 +779,78 @@
   <script src="core/distribution-drawer.js"></script>
   <script>
     const CATALOG = {
-      'prod_1': { title: 'Organic Honey', sub: 'Raw & Unfiltered • 500g', price: 499, mrp: 599, img: 'assets/showcase_honey.png', desc: 'Sourced directly from deep forest wild hives, our organic honey is cold-extracted and entirely unfiltered. It retains all natural pollen, enzymes, and raw vitality.' },
-      'prod_2': { title: 'Handmade Lemon Pickle', sub: 'Handmade | No Preservatives • 300g', price: 249, mrp: 299, img: 'assets/showcase_pickle.png', desc: 'Sun-cured country lemons marinated in cold-pressed mustard oil, fenugreek, and rock salt. No artificial vinegar or chemical preservatives.' },
-      'prod_3': { title: 'Millet Breakfast Rava', sub: '100% Organic • 500g', price: 189, mrp: 220, img: 'https://images.unsplash.com/photo-1586201375761-83865001e31c?w=600&auto=format&fit=crop&q=80', desc: '100% unpolished Millet Breakfast Rava. High dietary fiber and low glycemic index makes it ideal for healthy upma, idli, and dosa.' },
-      'prod_4': { title: 'Millet Biscuits', sub: 'No Maida • No Preservatives • 200g', price: 149, mrp: 180, img: 'https://images.unsplash.com/photo-1558961363-fa8fdf82db35?w=600&auto=format&fit=crop&q=80', desc: 'Crunchy, delicious cookies baked with multi-millets and organic jaggery. Zero maida, zero palm oil, zero preservatives.' },
-      'prod_5': { title: "Dates Laddu's", sub: 'Sugar Free | Pure Desi Ghee • 250g', price: 349, mrp: 399, img: 'assets/dates_laddu.jpg', desc: 'Sugar-free energy bites made from premium Arabian dates, roasted cashews, almonds, and pure desi cow ghee.' },
-      'prod_6': { title: 'Moringa Chikki', sub: 'Immunity Superfood Snack • 150g', price: 129, mrp: 150, img: 'https://images.unsplash.com/photo-1590080875515-8a3a8dc5735e?w=600&auto=format&fit=crop&q=80', desc: 'Superfood nutrition bar blending roasted peanuts, organic moringa leaf powder, and iron-rich jaggery.' }
+      'prod_1': { 
+        title: 'Organic Honey', 
+        sub: 'Raw & Unfiltered • 500g', 
+        price: 499, 
+        mrp: 599, 
+        img: 'assets/showcase_honey.png', 
+        desc: 'Sourced directly from deep forest wild hives, our organic honey is cold-extracted and entirely unfiltered. It retains all natural pollen, enzymes, and raw vitality.',
+        variants: [
+          { size: '500g Glass Jar', price: 499, mrp: 599, stock: 45 },
+          { size: '1kg Family Pack', price: 899, mrp: 1099, stock: 30 }
+        ]
+      },
+      'prod_2': { 
+        title: 'Handmade Lemon Pickle', 
+        sub: 'Handmade | No Preservatives • 300g', 
+        price: 249, 
+        mrp: 299, 
+        img: 'assets/showcase_pickle.png', 
+        desc: 'Sun-cured country lemons marinated in cold-pressed mustard oil, fenugreek, and rock salt. No artificial vinegar or chemical preservatives.',
+        variants: [
+          { size: '300g Jar', price: 249, mrp: 299, stock: 50 },
+          { size: '500g Jar', price: 399, mrp: 499, stock: 35 }
+        ]
+      },
+      'prod_3': { 
+        title: 'Millet Breakfast Rava', 
+        sub: '100% Organic • 500g', 
+        price: 189, 
+        mrp: 220, 
+        img: 'https://images.unsplash.com/photo-1586201375761-83865001e31c?w=600&auto=format&fit=crop&q=80', 
+        desc: '100% unpolished Millet Breakfast Rava. High dietary fiber and low glycemic index makes it ideal for healthy upma, idli, and dosa.',
+        variants: [
+          { size: '500g Pack', price: 189, mrp: 220, stock: 60 },
+          { size: '1kg Pack', price: 349, mrp: 410, stock: 40 }
+        ]
+      },
+      'prod_4': { 
+        title: 'Millet Biscuits', 
+        sub: 'No Maida • No Preservatives • 200g', 
+        price: 149, 
+        mrp: 180, 
+        img: 'https://images.unsplash.com/photo-1558961363-fa8fdf82db35?w=600&auto=format&fit=crop&q=80', 
+        desc: 'Crunchy, delicious cookies baked with multi-millets and organic jaggery. Zero maida, zero palm oil, zero preservatives.',
+        variants: [
+          { size: '200g Fresh Pack', price: 149, mrp: 180, stock: 55 },
+          { size: '400g Value Pack', price: 279, mrp: 340, stock: 35 }
+        ]
+      },
+      'prod_5': { 
+        title: "Dates Laddu's", 
+        sub: 'Sugar Free | Pure Desi Ghee • 250g', 
+        price: 349, 
+        mrp: 399, 
+        img: 'assets/dates_laddu.jpg', 
+        desc: 'Sugar-free energy bites made from premium Arabian dates, roasted cashews, almonds, and pure desi cow ghee.',
+        variants: [
+          { size: '250g Artisanal Box', price: 349, mrp: 399, stock: 40 },
+          { size: '500g Luxury Box', price: 649, mrp: 750, stock: 25 }
+        ]
+      },
+      'prod_6': { 
+        title: 'Moringa Chikki', 
+        sub: 'Immunity Superfood Snack • 150g', 
+        price: 129, 
+        mrp: 150, 
+        img: 'https://images.unsplash.com/photo-1590080875515-8a3a8dc5735e?w=600&auto=format&fit=crop&q=80', 
+        desc: 'Superfood nutrition bar blending roasted peanuts, organic moringa leaf powder, and iron-rich jaggery.',
+        variants: [
+          { size: '150g Crunchy Bar', price: 129, mrp: 150, stock: 50 },
+          { size: '300g Multipack', price: 239, mrp: 280, stock: 30 }
+        ]
+      }
     };
 
     let currentId = 'prod_1';
@@ -750,21 +898,9 @@
       document.getElementById('p-hero-img').src = item.image || item.img || 'assets/prod_honey_studio.jpg';
       document.getElementById('acc-desc').textContent = item.description || item.desc || '100% natural and authentic product.';
 
-      // Render Multi-Image Gallery Thumbnails
+      // Render Multi-Image Gallery with Native Touch Swipe & Pinch-to-Zoom
       const gallery = (Array.isArray(item.gallery) && item.gallery.length > 0) ? item.gallery : (item.image ? [item.image] : [item.img || 'assets/prod_honey_studio.jpg']);
-      const thumbsContainer = document.getElementById('p-gallery-thumbs');
-      if (thumbsContainer) {
-        if (gallery.length > 1) {
-          thumbsContainer.style.display = 'flex';
-          thumbsContainer.innerHTML = gallery.map((url, idx) => `
-            <button class="p-thumb-btn ${idx === 0 ? 'active' : ''}" onclick="switchHeroImage('${url}', this)">
-              <img src="${url}" alt="Photo ${idx + 1}">
-            </button>
-          `).join('');
-        } else {
-          thumbsContainer.style.display = 'none';
-        }
-      }
+      renderProductGallery(gallery);
 
       // Render Ingredients dynamically
       const accIngBody = document.getElementById('acc-ing');
@@ -784,10 +920,21 @@
         }
       }
 
-      // Prepare Variants Dynamically
+      // Prepare Variants Dynamically (Cloud DB -> LocalStorage -> Default Fallback)
       let variants = [];
-      if (Array.isArray(item.variants) && item.variants.length > 0) {
-        variants = item.variants;
+      let rawVariants = item.variants;
+      if (typeof rawVariants === 'string') {
+        try { rawVariants = JSON.parse(rawVariants); } catch (e) { rawVariants = null; }
+      }
+      if ((!rawVariants || !Array.isArray(rawVariants) || rawVariants.length === 0) && typeof window !== 'undefined' && window.localStorage && item.id) {
+        try {
+          const cached = localStorage.getItem('en_prod_variants_' + item.id);
+          if (cached) rawVariants = JSON.parse(cached);
+        } catch (e) {}
+      }
+
+      if (Array.isArray(rawVariants) && rawVariants.length > 0) {
+        variants = rawVariants;
       } else {
         const u = item.unit || 'Standard Pack';
         const p = Number(item.price) || 0;
@@ -883,11 +1030,336 @@
 
     window.addEventListener('DOMContentLoaded', loadProductDetail);
 
-    function switchHeroImage(url, btn) {
-      const hero = document.getElementById('p-hero-img');
-      if (hero) hero.src = url;
-      document.querySelectorAll('.p-thumb-btn').forEach(b => b.classList.remove('active'));
-      if (btn) btn.classList.add('active');
+    let currentGalleryList = [];
+    let currentGalleryIndex = 0;
+    let currentScale = 1.0;
+    let currentPanX = 0;
+    let currentPanY = 0;
+
+    function renderProductGallery(gallery) {
+      currentGalleryList = gallery;
+      currentGalleryIndex = 0;
+      currentScale = 1.0;
+      currentPanX = 0;
+      currentPanY = 0;
+
+      const track = document.getElementById('p-gallery-track');
+      const thumbsContainer = document.getElementById('p-gallery-thumbs');
+      const counterEl = document.getElementById('p-gallery-counter');
+      const zoomHint = document.getElementById('p-zoom-hint');
+
+      if (!track) return;
+
+      track.innerHTML = gallery.map((url, idx) => `
+        <div class="p-gallery-slide" data-index="${idx}">
+          <img class="p-zoomable-img" id="${idx === 0 ? 'p-hero-img' : ('p-hero-img-' + idx)}" src="${url}" alt="Product Photo ${idx + 1}" draggable="false">
+        </div>
+      `).join('');
+
+      if (gallery.length > 1) {
+        if (counterEl) {
+          counterEl.style.display = 'block';
+          counterEl.textContent = `1 / ${gallery.length}`;
+        }
+        if (thumbsContainer) {
+          thumbsContainer.style.display = 'flex';
+          thumbsContainer.innerHTML = gallery.map((url, idx) => `
+            <button class="p-thumb-btn ${idx === 0 ? 'active' : ''}" onclick="goToGallerySlide(${idx})">
+              <img src="${url}" alt="Photo ${idx + 1}">
+            </button>
+          `).join('');
+        }
+      } else {
+        if (counterEl) counterEl.style.display = 'none';
+        if (thumbsContainer) thumbsContainer.style.display = 'none';
+      }
+
+      if (zoomHint) {
+        zoomHint.style.opacity = '1';
+        setTimeout(() => {
+          if (zoomHint) zoomHint.style.opacity = '0';
+        }, 3500);
+      }
+
+      initGalleryTouchAndZoom();
+    }
+
+    function goToGallerySlide(idx) {
+      if (!currentGalleryList || currentGalleryList.length === 0) return;
+      currentGalleryIndex = Math.max(0, Math.min(idx, currentGalleryList.length - 1));
+      resetActiveImageZoom();
+      updateGallerySlidePosition();
+    }
+
+    function updateGallerySlidePosition() {
+      const track = document.getElementById('p-gallery-track');
+      if (track) {
+        track.style.transition = 'transform 0.35s cubic-bezier(0.25, 1, 0.5, 1)';
+        track.style.transform = `translateX(-${currentGalleryIndex * 100}%)`;
+      }
+      const counterEl = document.getElementById('p-gallery-counter');
+      if (counterEl && currentGalleryList.length > 1) {
+        counterEl.textContent = `${currentGalleryIndex + 1} / ${currentGalleryList.length}`;
+      }
+      document.querySelectorAll('.p-thumb-btn').forEach((b, idx) => {
+        b.classList.toggle('active', idx === currentGalleryIndex);
+      });
+    }
+
+    function resetActiveImageZoom() {
+      currentScale = 1.0;
+      currentPanX = 0;
+      currentPanY = 0;
+      document.querySelectorAll('.p-zoomable-img').forEach(img => {
+        img.style.transform = 'translate(0px, 0px) scale(1)';
+        img.classList.remove('is-zoomed', 'is-panning');
+      });
+    }
+
+    function initGalleryTouchAndZoom() {
+      const wrap = document.getElementById('p-hero-img-wrap');
+      const track = document.getElementById('p-gallery-track');
+      if (!wrap || !track) return;
+      if (wrap._hasTouchZoomInitialized) return;
+      wrap._hasTouchZoomInitialized = true;
+
+      let startX = 0;
+      let startY = 0;
+      let deltaX = 0;
+      let deltaY = 0;
+      let isDragging = false;
+      let dirLocked = false;
+
+      // Pinch zoom state
+      let initialPinchDist = 0;
+      let startScale = 1.0;
+      let isPinching = false;
+
+      // Pan state
+      let lastPanTouchX = 0;
+      let lastPanTouchY = 0;
+      let lastTapTime = 0;
+
+      const getActiveImg = () => {
+        const slides = track.querySelectorAll('.p-gallery-slide');
+        return slides[currentGalleryIndex]?.querySelector('.p-zoomable-img');
+      };
+
+      const getDistance = (t1, t2) => {
+        const dx = t1.clientX - t2.clientX;
+        const dy = t1.clientY - t2.clientY;
+        return Math.hypot(dx, dy);
+      };
+
+      const applyImageTransform = (img, scale, x, y, animate = false) => {
+        if (!img) return;
+        img.style.transition = animate ? 'transform 0.25s cubic-bezier(0.25, 1, 0.5, 1)' : 'none';
+        img.style.transform = `translate(${x}px, ${y}px) scale(${scale})`;
+        if (scale > 1.05) {
+          img.classList.add('is-zoomed');
+        } else {
+          img.classList.remove('is-zoomed');
+        }
+      };
+
+      // Touch Start
+      wrap.addEventListener('touchstart', (e) => {
+        const activeImg = getActiveImg();
+        if (!activeImg) return;
+
+        // 2-Finger Pinch to Zoom
+        if (e.touches.length === 2) {
+          isPinching = true;
+          isDragging = false;
+          initialPinchDist = getDistance(e.touches[0], e.touches[1]);
+          startScale = currentScale;
+          return;
+        }
+
+        // 1 Finger Touch
+        if (e.touches.length === 1) {
+          const now = Date.now();
+          const t = e.touches[0];
+          const rect = wrap.getBoundingClientRect();
+          const tapX = t.clientX - rect.left;
+          const tapY = t.clientY - rect.top;
+
+          // Double Tap detection (< 280ms)
+          if (now - lastTapTime < 280) {
+            e.preventDefault();
+            if (currentScale > 1.2) {
+              currentScale = 1.0;
+              currentPanX = 0;
+              currentPanY = 0;
+              applyImageTransform(activeImg, 1.0, 0, 0, true);
+            } else {
+              currentScale = 2.5;
+              const originX = (tapX / rect.width) * 100;
+              const originY = (tapY / rect.height) * 100;
+              activeImg.style.transformOrigin = `${originX}% ${originY}%`;
+              currentPanX = 0;
+              currentPanY = 0;
+              applyImageTransform(activeImg, 2.5, 0, 0, true);
+            }
+            lastTapTime = 0;
+            return;
+          }
+          lastTapTime = now;
+
+          startX = t.clientX;
+          startY = t.clientY;
+          deltaX = 0;
+          deltaY = 0;
+          isDragging = true;
+          dirLocked = false;
+
+          if (currentScale > 1.05) {
+            lastPanTouchX = t.clientX;
+            lastPanTouchY = t.clientY;
+            activeImg.classList.add('is-panning');
+          }
+        }
+      }, { passive: false });
+
+      // Touch Move
+      wrap.addEventListener('touchmove', (e) => {
+        const activeImg = getActiveImg();
+        if (!activeImg) return;
+
+        // Two-Finger Pinch
+        if (isPinching && e.touches.length === 2) {
+          if (e.cancelable) e.preventDefault();
+          const dist = getDistance(e.touches[0], e.touches[1]);
+          const factor = dist / (initialPinchDist || 1);
+          currentScale = Math.min(3.5, Math.max(0.8, startScale * factor));
+          applyImageTransform(activeImg, currentScale, currentPanX, currentPanY, false);
+          return;
+        }
+
+        // Single-Finger Move
+        if (isDragging && e.touches.length === 1) {
+          const t = e.touches[0];
+          deltaX = t.clientX - startX;
+          deltaY = t.clientY - startY;
+
+          // Pan zoomed image
+          if (currentScale > 1.05) {
+            if (e.cancelable) e.preventDefault();
+            const pMoveX = t.clientX - lastPanTouchX;
+            const pMoveY = t.clientY - lastPanTouchY;
+            lastPanTouchX = t.clientX;
+            lastPanTouchY = t.clientY;
+
+            currentPanX += pMoveX;
+            currentPanY += pMoveY;
+
+            const wrapRect = wrap.getBoundingClientRect();
+            const maxPanX = (wrapRect.width * (currentScale - 1)) / 2;
+            const maxPanY = (wrapRect.height * (currentScale - 1)) / 2;
+            currentPanX = Math.max(-maxPanX, Math.min(maxPanX, currentPanX));
+            currentPanY = Math.max(-maxPanY, Math.min(maxPanY, currentPanY));
+
+            applyImageTransform(activeImg, currentScale, currentPanX, currentPanY, false);
+            return;
+          }
+
+          // At 1x: Horizontal Gallery Swipe
+          if (!dirLocked) {
+            if (Math.abs(deltaX) > 6 || Math.abs(deltaY) > 6) {
+              dirLocked = Math.abs(deltaX) >= Math.abs(deltaY) ? 'h' : 'v';
+            }
+          }
+
+          if (dirLocked === 'v') return; // Allow smooth vertical page scroll
+
+          if (dirLocked === 'h') {
+            if (e.cancelable) e.preventDefault();
+            if (currentGalleryList.length <= 1) return;
+
+            const wrapWidth = wrap.offsetWidth;
+            let offset = deltaX;
+            if ((currentGalleryIndex === 0 && deltaX > 0) ||
+                (currentGalleryIndex === currentGalleryList.length - 1 && deltaX < 0)) {
+              offset = deltaX * 0.3;
+            }
+
+            track.style.transition = 'none';
+            const basePx = -(currentGalleryIndex * wrapWidth);
+            track.style.transform = `translateX(${basePx + offset}px)`;
+          }
+        }
+      }, { passive: false });
+
+      // Touch End
+      wrap.addEventListener('touchend', () => {
+        const activeImg = getActiveImg();
+
+        if (isPinching) {
+          isPinching = false;
+          if (currentScale < 1.05) {
+            currentScale = 1.0;
+            currentPanX = 0;
+            currentPanY = 0;
+            applyImageTransform(activeImg, 1.0, 0, 0, true);
+          } else {
+            currentScale = Math.min(3.5, currentScale);
+            applyImageTransform(activeImg, currentScale, currentPanX, currentPanY, true);
+          }
+          return;
+        }
+
+        if (isDragging) {
+          isDragging = false;
+          if (activeImg) activeImg.classList.remove('is-panning');
+
+          if (currentScale <= 1.05 && dirLocked === 'h' && currentGalleryList.length > 1) {
+            const wrapWidth = wrap.offsetWidth;
+            const threshold = Math.min(wrapWidth * 0.18, 50);
+
+            if (deltaX < -threshold && currentGalleryIndex < currentGalleryList.length - 1) {
+              currentGalleryIndex++;
+            } else if (deltaX > threshold && currentGalleryIndex > 0) {
+              currentGalleryIndex--;
+            }
+            updateGallerySlidePosition();
+          }
+        }
+      }, { passive: true });
+
+      // Double-click zoom for desktop
+      wrap.addEventListener('dblclick', (e) => {
+        const activeImg = getActiveImg();
+        if (!activeImg) return;
+        if (currentScale > 1.2) {
+          currentScale = 1.0;
+          currentPanX = 0;
+          currentPanY = 0;
+          applyImageTransform(activeImg, 1.0, 0, 0, true);
+        } else {
+          currentScale = 2.5;
+          const rect = wrap.getBoundingClientRect();
+          const originX = ((e.clientX - rect.left) / rect.width) * 100;
+          const originY = ((e.clientY - rect.top) / rect.height) * 100;
+          activeImg.style.transformOrigin = `${originX}% ${originY}%`;
+          currentPanX = 0;
+          currentPanY = 0;
+          applyImageTransform(activeImg, 2.5, 0, 0, true);
+        }
+      });
+
+      // Mouse wheel zoom for desktop
+      wrap.addEventListener('wheel', (e) => {
+        const activeImg = getActiveImg();
+        if (!activeImg) return;
+        e.preventDefault();
+        const delta = e.deltaY < 0 ? 0.25 : -0.25;
+        currentScale = Math.min(3.5, Math.max(1.0, currentScale + delta));
+        if (currentScale === 1.0) {
+          currentPanX = 0;
+          currentPanY = 0;
+        }
+        applyImageTransform(activeImg, currentScale, currentPanX, currentPanY, false);
+      }, { passive: false });
     }
 
     function selectExactVariant(index) {
