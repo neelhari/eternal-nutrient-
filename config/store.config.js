@@ -30,7 +30,11 @@ window.STORE_CONFIG = {
   freeShippingThreshold: 999, // Free shipping for orders >= ₹999
   standardShippingFee: 40,
 
-  // 5. Cloud Database (Supabase Public Client)
+  // 5. Payment Gateway (Razorpay Test Keys)
+  razorpayKeyId: 'rzp_test_TWgbdjWKyIcwON',
+  razorpayKeySecret: 'jU9HOxVbwOsAvvB1Oikr5Nkm',
+
+  // 6. Cloud Database (Supabase Public Client)
   supabaseUrl: 'https://pqorpwmyhfwafzddubaf.supabase.co',
   supabaseAnonKey: 'sb_publishable_1HaDlvVRIZQQP-x-i_wM7w_oHp3jUKu',
 

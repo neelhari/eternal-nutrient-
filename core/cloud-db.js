@@ -310,6 +310,27 @@ window.CloudDB = (function() {
     return [];
   }
 
+  async function getOrderByNumber(orderNum) {
+    if (!orderNum) return null;
+    const cleanNum = orderNum.trim();
+    if (isSupabaseActive && supabaseClient) {
+      try {
+        const { data, error } = await supabaseClient
+          .from('orders')
+          .select('*')
+          .or(`order_number.eq.${cleanNum},id.eq.${cleanNum}`)
+          .maybeSingle();
+        if (!error && data) return data;
+      } catch (err) {
+        console.warn('Order lookup notice:', err.message);
+      }
+    }
+    if (mock && mock.orders) {
+      return mock.orders.find(o => (o.order_number && o.order_number.toUpperCase() === cleanNum.toUpperCase()) || o.id === cleanNum) || null;
+    }
+    return null;
+  }
+
   async function createOrder(rawOrder) {
     const orderId = rawOrder.id || `ord_${Date.now()}_${Math.random().toString(36).substr(2, 4)}`;
     const orderNum = rawOrder.order_number || rawOrder.orderNumber || `EN-${Math.floor(1000 + Math.random() * 9000)}`;
@@ -747,6 +768,7 @@ window.CloudDB = (function() {
     deleteCategory,
     getOrders,
     getOrdersByEmail,
+    getOrderByNumber,
     createOrder,
     updateOrderStatus,
     deductInventory,
