@@ -8,8 +8,8 @@
     <div class="distribution-drawer-content" onclick="event.stopPropagation()">
       <div class="distribution-drawer-header">
         <div class="distribution-header-left">
-          <div class="distribution-badge"><i class="ri-shake-hands-fill"></i> Partnership</div>
-          <h2 class="distribution-drawer-title">Distribution Request</h2>
+          <div class="distribution-badge"><i class="ri-customer-service-2-fill"></i> Get in Touch</div>
+          <h2 class="distribution-drawer-title">Contact Us & Inquiry</h2>
         </div>
         <button type="button" class="distribution-drawer-close" onclick="closeDistributionDrawer()" aria-label="Close">
           <i class="ri-close-line"></i>
@@ -18,9 +18,9 @@
 
       <div class="distribution-drawer-body">
         <div class="distribution-info-banner">
-          <div class="distribution-info-title">Partner with Eternal Nutricare</div>
+          <div class="distribution-info-title">Connect with Eternal Nutricare</div>
           <div class="distribution-info-desc">
-            Expand organic, chemical-free wellness in your region. Fill out this quick inquiry and our distribution team will connect with you within 24 hours.
+            Have questions, bulk orders, or want to partner with us? Fill out this quick inquiry and our team will connect with you within 24 hours.
           </div>
         </div>
 
