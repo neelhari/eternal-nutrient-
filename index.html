@@ -897,7 +897,6 @@
                     <span class="mockup-current-price">₹${p.price}</span>
                     ${p.originalPrice > p.price ? `<span class="mockup-mrp-struck">₹${p.originalPrice}</span>` : ''}
                   </div>
-                  ${diff > 0 ? `<div class="mockup-discount-text">${Math.round((diff / p.originalPrice) * 100)}% OFF</div>` : ''}
                 </div>
                 <div id="bs-actions-${p.id}">
                   ${isOut ? `
@@ -941,7 +940,6 @@
                       <span class="mockup-current-price">₹${p.price}</span>
                       ${p.originalPrice > p.price ? `<span class="mockup-mrp-struck">₹${p.originalPrice}</span>` : ''}
                     </div>
-                    ${diff > 0 ? `<div class="mockup-discount-text">${Math.round((diff / p.originalPrice) * 100)}% OFF</div>` : ''}
                   </div>
                   <div id="na-actions-${p.id}">
                     ${isOut ? `

@@ -143,7 +143,10 @@
 
     <!-- 3. Zepto 2-Column Product Grid (Bottom) -->
     <div class="zepto-products-grid" id="zepto-products-grid">
-      <!-- Rendered dynamically -->
+      <div class="skeleton-showcase-card"><div class="skeleton-card-img"></div><div class="skeleton-card-title"></div><div class="skeleton-card-price"></div></div>
+      <div class="skeleton-showcase-card"><div class="skeleton-card-img"></div><div class="skeleton-card-title"></div><div class="skeleton-card-price"></div></div>
+      <div class="skeleton-showcase-card"><div class="skeleton-card-img"></div><div class="skeleton-card-title"></div><div class="skeleton-card-price"></div></div>
+      <div class="skeleton-showcase-card"><div class="skeleton-card-img"></div><div class="skeleton-card-title"></div><div class="skeleton-card-price"></div></div>
     </div>
 
   </main>
@@ -265,8 +268,6 @@
             ALL_PRODUCTS = prods.map(p => {
               const price = Number(p.price) || 0;
               const mrp = Number(p.original_price ?? p.originalPrice ?? p.mrp ?? p.price ?? price);
-              const diff = mrp > price ? mrp - price : 0;
-              const percent = mrp > price ? Math.round((diff / mrp) * 100) : 0;
               const stock = Number(p.stock_qty ?? 50);
               const inStock = p.in_stock !== false && stock > 0;
               return {
@@ -275,7 +276,6 @@
                 category: p.category || 'General',
                 price: price,
                 mrp: mrp,
-                discount: percent > 0 ? `${percent}% OFF` : '',
                 unit: p.unit || 'Pack',
                 badge: p.badge || (p.is_bestseller ? '★ Bestseller' : (p.is_new_arrival ? '⚡ New Arrival' : '')),
                 image: p.image || (Array.isArray(p.gallery) && p.gallery[0]) || 'assets/prod_honey_studio.jpg',
@@ -501,7 +501,6 @@
                     <span class="zepto-selling-price">₹${p.price}</span>
                     ${p.mrp > p.price ? `<span class="zepto-mrp-price">₹${p.mrp}</span>` : ''}
                   </div>
-                  ${p.discount ? `<span class="zepto-discount-tag">${p.discount}</span>` : ''}
                 </div>
                 
                 <div>

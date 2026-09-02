@@ -303,13 +303,33 @@
       text-decoration: line-through;
     }
 
-    .p-discount-tag {
-      background: #2D5C14;
-      color: #FFFFFF;
-      font-size: 11.5px;
-      font-weight: 800;
-      padding: 3px 8px;
-      border-radius: 4px;
+    /* Skeleton Loading Shimmer for Product Page */
+    .p-skeleton-hero {
+      width: 100%;
+      aspect-ratio: 1 / 1;
+      border-radius: 20px;
+      background: #E2E8F0;
+      animation: shimmerPulse 1.4s ease-in-out infinite;
+    }
+
+    .p-skeleton-line {
+      border-radius: 6px;
+      background: #E2E8F0;
+      animation: shimmerPulse 1.4s ease-in-out infinite;
+    }
+    .p-skeleton-line.title {
+      width: 80%;
+      height: 26px;
+      margin-bottom: 6px;
+    }
+    .p-skeleton-line.sub {
+      width: 50%;
+      height: 16px;
+      margin-bottom: 12px;
+    }
+    .p-skeleton-line.price {
+      width: 110px;
+      height: 28px;
     }
 
     /* Multi-Image Gallery Thumbnails */
@@ -570,13 +590,10 @@
     <!-- Left Column: Hero Image Card & Gallery -->
     <div>
       <div class="p-hero-img-wrap" id="p-hero-img-wrap">
-        <div class="p-gallery-swipe-track" id="p-gallery-track">
-          <div class="p-gallery-slide" data-index="0">
-            <img class="p-zoomable-img" id="p-hero-img" src="assets/showcase_honey.png" alt="Product Image">
-          </div>
-        </div>
+        <div class="p-skeleton-hero" id="p-hero-skeleton"></div>
+        <div class="p-gallery-swipe-track" id="p-gallery-track" style="display: none;"></div>
         <div class="p-gallery-counter-badge" id="p-gallery-counter" style="display: none;">1 / 1</div>
-        <div class="p-zoom-hint" id="p-zoom-hint"><i class="ri-zoom-in-line"></i> Double-tap / pinch to zoom</div>
+        <div class="p-zoom-hint" id="p-zoom-hint" style="display: none;"><i class="ri-zoom-in-line"></i> Double-tap / pinch to zoom</div>
         <button class="p-wishlist-float-btn" id="p-wish-btn" onclick="handleProductWishlistClick()" aria-label="Wishlist">
           <i class="ri-heart-line" id="p-wish-icon"></i>
         </button>
@@ -588,18 +605,17 @@
     <div>
       
       <div class="p-meta-box">
-        <h1 class="p-main-title" id="p-title">Raw Organic Honey</h1>
-        <div class="p-sub-title" id="p-subtitle">Raw & Unfiltered • 500g</div>
+        <h1 class="p-main-title" id="p-title"><div class="p-skeleton-line title"></div></h1>
+        <div class="p-sub-title" id="p-subtitle"><div class="p-skeleton-line sub"></div></div>
         
-        <div class="p-rating-row">
+        <div class="p-rating-row" id="p-rating-row" style="display: none;">
           <span class="p-stars">★★★★★</span>
           <span>4.8 (245 reviews)</span>
         </div>
 
         <div class="p-price-row">
-          <span class="p-price-val" id="p-price">₹499</span>
-          <span class="p-mrp-val" id="p-mrp">₹599</span>
-          <span class="p-discount-tag" id="p-discount">17% OFF</span>
+          <span class="p-price-val" id="p-price"><div class="p-skeleton-line price"></div></span>
+          <span class="p-mrp-val" id="p-mrp" style="display: none;"></span>
         </div>
       </div>
 
@@ -893,10 +909,15 @@
       currentItem = item;
       setTimeout(updateWishIconUI, 100);
 
-      document.getElementById('p-title').textContent = item.title || item.name;
-      document.getElementById('p-subtitle').textContent = item.sub || `${item.category || ''} • ${item.unit || '500g'}`;
-      document.getElementById('p-hero-img').src = item.image || item.img || 'assets/prod_honey_studio.jpg';
-      document.getElementById('acc-desc').textContent = item.description || item.desc || '100% natural and authentic product.';
+      const pTitle = document.getElementById('p-title');
+      const pSub = document.getElementById('p-subtitle');
+      const pRatingRow = document.getElementById('p-rating-row');
+      const pDesc = document.getElementById('acc-desc');
+
+      if (pTitle) pTitle.textContent = item.title || item.name;
+      if (pSub) pSub.textContent = item.sub || `${item.category || ''} • ${item.unit || '500g'}`;
+      if (pRatingRow) pRatingRow.style.display = 'flex';
+      if (pDesc) pDesc.textContent = item.description || item.desc || '100% natural and authentic product.';
 
       // Render Multi-Image Gallery with Native Touch Swipe & Pinch-to-Zoom
       const gallery = (Array.isArray(item.gallery) && item.gallery.length > 0) ? item.gallery : (item.image ? [item.image] : [item.img || 'assets/prod_honey_studio.jpg']);
@@ -1047,6 +1068,10 @@
       const thumbsContainer = document.getElementById('p-gallery-thumbs');
       const counterEl = document.getElementById('p-gallery-counter');
       const zoomHint = document.getElementById('p-zoom-hint');
+      const heroSkeleton = document.getElementById('p-hero-skeleton');
+
+      if (heroSkeleton) heroSkeleton.style.display = 'none';
+      if (track) track.style.display = 'flex';
 
       if (!track) return;
 
@@ -1405,20 +1430,20 @@
     }
 
     function updatePricingUI() {
-      const discount = currentMRP > currentPrice ? Math.round(((currentMRP - currentPrice) / currentMRP) * 100) : 0;
-      document.getElementById('p-price').textContent = `₹${currentPrice}`;
-      
+      const priceEl = document.getElementById('p-price');
       const mrpEl = document.getElementById('p-mrp');
       const discEl = document.getElementById('p-discount');
 
-      if (discount > 0 && currentMRP > currentPrice) {
-        mrpEl.style.display = 'inline';
-        mrpEl.textContent = `₹${currentMRP}`;
-        discEl.style.display = 'inline-block';
-        discEl.textContent = `${discount}% OFF`;
-      } else {
-        mrpEl.style.display = 'none';
-        discEl.style.display = 'none';
+      if (priceEl) priceEl.textContent = `₹${currentPrice}`;
+      if (discEl) discEl.style.display = 'none';
+
+      if (mrpEl) {
+        if (currentMRP > currentPrice) {
+          mrpEl.style.display = 'inline';
+          mrpEl.textContent = `₹${currentMRP}`;
+        } else {
+          mrpEl.style.display = 'none';
+        }
       }
     }
 
