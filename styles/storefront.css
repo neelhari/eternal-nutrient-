@@ -179,21 +179,21 @@ body {
 }
 
 .brand-logo-official-img {
-  height: 64px;
+  height: 48px;
   width: auto;
-  max-width: 130px;
+  max-width: 190px;
   object-fit: contain;
   display: block;
 }
 
 @media (max-width: 768px) {
   .main-header {
-    padding: 6px 16px;
-    min-height: 68px;
+    padding: 8px 16px;
+    min-height: 58px;
   }
   .brand-logo-official-img {
-    height: 58px;
-    max-width: 120px;
+    height: 40px;
+    max-width: 160px;
   }
 }
 
