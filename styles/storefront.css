@@ -335,17 +335,73 @@ body {
   }
 }
 
-/* Mobile Search Pill Bar */
-.mobile-search-bar {
+/* Header Search Icon Button (Mobile Top Bar) */
+.header-search-icon-btn {
   display: none;
-  padding: 10px 16px 6px;
-  background: #FFFFFF;
+  align-items: center;
+  justify-content: center;
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: #F8F6F0;
+  color: #281612;
+  border: 1.5px solid #EAE5DE;
+  font-size: 18px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  flex-shrink: 0;
+  outline: none;
+  padding: 0;
+}
+
+.header-search-icon-btn:hover {
+  background: #EAF0E5;
+  color: #386618;
+  border-color: #D3DEC9;
+  transform: scale(1.05);
 }
 
 @media (max-width: 768px) {
-  .mobile-search-bar {
-    display: block;
+  .header-search-icon-btn {
+    display: inline-flex !important;
   }
+}
+
+/* Mobile Search Overlay Drawer */
+.mobile-search-overlay {
+  background: #FFFFFF;
+  border-bottom: 1px solid #EAE5DE;
+  box-shadow: 0 4px 16px rgba(40, 22, 18, 0.08);
+  position: relative;
+  z-index: 120;
+  animation: slideDownSearch 0.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes slideDownSearch {
+  from { opacity: 0; transform: translateY(-8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.search-close-btn {
+  background: none;
+  border: none;
+  color: #8C7E77;
+  font-size: 20px;
+  cursor: pointer;
+  padding: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: color 0.15s ease;
+}
+
+.search-close-btn:hover {
+  color: #281612;
+}
+
+/* Mobile Search Pill Bar (Deprecated - replaced by header search icon) */
+.mobile-search-bar {
+  display: none !important;
 }
 
 /* ==========================================================================

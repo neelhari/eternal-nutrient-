@@ -50,8 +50,11 @@
         </div>
       </div>
 
-      <!-- Right Action: ONLY Account Icon (No Cart Symbol in Header) -->
-      <div class="header-actions-right">
+      <!-- Right Action: Search Icon + Account Icon -->
+      <div class="header-actions-right" style="display: flex; align-items: center; gap: 8px;">
+        <button type="button" class="header-search-icon-btn" onclick="toggleMobileSearchOverlay()" aria-label="Search" title="Search">
+          <i class="ri-search-2-line"></i>
+        </button>
         <a href="account.html" class="header-desktop-account-btn" title="My Account" aria-label="Account">
           <i class="ri-user-3-fill" style="font-size: 18px; color: #386618;"></i>
           <span class="header-auth-label">Account</span>
@@ -59,6 +62,17 @@
       </div>
 
     </header>
+
+    <!-- Slide-Down Mobile Search Overlay Drawer -->
+    <div id="mobile-search-overlay" class="mobile-search-overlay" style="display: none;">
+      <div class="search-input-pill" style="margin: 8px 16px;">
+        <i class="ri-search-2-line search-leading-icon"></i>
+        <input type="text" id="overlay-search-input" placeholder="Search organic honey, pickles, millets, laddus..." onkeydown="if(event.key==='Enter') window.location.href='categories.html?search='+encodeURIComponent(this.value)">
+        <button type="button" class="search-close-btn" onclick="toggleMobileSearchOverlay()" aria-label="Close search">
+          <i class="ri-close-line"></i>
+        </button>
+      </div>
+    </div>
 
     <!-- Desktop Category Quick Nav -->
     <nav class="desktop-category-nav-bar">
@@ -815,6 +829,17 @@
         } catch(e) {
           console.warn('Orbit sync notice:', e);
         }
+      }
+    }
+
+    function toggleMobileSearchOverlay() {
+      const overlay = document.getElementById('mobile-search-overlay');
+      if (!overlay) return;
+      const isOpen = overlay.style.display !== 'none';
+      overlay.style.display = isOpen ? 'none' : 'block';
+      if (!isOpen) {
+        const input = document.getElementById('overlay-search-input');
+        if (input) setTimeout(() => input.focus(), 60);
       }
     }
 
