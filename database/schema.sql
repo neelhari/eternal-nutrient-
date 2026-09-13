@@ -262,3 +262,19 @@ ALTER TABLE products ADD COLUMN IF NOT EXISTS variants JSONB DEFAULT '[]'::jsonb
 ALTER TABLE products ADD COLUMN IF NOT EXISTS is_bestseller BOOLEAN DEFAULT false;
 ALTER TABLE products ADD COLUMN IF NOT EXISTS is_new_arrival BOOLEAN DEFAULT false;
 ALTER TABLE products ADD COLUMN IF NOT EXISTS is_featured BOOLEAN DEFAULT false;
+
+-- 5. CMS CONTENT DEFAULT ENTRIES (Safe Initialization)
+INSERT INTO cms_content (id, section_type, content_payload, is_active)
+VALUES (
+    'cms_orbit_showcase',
+    'orbit_showcase',
+    '[
+      {"id":"orbit_protein_bowl","title":"Sprouted Millets & Superfood Protein Bowl","category":"Millet Snacks","badge":"Complete protein source","desc":"Naturally rich in branched-chain amino acids, dietary fiber, and essential minerals for long-lasting clean energy.","image":"assets/orbit_bowl_protein.jpg","link":"categories.html?category=Millet%20Snacks"},
+      {"id":"prod_1","title":"Wild Multiflora Raw Forest Honey","category":"Honey","badge":"100% Raw & Unheated","desc":"Directly harvested from pristine deep forest bee colonies. Zero pasteurization, zero added sugar, packed with natural bee pollen & enzymes.","image":"assets/prod_honey_studio.jpg","link":"categories.html?category=Honey"},
+      {"id":"prod_laddu","title":"Handcrafted Dates & Nut Laddus","category":"Dates Laddu''s","badge":"Zero Added Sugar • High Iron","desc":"Naturally sweetened solely with Medjool dates, dry fruits, and native A2 desi ghee. Wholesome goodness for every generation.","image":"assets/prod_laddu_studio.jpg","link":"categories.html?category=Dates%20Laddu%27s"},
+      {"id":"orbit_harvest_bowl","title":"Rainbow Harvest Quinoa & Edamame Bowl","category":"All","badge":"Antioxidants & Clean Fiber","desc":"Vibrant spectrum of phytonutrients, clean plant protein, and digestive enzymes from organically grown heirloom vegetables.","image":"assets/orbit_bowl_harvest.jpg","link":"categories.html"},
+      {"id":"orbit_avocado_bowl","title":"Avocado & Wild Salmon Superfood Greens","category":"All","badge":"Heart Healthy Omega-3","desc":"Loaded with clean monounsaturated fats, brain-supporting EPA/DHA omega-3s, and mineral-dense fresh organic microgreens.","image":"assets/orbit_bowl_avocado.jpg","link":"categories.html"}
+    ]'::jsonb,
+    true
+)
+ON CONFLICT (id) DO NOTHING;

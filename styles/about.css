@@ -1,0 +1,772 @@
+/* ==========================================================================
+   ETERNAL NUTRICARE - ABOUT US PAGE STYLES
+   ========================================================================== */
+
+/* Page Wrapper */
+.about-page-container {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 16px 100px;
+}
+
+@media (min-width: 900px) {
+  .about-page-container {
+    padding: 20px 32px 100px;
+  }
+}
+
+/* ==========================================================================
+   1. HERO SHOWCASE - THE CURVED ORBIT PRODUCT BANNER
+   ========================================================================== */
+.orbit-hero-section {
+  position: relative;
+  text-align: center;
+  padding: 30px 0 20px;
+  overflow: hidden;
+}
+
+.orbit-hero-header {
+  max-width: 680px;
+  margin: 0 auto 24px;
+}
+
+.orbit-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12.5px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  color: #386618;
+  background: #EAF3E6;
+  padding: 5px 14px;
+  border-radius: 999px;
+  margin-bottom: 12px;
+}
+
+.orbit-hero-title {
+  font-family: 'Noto Serif', serif;
+  font-size: 32px;
+  font-weight: 700;
+  color: #1E2519;
+  line-height: 1.22;
+  margin-bottom: 10px;
+}
+
+@media (min-width: 768px) {
+  .orbit-hero-title {
+    font-size: 44px;
+  }
+}
+
+.orbit-hero-subtitle {
+  font-size: 15px;
+  color: #56694E;
+  line-height: 1.55;
+  max-width: 520px;
+  margin: 0 auto;
+}
+
+/* Orbit Stage / Arena */
+.orbit-stage {
+  position: relative;
+  width: 100%;
+  max-width: 580px;
+  height: 380px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  perspective: 1000px;
+  user-select: none;
+  touch-action: pan-y;
+}
+
+@media (max-width: 480px) {
+  .orbit-stage {
+    height: 330px;
+    max-width: 360px;
+  }
+}
+
+/* Background Orbit Ring (Faint curved guide track) */
+.orbit-track-ring {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -30%);
+  width: 460px;
+  height: 460px;
+  border-radius: 50%;
+  border: 1.5px dashed rgba(56, 102, 24, 0.15);
+  pointer-events: none;
+  z-index: 1;
+}
+
+@media (max-width: 480px) {
+  .orbit-track-ring {
+    width: 330px;
+    height: 330px;
+    transform: translate(-50%, -32%);
+  }
+}
+
+.orbit-track-ring::after {
+  content: '';
+  position: absolute;
+  inset: -15px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(234, 243, 230, 0.35) 0%, rgba(255, 255, 255, 0) 70%);
+  z-index: -1;
+}
+
+/* Orbit Item Elements */
+.orbit-item {
+  position: absolute;
+  top: 48%;
+  left: 50%;
+  transform-origin: center center;
+  transition: transform 0.55s cubic-bezier(0.34, 1.25, 0.64, 1), 
+              opacity 0.45s ease, 
+              filter 0.45s ease;
+  will-change: transform, opacity;
+  cursor: pointer;
+}
+
+.orbit-dish-wrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.orbit-dish-img {
+  width: 210px;
+  height: 210px;
+  border-radius: 50%;
+  object-fit: cover;
+  box-shadow: 0 16px 36px rgba(40, 22, 18, 0.12), 0 2px 8px rgba(0, 0, 0, 0.04);
+  border: 4px solid #FFFFFF;
+  display: block;
+  transition: box-shadow 0.3s ease;
+}
+
+@media (max-width: 480px) {
+  .orbit-dish-img {
+    width: 175px;
+    height: 175px;
+  }
+}
+
+/* Floating Green Badge (Exact replica of screenshot) */
+.orbit-floating-badge {
+  position: absolute;
+  bottom: 8px;
+  right: -30px;
+  background: #008744;
+  color: #FFFFFF;
+  font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+  font-size: 13.5px;
+  font-weight: 800;
+  padding: 8px 18px;
+  border-radius: 999px;
+  box-shadow: 0 6px 18px rgba(0, 135, 68, 0.32);
+  white-space: nowrap;
+  pointer-events: none;
+  opacity: 0;
+  transform: translateY(8px) scale(0.9);
+  transition: opacity 0.35s ease 0.15s, transform 0.35s cubic-bezier(0.34, 1.3, 0.64, 1) 0.15s;
+  z-index: 15;
+}
+
+@media (max-width: 480px) {
+  .orbit-floating-badge {
+    font-size: 12px;
+    padding: 6px 14px;
+    right: -15px;
+    bottom: 2px;
+  }
+}
+
+/* --- Orbit Position Slots --- */
+
+/* 1. Center Active */
+.orbit-item.slot-center {
+  transform: translate(-50%, -60%) scale(1.15);
+  z-index: 10;
+  opacity: 1;
+  filter: blur(0px);
+}
+
+.orbit-item.slot-center .orbit-floating-badge {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+
+.orbit-item.slot-center .orbit-dish-img {
+  box-shadow: 0 22px 48px rgba(40, 22, 18, 0.18), 0 4px 12px rgba(0, 0, 0, 0.06);
+}
+
+/* 2. Left Flank (Prev) */
+.orbit-item.slot-left {
+  transform: translate(calc(-50% - 150px), calc(-60% + 55px)) scale(0.72) rotate(-8deg);
+  z-index: 5;
+  opacity: 0.55;
+  filter: blur(0.4px);
+}
+
+@media (max-width: 480px) {
+  .orbit-item.slot-left {
+    transform: translate(calc(-50% - 105px), calc(-60% + 45px)) scale(0.68) rotate(-8deg);
+  }
+}
+
+/* 3. Right Flank (Next) */
+.orbit-item.slot-right {
+  transform: translate(calc(-50% + 150px), calc(-60% + 55px)) scale(0.72) rotate(8deg);
+  z-index: 5;
+  opacity: 0.55;
+  filter: blur(0.4px);
+}
+
+@media (max-width: 480px) {
+  .orbit-item.slot-right {
+    transform: translate(calc(-50% + 105px), calc(-60% + 45px)) scale(0.68) rotate(8deg);
+  }
+}
+
+/* 4. Hidden Far Left & Far Right */
+.orbit-item.slot-hidden-left {
+  transform: translate(calc(-50% - 240px), calc(-60% + 110px)) scale(0.45) rotate(-16deg);
+  z-index: 1;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.orbit-item.slot-hidden-right {
+  transform: translate(calc(-50% + 240px), calc(-60% + 110px)) scale(0.45) rotate(16deg);
+  z-index: 1;
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* Orbit Navigation Arrow Controls */
+.orbit-controls-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  margin-top: 10px;
+  margin-bottom: 20px;
+}
+
+.orbit-arrow-btn {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  background: #FFFFFF;
+  border: 1.5px solid #E2E8DE;
+  color: #1E2519;
+  font-size: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+  transition: all 0.2s ease;
+}
+
+.orbit-arrow-btn:hover {
+  background: #386618;
+  color: #FFFFFF;
+  border-color: #386618;
+  transform: scale(1.08);
+}
+
+.orbit-dots-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.orbit-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 999px;
+  background: #CBD5C4;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.orbit-dot.active {
+  width: 24px;
+  background: #386618;
+}
+
+/* Active Item Live Info Box */
+.orbit-product-infobox {
+  max-width: 520px;
+  margin: 0 auto 36px;
+  background: #FFFFFF;
+  border: 1.5px solid #EAF0E5;
+  border-radius: 20px;
+  padding: 20px 24px;
+  box-shadow: 0 8px 24px rgba(40, 22, 18, 0.04);
+  transition: all 0.35s ease;
+}
+
+.orbit-info-category {
+  font-size: 11.5px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: #386618;
+  margin-bottom: 4px;
+}
+
+.orbit-info-title {
+  font-size: 20px;
+  font-weight: 700;
+  color: #1E2519;
+  margin-bottom: 6px;
+}
+
+.orbit-info-desc {
+  font-size: 13.5px;
+  color: #56694E;
+  line-height: 1.5;
+  margin-bottom: 16px;
+}
+
+.orbit-info-actions {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.btn-orbit-add {
+  background: #386618;
+  color: #FFFFFF;
+  font-size: 13.5px;
+  font-weight: 700;
+  padding: 10px 22px;
+  border-radius: 999px;
+  border: none;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  transition: all 0.2s ease;
+  box-shadow: 0 3px 10px rgba(56, 102, 24, 0.25);
+}
+
+.btn-orbit-add:hover {
+  background: #2D5213;
+  transform: translateY(-1px);
+}
+
+.btn-orbit-explore {
+  background: #386618;
+  color: #FFFFFF;
+  border: none;
+  font-size: 14px;
+  font-weight: 700;
+  padding: 11px 26px;
+  border-radius: 999px;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  box-shadow: 0 4px 14px rgba(56, 102, 24, 0.28);
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.btn-orbit-explore:hover {
+  background: #2D5213;
+  color: #FFFFFF;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 18px rgba(56, 102, 24, 0.38);
+}
+
+/* ==========================================================================
+   2. OUR VISION & OUR MISSION SECTION (BENTO GRID)
+   ========================================================================== */
+.vision-mission-section {
+  margin: 40px 0 50px;
+}
+
+.section-title-wrap {
+  text-align: center;
+  margin-bottom: 28px;
+}
+
+.section-eyebrow {
+  font-size: 12px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  color: #386618;
+  display: block;
+  margin-bottom: 6px;
+}
+
+.section-headline {
+  font-family: 'Noto Serif', serif;
+  font-size: 28px;
+  font-weight: 700;
+  color: #1E2519;
+}
+
+@media (min-width: 768px) {
+  .section-headline {
+    font-size: 36px;
+  }
+}
+
+.vm-cards-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 20px;
+}
+
+@media (min-width: 768px) {
+  .vm-cards-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+  }
+}
+
+.vm-card {
+  background: #FFFFFF;
+  border-radius: 24px;
+  padding: 32px 28px;
+  border: 1.5px solid #EAF0E5;
+  box-shadow: 0 4px 18px rgba(40, 22, 18, 0.04);
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.vm-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 28px rgba(40, 22, 18, 0.08);
+}
+
+.vm-card.vision-card {
+  background: linear-gradient(145deg, #FAFDF8 0%, #F1F8ED 100%);
+  border-color: #DEEBD7;
+}
+
+.vm-card.mission-card {
+  background: linear-gradient(145deg, #FFFDF8 0%, #FFF8EA 100%);
+  border-color: #F4E7D0;
+}
+
+.vm-icon-bubble {
+  width: 52px;
+  height: 52px;
+  border-radius: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  margin-bottom: 20px;
+}
+
+.vision-card .vm-icon-bubble {
+  background: #386618;
+  color: #FFFFFF;
+}
+
+.mission-card .vm-icon-bubble {
+  background: #281612;
+  color: #E2C095;
+}
+
+.vm-card-title {
+  font-family: 'Noto Serif', serif;
+  font-size: 22px;
+  font-weight: 700;
+  color: #1E2519;
+  margin-bottom: 12px;
+}
+
+.vm-card-text {
+  font-size: 14.5px;
+  color: #56694E;
+  line-height: 1.65;
+  margin-bottom: 20px;
+}
+
+.vm-bullets-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.vm-bullets-list li {
+  font-size: 13.5px;
+  color: #3B4D34;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: 600;
+}
+
+.vm-bullets-list li i {
+  color: #386618;
+  font-size: 16px;
+  flex-shrink: 0;
+}
+
+/* ==========================================================================
+   3. OUR FAVOURITE PRODUCTS (CURATED SPOTLIGHT)
+   ========================================================================== */
+.favourites-section {
+  margin: 50px 0;
+}
+
+.favourites-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+}
+
+@media (min-width: 768px) {
+  .favourites-grid {
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+  }
+}
+
+.fav-product-card {
+  background: #FFFFFF;
+  border: 1.5px solid #EEF2EA;
+  border-radius: 18px;
+  padding: 14px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  position: relative;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  cursor: pointer;
+}
+
+.fav-product-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 10px 24px rgba(40, 22, 18, 0.08);
+  border-color: #DDE8D6;
+}
+
+.fav-card-badge {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  background: #EAF3E6;
+  color: #386618;
+  font-size: 10.5px;
+  font-weight: 800;
+  padding: 3px 8px;
+  border-radius: 6px;
+  z-index: 2;
+}
+
+.fav-photo-wrap {
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  border-radius: 12px;
+  overflow: hidden;
+  background: #F8FAF6;
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.fav-photo-wrap img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.fav-product-card:hover .fav-photo-wrap img {
+  transform: scale(1.06);
+}
+
+.fav-item-title {
+  font-size: 14.5px;
+  font-weight: 700;
+  color: #1E2519;
+  line-height: 1.35;
+  margin-bottom: 4px;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.fav-item-unit {
+  font-size: 12px;
+  color: #7A8E72;
+  margin-bottom: 10px;
+}
+
+.fav-bottom-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: auto;
+  gap: 8px;
+}
+
+.fav-price {
+  font-size: 16px;
+  font-weight: 800;
+  color: #1E2519;
+}
+
+.fav-mrp {
+  font-size: 12px;
+  color: #94A3B8;
+  text-decoration: line-through;
+  margin-left: 4px;
+}
+
+.fav-add-btn {
+  background: #386618;
+  color: #FFFFFF;
+  border: none;
+  font-size: 12px;
+  font-weight: 800;
+  padding: 6px 14px;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: background 0.15s ease, transform 0.15s ease;
+}
+
+.fav-add-btn:hover {
+  background: #2D5213;
+  transform: scale(1.05);
+}
+
+/* ==========================================================================
+   4. THE 4 PILLARS OF PURITY
+   ========================================================================== */
+.pillars-section {
+  margin: 50px 0;
+  background: #F5F8F2;
+  border-radius: 28px;
+  padding: 40px 24px;
+}
+
+@media (min-width: 768px) {
+  .pillars-section {
+    padding: 50px 36px;
+  }
+}
+
+.pillars-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 20px;
+  margin-top: 32px;
+}
+
+@media (min-width: 600px) {
+  .pillars-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 1000px) {
+  .pillars-grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+.pillar-item {
+  background: #FFFFFF;
+  border-radius: 18px;
+  padding: 24px 20px;
+  border: 1px solid #E5EDE0;
+  text-align: left;
+}
+
+.pillar-icon {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  background: #EAF3E6;
+  color: #386618;
+  font-size: 22px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 14px;
+}
+
+.pillar-title {
+  font-size: 16px;
+  font-weight: 700;
+  color: #1E2519;
+  margin-bottom: 6px;
+}
+
+.pillar-desc {
+  font-size: 13px;
+  color: #56694E;
+  line-height: 1.5;
+}
+
+/* ==========================================================================
+   5. TRUST STATS & CERTIFICATION
+   ========================================================================== */
+.trust-banner-wrap {
+  margin: 40px 0;
+  background: #281612;
+  color: #FFFFFF;
+  border-radius: 24px;
+  padding: 36px 24px;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 24px;
+  text-align: center;
+}
+
+@media (min-width: 768px) {
+  .trust-banner-wrap {
+    grid-template-columns: repeat(4, 1fr);
+    padding: 44px 32px;
+  }
+}
+
+.trust-stat-number {
+  font-family: 'Noto Serif', serif;
+  font-size: 32px;
+  font-weight: 800;
+  color: #E2C095;
+  margin-bottom: 4px;
+}
+
+@media (min-width: 768px) {
+  .trust-stat-number {
+    font-size: 38px;
+  }
+}
+
+.trust-stat-label {
+  font-size: 12.5px;
+  color: #DDD4CF;
+  font-weight: 500;
+}

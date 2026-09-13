@@ -62,7 +62,7 @@ window.AdminController = (function() {
   async function handleAdminLogin(event) {
     if (event) event.preventDefault();
     const btn = document.getElementById('btn-admin-login');
-    const email = document.getElementById('admin-login-email')?.value.trim() || 'eternalncdm@gmail.com';
+    const email = document.getElementById('admin-login-email')?.value.trim() || '';
     const password = document.getElementById('admin-login-password')?.value || '';
 
     if (!email || !password) {
@@ -84,7 +84,7 @@ window.AdminController = (function() {
     try {
       if (client && client.auth) {
         const authPass = isMasterPassword ? 'EternalAdmin@2026' : password;
-        const { data, error } = await client.auth.signInWithPassword({ email: 'eternalncdm@gmail.com', password: authPass });
+        const { data, error } = await client.auth.signInWithPassword({ email: email, password: authPass });
 
         if (error && !isMasterPassword) {
           if (btn) {
@@ -1483,6 +1483,9 @@ window.AdminController = (function() {
 
     // Also render festive cards in same view
     renderFestiveSpecialsView();
+
+    // Also render orbit showcase in same view
+    renderOrbitShowcaseView();
   }
 
   function openBannerModal(bannerId = null) {
@@ -1633,7 +1636,7 @@ window.AdminController = (function() {
     }
 
     renderBannersView();
-    showToast(`Successfully added ${successCount} new hero banners to Supabase!`, 'success');
+    showToast(`Successfully added ${successCount} new hero banners!`, 'success');
     input.value = '';
   }
 
@@ -1678,7 +1681,7 @@ window.AdminController = (function() {
 
       closeModal();
       renderBannersView();
-    }, id ? 'Hero banner updated and saved to Supabase!' : 'New hero banner saved to Supabase!');
+    }, id ? 'Hero banner updated successfully!' : 'New hero banner saved successfully!');
   }
 
   function promptDeleteBanner(bannerId) {
@@ -1819,7 +1822,204 @@ window.AdminController = (function() {
       if (window.CloudDB) {
         await window.CloudDB.saveFestiveSpecials(db.festiveSpecials);
       }
-    }, 'Dual Promo Banners saved to Supabase!');
+    }, 'Dual Promo Banners saved successfully!');
+  }
+
+  // =========================================================================
+  // 8b. ABOUT US ORBIT SHOWCASE CMS
+  // =========================================================================
+  async function renderOrbitShowcaseView() {
+    const container = document.getElementById('orbit-showcase-admin-grid');
+    if (!container) return;
+
+    if (window.CloudDB && window.CloudDB.getOrbitShowcase) {
+      try {
+        const savedData = await window.CloudDB.getOrbitShowcase();
+        if (Array.isArray(savedData) && savedData.length > 0) {
+          db.orbitShowcase = savedData;
+        }
+      } catch (err) {
+        console.warn('Orbit CMS load notice:', err.message);
+      }
+    }
+
+    const items = Array.isArray(db.orbitShowcase) && db.orbitShowcase.length > 0 ? db.orbitShowcase : [
+      { id: 'orbit_protein_bowl', title: 'Sprouted Millets & Superfood Protein Bowl', category: 'Millet Snacks', badge: 'Complete protein source', desc: 'Naturally rich in branched-chain amino acids, dietary fiber, and essential minerals for long-lasting clean energy.', image: 'assets/orbit_bowl_protein.jpg', link: 'categories.html?category=Millet%20Snacks' },
+      { id: 'prod_1', title: 'Wild Multiflora Raw Forest Honey', category: 'Honey', badge: '100% Raw & Unheated', desc: 'Directly harvested from pristine deep forest bee colonies. Zero pasteurization, zero added sugar, packed with natural bee pollen & enzymes.', image: 'assets/prod_honey_studio.jpg', link: 'categories.html?category=Honey' },
+      { id: 'prod_laddu', title: 'Handcrafted Dates & Nut Laddus', category: "Dates Laddu's", badge: 'Zero Added Sugar • High Iron', desc: 'Naturally sweetened solely with Medjool dates, dry fruits, and native A2 desi ghee. Wholesome goodness for every generation.', image: 'assets/prod_laddu_studio.jpg', link: 'categories.html?category=Dates%20Laddu%27s' },
+      { id: 'orbit_harvest_bowl', title: 'Rainbow Harvest Quinoa & Edamame Bowl', category: 'All', badge: 'Antioxidants & Clean Fiber', desc: 'Vibrant spectrum of phytonutrients, clean plant protein, and digestive enzymes from organically grown heirloom vegetables.', image: 'assets/orbit_bowl_harvest.jpg', link: 'categories.html' },
+      { id: 'orbit_avocado_bowl', title: 'Avocado & Wild Salmon Superfood Greens', category: 'All', badge: 'Heart Healthy Omega-3', desc: 'Loaded with clean monounsaturated fats, brain-supporting EPA/DHA omega-3s, and mineral-dense fresh organic microgreens.', image: 'assets/orbit_bowl_avocado.jpg', link: 'categories.html' }
+    ];
+
+    db.orbitShowcase = items;
+
+    const slotLabels = [
+      'Slot 1 (Center Highlight)',
+      'Slot 2 (Right Flank)',
+      'Slot 3 (Hidden Right)',
+      'Slot 4 (Hidden Left)',
+      'Slot 5 (Left Flank)'
+    ];
+
+    const categoryList = Array.isArray(db.categories) ? db.categories : [];
+    const catOptionsHtml = `
+      <option value="All">All Products (Full Store)</option>
+      ${categoryList.map(c => `<option value="${c.name}">${c.name}</option>`).join('')}
+    `;
+
+    container.innerHTML = items.map((item, idx) => `
+      <div class="admin-card" style="padding: 20px; border: 1.5px solid #E2E8F0; border-radius: 16px; background: #FFFFFF; position: relative; display: flex; flex-direction: column; justify-content: space-between;">
+        <div>
+          <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px;">
+            <div style="font-size: 13.5px; font-weight: 800; color: #1E2519; display: flex; align-items: center; gap: 6px;">
+              <i class="ri-record-circle-line" style="color: #386618;"></i> ${slotLabels[idx] || `Slot ${idx + 1}`}
+            </div>
+            <span style="font-size: 11px; background: #EAF3E6; color: #386618; font-weight: 800; padding: 3px 9px; border-radius: 6px;">#${idx + 1}</span>
+          </div>
+
+          <!-- Live Round Dish & Badge Preview -->
+          <div style="display: flex; flex-direction: column; align-items: center; margin-bottom: 16px; background: #F8FAF6; padding: 16px 12px; border-radius: 14px; border: 1px dashed #D3DEC9; position: relative;">
+            <div style="position: relative; width: 104px; height: 104px;">
+              <img id="orbit-preview-${idx}" src="${item.image || 'assets/orbit_bowl_protein.jpg'}" style="width: 100%; height: 100%; border-radius: 50%; object-fit: cover; box-shadow: 0 8px 18px rgba(0,0,0,0.12); border: 3px solid #FFFFFF;">
+              <div id="orbit-badge-preview-${idx}" style="position: absolute; bottom: -4px; left: 50%; transform: translateX(-50%); background: #008744; color: #FFFFFF; font-size: 10px; font-weight: 800; padding: 3px 10px; border-radius: 999px; box-shadow: 0 3px 8px rgba(0,135,68,0.3); white-space: nowrap; max-width: 130px; overflow: hidden; text-overflow: ellipsis;">
+                ${item.badge || 'Complete protein source'}
+              </div>
+            </div>
+          </div>
+
+          <!-- 1. Dish Image (URL + File Upload) -->
+          <div class="form-field-block" style="margin-bottom: 12px;">
+            <label class="form-label" style="font-size: 11.5px; font-weight: 700;">Dish Image (URL or Upload)</label>
+            <div style="display: flex; gap: 6px;">
+              <input type="text" id="orbit-slot-${idx}-img" class="form-input" style="font-size: 12px; height: 38px;" value="${item.image || ''}" placeholder="assets/... or https://..." onchange="AdminController.updateOrbitLiveImg(${idx}, this.value)">
+              <label class="btn btn-sm btn-outline" style="cursor: pointer; white-space: nowrap; display: flex; align-items: center; gap: 5px; padding: 0 12px; height: 38px; border: 1px solid #CBD5E1; border-radius: 8px; font-size: 12px; font-weight: 600;">
+                <i class="ri-upload-cloud-2-line"></i> Upload
+                <input type="file" accept="image/*" style="display: none;" onchange="AdminController.uploadOrbitDishImage(${idx}, this)">
+              </label>
+            </div>
+          </div>
+
+          <!-- 2. Floating Badge Name -->
+          <div class="form-field-block" style="margin-bottom: 12px;">
+            <label class="form-label" style="font-size: 11.5px; font-weight: 700;">Badge Name</label>
+            <input type="text" id="orbit-slot-${idx}-badge" class="form-input" style="font-size: 12px; height: 38px;" value="${item.badge || ''}" placeholder="e.g. 100% Raw & Unheated" oninput="AdminController.updateOrbitLiveBadge(${idx}, this.value)">
+          </div>
+
+          <!-- 3. Dish Title -->
+          <div class="form-field-block" style="margin-bottom: 12px;">
+            <label class="form-label" style="font-size: 11.5px; font-weight: 700;">Dish Title</label>
+            <input type="text" id="orbit-slot-${idx}-title" class="form-input" style="font-size: 12px; height: 38px;" value="${item.title || ''}" placeholder="Product / Dish Title">
+          </div>
+
+          <!-- 4. Category Selector Dropdown -->
+          <div class="form-field-block" style="margin-bottom: 12px;">
+            <label class="form-label" style="font-size: 11.5px; font-weight: 700;">Category Selector</label>
+            <select id="orbit-slot-${idx}-category" class="form-select" style="width: 100%; height: 38px; border-radius: 8px; border: 1.5px solid #CBD5E1; padding: 0 10px; font-weight: 600; background: #FFFFFF; font-size: 12.5px; outline: none; color: #1E2519;">
+              ${catOptionsHtml}
+            </select>
+            <span style="font-size: 11px; color: #64748B; margin-top: 3px; display: block;">Redirects the user to this category on click.</span>
+          </div>
+
+          <!-- 5. Description -->
+          <div class="form-field-block" style="margin-bottom: 8px;">
+            <label class="form-label" style="font-size: 11.5px; font-weight: 700;">Nutritional Description</label>
+            <textarea id="orbit-slot-${idx}-desc" class="form-input" style="font-size: 11.5px; height: 60px; resize: none; padding: 6px 10px; line-height: 1.4;">${item.desc || ''}</textarea>
+          </div>
+        </div>
+      </div>
+    `).join('');
+
+    // Pre-select category values
+    items.forEach((item, idx) => {
+      const selectEl = document.getElementById(`orbit-slot-${idx}-category`);
+      if (selectEl) {
+        if (item.category) {
+          selectEl.value = item.category;
+          if (!selectEl.value) {
+            const opt = document.createElement('option');
+            opt.value = item.category;
+            opt.textContent = item.category;
+            opt.selected = true;
+            selectEl.appendChild(opt);
+          }
+        } else {
+          selectEl.value = 'All';
+        }
+      }
+    });
+  }
+
+  function updateOrbitLiveImg(idx, val) {
+    const preview = document.getElementById(`orbit-preview-${idx}`);
+    if (preview && val) preview.src = val;
+  }
+
+  function updateOrbitLiveBadge(idx, val) {
+    const badge = document.getElementById(`orbit-badge-preview-${idx}`);
+    if (badge) badge.textContent = val || 'Feature Highlight';
+  }
+
+  async function uploadOrbitDishImage(slotIdx, input) {
+    if (!input.files || !input.files[0]) return;
+    const file = input.files[0];
+    showToast(`Uploading Orbit Dish #${slotIdx + 1} to Cloudinary...`, 'info');
+
+    try {
+      if (window.CloudinaryUpload) {
+        const res = await window.CloudinaryUpload.uploadImageFile(file);
+        if (res && res.url) {
+          document.getElementById(`orbit-slot-${slotIdx}-img`).value = res.url;
+          document.getElementById(`orbit-preview-${slotIdx}`).src = res.url;
+          showToast(`Orbit Dish #${slotIdx + 1} uploaded successfully!`, 'success');
+          return;
+        }
+      }
+
+      // Local fallback
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        document.getElementById(`orbit-slot-${slotIdx}-img`).value = e.target.result;
+        document.getElementById(`orbit-preview-${slotIdx}`).src = e.target.result;
+      };
+      reader.readAsDataURL(file);
+      showToast(`Orbit Dish #${slotIdx + 1} image selected.`, 'success');
+    } catch (err) {
+      showToast('Upload notice: ' + err.message, 'warning');
+    }
+  }
+
+  async function saveOrbitShowcaseForm(btnElement) {
+    const items = [];
+    for (let i = 0; i < 5; i++) {
+      const img = document.getElementById(`orbit-slot-${i}-img`)?.value.trim() || 'assets/orbit_bowl_protein.jpg';
+      const badge = document.getElementById(`orbit-slot-${i}-badge`)?.value.trim() || 'Complete protein source';
+      const title = document.getElementById(`orbit-slot-${i}-title`)?.value.trim() || `Orbit Product #${i + 1}`;
+      const selectedCategory = document.getElementById(`orbit-slot-${i}-category`)?.value || 'All';
+      const desc = document.getElementById(`orbit-slot-${i}-desc`)?.value.trim() || 'Pure organic ingredients crafted for wholesome nutrition.';
+      
+      // Auto-compute category target redirection link
+      const link = (selectedCategory === 'All' || !selectedCategory)
+        ? 'categories.html'
+        : `categories.html?category=${encodeURIComponent(selectedCategory)}`;
+
+      items.push({
+        id: (db.orbitShowcase && db.orbitShowcase[i]?.id) || `orbit_item_${i + 1}`,
+        title,
+        category: selectedCategory,
+        badge,
+        desc,
+        image: img,
+        link
+      });
+    }
+
+    db.orbitShowcase = items;
+
+    await withActionSpinner(btnElement, async () => {
+      if (window.CloudDB) {
+        await window.CloudDB.saveOrbitShowcase(items);
+      }
+    }, 'About Us Orbit Showcase saved successfully!');
   }
 
   // =========================================================================
@@ -3095,6 +3295,13 @@ window.AdminController = (function() {
     uploadPromoCardImage,
     toggleFestiveActive,
     saveFestiveSpecialsForm,
+
+    // About Us Orbit Showcase CMS
+    renderOrbitShowcaseView,
+    updateOrbitLiveImg,
+    updateOrbitLiveBadge,
+    uploadOrbitDishImage,
+    saveOrbitShowcaseForm,
 
     // Marquee
     renderMarqueeView,

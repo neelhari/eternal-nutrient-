@@ -719,6 +719,51 @@ window.CloudDB = (function() {
     return { success: true, local: true };
   }
 
+  // 8. ABOUT US ORBIT SHOWCASE CMS
+  async function getOrbitShowcase() {
+    if (isSupabaseActive && supabaseClient) {
+      try {
+        const { data, error } = await supabaseClient.from('cms_content').select('*').eq('id', 'cms_orbit_showcase').single();
+        if (!error && data && Array.isArray(data.content_payload) && data.content_payload.length > 0) return data.content_payload;
+      } catch (err) {
+        console.warn('Falling back to local orbit showcase:', err.message);
+      }
+    }
+    try {
+      const cached = localStorage.getItem('en_orbit_showcase_data');
+      if (cached) {
+        const parsed = JSON.parse(cached);
+        if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+      }
+    } catch(e) {}
+    return mock && mock.orbitShowcase ? mock.orbitShowcase : null;
+  }
+
+  async function saveOrbitShowcase(orbitList) {
+    try {
+      localStorage.setItem('en_orbit_showcase_data', JSON.stringify(orbitList));
+    } catch(e) {}
+
+    const payload = {
+      id: 'cms_orbit_showcase',
+      section_type: 'orbit_showcase',
+      content_payload: orbitList,
+      is_active: true,
+      updated_at: new Date().toISOString()
+    };
+    if (isSupabaseActive && supabaseClient) {
+      try {
+        const { data, error } = await supabaseClient.from('cms_content').upsert(payload).select();
+        if (!error) return { success: true, data };
+        return { success: false, error };
+      } catch (err) {
+        return { success: false, error: err };
+      }
+    }
+    if (mock) mock.orbitShowcase = orbitList;
+    return { success: true, local: true };
+  }
+
   // 9. FRANCHISE INQUIRIES PIPELINE
   async function saveFranchiseInquiry(inquiry) {
     const ts = Date.now();
@@ -785,6 +830,8 @@ window.CloudDB = (function() {
     saveFestiveSpecials,
     getAnnouncements,
     saveAnnouncements,
+    getOrbitShowcase,
+    saveOrbitShowcase,
     saveFranchiseInquiry,
     getFranchiseInquiries
   };

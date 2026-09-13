@@ -2185,11 +2185,30 @@ body {
     font-weight: 800;
   }
 
-  /* On Mobile (Screen <= 768px): Clean Top Header - Hide account name and cart icon (handled in 4-tab bottom dock) */
-  .header-desktop-account-btn,
-  .auth-header-indicator,
+  /* On Mobile (Screen <= 768px): Clean Top Header - Show Account icon on top right; cart is handled in bottom dock */
   .minimal-cart-icon-btn,
   .minimal-wishlist-icon-btn {
+    display: none !important;
+  }
+
+  .header-desktop-account-btn,
+  .header-account-btn,
+  .auth-header-indicator {
+    display: inline-flex !important;
+    align-items: center;
+    justify-content: center;
+    width: 38px !important;
+    height: 38px !important;
+    padding: 0 !important;
+    border-radius: 50% !important;
+    background: #F3F7F0 !important;
+    color: #2D5213 !important;
+    border: 1.5px solid #E2EEDC !important;
+    text-decoration: none !important;
+    flex-shrink: 0;
+  }
+
+  .header-desktop-account-btn .header-auth-label {
     display: none !important;
   }
 }

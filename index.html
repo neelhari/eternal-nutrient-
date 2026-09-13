@@ -113,6 +113,7 @@
     <nav class="desktop-category-nav-bar">
       <a href="index.html" class="desktop-nav-pill active"><i class="ri-home-4-line"></i> Home</a>
       <a href="categories.html" class="desktop-nav-pill"><i class="ri-store-2-line"></i> All Products</a>
+      <a href="about.html" class="desktop-nav-pill"><i class="ri-information-line"></i> About Us</a>
       <a href="categories.html?category=Honey" class="desktop-nav-pill">🍯 Raw Honey</a>
       <a href="categories.html?category=Laddus" class="desktop-nav-pill">🌰 Dates Laddus</a>
       <a href="categories.html?category=Snacks" class="desktop-nav-pill">🌿 Millet Snacks</a>
@@ -436,7 +437,7 @@
 
     </footer>
 
-    <!-- 8. Mobile Bottom Navigation Dock (5 Tabs: Home, Shop, Cart, Distribute, Profile) -->
+    <!-- 8. Mobile Bottom Navigation Dock (5 Tabs: Home, Shop, Cart, Distribute, About Us) -->
     <nav class="mobile-bottom-dock">
       <a href="index.html" class="mobile-dock-btn active">
         <i class="ri-home-5-fill"></i>
@@ -455,9 +456,9 @@
         <i class="ri-customer-service-2-line"></i>
         <span>Contact Us</span>
       </a>
-      <a href="account.html" class="mobile-dock-btn">
-        <i class="ri-user-3-line"></i>
-        <span>Profile</span>
+      <a href="about.html" class="mobile-dock-btn">
+        <i class="ri-information-line"></i>
+        <span>About Us</span>
       </a>
     </nav>
 
@@ -588,6 +589,7 @@
               desktopNav.innerHTML = `
                 <a href="index.html" class="desktop-nav-pill active"><i class="ri-home-4-line"></i> Home</a>
                 <a href="categories.html" class="desktop-nav-pill"><i class="ri-store-2-line"></i> All Products</a>
+                <a href="about.html" class="desktop-nav-pill"><i class="ri-information-line"></i> About Us</a>
               ` + visibleCats.map(c => `
                 <a href="categories.html?cat=${encodeURIComponent(c.name)}" class="desktop-nav-pill">${c.name}</a>
               `).join('') + `

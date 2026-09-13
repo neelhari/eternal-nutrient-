@@ -71,6 +71,9 @@
 
     .sub-header-spacer {
       width: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
     }
 
     /* Page Container (Full Screen Responsive) */
@@ -356,13 +359,17 @@
 <body>
 
   <!-- Plain Clean Header with Go Back Navigation (100% Width) -->
-  <header class="plain-sub-header">
-    <a href="index.html" class="sub-back-btn" aria-label="Go Back">
-      <i class="ri-arrow-left-line"></i>
-    </a>
-    <h1 class="sub-page-title">Cart</h1>
-    <div class="sub-header-spacer"></div>
-  </header>
+    <header class="plain-sub-header">
+      <a href="javascript:history.back()" class="sub-back-btn" aria-label="Go back">
+        <i class="ri-arrow-left-s-line"></i>
+      </a>
+      <h1 class="sub-page-title">Shopping Cart</h1>
+      <div class="sub-header-spacer">
+        <a href="account.html" aria-label="Account" title="My Account" style="text-decoration: none; color: #2D5213; width: 36px; height: 36px; border-radius: 50%; background: #F3F7F0; border: 1.5px solid #E2EEDC; display: flex; align-items: center; justify-content: center; font-size: 18px;">
+          <i class="ri-user-3-line"></i>
+        </a>
+      </div>
+    </header>
 
   <!-- Main Cart Container -->
   <main class="cart-screen-container">
@@ -432,9 +439,9 @@
       <i class="ri-customer-service-2-line"></i>
       <span>Contact Us</span>
     </a>
-    <a href="account.html" class="mobile-dock-btn" aria-label="Profile">
-      <i class="ri-user-3-line"></i>
-      <span>Profile</span>
+    <a href="about.html" class="mobile-dock-btn" aria-label="About Us">
+      <i class="ri-information-line"></i>
+      <span>About Us</span>
     </a>
   </nav>
 

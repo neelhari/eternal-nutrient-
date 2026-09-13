@@ -673,6 +673,60 @@ window.ADMIN_MOCK_DB = (function() {
     ]
   };
 
+  // 7b. About Us Orbit Showcase (3D Curved Arc Dishes)
+  const orbitShowcase = [
+    {
+      id: 'orbit_protein_bowl',
+      title: 'Sprouted Millets & Superfood Protein Bowl',
+      category: 'Signature Organic Superfood',
+      badge: 'Complete protein source',
+      desc: 'Naturally rich in branched-chain amino acids, dietary fiber, and essential minerals for long-lasting clean energy.',
+      price: 299,
+      image: 'assets/orbit_bowl_protein.jpg',
+      link: 'categories.html?category=Snacks'
+    },
+    {
+      id: 'prod_1',
+      title: 'Wild Multiflora Raw Forest Honey',
+      category: '100% Raw Honey',
+      badge: '100% Raw & Unheated',
+      desc: 'Directly harvested from pristine deep forest bee colonies. Zero pasteurization, zero added sugar, packed with natural bee pollen & enzymes.',
+      price: 499,
+      image: 'assets/prod_honey_studio.jpg',
+      link: 'product.html?id=prod_1'
+    },
+    {
+      id: 'prod_laddu',
+      title: 'Handcrafted Dates & Nut Laddus',
+      category: 'Guilt-Free Sweets',
+      badge: 'Zero Added Sugar • High Iron',
+      desc: 'Naturally sweetened solely with Medjool dates, dry fruits, and native A2 desi ghee. Wholesome goodness for every generation.',
+      price: 349,
+      image: 'assets/prod_laddu_studio.jpg',
+      link: 'categories.html?category=Laddus'
+    },
+    {
+      id: 'orbit_harvest_bowl',
+      title: 'Rainbow Harvest Quinoa & Edamame Bowl',
+      category: 'Plant Power Meal',
+      badge: 'Antioxidants & Clean Fiber',
+      desc: 'Vibrant spectrum of phytonutrients, clean plant protein, and digestive enzymes from organically grown heirloom vegetables.',
+      price: 320,
+      image: 'assets/orbit_bowl_harvest.jpg',
+      link: 'categories.html'
+    },
+    {
+      id: 'orbit_avocado_bowl',
+      title: 'Avocado & Wild Salmon Superfood Greens',
+      category: 'Organic Vitality Meal',
+      badge: 'Heart Healthy Omega-3',
+      desc: 'Loaded with clean monounsaturated fats, brain-supporting EPA/DHA omega-3s, and mineral-dense fresh organic microgreens.',
+      price: 399,
+      image: 'assets/orbit_bowl_avocado.jpg',
+      link: 'categories.html'
+    }
+  ];
+
   // 8. Continuous Marquee Ribbon Announcements
   const announcementItems = [
     { id: 'ann_1', text: 'Minimum Order Value: ₹999', icon: 'ri-shopping-basket-fill', isActive: true, sortOrder: 1 },
@@ -785,6 +839,7 @@ window.ADMIN_MOCK_DB = (function() {
     heroBanners,
     featuredCollections,
     festiveSpecials,
+    orbitShowcase,
     announcementItems,
     coupons,
     storeSettings,

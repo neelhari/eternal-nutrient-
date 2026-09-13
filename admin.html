@@ -678,7 +678,28 @@
                 <select id="promo-slot2-category" class="form-select" style="width: 100%; height: 42px; border-radius: 8px; border: 1.5px solid #E7E5E4; padding: 0 12px; font-weight: 600; background: #FFFFFF; font-size: 13px; outline: none;"></select>
               </div>
             </div>
+          </div>
 
+          <!-- About Us Orbit Showcase (3D Curved Arc Dishes) -->
+          <div class="view-header-strip" style="border-top: 1px solid #E7E5E4; padding-top: 32px; margin-top: 32px;">
+            <div>
+              <h1 class="view-heading-title" style="font-size: 20px; color: #1E2519; display: flex; align-items: center; gap: 8px;">
+                <i class="ri-compass-3-line" style="color: #386618;"></i> About Us Banners (Orbit Showcase)
+              </h1>
+              <p class="view-heading-sub" style="font-size: 13px; color: #64748B; margin-top: 4px;">
+                Manage the 5 rotating superfood dish banners on the About Us page. Customize dish images, floating highlight badges, descriptions, and linked categories.
+              </p>
+            </div>
+            <div style="display: flex; align-items: center; gap: 14px;">
+              <button class="btn btn-primary" onclick="AdminController.saveOrbitShowcaseForm(this)" style="padding: 10px 20px; font-weight: 700; border-radius: 8px;">
+                <i class="ri-save-3-line"></i> Save Orbit Showcase
+              </button>
+            </div>
+          </div>
+
+          <!-- 5 Orbit Dish Cards Grid (Organized in 3-column grid) -->
+          <div id="orbit-showcase-admin-grid" class="orbit-admin-grid">
+            <!-- Rendered Dynamically by AdminController -->
           </div>
 
         </section>
@@ -1428,19 +1449,19 @@
       <div style="padding: 32px 28px 24px; text-align: center; border-bottom: 1px solid var(--border-subtle); background: #F8FAFC;">
         <img src="assets/brand_logo.svg" alt="Eternal Nutricare" style="height: 52px; margin-bottom: 12px;">
         <h2 style="font-size: 18px; font-weight: 800; color: #0F172A;">Admin Portal Login</h2>
-        <p style="font-size: 12.5px; color: var(--text-muted); margin-top: 4px;">Sign in with your verified Supabase administrator credentials to manage your store.</p>
+        <p style="font-size: 12.5px; color: var(--text-muted); margin-top: 4px;">Enter your administrator credentials to manage your store.</p>
       </div>
 
       <div style="padding: 24px 28px;">
         <form onsubmit="AdminController.handleAdminLogin(event)">
           <div class="form-field-block" style="margin-bottom: 16px;">
             <label class="form-label">Admin Email Address</label>
-            <input type="email" id="admin-login-email" class="form-input" placeholder="eternalncdm@gmail.com" required value="eternalncdm@gmail.com">
+            <input type="email" id="admin-login-email" class="form-input" required autocomplete="username">
           </div>
 
           <div class="form-field-block" style="margin-bottom: 8px;">
             <label class="form-label">Admin Password</label>
-            <input type="password" id="admin-login-password" class="form-input" placeholder="••••••••••••" required>
+            <input type="password" id="admin-login-password" class="form-input" required autocomplete="current-password">
           </div>
 
           <div style="text-align: right; margin-bottom: 20px;">
@@ -1456,7 +1477,7 @@
       </div>
 
       <div style="padding: 14px 28px; background: #F1F5F9; border-top: 1px solid var(--border-subtle); text-align: center; font-size: 11.5px; color: var(--text-muted);">
-        <i class="ri-lock-2-line"></i> Protected by Supabase JWT & Row Level Security (RLS)
+        <i class="ri-shield-check-line"></i> 256-Bit Encrypted Session • Authorized Access Only
       </div>
     </div>
   </div>

@@ -1,0 +1,830 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="format-detection" content="telephone=no">
+  <title>About Us - Eternal Nutricare | Pure. Natural. Eternal.</title>
+  
+  <!-- Remix Icons Font -->
+  <link href="https://cdn.jsdelivr.net/npm/remixicon@4.2.0/fonts/remixicon.css" rel="stylesheet">
+  
+  <!-- Google Fonts: Plus Jakarta Sans & Noto Serif -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif:ital,wght@0,400;0,700;1,400;1,700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <!-- Core Layout & Theme Styles -->
+  <link rel="stylesheet" href="styles/theme.css">
+  <link rel="stylesheet" href="styles/storefront.css">
+  <link rel="stylesheet" href="styles/about.css">
+
+  <style>
+    /* 5 Tabs in mobile bottom dock */
+    .mobile-bottom-dock {
+      grid-template-columns: repeat(5, 1fr) !important;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Main Responsive Site Wrapper -->
+  <div class="site-wrapper">
+    
+    <!-- 1. Top Header (Clean: Left Logo + Right Account Icon ONLY) -->
+    <header class="main-header">
+      
+      <!-- Brand Logo -->
+      <a href="index.html" class="brand-link-left">
+        <img src="assets/brand_logo.svg" alt="Eternal Nutricare Official Logo" class="brand-logo-official-img">
+      </a>
+
+      <!-- Desktop Center Search Bar (Hidden on Mobile) -->
+      <div class="header-search-wrap">
+        <div class="search-input-pill">
+          <i class="ri-search-2-line search-leading-icon"></i>
+          <input type="text" id="desktop-search-input" placeholder="Search organic honey, pickles, millets, laddus..." onkeydown="if(event.key==='Enter') window.location.href='categories.html?search='+encodeURIComponent(this.value)">
+          <button class="search-submit-btn" onclick="const q=document.getElementById('desktop-search-input').value; if(q) window.location.href='categories.html?search='+encodeURIComponent(q)" aria-label="Search">
+            <i class="ri-search-2-line"></i>
+          </button>
+        </div>
+      </div>
+
+      <!-- Right Action: ONLY Account Icon (No Cart Symbol in Header) -->
+      <div class="header-actions-right">
+        <a href="account.html" class="header-desktop-account-btn" title="My Account" aria-label="Account">
+          <i class="ri-user-3-fill" style="font-size: 18px; color: #386618;"></i>
+          <span class="header-auth-label">Account</span>
+        </a>
+      </div>
+
+    </header>
+
+    <!-- Desktop Category Quick Nav -->
+    <nav class="desktop-category-nav-bar">
+      <a href="index.html" class="desktop-nav-pill"><i class="ri-home-4-line"></i> Home</a>
+      <a href="categories.html" class="desktop-nav-pill"><i class="ri-store-2-line"></i> All Products</a>
+      <a href="about.html" class="desktop-nav-pill active"><i class="ri-information-line"></i> About Us</a>
+      <a href="categories.html?category=Honey" class="desktop-nav-pill">🍯 Raw Honey</a>
+      <a href="categories.html?category=Laddus" class="desktop-nav-pill">🌰 Dates Laddus</a>
+      <a href="categories.html?category=Snacks" class="desktop-nav-pill">🌿 Millet Snacks</a>
+      <a href="categories.html?category=Pickles" class="desktop-nav-pill">🍋 Handmade Pickles</a>
+      <a href="shipping-delivery.html" class="desktop-nav-pill"><i class="ri-truck-line"></i> Shipping & Delivery</a>
+      <a href="account.html" class="desktop-nav-pill"><i class="ri-heart-line"></i> Wishlist</a>
+      <a href="cart.html" class="desktop-nav-pill"><i class="ri-shopping-cart-2-line"></i> Cart</a>
+    </nav>
+
+    <!-- MAIN ABOUT US CONTENT -->
+    <main class="about-page-container">
+
+      <!-- ==================================================================
+           HERO SECTION: 3D CURVED ORBIT PRODUCT SHOWCASE BANNER
+           ================================================================== -->
+      <section class="orbit-hero-section">
+        <div class="orbit-hero-header">
+          <span class="orbit-eyebrow"><i class="ri-sparkling-fill"></i> Pure. Natural. Eternal.</span>
+          <h1 class="orbit-hero-title">Wholesome Nutrition<br>In Every Pure Bite.</h1>
+          <p class="orbit-hero-subtitle">Harvested with respect, processed without chemicals, and crafted for real wellness. Explore our signature superfood orbit.</p>
+        </div>
+
+        <!-- 3D Curved Arc Showcase Stage -->
+        <div class="orbit-stage" id="orbit-stage" aria-label="Rotating Product Showcase">
+          <!-- Background Orbit Guide Track -->
+          <div class="orbit-track-ring"></div>
+
+          <!-- Product Item 0: Protein Sprouted Bowl -->
+          <div class="orbit-item slot-center" data-index="0" onclick="handleOrbitItemClick(0)">
+            <div class="orbit-dish-wrap">
+              <img src="assets/orbit_bowl_protein.jpg" alt="Sprouted Millets & Egg Protein Bowl" class="orbit-dish-img">
+              <div class="orbit-floating-badge">Complete protein source</div>
+            </div>
+          </div>
+
+          <!-- Product Item 1: Raw Forest Honey -->
+          <div class="orbit-item slot-right" data-index="1" onclick="handleOrbitItemClick(1)">
+            <div class="orbit-dish-wrap">
+              <img src="assets/prod_honey_studio.jpg" alt="Wild Raw Forest Honey" class="orbit-dish-img">
+              <div class="orbit-floating-badge">100% Raw & Unheated</div>
+            </div>
+          </div>
+
+          <!-- Product Item 2: Dates Laddus -->
+          <div class="orbit-item slot-hidden-right" data-index="2" onclick="handleOrbitItemClick(2)">
+            <div class="orbit-dish-wrap">
+              <img src="assets/prod_laddu_studio.jpg" alt="Dates & Nut Laddus" class="orbit-dish-img">
+              <div class="orbit-floating-badge">Zero Added Sugar • High Iron</div>
+            </div>
+          </div>
+
+          <!-- Product Item 3: Rainbow Harvest Salad Bowl -->
+          <div class="orbit-item slot-hidden-left" data-index="3" onclick="handleOrbitItemClick(3)">
+            <div class="orbit-dish-wrap">
+              <img src="assets/orbit_bowl_harvest.jpg" alt="Rainbow Harvest Salad" class="orbit-dish-img">
+              <div class="orbit-floating-badge">Antioxidants & Clean Fiber</div>
+            </div>
+          </div>
+
+          <!-- Product Item 4: Avocado & Superfood Greens -->
+          <div class="orbit-item slot-left" data-index="4" onclick="handleOrbitItemClick(4)">
+            <div class="orbit-dish-wrap">
+              <img src="assets/orbit_bowl_avocado.jpg" alt="Avocado & Greens Superfood" class="orbit-dish-img">
+              <div class="orbit-floating-badge">Heart Healthy Omega-3</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Orbit Controls: Prev / Dots / Next -->
+        <div class="orbit-controls-row">
+          <button class="orbit-arrow-btn" onclick="orbitPrev()" aria-label="Previous Product">
+            <i class="ri-arrow-left-s-line"></i>
+          </button>
+
+          <div class="orbit-dots-row" id="orbit-dots-row">
+            <span class="orbit-dot active" onclick="setOrbitIndex(0)"></span>
+            <span class="orbit-dot" onclick="setOrbitIndex(1)"></span>
+            <span class="orbit-dot" onclick="setOrbitIndex(2)"></span>
+            <span class="orbit-dot" onclick="setOrbitIndex(3)"></span>
+            <span class="orbit-dot" onclick="setOrbitIndex(4)"></span>
+          </div>
+
+          <button class="orbit-arrow-btn" onclick="orbitNext()" aria-label="Next Product">
+            <i class="ri-arrow-right-s-line"></i>
+          </button>
+        </div>
+
+        <!-- Active Item Dynamic Details Card -->
+        <div class="orbit-product-infobox" id="orbit-infobox">
+          <div class="orbit-info-category" id="orbit-info-cat">Signature Organic Superfood</div>
+          <h2 class="orbit-info-title" id="orbit-info-title">Sprouted Millets & Superfood Protein Bowl</h2>
+          <p class="orbit-info-desc" id="orbit-info-desc">Naturally rich in branched-chain amino acids, dietary fiber, and essential minerals for long-lasting clean energy.</p>
+          <div class="orbit-info-actions">
+            <a href="categories.html" class="btn-orbit-explore" id="orbit-link-btn">
+              <span id="orbit-link-label">Explore All Products</span>
+              <i class="ri-arrow-right-line"></i>
+            </a>
+          </div>
+        </div>
+      </section>
+
+      <!-- ==================================================================
+           2. OUR VISION & OUR MISSION SECTION (BENTO GRID)
+           ================================================================== -->
+      <section class="vision-mission-section">
+        <div class="section-title-wrap">
+          <span class="section-eyebrow">Our Guiding Light</span>
+          <h2 class="section-headline">Our Vision & Mission</h2>
+        </div>
+
+        <div class="vm-cards-grid">
+          
+          <!-- Vision Card -->
+          <div class="vm-card vision-card">
+            <div>
+              <div class="vm-icon-bubble">
+                <i class="ri-eye-line"></i>
+              </div>
+              <h3 class="vm-card-title">Our Vision</h3>
+              <p class="vm-card-text">
+                To nurture a world where every household has effortless access to 100% pure, honest, and unadulterated nutrition. We envision reviving ancient nutritional wisdom, inspiring generations to thrive with vital energy gifted straight from unpolluted soil and forests.
+              </p>
+            </div>
+            <ul class="vm-bullets-list">
+              <li><i class="ri-checkbox-circle-fill"></i> Zero adulteration, zero artificial sweeteners</li>
+              <li><i class="ri-checkbox-circle-fill"></i> Restoring generational health through heirloom crops</li>
+              <li><i class="ri-checkbox-circle-fill"></i> Promoting regenerative, chemical-free organic farming</li>
+            </ul>
+          </div>
+
+          <!-- Mission Card -->
+          <div class="vm-card mission-card">
+            <div>
+              <div class="vm-icon-bubble">
+                <i class="ri-compass-3-line"></i>
+              </div>
+              <h3 class="vm-card-title">Our Mission</h3>
+              <p class="vm-card-text">
+                To build transparent, direct bridges between ethical tribal beekeepers, smallholder organic farmers, and conscious families. By eliminating middlemen and harsh industrial processing, we preserve every vital enzyme, nutrient, and natural flavor just as nature intended.
+              </p>
+            </div>
+            <ul class="vm-bullets-list">
+              <li><i class="ri-checkbox-circle-fill"></i> Direct fair-trade support for indigenous farmers</li>
+              <li><i class="ri-checkbox-circle-fill"></i> Cold-crafted, sun-cured, and traditional methods</li>
+              <li><i class="ri-checkbox-circle-fill"></i> Rigorous batch testing and FSSAI certified purity</li>
+            </ul>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- ==================================================================
+           3. OUR FAVOURITE PRODUCTS (CURATED SPOTLIGHT)
+           ================================================================== -->
+      <section class="favourites-section">
+        <div class="section-title-wrap">
+          <span class="section-eyebrow">Founder's & Family Choice</span>
+          <h2 class="section-headline">Our Favourite Products</h2>
+        </div>
+
+        <div class="favourites-grid">
+          
+          <!-- Fav 1: Raw Honey -->
+          <div class="fav-product-card" onclick="window.location.href='product.html?id=prod_1'">
+            <span class="fav-card-badge">Bestseller</span>
+            <div class="fav-photo-wrap">
+              <img src="assets/prod_honey_studio.jpg" alt="Pure Raw Honey" loading="lazy">
+            </div>
+            <h3 class="fav-item-title">Wild Raw Forest Honey</h3>
+            <div class="fav-item-unit">500g Glass Jar • Unprocessed</div>
+            <div class="fav-bottom-row">
+              <div class="fav-price">₹499 <span class="fav-mrp">₹599</span></div>
+              <button class="fav-add-btn" onclick="event.stopPropagation(); quickAddFav('prod_1', 'Wild Raw Forest Honey', 499, 'assets/prod_honey_studio.jpg')">ADD</button>
+            </div>
+          </div>
+
+          <!-- Fav 2: Dates Laddus -->
+          <div class="fav-product-card" onclick="window.location.href='categories.html?category=Laddus'">
+            <span class="fav-card-badge">Zero Sugar</span>
+            <div class="fav-photo-wrap">
+              <img src="assets/prod_laddu_studio.jpg" alt="Dates & Nut Laddus" loading="lazy">
+            </div>
+            <h3 class="fav-item-title">Handcrafted Dates Laddus</h3>
+            <div class="fav-item-unit">400g • Dates, Nuts & Desi Ghee</div>
+            <div class="fav-bottom-row">
+              <div class="fav-price">₹349 <span class="fav-mrp">₹420</span></div>
+              <button class="fav-add-btn" onclick="event.stopPropagation(); quickAddFav('prod_laddu', 'Handcrafted Dates Laddus', 349, 'assets/prod_laddu_studio.jpg')">ADD</button>
+            </div>
+          </div>
+
+          <!-- Fav 3: Millet Cookies / Biscuits -->
+          <div class="fav-product-card" onclick="window.location.href='categories.html?category=Snacks'">
+            <span class="fav-card-badge">High Fiber</span>
+            <div class="fav-photo-wrap">
+              <img src="assets/prod_cookie_studio.jpg" alt="Organic Millet Biscuits" loading="lazy">
+            </div>
+            <h3 class="fav-item-title">Crunchy Millet Super Cookies</h3>
+            <div class="fav-item-unit">250g • Ragi & Jowar Blend</div>
+            <div class="fav-bottom-row">
+              <div class="fav-price">₹199 <span class="fav-mrp">₹240</span></div>
+              <button class="fav-add-btn" onclick="event.stopPropagation(); quickAddFav('prod_cookies', 'Crunchy Millet Super Cookies', 199, 'assets/prod_cookie_studio.jpg')">ADD</button>
+            </div>
+          </div>
+
+          <!-- Fav 4: Artisanal Pickle -->
+          <div class="fav-product-card" onclick="window.location.href='categories.html?category=Pickles'">
+            <span class="fav-card-badge">Probiotic</span>
+            <div class="fav-photo-wrap">
+              <img src="assets/prod_pickle_studio.jpg" alt="Handmade Pickles" loading="lazy">
+            </div>
+            <h3 class="fav-item-title">Sun-Cured Traditional Pickle</h3>
+            <div class="fav-item-unit">350g • Cold-Pressed Sesame Oil</div>
+            <div class="fav-bottom-row">
+              <div class="fav-price">₹249 <span class="fav-mrp">₹299</span></div>
+              <button class="fav-add-btn" onclick="event.stopPropagation(); quickAddFav('prod_pickle', 'Sun-Cured Traditional Pickle', 249, 'assets/prod_pickle_studio.jpg')">ADD</button>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- ==================================================================
+           4. THE 4 PILLARS OF PURITY
+           ================================================================== -->
+      <section class="pillars-section">
+        <div class="section-title-wrap">
+          <span class="section-eyebrow">Our Unshakable Standard</span>
+          <h2 class="section-headline">The 4 Pillars of Eternal Purity</h2>
+        </div>
+
+        <div class="pillars-grid">
+          <div class="pillar-item">
+            <div class="pillar-icon"><i class="ri-shield-check-line"></i></div>
+            <h3 class="pillar-title">100% Raw & Unadulterated</h3>
+            <p class="pillar-desc">Never heated, ultra-filtered, or chemically clarified. You receive living enzymes and intact vitamins.</p>
+          </div>
+
+          <div class="pillar-item">
+            <div class="pillar-icon"><i class="ri-seedling-line"></i></div>
+            <h3 class="pillar-title">Direct Native Sourcing</h3>
+            <p class="pillar-desc">Sourced directly from native beekeepers and multi-generational regenerative organic farmlands.</p>
+          </div>
+
+          <div class="pillar-item">
+            <div class="pillar-icon"><i class="ri-flask-line"></i></div>
+            <h3 class="pillar-title">FSSAI & Lab Certified</h3>
+            <p class="pillar-desc">Rigorous multi-parameter testing for heavy metals, moisture ratios, and zero pesticide residues.</p>
+          </div>
+
+          <div class="pillar-item">
+            <div class="pillar-icon"><i class="ri-forbid-2-line"></i></div>
+            <h3 class="pillar-title">Zero Preservatives</h3>
+            <p class="pillar-desc">No synthetic food coloring, artificial flavoring, palm oil, or refined sugars. Pure natural nutrition.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- ==================================================================
+           5. TRUST STATS & CERTIFICATION
+           ================================================================== -->
+      <section class="trust-banner-wrap">
+        <div>
+          <div class="trust-stat-number">10,000+</div>
+          <div class="trust-stat-label">Happy Conscious Families</div>
+        </div>
+        <div>
+          <div class="trust-stat-number">100%</div>
+          <div class="trust-stat-label">Natural & Unrefined</div>
+        </div>
+        <div>
+          <div class="trust-stat-number">0%</div>
+          <div class="trust-stat-label">Artificial Additives</div>
+        </div>
+        <div>
+          <div class="trust-stat-number">4.9 ★</div>
+          <div class="trust-stat-label">Customer Satisfaction</div>
+        </div>
+      </section>
+
+    </main>
+
+    <!-- 7. Luxury Interactive Deep-Forest Footer -->
+    <footer class="site-footer">
+      
+      <!-- Top Brand Bar (No Logo Image) -->
+      <div class="footer-top-brand-bar">
+        <div class="footer-brand-lockup">
+          <div>
+            <div class="footer-brand-title">ETERNAL NUTRICARE<span class="footer-tm">™</span></div>
+            <div class="footer-brand-tagline">Pure. Natural. Eternal. • 100% Organic Goodness</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Main 4-Column Grid -->
+      <div class="footer-main-grid">
+        
+        <!-- Column 1: About Business, UDYAM & FSSAI -->
+        <div>
+          <div class="footer-col-header">About Eternal Nutricare</div>
+          <p class="footer-desc-text">
+            Dedicated to delivering farm-fresh, 100% natural, chemical-free organic essentials directly to your doorstep.
+          </p>
+          <div style="display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px;">
+            <div class="footer-gstin-chip">
+              <i class="ri-verified-badge-fill"></i>
+              <span>UDYAM: UDYAM-KR-03-0464297</span>
+            </div>
+            <div class="footer-gstin-chip">
+              <i class="ri-shield-check-fill"></i>
+              <span>FSSAI Lic: 21226009001641</span>
+            </div>
+          </div>
+
+          <!-- Enhanced Official FSSAI Trust Emblem -->
+          <div class="footer-fssai-badge-wrap">
+            <img src="assets/fssai_logo.png" alt="FSSAI Official Certified Logo" class="fssai-footer-logo-img">
+            <div class="footer-fssai-text-block">
+              <span class="footer-fssai-title">Certified Food Safety</span>
+              <span class="footer-fssai-subtitle">Govt. Lic: 21226009001641</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Column 2: Quick Organic Categories -->
+        <div>
+          <div class="footer-col-header">Our Categories</div>
+          <ul class="footer-links-list">
+            <li class="footer-link-item"><a href="categories.html?cat=Millet%20Biscuits"><img src="assets/prod_cookie_studio.jpg" alt="Millet Biscuits" class="footer-cat-thumb"><span>Millet Biscuits</span></a></li>
+            <li class="footer-link-item"><a href="categories.html?cat=Dates%20Laddu's"><img src="assets/prod_laddu_studio.jpg" alt="Dates Laddu's" class="footer-cat-thumb"><span>Dates Laddu's</span></a></li>
+            <li class="footer-link-item"><a href="categories.html?cat=Honey"><img src="assets/prod_honey_studio.jpg" alt="Honey" class="footer-cat-thumb"><span>Honey</span></a></li>
+            <li class="footer-link-item"><a href="categories.html?cat=Moringa%20Chikki"><img src="assets/prod_chikki_studio.jpg" alt="Moringa Chikki" class="footer-cat-thumb"><span>Moringa Chikki</span></a></li>
+            <li class="footer-link-item"><a href="categories.html?cat=Millet%20Rava"><img src="assets/prod_rava_studio.jpg" alt="Millet Rava" class="footer-cat-thumb"><span>Millet Rava</span></a></li>
+            <li class="footer-link-item"><a href="categories.html?cat=Pickles"><img src="assets/prod_pickle_studio.jpg" alt="Pickles" class="footer-cat-thumb"><span>Pickles</span></a></li>
+          </ul>
+        </div>
+
+        <!-- Column 3: Customer Care & Official Address -->
+        <div>
+          <div class="footer-col-header">Customer Support</div>
+          
+          <div class="footer-contact-row">
+            <i class="ri-phone-fill"></i>
+            <div>
+              <div style="font-size: 11px; color: #8C756C; margin-bottom: 2px;">Contact Us</div>
+              <span id="footer-phone-links">
+                <a href="tel:6302017482">+91 6302017482</a>, <a href="tel:9392235693">+91 9392235693</a>
+              </span>
+            </div>
+          </div>
+
+          <div class="footer-contact-row">
+            <i class="ri-mail-line"></i>
+            <div>
+              <a href="mailto:eternalncdm@gmail.com" id="footer-email-link">eternalncdm@gmail.com</a>
+            </div>
+          </div>
+
+          <div class="footer-contact-row">
+            <i class="ri-map-pin-2-line"></i>
+            <span id="footer-address-text" style="font-size: 12px; color: #C2B0A6; line-height: 1.4;">
+              Eternal Sales<br>Flat No.A1, Eco greens layout, hegondanahalli, Gunjur, Bangalore - 560087
+            </span>
+          </div>
+
+          <div class="footer-contact-row" style="margin-top: 10px;">
+            <i class="ri-truck-line"></i>
+            <div>
+              <a href="shipping-delivery.html" style="color: #E2C095; font-size: 12px; font-weight: 700; text-decoration: none; display: flex; align-items: center; gap: 4px;">
+                <span>Shipping & Delivery Policy</span>
+                <i class="ri-arrow-right-s-line"></i>
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Column 4: Newsletter / VIP Perks -->
+        <div>
+          <div class="footer-col-header">Join the Health Club</div>
+          <p class="footer-desc-text">
+            Get 10% off your first organic purchase & receive weekly seasonal harvest updates.
+          </p>
+          <div class="footer-newsletter-wrap">
+            <div class="footer-news-input-box">
+              <input type="email" id="footer-email-input" placeholder="Enter your email...">
+              <button class="footer-news-btn" onclick="subscribeNewsletter()">Join</button>
+            </div>
+            <span style="font-size: 10.5px; color: #6C8264;">🔒 Zero spam. Unsubscribe anytime.</span>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Bottom Strip (Payments & Copyright) -->
+      <div class="footer-bottom-strip">
+        <div>
+          © 2026 <strong>Eternal Nutricare</strong>. All rights reserved.
+        </div>
+
+        <div class="footer-payments-row">
+          <span>100% Safe Payments:</span>
+          <i class="ri-bank-card-line" title="Debit & Credit Cards"></i>
+          <i class="ri-qr-code-line" title="UPI (GPay / PhonePe / Paytm)"></i>
+          <i class="ri-shield-check-line" title="256-Bit SSL Encrypted"></i>
+        </div>
+      </div>
+
+    </footer>
+
+    <!-- 5-Tab Mobile Bottom Dock: Home, Shop, Cart, Contact Us, About Us -->
+    <nav class="mobile-bottom-dock">
+      <a href="index.html" class="mobile-dock-btn">
+        <i class="ri-home-5-line"></i>
+        <span>Home</span>
+      </a>
+      <a href="categories.html" class="mobile-dock-btn">
+        <i class="ri-store-2-line"></i>
+        <span>Shop</span>
+      </a>
+      <a href="cart.html" class="mobile-dock-btn">
+        <i class="ri-shopping-bag-3-line"></i>
+        <span class="dock-badge-pill minimal-cart-badge cart-badge" style="display: none;">0</span>
+        <span>Cart</span>
+      </a>
+      <a href="javascript:void(0)" class="mobile-dock-btn" onclick="openDistributionDrawer()" aria-label="Contact Us">
+        <i class="ri-customer-service-2-line"></i>
+        <span>Contact Us</span>
+      </a>
+      <a href="about.html" class="mobile-dock-btn active">
+        <i class="ri-information-line"></i>
+        <span>About Us</span>
+      </a>
+    </nav>
+
+  </div>
+
+  <!-- Global Toast Bubble -->
+  <div id="toast-wrapper" class="toast-floating-container"></div>
+
+  <!-- Scripts -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="config/store.config.js"></script>
+  <script src="core/cloud-db.js"></script>
+  <script src="core/auth-engine.js"></script>
+  <script src="core/distribution-drawer.js"></script>
+
+  <!-- 3D Orbital Banner & Page Logic -->
+  <script>
+    // Product data for the 5 orbit items (Supports live updates from Admin Panel)
+    let ORBIT_PRODUCTS = [
+      {
+        id: 'orbit_protein_bowl',
+        title: 'Sprouted Millets & Superfood Protein Bowl',
+        category: 'Signature Organic Superfood',
+        badge: 'Complete protein source',
+        desc: 'Naturally rich in branched-chain amino acids, dietary fiber, and essential minerals for long-lasting clean energy.',
+        price: 299,
+        image: 'assets/orbit_bowl_protein.jpg',
+        link: 'categories.html?category=Snacks'
+      },
+      {
+        id: 'prod_1',
+        title: 'Wild Multiflora Raw Forest Honey',
+        category: '100% Raw Honey',
+        badge: '100% Raw & Unheated',
+        desc: 'Directly harvested from pristine deep forest bee colonies. Zero pasteurization, zero added sugar, packed with natural bee pollen & enzymes.',
+        price: 499,
+        image: 'assets/prod_honey_studio.jpg',
+        link: 'product.html?id=prod_1'
+      },
+      {
+        id: 'prod_laddu',
+        title: 'Handcrafted Dates & Nut Laddus',
+        category: 'Guilt-Free Sweets',
+        badge: 'Zero Added Sugar • High Iron',
+        desc: 'Naturally sweetened solely with Medjool dates, dry fruits, and native A2 desi ghee. Wholesome goodness for every generation.',
+        price: 349,
+        image: 'assets/prod_laddu_studio.jpg',
+        link: 'categories.html?category=Laddus'
+      },
+      {
+        id: 'orbit_harvest_bowl',
+        title: 'Rainbow Harvest Quinoa & Edamame Bowl',
+        category: 'Plant Power Meal',
+        badge: 'Antioxidants & Clean Fiber',
+        desc: 'Vibrant spectrum of phytonutrients, clean plant protein, and digestive enzymes from organically grown heirloom vegetables.',
+        price: 320,
+        image: 'assets/orbit_bowl_harvest.jpg',
+        link: 'categories.html'
+      },
+      {
+        id: 'orbit_avocado_bowl',
+        title: 'Avocado & Wild Salmon Superfood Greens',
+        category: 'Organic Vitality Meal',
+        badge: 'Heart Healthy Omega-3',
+        desc: 'Loaded with clean monounsaturated fats, brain-supporting EPA/DHA omega-3s, and mineral-dense fresh organic microgreens.',
+        price: 399,
+        image: 'assets/orbit_bowl_avocado.jpg',
+        link: 'categories.html'
+      }
+    ];
+
+    // Check for saved admin showcase in localStorage immediately to avoid placeholder flash
+    try {
+      const cached = localStorage.getItem('en_orbit_showcase_data');
+      if (cached) {
+        const parsed = JSON.parse(cached);
+        if (Array.isArray(parsed) && parsed.length > 0) {
+          ORBIT_PRODUCTS = parsed;
+        }
+      }
+    } catch(e) {}
+
+    let currentOrbitIndex = 0;
+    let orbitTimer = null;
+    const totalOrbitItems = ORBIT_PRODUCTS.length;
+
+    // Slot class mapping for a 5-item circular arc
+    function updateOrbitPositions() {
+      const items = document.querySelectorAll('.orbit-item');
+      
+      items.forEach((item) => {
+        const itemIdx = parseInt(item.getAttribute('data-index'), 10);
+        // Calculate relative position to currentOrbitIndex (-2, -1, 0, 1, 2)
+        let diff = (itemIdx - currentOrbitIndex) % totalOrbitItems;
+        if (diff > totalOrbitItems / 2) diff -= totalOrbitItems;
+        if (diff < -totalOrbitItems / 2) diff += totalOrbitItems;
+
+        item.classList.remove('slot-center', 'slot-left', 'slot-right', 'slot-hidden-left', 'slot-hidden-right');
+
+        if (diff === 0) {
+          item.classList.add('slot-center');
+        } else if (diff === -1 || diff === (totalOrbitItems - 1)) {
+          item.classList.add('slot-left');
+        } else if (diff === 1 || diff === -(totalOrbitItems - 1)) {
+          item.classList.add('slot-right');
+        } else if (diff < -1) {
+          item.classList.add('slot-hidden-left');
+        } else {
+          item.classList.add('slot-hidden-right');
+        }
+      });
+
+      // Update dots
+      const dots = document.querySelectorAll('#orbit-dots-row .orbit-dot');
+      dots.forEach((d, idx) => {
+        d.classList.toggle('active', idx === currentOrbitIndex);
+      });
+
+      // Update Info Box
+      const activeProd = ORBIT_PRODUCTS[currentOrbitIndex];
+      if (activeProd) {
+        const catLabel = (activeProd.category && activeProd.category !== 'All') ? activeProd.category : 'All Products';
+        document.getElementById('orbit-info-cat').textContent = catLabel;
+        document.getElementById('orbit-info-title').textContent = activeProd.title || '';
+        document.getElementById('orbit-info-desc').textContent = activeProd.desc || '';
+        
+        const targetUrl = activeProd.link || (activeProd.category && activeProd.category !== 'All'
+          ? `categories.html?category=${encodeURIComponent(activeProd.category)}`
+          : 'categories.html');
+        const linkBtn = document.getElementById('orbit-link-btn');
+        if (linkBtn) {
+          linkBtn.href = targetUrl;
+          const labelSpan = document.getElementById('orbit-link-label');
+          if (labelSpan) {
+            labelSpan.textContent = (activeProd.category && activeProd.category !== 'All')
+              ? `Explore ${activeProd.category}`
+              : 'Explore All Products';
+          }
+        }
+      }
+    }
+
+    function orbitNext() {
+      currentOrbitIndex = (currentOrbitIndex + 1) % totalOrbitItems;
+      updateOrbitPositions();
+      restartOrbitTimer();
+    }
+
+    function orbitPrev() {
+      currentOrbitIndex = (currentOrbitIndex - 1 + totalOrbitItems) % totalOrbitItems;
+      updateOrbitPositions();
+      restartOrbitTimer();
+    }
+
+    function setOrbitIndex(idx) {
+      currentOrbitIndex = idx;
+      updateOrbitPositions();
+      restartOrbitTimer();
+    }
+
+    function handleOrbitItemClick(idx) {
+      if (idx === currentOrbitIndex) {
+        // If clicking already active item, open its linked category
+        const prod = ORBIT_PRODUCTS[idx];
+        const targetUrl = prod.link || (prod.category && prod.category !== 'All'
+          ? `categories.html?category=${encodeURIComponent(prod.category)}`
+          : 'categories.html');
+        window.location.href = targetUrl;
+      } else {
+        // Rotate clicked item to center
+        setOrbitIndex(idx);
+      }
+    }
+
+    function startOrbitTimer() {
+      if (orbitTimer) clearInterval(orbitTimer);
+      orbitTimer = setInterval(() => {
+        currentOrbitIndex = (currentOrbitIndex + 1) % totalOrbitItems;
+        updateOrbitPositions();
+      }, 3800);
+    }
+
+    function restartOrbitTimer() {
+      if (orbitTimer) clearInterval(orbitTimer);
+      startOrbitTimer();
+    }
+
+    // Touch and swipe gestures on orbit stage
+    let touchStartX = 0;
+    const stageEl = document.getElementById('orbit-stage');
+
+    if (stageEl) {
+      stageEl.addEventListener('touchstart', (e) => {
+        touchStartX = e.touches[0].clientX;
+        if (orbitTimer) clearInterval(orbitTimer);
+      }, { passive: true });
+
+      stageEl.addEventListener('touchend', (e) => {
+        const touchEndX = e.changedTouches[0].clientX;
+        const diff = touchEndX - touchStartX;
+        if (Math.abs(diff) > 40) {
+          if (diff < 0) {
+            orbitNext();
+          } else {
+            orbitPrev();
+          }
+        } else {
+          startOrbitTimer();
+        }
+      }, { passive: true });
+
+      stageEl.addEventListener('mouseenter', () => {
+        if (orbitTimer) clearInterval(orbitTimer);
+      });
+
+      stageEl.addEventListener('mouseleave', () => {
+        startOrbitTimer();
+      });
+    }
+
+    // Global Cart Integration
+    function getStoredCart() {
+      try {
+        const saved = localStorage.getItem('em_cart_items');
+        return saved ? JSON.parse(saved) : [];
+      } catch(e) {
+        return [];
+      }
+    }
+
+    function saveCart(cart) {
+      try {
+        localStorage.setItem('em_cart_items', JSON.stringify(cart));
+      } catch(e) {}
+    }
+
+    function showToast(msg) {
+      const wrap = document.getElementById('toast-wrapper');
+      if (!wrap) return;
+      const toast = document.createElement('div');
+      toast.className = 'toast-bubble';
+      toast.innerHTML = `<i class="ri-checkbox-circle-fill"></i> <span>${msg}</span>`;
+      wrap.appendChild(toast);
+      setTimeout(() => toast.remove(), 2500);
+    }
+
+    function updateCartBadge() {
+      const cart = getStoredCart();
+      const totalQty = cart.reduce((acc, i) => acc + (i.qty || 1), 0);
+      document.querySelectorAll('.minimal-cart-badge').forEach(b => {
+        b.textContent = totalQty;
+        b.style.display = totalQty > 0 ? 'flex' : 'none';
+      });
+    }
+
+    function addCurrentOrbitToCart() {
+      const p = ORBIT_PRODUCTS[currentOrbitIndex];
+      quickAddFav(p.id, p.title, p.price, p.image);
+    }
+
+    function quickAddFav(id, title, price, image) {
+      let cart = getStoredCart();
+      const existing = cart.find(i => i.id === id);
+      if (existing) {
+        existing.qty = (existing.qty || 1) + 1;
+      } else {
+        cart.push({ id, title, price, image, qty: 1 });
+      }
+      saveCart(cart);
+      updateCartBadge();
+      showToast(`Added ${title} to bag!`);
+    }
+
+    function subscribeNewsletter() {
+      const input = document.getElementById('footer-email-input');
+      if (input && input.value.trim().length > 4) {
+        showToast('🎉 Welcome to the Eternal VIP Health Club! 10% coupon emailed.');
+        input.value = '';
+      } else {
+        showToast('Please enter a valid email address.');
+      }
+    }
+
+    function renderOrbitStageDom() {
+      const stage = document.getElementById('orbit-stage');
+      if (!stage || !Array.isArray(ORBIT_PRODUCTS) || ORBIT_PRODUCTS.length === 0) return;
+
+      const ring = stage.querySelector('.orbit-track-ring');
+      const itemsHtml = ORBIT_PRODUCTS.map((p, idx) => `
+        <div class="orbit-item" data-index="${idx}" onclick="handleOrbitItemClick(${idx})">
+          <div class="orbit-dish-wrap">
+            <img src="${p.image || 'assets/orbit_bowl_protein.jpg'}" alt="${p.title}" class="orbit-dish-img">
+            <div class="orbit-floating-badge">${p.badge || 'Complete protein source'}</div>
+          </div>
+        </div>
+      `).join('');
+
+      stage.innerHTML = (ring ? ring.outerHTML : '<div class="orbit-track-ring"></div>') + itemsHtml;
+
+      const dotsRow = document.getElementById('orbit-dots-row');
+      if (dotsRow) {
+        dotsRow.innerHTML = ORBIT_PRODUCTS.map((_, idx) => `
+          <span class="orbit-dot ${idx === currentOrbitIndex ? 'active' : ''}" onclick="setOrbitIndex(${idx})"></span>
+        `).join('');
+      }
+    }
+
+    async function syncOrbitFromCloud() {
+      if (window.CloudDB && window.CloudDB.getOrbitShowcase) {
+        try {
+          const cloudItems = await window.CloudDB.getOrbitShowcase();
+          if (Array.isArray(cloudItems) && cloudItems.length > 0) {
+            ORBIT_PRODUCTS = cloudItems;
+            renderOrbitStageDom();
+            updateOrbitPositions();
+          }
+        } catch(e) {
+          console.warn('Orbit sync notice:', e);
+        }
+      }
+    }
+
+    window.addEventListener('DOMContentLoaded', async () => {
+      renderOrbitStageDom();
+      updateOrbitPositions();
+      await syncOrbitFromCloud();
+      startOrbitTimer();
+      updateCartBadge();
+    });
+  </script>
+</body>
+</html>
