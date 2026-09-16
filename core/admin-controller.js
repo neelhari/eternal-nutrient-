@@ -1486,6 +1486,9 @@ window.AdminController = (function() {
 
     // Also render orbit showcase in same view
     renderOrbitShowcaseView();
+
+    // Also render about us favourite products in same view
+    renderAboutFavouritesView();
   }
 
   function openBannerModal(bannerId = null) {
@@ -2020,6 +2023,169 @@ window.AdminController = (function() {
         await window.CloudDB.saveOrbitShowcase(items);
       }
     }, 'About Us Orbit Showcase saved successfully!');
+  }
+
+  // =========================================================================
+  // 8C. ABOUT US FAVOURITE PRODUCTS CMS (FOUNDER'S CHOICE)
+  // =========================================================================
+  async function renderAboutFavouritesView() {
+    const container = document.getElementById('about-favourites-admin-grid');
+    if (!container) return;
+
+    let savedFavs = [];
+    if (window.CloudDB && window.CloudDB.getAboutFavourites) {
+      try {
+        const data = await window.CloudDB.getAboutFavourites();
+        if (Array.isArray(data) && data.length > 0) {
+          savedFavs = data;
+        }
+      } catch (e) {
+        console.warn('About favourites load notice:', e);
+      }
+    }
+
+    if (!savedFavs || savedFavs.length === 0) {
+      savedFavs = [
+        { slot: 1, productId: 'prod_1', badge: 'Bestseller' },
+        { slot: 2, productId: 'prod_2', badge: 'Zero Sugar' },
+        { slot: 3, productId: 'prod_4', badge: 'High Fiber' },
+        { slot: 4, productId: 'prod_6', badge: 'Probiotic' }
+      ];
+    }
+
+    const allProducts = (db && Array.isArray(db.products) && db.products.length > 0)
+      ? db.products
+      : (window.ADMIN_MOCK_DB && window.ADMIN_MOCK_DB.products ? window.ADMIN_MOCK_DB.products : []);
+
+    const slotLabels = [
+      'Slot 1 (Spotlight #1)',
+      'Slot 2 (Spotlight #2)',
+      'Slot 3 (Spotlight #3)',
+      'Slot 4 (Spotlight #4)'
+    ];
+
+    container.innerHTML = [0, 1, 2, 3].map(idx => {
+      const fav = savedFavs[idx] || { slot: idx + 1, productId: (allProducts[idx]?.id || 'prod_1'), badge: 'Featured' };
+      const currentProd = allProducts.find(p => p.id === fav.productId) || allProducts[0] || {
+        id: fav.productId,
+        title: 'Product ' + (idx + 1),
+        price: 299,
+        unit: 'Standard Pack',
+        image: 'assets/prod_honey_studio.jpg'
+      };
+
+      const optionsHtml = allProducts.map(p => `
+        <option value="${p.id}" ${p.id === currentProd.id ? 'selected' : ''}>
+          ${p.title} (${p.category || 'General'} — ₹${p.price})
+        </option>
+      `).join('');
+
+      return `
+        <div class="admin-card" style="padding: 18px; border: 1.5px solid #E2E8F0; border-radius: 16px; background: #FFFFFF; display: flex; flex-direction: column; justify-content: space-between;">
+          <div>
+            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px;">
+              <div style="font-size: 13.5px; font-weight: 800; color: #1E2519; display: flex; align-items: center; gap: 6px;">
+                <i class="ri-heart-3-fill" style="color: #E11D48;"></i> ${slotLabels[idx]}
+              </div>
+              <span style="font-size: 11px; background: #FFE4E6; color: #E11D48; font-weight: 800; padding: 3px 9px; border-radius: 6px;">Slot ${idx + 1}</span>
+            </div>
+
+            <!-- Mini Live Preview Card -->
+            <div style="display: flex; gap: 12px; align-items: center; background: #F8FAF6; padding: 12px; border-radius: 12px; border: 1px dashed #D3DEC9; margin-bottom: 14px;">
+              <div style="position: relative; width: 68px; height: 68px; flex-shrink: 0; border-radius: 10px; overflow: hidden; border: 1px solid #E2E8F0; background: #FFFFFF;">
+                <img id="fav-preview-img-${idx}" src="${currentProd.image || 'assets/prod_honey_studio.jpg'}" style="width: 100%; height: 100%; object-fit: cover;">
+              </div>
+              <div style="flex: 1; min-width: 0;">
+                <span id="fav-preview-badge-${idx}" style="font-size: 10px; font-weight: 800; background: #008744; color: #FFFFFF; padding: 2px 7px; border-radius: 4px; display: inline-block; margin-bottom: 4px;">
+                  ${fav.badge || 'Featured'}
+                </span>
+                <div id="fav-preview-title-${idx}" style="font-size: 13px; font-weight: 700; color: #1E2519; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+                  ${currentProd.title}
+                </div>
+                <div id="fav-preview-meta-${idx}" style="font-size: 11.5px; color: #64748B; font-weight: 600; margin-top: 2px;">
+                  ₹${currentProd.price} • ${fav.customUnit || currentProd.unit || 'Pack'}
+                </div>
+              </div>
+            </div>
+
+            <!-- Select Product Dropdown -->
+            <div class="form-field-block" style="margin-bottom: 12px;">
+              <label class="form-label" style="font-size: 11.5px; font-weight: 700;">Select Product</label>
+              <select id="fav-slot-${idx}-product" class="form-select" style="width: 100%; height: 38px; border-radius: 8px; border: 1.5px solid #CBD5E1; padding: 0 10px; font-weight: 600; background: #FFFFFF; font-size: 12.5px; outline: none; color: #1E2519;" onchange="AdminController.handleFavProductChange(${idx})">
+                ${optionsHtml}
+              </select>
+            </div>
+
+            <!-- Spotlight Badge -->
+            <div class="form-field-block" style="margin-bottom: 12px;">
+              <label class="form-label" style="font-size: 11.5px; font-weight: 700;">Spotlight Card Badge</label>
+              <input type="text" id="fav-slot-${idx}-badge" class="form-input" style="font-size: 12px; height: 38px;" value="${fav.badge || ''}" placeholder="e.g. Bestseller, Zero Sugar, High Fiber" oninput="AdminController.updateFavLiveBadge(${idx}, this.value)">
+            </div>
+
+            <!-- Custom Subtitle / Unit Override -->
+            <div class="form-field-block">
+              <label class="form-label" style="font-size: 11.5px; font-weight: 700;">Subtitle / Unit Note (Optional)</label>
+              <input type="text" id="fav-slot-${idx}-unit" class="form-input" style="font-size: 12px; height: 38px;" value="${fav.customUnit || ''}" placeholder="e.g. 500g Glass Jar • Unprocessed" oninput="AdminController.updateFavLiveUnit(${idx}, this.value)">
+            </div>
+          </div>
+        </div>
+      `;
+    }).join('');
+  }
+
+  function handleFavProductChange(slotIdx) {
+    const select = document.getElementById(`fav-slot-${slotIdx}-product`);
+    if (!select) return;
+    const selectedId = select.value;
+    const allProducts = (db && Array.isArray(db.products)) ? db.products : (window.ADMIN_MOCK_DB?.products || []);
+    const prod = allProducts.find(p => p.id === selectedId);
+    if (!prod) return;
+
+    const imgEl = document.getElementById(`fav-preview-img-${slotIdx}`);
+    const titleEl = document.getElementById(`fav-preview-title-${slotIdx}`);
+    const metaEl = document.getElementById(`fav-preview-meta-${slotIdx}`);
+    const customUnit = document.getElementById(`fav-slot-${slotIdx}-unit`)?.value.trim();
+
+    if (imgEl) imgEl.src = prod.image || 'assets/prod_honey_studio.jpg';
+    if (titleEl) titleEl.textContent = prod.title;
+    if (metaEl) metaEl.textContent = `₹${prod.price} • ${customUnit || prod.unit || 'Pack'}`;
+  }
+
+  function updateFavLiveBadge(slotIdx, val) {
+    const badgeEl = document.getElementById(`fav-preview-badge-${slotIdx}`);
+    if (badgeEl) badgeEl.textContent = val.trim() || 'Featured';
+  }
+
+  function updateFavLiveUnit(slotIdx, val) {
+    const metaEl = document.getElementById(`fav-preview-meta-${slotIdx}`);
+    const select = document.getElementById(`fav-slot-${slotIdx}-product`);
+    const allProducts = (db && Array.isArray(db.products)) ? db.products : (window.ADMIN_MOCK_DB?.products || []);
+    const prod = allProducts.find(p => p.id === select?.value);
+    const unitStr = val.trim() || prod?.unit || 'Pack';
+    if (metaEl && prod) {
+      metaEl.textContent = `₹${prod.price} • ${unitStr}`;
+    }
+  }
+
+  async function saveAboutFavouritesForm(btnElement) {
+    const items = [];
+    for (let i = 0; i < 4; i++) {
+      const prodId = document.getElementById(`fav-slot-${i}-product`)?.value || `prod_${i + 1}`;
+      const badge = document.getElementById(`fav-slot-${i}-badge`)?.value.trim() || 'Featured';
+      const customUnit = document.getElementById(`fav-slot-${i}-unit`)?.value.trim() || '';
+      items.push({
+        slot: i + 1,
+        productId: prodId,
+        badge,
+        customUnit
+      });
+    }
+
+    await withActionSpinner(btnElement, async () => {
+      if (window.CloudDB && window.CloudDB.saveAboutFavourites) {
+        await window.CloudDB.saveAboutFavourites(items);
+      }
+    }, 'About Us Favourite Products saved successfully!');
   }
 
   // =========================================================================
@@ -3302,6 +3468,13 @@ window.AdminController = (function() {
     updateOrbitLiveBadge,
     uploadOrbitDishImage,
     saveOrbitShowcaseForm,
+
+    // About Us Favourite Products (Founder's Choice) CMS
+    renderAboutFavouritesView,
+    handleFavProductChange,
+    updateFavLiveBadge,
+    updateFavLiveUnit,
+    saveAboutFavouritesForm,
 
     // Marquee
     renderMarqueeView,

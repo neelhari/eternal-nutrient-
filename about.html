@@ -239,7 +239,7 @@
           <h2 class="section-headline">Our Favourite Products</h2>
         </div>
 
-        <div class="favourites-grid">
+        <div class="favourites-grid" id="favourites-grid">
           
           <!-- Fav 1: Raw Honey -->
           <div class="fav-product-card" onclick="window.location.href='product.html?id=prod_1'">
@@ -832,6 +832,64 @@
       }
     }
 
+    async function syncFavouritesFromCloud() {
+      const grid = document.getElementById('favourites-grid');
+      if (!grid || !window.CloudDB) return;
+
+      try {
+        const [favConfigs, allProducts] = await Promise.all([
+          window.CloudDB.getAboutFavourites ? window.CloudDB.getAboutFavourites() : null,
+          window.CloudDB.getProducts ? window.CloudDB.getProducts() : []
+        ]);
+
+        if (!allProducts || allProducts.length === 0) return;
+
+        // Default mapping if no configs stored yet
+        const defaultConfigs = [
+          { slot: 1, productId: 'prod_1', badge: 'Bestseller' },
+          { slot: 2, productId: 'prod_2', badge: 'Zero Sugar' },
+          { slot: 3, productId: 'prod_4', badge: 'High Fiber' },
+          { slot: 4, productId: 'prod_6', badge: 'Probiotic' }
+        ];
+
+        const configs = (Array.isArray(favConfigs) && favConfigs.length > 0) ? favConfigs : defaultConfigs;
+
+        const cardsHtml = configs.map((cfg, idx) => {
+          let p = allProducts.find(item => item.id === cfg.productId);
+          if (!p) p = allProducts[idx % allProducts.length];
+          if (!p) return '';
+
+          const price = Number(p.price) || 0;
+          const originalPrice = Number(p.original_price || p.originalPrice || p.mrp || 0);
+          const img = p.image || (Array.isArray(p.gallery) ? p.gallery[0] : 'assets/prod_honey_studio.jpg');
+          const badge = cfg.badge || p.badge || (p.is_bestseller ? 'Bestseller' : 'Founder Choice');
+          const unit = cfg.customUnit || p.unit || 'Standard Pack';
+          const safeTitle = (p.title || '').replace(/'/g, "\\'");
+
+          return `
+            <div class="fav-product-card" onclick="window.location.href='product.html?id=${encodeURIComponent(p.id)}'">
+              <span class="fav-card-badge">${badge}</span>
+              <div class="fav-photo-wrap">
+                <img src="${img}" alt="${p.title}" loading="lazy">
+              </div>
+              <h3 class="fav-item-title">${p.title}</h3>
+              <div class="fav-item-unit">${unit}</div>
+              <div class="fav-bottom-row">
+                <div class="fav-price">₹${price} ${originalPrice > price ? `<span class="fav-mrp">₹${originalPrice}</span>` : ''}</div>
+                <button class="fav-add-btn" onclick="event.stopPropagation(); quickAddFav('${p.id}', '${safeTitle}', ${price}, '${img}')">ADD</button>
+              </div>
+            </div>
+          `;
+        }).filter(Boolean).join('');
+
+        if (cardsHtml) {
+          grid.innerHTML = cardsHtml;
+        }
+      } catch (err) {
+        console.warn('Favourites cloud sync notice:', err);
+      }
+    }
+
     function toggleMobileSearchOverlay() {
       const overlay = document.getElementById('mobile-search-overlay');
       if (!overlay) return;
@@ -846,7 +904,10 @@
     window.addEventListener('DOMContentLoaded', async () => {
       renderOrbitStageDom();
       updateOrbitPositions();
-      await syncOrbitFromCloud();
+      await Promise.all([
+        syncOrbitFromCloud(),
+        syncFavouritesFromCloud()
+      ]);
       startOrbitTimer();
       updateCartBadge();
     });

@@ -702,6 +702,28 @@
             <!-- Rendered Dynamically by AdminController -->
           </div>
 
+          <!-- About Us Founder's Choice (4 Favourite Products Grid) -->
+          <div class="view-header-strip" style="border-top: 1px solid #E7E5E4; padding-top: 32px; margin-top: 32px;">
+            <div>
+              <h1 class="view-heading-title" style="font-size: 20px; color: #1E2519; display: flex; align-items: center; gap: 8px;">
+                <i class="ri-heart-3-line" style="color: #E11D48;"></i> About Us Favourite Products (Founder's Choice)
+              </h1>
+              <p class="view-heading-sub" style="font-size: 13px; color: #64748B; margin-top: 4px;">
+                Curate the 4 favourite products showcased under "Founder's & Family Choice" on the About Us page. Select items from your store catalog and customize spotlight badges.
+              </p>
+            </div>
+            <div style="display: flex; align-items: center; gap: 14px;">
+              <button class="btn btn-primary" onclick="AdminController.saveAboutFavouritesForm(this)" style="padding: 10px 20px; font-weight: 700; border-radius: 8px; background: #008744;">
+                <i class="ri-save-3-line"></i> Save Favourite Products
+              </button>
+            </div>
+          </div>
+
+          <!-- 4 Curated Products Grid -->
+          <div id="about-favourites-admin-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px; margin-top: 16px; margin-bottom: 24px;">
+            <!-- Rendered Dynamically by AdminController -->
+          </div>
+
         </section>
 
         <!-- ================================================================= -->

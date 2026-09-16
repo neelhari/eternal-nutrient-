@@ -764,6 +764,58 @@ window.CloudDB = (function() {
     return { success: true, local: true };
   }
 
+  // 8B. ABOUT US FAVOURITE PRODUCTS (FOUNDER'S CHOICE) CMS
+  const DEFAULT_ABOUT_FAVOURITES = [
+    { slot: 1, productId: 'prod_1', badge: 'Bestseller' },
+    { slot: 2, productId: 'prod_2', badge: 'Zero Sugar' },
+    { slot: 3, productId: 'prod_4', badge: 'High Fiber' },
+    { slot: 4, productId: 'prod_6', badge: 'Probiotic' }
+  ];
+
+  async function getAboutFavourites() {
+    if (isSupabaseActive && supabaseClient) {
+      try {
+        const { data, error } = await supabaseClient.from('cms_content').select('*').eq('id', 'cms_about_favourites').single();
+        if (!error && data && Array.isArray(data.content_payload) && data.content_payload.length > 0) return data.content_payload;
+      } catch (err) {
+        console.warn('Falling back to local about favourites:', err.message);
+      }
+    }
+    try {
+      const cached = localStorage.getItem('en_about_favourites_data');
+      if (cached) {
+        const parsed = JSON.parse(cached);
+        if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+      }
+    } catch(e) {}
+    return (mock && mock.aboutFavourites) ? mock.aboutFavourites : DEFAULT_ABOUT_FAVOURITES;
+  }
+
+  async function saveAboutFavourites(favList) {
+    try {
+      localStorage.setItem('en_about_favourites_data', JSON.stringify(favList));
+    } catch(e) {}
+
+    const payload = {
+      id: 'cms_about_favourites',
+      section_type: 'about_favourites',
+      content_payload: favList,
+      is_active: true,
+      updated_at: new Date().toISOString()
+    };
+    if (isSupabaseActive && supabaseClient) {
+      try {
+        const { data, error } = await supabaseClient.from('cms_content').upsert(payload).select();
+        if (!error) return { success: true, data };
+        return { success: false, error };
+      } catch (err) {
+        return { success: false, error: err };
+      }
+    }
+    if (mock) mock.aboutFavourites = favList;
+    return { success: true, local: true };
+  }
+
   // 9. FRANCHISE INQUIRIES PIPELINE
   async function saveFranchiseInquiry(inquiry) {
     const ts = Date.now();
@@ -832,6 +884,8 @@ window.CloudDB = (function() {
     saveAnnouncements,
     getOrbitShowcase,
     saveOrbitShowcase,
+    getAboutFavourites,
+    saveAboutFavourites,
     saveFranchiseInquiry,
     getFranchiseInquiries
   };
