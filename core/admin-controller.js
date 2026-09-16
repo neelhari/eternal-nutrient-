@@ -1484,11 +1484,8 @@ window.AdminController = (function() {
     // Also render festive cards in same view
     renderFestiveSpecialsView();
 
-    // Also render orbit showcase in same view
-    renderOrbitShowcaseView();
-
-    // Also render about us favourite products in same view
-    renderAboutFavouritesView();
+    // Also render unified about us spotlight showcase (platter & favourites) in same view
+    renderAboutShowcaseView();
   }
 
   function openBannerModal(bannerId = null) {
@@ -2026,9 +2023,9 @@ window.AdminController = (function() {
   }
 
   // =========================================================================
-  // 8C. ABOUT US FAVOURITE PRODUCTS CMS (FOUNDER'S CHOICE)
+  // 8C. UNIFIED ABOUT US SPOTLIGHT SHOWCASE (PLATTER + FAVOURITES)
   // =========================================================================
-  async function renderAboutFavouritesView() {
+  async function renderAboutShowcaseView() {
     const container = document.getElementById('about-favourites-admin-grid');
     if (!container) return;
 
@@ -2058,10 +2055,10 @@ window.AdminController = (function() {
       : (window.ADMIN_MOCK_DB && window.ADMIN_MOCK_DB.products ? window.ADMIN_MOCK_DB.products : []);
 
     const slotLabels = [
-      'Slot 1 (Spotlight #1)',
-      'Slot 2 (Spotlight #2)',
-      'Slot 3 (Spotlight #3)',
-      'Slot 4 (Spotlight #4)'
+      'Slot 1 (Platter Center & Top Pick)',
+      'Slot 2 (Platter Right & Pick #2)',
+      'Slot 3 (Platter Back & Pick #3)',
+      'Slot 4 (Platter Left & Pick #4)'
     ];
 
     container.innerHTML = [0, 1, 2, 3].map(idx => {
@@ -2084,15 +2081,15 @@ window.AdminController = (function() {
         <div class="admin-card" style="padding: 18px; border: 1.5px solid #E2E8F0; border-radius: 16px; background: #FFFFFF; display: flex; flex-direction: column; justify-content: space-between;">
           <div>
             <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px;">
-              <div style="font-size: 13.5px; font-weight: 800; color: #1E2519; display: flex; align-items: center; gap: 6px;">
-                <i class="ri-heart-3-fill" style="color: #E11D48;"></i> ${slotLabels[idx]}
+              <div style="font-size: 13px; font-weight: 800; color: #1E2519; display: flex; align-items: center; gap: 6px;">
+                <i class="ri-compass-3-fill" style="color: #386618;"></i> ${slotLabels[idx]}
               </div>
-              <span style="font-size: 11px; background: #FFE4E6; color: #E11D48; font-weight: 800; padding: 3px 9px; border-radius: 6px;">Slot ${idx + 1}</span>
+              <span style="font-size: 11px; background: #EAF3E6; color: #386618; font-weight: 800; padding: 3px 9px; border-radius: 6px;">Slot ${idx + 1}</span>
             </div>
 
-            <!-- Mini Live Preview Card -->
+            <!-- Mini Live Platter + Card Preview -->
             <div style="display: flex; gap: 12px; align-items: center; background: #F8FAF6; padding: 12px; border-radius: 12px; border: 1px dashed #D3DEC9; margin-bottom: 14px;">
-              <div style="position: relative; width: 68px; height: 68px; flex-shrink: 0; border-radius: 10px; overflow: hidden; border: 1px solid #E2E8F0; background: #FFFFFF;">
+              <div style="position: relative; width: 68px; height: 68px; flex-shrink: 0; border-radius: 50%; overflow: hidden; border: 2.5px solid #386618; box-shadow: 0 4px 10px rgba(0,0,0,0.12); background: #FFFFFF;">
                 <img id="fav-preview-img-${idx}" src="${currentProd.image || 'assets/prod_honey_studio.jpg'}" style="width: 100%; height: 100%; object-fit: cover;">
               </div>
               <div style="flex: 1; min-width: 0;">
@@ -2105,12 +2102,15 @@ window.AdminController = (function() {
                 <div id="fav-preview-meta-${idx}" style="font-size: 11.5px; color: #64748B; font-weight: 600; margin-top: 2px;">
                   ₹${currentProd.price} • ${fav.customUnit || currentProd.unit || 'Pack'}
                 </div>
+                <div style="font-size: 10.5px; color: #059669; font-weight: 700; margin-top: 3px;">
+                  <i class="ri-check-line"></i> Shown on Platter & Grid
+                </div>
               </div>
             </div>
 
             <!-- Select Product Dropdown -->
             <div class="form-field-block" style="margin-bottom: 12px;">
-              <label class="form-label" style="font-size: 11.5px; font-weight: 700;">Select Product</label>
+              <label class="form-label" style="font-size: 11.5px; font-weight: 700;">Select Product From Store</label>
               <select id="fav-slot-${idx}-product" class="form-select" style="width: 100%; height: 38px; border-radius: 8px; border: 1.5px solid #CBD5E1; padding: 0 10px; font-weight: 600; background: #FFFFFF; font-size: 12.5px; outline: none; color: #1E2519;" onchange="AdminController.handleFavProductChange(${idx})">
                 ${optionsHtml}
               </select>
@@ -2167,11 +2167,15 @@ window.AdminController = (function() {
     }
   }
 
-  async function saveAboutFavouritesForm(btnElement) {
+  async function saveAboutShowcaseForm(btnElement) {
     const items = [];
+    const allProducts = (db && Array.isArray(db.products) && db.products.length > 0)
+      ? db.products
+      : (window.ADMIN_MOCK_DB && window.ADMIN_MOCK_DB.products ? window.ADMIN_MOCK_DB.products : []);
+
     for (let i = 0; i < 4; i++) {
-      const prodId = document.getElementById(`fav-slot-${i}-product`)?.value || `prod_${i + 1}`;
-      const badge = document.getElementById(`fav-slot-${i}-badge`)?.value.trim() || 'Featured';
+      const prodId = document.getElementById(`fav-slot-${i}-product`)?.value || (allProducts[i]?.id || `prod_${i + 1}`);
+      const badge = document.getElementById(`fav-slot-${i}-badge`)?.value.trim() || 'Founder Choice';
       const customUnit = document.getElementById(`fav-slot-${i}-unit`)?.value.trim() || '';
       items.push({
         slot: i + 1,
@@ -2181,11 +2185,36 @@ window.AdminController = (function() {
       });
     }
 
+    // Build the matching 4 platter orbit items directly from the chosen products
+    const orbitItems = items.map((item, idx) => {
+      const prod = allProducts.find(p => p.id === item.productId) || allProducts[idx % allProducts.length] || {};
+      const img = prod.image || (Array.isArray(prod.gallery) ? prod.gallery[0] : 'assets/prod_honey_studio.jpg');
+      const title = prod.title || `Spotlight Product #${idx + 1}`;
+      const cat = prod.category || 'All';
+      const badge = item.badge || prod.badge || 'Pure Superfood';
+      const desc = prod.short_summary || prod.shortSummary || prod.description || '100% pure, unadulterated artisanal nutrition.';
+      return {
+        id: prod.id || `fav_orbit_${idx + 1}`,
+        title,
+        category: cat,
+        badge,
+        desc,
+        image: img,
+        price: Number(prod.price) || 0,
+        link: `product.html?id=${encodeURIComponent(prod.id || '')}`
+      };
+    });
+
     await withActionSpinner(btnElement, async () => {
-      if (window.CloudDB && window.CloudDB.saveAboutFavourites) {
-        await window.CloudDB.saveAboutFavourites(items);
+      if (window.CloudDB) {
+        if (window.CloudDB.saveAboutFavourites) {
+          await window.CloudDB.saveAboutFavourites(items);
+        }
+        if (window.CloudDB.saveOrbitShowcase) {
+          await window.CloudDB.saveOrbitShowcase(orbitItems);
+        }
       }
-    }, 'About Us Favourite Products saved successfully!');
+    }, 'About Us Showcase saved! Platter and Favourite Products updated successfully.');
   }
 
   // =========================================================================
@@ -3462,19 +3491,14 @@ window.AdminController = (function() {
     toggleFestiveActive,
     saveFestiveSpecialsForm,
 
-    // About Us Orbit Showcase CMS
-    renderOrbitShowcaseView,
-    updateOrbitLiveImg,
-    updateOrbitLiveBadge,
-    uploadOrbitDishImage,
-    saveOrbitShowcaseForm,
-
-    // About Us Favourite Products (Founder's Choice) CMS
-    renderAboutFavouritesView,
+    // Unified About Us Showcase CMS (Platter & Favourites)
+    renderAboutShowcaseView,
+    saveAboutShowcaseForm,
     handleFavProductChange,
     updateFavLiveBadge,
     updateFavLiveUnit,
-    saveAboutFavouritesForm,
+    renderAboutFavouritesView: renderAboutShowcaseView,
+    saveAboutFavouritesForm: saveAboutShowcaseForm,
 
     // Marquee
     renderMarqueeView,

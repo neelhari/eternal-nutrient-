@@ -106,43 +106,35 @@
           <!-- Background Orbit Guide Track -->
           <div class="orbit-track-ring"></div>
 
-          <!-- Product Item 0: Protein Sprouted Bowl -->
+          <!-- Product Item 0: Honey -->
           <div class="orbit-item slot-center" data-index="0" onclick="handleOrbitItemClick(0)">
             <div class="orbit-dish-wrap">
-              <img src="assets/orbit_bowl_protein.jpg" alt="Sprouted Millets & Egg Protein Bowl" class="orbit-dish-img">
-              <div class="orbit-floating-badge">Complete protein source</div>
+              <img src="assets/prod_honey_studio.jpg" alt="Wild Raw Forest Honey" class="orbit-dish-img">
+              <div class="orbit-floating-badge">Bestseller</div>
             </div>
           </div>
 
-          <!-- Product Item 1: Raw Forest Honey -->
+          <!-- Product Item 1: Dates Laddus -->
           <div class="orbit-item slot-right" data-index="1" onclick="handleOrbitItemClick(1)">
             <div class="orbit-dish-wrap">
-              <img src="assets/prod_honey_studio.jpg" alt="Wild Raw Forest Honey" class="orbit-dish-img">
-              <div class="orbit-floating-badge">100% Raw & Unheated</div>
+              <img src="assets/prod_laddu_studio.jpg" alt="Handcrafted Dates Laddus" class="orbit-dish-img">
+              <div class="orbit-floating-badge">Zero Sugar</div>
             </div>
           </div>
 
-          <!-- Product Item 2: Dates Laddus -->
+          <!-- Product Item 2: Millet Cookies -->
           <div class="orbit-item slot-hidden-right" data-index="2" onclick="handleOrbitItemClick(2)">
             <div class="orbit-dish-wrap">
-              <img src="assets/prod_laddu_studio.jpg" alt="Dates & Nut Laddus" class="orbit-dish-img">
-              <div class="orbit-floating-badge">Zero Added Sugar • High Iron</div>
+              <img src="assets/prod_cookie_studio.jpg" alt="Crunchy Millet Super Cookies" class="orbit-dish-img">
+              <div class="orbit-floating-badge">High Fiber</div>
             </div>
           </div>
 
-          <!-- Product Item 3: Rainbow Harvest Salad Bowl -->
-          <div class="orbit-item slot-hidden-left" data-index="3" onclick="handleOrbitItemClick(3)">
+          <!-- Product Item 3: Traditional Pickle -->
+          <div class="orbit-item slot-left" data-index="3" onclick="handleOrbitItemClick(3)">
             <div class="orbit-dish-wrap">
-              <img src="assets/orbit_bowl_harvest.jpg" alt="Rainbow Harvest Salad" class="orbit-dish-img">
-              <div class="orbit-floating-badge">Antioxidants & Clean Fiber</div>
-            </div>
-          </div>
-
-          <!-- Product Item 4: Avocado & Superfood Greens -->
-          <div class="orbit-item slot-left" data-index="4" onclick="handleOrbitItemClick(4)">
-            <div class="orbit-dish-wrap">
-              <img src="assets/orbit_bowl_avocado.jpg" alt="Avocado & Greens Superfood" class="orbit-dish-img">
-              <div class="orbit-floating-badge">Heart Healthy Omega-3</div>
+              <img src="assets/prod_pickle_studio.jpg" alt="Sun-Cured Traditional Pickle" class="orbit-dish-img">
+              <div class="orbit-floating-badge">Probiotic</div>
             </div>
           </div>
         </div>
@@ -158,7 +150,6 @@
             <span class="orbit-dot" onclick="setOrbitIndex(1)"></span>
             <span class="orbit-dot" onclick="setOrbitIndex(2)"></span>
             <span class="orbit-dot" onclick="setOrbitIndex(3)"></span>
-            <span class="orbit-dot" onclick="setOrbitIndex(4)"></span>
           </div>
 
           <button class="orbit-arrow-btn" onclick="orbitNext()" aria-label="Next Product">
@@ -527,93 +518,89 @@
 
   <!-- 3D Orbital Banner & Page Logic -->
   <script>
-    // Product data for the 5 orbit items (Supports live updates from Admin Panel)
+    // Product data for the 4 showcase items (unified Platter & Favourites)
     let ORBIT_PRODUCTS = [
       {
-        id: 'orbit_protein_bowl',
-        title: 'Sprouted Millets & Superfood Protein Bowl',
-        category: 'Signature Organic Superfood',
-        badge: 'Complete protein source',
-        desc: 'Naturally rich in branched-chain amino acids, dietary fiber, and essential minerals for long-lasting clean energy.',
-        price: 299,
-        image: 'assets/orbit_bowl_protein.jpg',
-        link: 'categories.html?category=Snacks'
-      },
-      {
         id: 'prod_1',
-        title: 'Wild Multiflora Raw Forest Honey',
+        title: 'Wild Raw Forest Honey',
         category: '100% Raw Honey',
-        badge: '100% Raw & Unheated',
+        badge: 'Bestseller',
         desc: 'Directly harvested from pristine deep forest bee colonies. Zero pasteurization, zero added sugar, packed with natural bee pollen & enzymes.',
         price: 499,
+        originalPrice: 599,
         image: 'assets/prod_honey_studio.jpg',
         link: 'product.html?id=prod_1'
       },
       {
         id: 'prod_laddu',
-        title: 'Handcrafted Dates & Nut Laddus',
+        title: 'Handcrafted Dates Laddus',
         category: 'Guilt-Free Sweets',
-        badge: 'Zero Added Sugar • High Iron',
+        badge: 'Zero Sugar',
         desc: 'Naturally sweetened solely with Medjool dates, dry fruits, and native A2 desi ghee. Wholesome goodness for every generation.',
         price: 349,
+        originalPrice: 420,
         image: 'assets/prod_laddu_studio.jpg',
         link: 'categories.html?category=Laddus'
       },
       {
-        id: 'orbit_harvest_bowl',
-        title: 'Rainbow Harvest Quinoa & Edamame Bowl',
-        category: 'Plant Power Meal',
-        badge: 'Antioxidants & Clean Fiber',
-        desc: 'Vibrant spectrum of phytonutrients, clean plant protein, and digestive enzymes from organically grown heirloom vegetables.',
-        price: 320,
-        image: 'assets/orbit_bowl_harvest.jpg',
-        link: 'categories.html'
+        id: 'prod_cookies',
+        title: 'Crunchy Millet Super Cookies',
+        category: 'Millet Biscuits',
+        badge: 'High Fiber',
+        desc: 'Crunchy artisan biscuits formulated from a blend of ancient millets, baked with butter and jaggery. Completely maida-free.',
+        price: 199,
+        originalPrice: 240,
+        image: 'assets/prod_cookie_studio.jpg',
+        link: 'categories.html?category=Snacks'
       },
       {
-        id: 'orbit_avocado_bowl',
-        title: 'Avocado & Wild Salmon Superfood Greens',
-        category: 'Organic Vitality Meal',
-        badge: 'Heart Healthy Omega-3',
-        desc: 'Loaded with clean monounsaturated fats, brain-supporting EPA/DHA omega-3s, and mineral-dense fresh organic microgreens.',
-        price: 399,
-        image: 'assets/orbit_bowl_avocado.jpg',
-        link: 'categories.html'
+        id: 'prod_pickle',
+        title: 'Sun-Cured Traditional Pickle',
+        category: 'Artisanal Pickles',
+        badge: 'Probiotic',
+        desc: 'Sun-cured raw mango pickle infused with aromatic spices and cold-pressed sesame oil. Aged in ceramic jars with zero preservatives.',
+        price: 249,
+        originalPrice: 299,
+        image: 'assets/prod_pickle_studio.jpg',
+        link: 'categories.html?category=Pickles'
       }
     ];
 
-    // Check for saved admin showcase in localStorage immediately to avoid placeholder flash
+    // Check for cached showcase data immediately
     try {
-      const cached = localStorage.getItem('en_orbit_showcase_data');
+      const cached = localStorage.getItem('en_about_favourites_data') || localStorage.getItem('en_orbit_showcase_data');
       if (cached) {
         const parsed = JSON.parse(cached);
         if (Array.isArray(parsed) && parsed.length > 0) {
-          ORBIT_PRODUCTS = parsed;
+          // If already full product objects
+          if (parsed[0].title && parsed[0].image) {
+            ORBIT_PRODUCTS = parsed;
+          }
         }
       }
     } catch(e) {}
 
     let currentOrbitIndex = 0;
     let orbitTimer = null;
-    const totalOrbitItems = ORBIT_PRODUCTS.length;
 
-    // Slot class mapping for a 5-item circular arc
+    // Slot class mapping for rotating circular arc
     function updateOrbitPositions() {
       const items = document.querySelectorAll('.orbit-item');
+      const total = (Array.isArray(ORBIT_PRODUCTS) && ORBIT_PRODUCTS.length) || 4;
       
       items.forEach((item) => {
         const itemIdx = parseInt(item.getAttribute('data-index'), 10);
-        // Calculate relative position to currentOrbitIndex (-2, -1, 0, 1, 2)
-        let diff = (itemIdx - currentOrbitIndex) % totalOrbitItems;
-        if (diff > totalOrbitItems / 2) diff -= totalOrbitItems;
-        if (diff < -totalOrbitItems / 2) diff += totalOrbitItems;
+        let diff = (itemIdx - currentOrbitIndex) % total;
+        if (diff > total / 2) diff -= total;
+        if (diff < -total / 2) diff += total;
 
         item.classList.remove('slot-center', 'slot-left', 'slot-right', 'slot-hidden-left', 'slot-hidden-right');
 
         if (diff === 0) {
           item.classList.add('slot-center');
-        } else if (diff === -1 || diff === (totalOrbitItems - 1)) {
+        } else if (diff === -1 || diff === (total - 1)) {
           item.classList.add('slot-left');
-        } else if (diff === 1 || diff === -(totalOrbitItems - 1)) {
+        } else if (diff === 1 || diff === -(total - 1)) {
           item.classList.add('slot-right');
         } else if (diff < -1) {
           item.classList.add('slot-hidden-left');
@@ -631,35 +618,33 @@
       // Update Info Box
       const activeProd = ORBIT_PRODUCTS[currentOrbitIndex];
       if (activeProd) {
-        const catLabel = (activeProd.category && activeProd.category !== 'All') ? activeProd.category : 'All Products';
+        const catLabel = (activeProd.category && activeProd.category !== 'All') ? activeProd.category : 'Featured Spotlight';
         document.getElementById('orbit-info-cat').textContent = catLabel;
         document.getElementById('orbit-info-title').textContent = activeProd.title || '';
         document.getElementById('orbit-info-desc').textContent = activeProd.desc || '';
         
-        const targetUrl = activeProd.link || (activeProd.category && activeProd.category !== 'All'
-          ? `categories.html?category=${encodeURIComponent(activeProd.category)}`
-          : 'categories.html');
+        const targetUrl = activeProd.link || `product.html?id=${encodeURIComponent(activeProd.id)}`;
         const linkBtn = document.getElementById('orbit-link-btn');
         if (linkBtn) {
           linkBtn.href = targetUrl;
           const labelSpan = document.getElementById('orbit-link-label');
           if (labelSpan) {
-            labelSpan.textContent = (activeProd.category && activeProd.category !== 'All')
-              ? `Explore ${activeProd.category}`
-              : 'Explore All Products';
+            labelSpan.textContent = `Explore ${activeProd.title}`;
           }
         }
       }
     }
 
     function orbitNext() {
-      currentOrbitIndex = (currentOrbitIndex + 1) % totalOrbitItems;
+      const total = (Array.isArray(ORBIT_PRODUCTS) && ORBIT_PRODUCTS.length) || 4;
+      currentOrbitIndex = (currentOrbitIndex + 1) % total;
       updateOrbitPositions();
       restartOrbitTimer();
     }
 
     function orbitPrev() {
-      currentOrbitIndex = (currentOrbitIndex - 1 + totalOrbitItems) % totalOrbitItems;
+      const total = (Array.isArray(ORBIT_PRODUCTS) && ORBIT_PRODUCTS.length) || 4;
+      currentOrbitIndex = (currentOrbitIndex - 1 + total) % total;
       updateOrbitPositions();
       restartOrbitTimer();
     }
@@ -817,24 +802,8 @@
       }
     }
 
-    async function syncOrbitFromCloud() {
-      if (window.CloudDB && window.CloudDB.getOrbitShowcase) {
-        try {
-          const cloudItems = await window.CloudDB.getOrbitShowcase();
-          if (Array.isArray(cloudItems) && cloudItems.length > 0) {
-            ORBIT_PRODUCTS = cloudItems;
-            renderOrbitStageDom();
-            updateOrbitPositions();
-          }
-        } catch(e) {
-          console.warn('Orbit sync notice:', e);
-        }
-      }
-    }
-
-    async function syncFavouritesFromCloud() {
-      const grid = document.getElementById('favourites-grid');
-      if (!grid || !window.CloudDB) return;
+    async function syncAboutShowcase() {
+      if (!window.CloudDB) return;
 
       try {
         const [favConfigs, allProducts] = await Promise.all([
@@ -844,7 +813,7 @@
 
         if (!allProducts || allProducts.length === 0) return;
 
-        // Default mapping if no configs stored yet
+        // Default mapping if no configs stored yet (Honey, Dates Laddus, Biscuits, Pickle)
         const defaultConfigs = [
           { slot: 1, productId: 'prod_1', badge: 'Bestseller' },
           { slot: 2, productId: 'prod_2', badge: 'Zero Sugar' },
@@ -854,39 +823,62 @@
 
         const configs = (Array.isArray(favConfigs) && favConfigs.length > 0) ? favConfigs : defaultConfigs;
 
-        const cardsHtml = configs.map((cfg, idx) => {
+        const showcaseProducts = configs.slice(0, 4).map((cfg, idx) => {
           let p = allProducts.find(item => item.id === cfg.productId);
           if (!p) p = allProducts[idx % allProducts.length];
-          if (!p) return '';
+          if (!p) return null;
 
           const price = Number(p.price) || 0;
           const originalPrice = Number(p.original_price || p.originalPrice || p.mrp || 0);
           const img = p.image || (Array.isArray(p.gallery) ? p.gallery[0] : 'assets/prod_honey_studio.jpg');
           const badge = cfg.badge || p.badge || (p.is_bestseller ? 'Bestseller' : 'Founder Choice');
           const unit = cfg.customUnit || p.unit || 'Standard Pack';
-          const safeTitle = (p.title || '').replace(/'/g, "\\'");
+          const desc = p.short_summary || p.shortSummary || p.description || '100% pure, unadulterated artisanal organic nutrition.';
 
-          return `
-            <div class="fav-product-card" onclick="window.location.href='product.html?id=${encodeURIComponent(p.id)}'">
-              <span class="fav-card-badge">${badge}</span>
-              <div class="fav-photo-wrap">
-                <img src="${img}" alt="${p.title}" loading="lazy">
-              </div>
-              <h3 class="fav-item-title">${p.title}</h3>
-              <div class="fav-item-unit">${unit}</div>
-              <div class="fav-bottom-row">
-                <div class="fav-price">₹${price} ${originalPrice > price ? `<span class="fav-mrp">₹${originalPrice}</span>` : ''}</div>
-                <button class="fav-add-btn" onclick="event.stopPropagation(); quickAddFav('${p.id}', '${safeTitle}', ${price}, '${img}')">ADD</button>
-              </div>
-            </div>
-          `;
-        }).filter(Boolean).join('');
+          return {
+            id: p.id,
+            title: p.title,
+            category: p.category || 'Featured Spotlight',
+            badge,
+            desc,
+            price,
+            originalPrice,
+            image: img,
+            unit,
+            link: `product.html?id=${encodeURIComponent(p.id)}`
+          };
+        }).filter(Boolean);
 
-        if (cardsHtml) {
-          grid.innerHTML = cardsHtml;
+        if (showcaseProducts.length > 0) {
+          // 1. UPDATE THE 3D ROTATING PLATTER AT THE TOP!
+          ORBIT_PRODUCTS = showcaseProducts;
+          renderOrbitStageDom();
+          updateOrbitPositions();
+
+          // 2. UPDATE "OUR FAVOURITE PRODUCTS" GRID BELOW!
+          const grid = document.getElementById('favourites-grid');
+          if (grid) {
+            grid.innerHTML = showcaseProducts.map(p => {
+              const safeTitle = (p.title || '').replace(/'/g, "\\'");
+              return `
+                <div class="fav-product-card" onclick="window.location.href='${p.link}'">
+                  <span class="fav-card-badge">${p.badge}</span>
+                  <div class="fav-photo-wrap">
+                    <img src="${p.image}" alt="${p.title}" loading="lazy">
+                  </div>
+                  <h3 class="fav-item-title">${p.title}</h3>
+                  <div class="fav-item-unit">${p.unit}</div>
+                  <div class="fav-bottom-row">
+                    <div class="fav-price">₹${p.price} ${p.originalPrice > p.price ? `<span class="fav-mrp">₹${p.originalPrice}</span>` : ''}</div>
+                    <button class="fav-add-btn" onclick="event.stopPropagation(); quickAddFav('${p.id}', '${safeTitle}', ${p.price}, '${p.image}')">ADD</button>
+                  </div>
+                </div>
+              `;
+            }).join('');
+          }
         }
       } catch (err) {
-        console.warn('Favourites cloud sync notice:', err);
+        console.warn('About showcase sync notice:', err);
       }
     }
 
@@ -904,10 +896,7 @@
     window.addEventListener('DOMContentLoaded', async () => {
       renderOrbitStageDom();
       updateOrbitPositions();
-      await Promise.all([
-        syncOrbitFromCloud(),
-        syncFavouritesFromCloud()
-      ]);
+      await syncAboutShowcase();
       startOrbitTimer();
       updateCartBadge();
     });
