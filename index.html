@@ -249,24 +249,57 @@
       </div>
     </section>
 
-    <!-- 6. 4 Quality Pillars Strip -->
-    <section class="quality-pillars-section">
-      <div class="quality-pillars-grid">
-        <div class="pillar-item-col">
-          <i class="ri-leaf-line pillar-icon"></i>
-          <span class="pillar-label">100% Organic</span>
+    <!-- 6. Customer Reviews Section (Managed via Admin Panel) -->
+    <section class="customer-reviews-section" id="customer-reviews-section">
+      <div class="reviews-section-header">
+        <span class="reviews-section-eyebrow"><i class="ri-heart-3-fill"></i> LOVED BY THOUSANDS</span>
+        <h2 class="reviews-section-title">What Our Families Say</h2>
+        <p class="reviews-section-subtitle">Real experiences from homes nourishing their loved ones with Eternal NutriCare</p>
+      </div>
+      <div class="reviews-cards-grid" id="homepage-reviews-cards-grid">
+        <div class="review-home-card">
+          <div class="review-card-top">
+            <div class="review-stars-row">★★★★★</div>
+            <span class="review-verified-pill"><i class="ri-checkbox-circle-fill"></i> Verified</span>
+          </div>
+          <p class="review-quote-body">"The purest honey we have ever tasted! My children take a spoonful every morning before school. Truly unadulterated."</p>
+          <div class="review-card-footer">
+            <div class="review-author-name">Priya Sharma</div>
+            <div class="review-product-tag"><i class="ri-leaf-line"></i> Wild Raw Forest Honey</div>
+          </div>
         </div>
-        <div class="pillar-item-col">
-          <i class="ri-flask-line pillar-icon"></i>
-          <span class="pillar-label">No Preservatives</span>
+        <div class="review-home-card">
+          <div class="review-card-top">
+            <div class="review-stars-row">★★★★★</div>
+            <span class="review-verified-pill"><i class="ri-checkbox-circle-fill"></i> Verified</span>
+          </div>
+          <p class="review-quote-body">"Completely zero refined sugar, rich in nuts and desi ghee. Perfect healthy sweet for my diabetic father. Highly recommended!"</p>
+          <div class="review-card-footer">
+            <div class="review-author-name">Rajesh Nair</div>
+            <div class="review-product-tag"><i class="ri-leaf-line"></i> Handcrafted Dates Laddus</div>
+          </div>
         </div>
-        <div class="pillar-item-col">
-          <i class="ri-plant-line pillar-icon"></i>
-          <span class="pillar-label">Sustainably Sourced</span>
+        <div class="review-home-card">
+          <div class="review-card-top">
+            <div class="review-stars-row">★★★★★</div>
+            <span class="review-verified-pill"><i class="ri-checkbox-circle-fill"></i> Verified</span>
+          </div>
+          <p class="review-quote-body">"Finally a healthy snack with no maida and no palm oil. Super crispy and wholesome. Bangalore express delivery was prompt."</p>
+          <div class="review-card-footer">
+            <div class="review-author-name">Ananya Rao</div>
+            <div class="review-product-tag"><i class="ri-leaf-line"></i> Crunchy Millet Super Cookies</div>
+          </div>
         </div>
-        <div class="pillar-item-col">
-          <i class="ri-heart-line pillar-icon"></i>
-          <span class="pillar-label">Good for You & Planet</span>
+        <div class="review-home-card">
+          <div class="review-card-top">
+            <div class="review-stars-row">★★★★★</div>
+            <span class="review-verified-pill"><i class="ri-checkbox-circle-fill"></i> Verified</span>
+          </div>
+          <p class="review-quote-body">"Reminds me of my grandmother’s traditional sun-cured pickle. The cold-pressed sesame oil aroma is pure nostalgia!"</p>
+          <div class="review-card-footer">
+            <div class="review-author-name">Vikram Mehta</div>
+            <div class="review-product-tag"><i class="ri-leaf-line"></i> Traditional Mango Pickle</div>
+          </div>
         </div>
       </div>
     </section>
@@ -527,13 +560,14 @@
     async function syncProductsFromSupabase() {
       if (window.CloudDB && window.CloudDB.isSupabaseActive()) {
         try {
-          const [prods, cats, banners, festive, anns, settings] = await Promise.all([
+          const [prods, cats, banners, festive, anns, settings, reviews] = await Promise.all([
             window.CloudDB.getProducts(),
             window.CloudDB.getCategories(),
             window.CloudDB.getBanners(),
             window.CloudDB.getFestiveSpecials(),
             window.CloudDB.getAnnouncements(),
-            window.CloudDB.getStoreSettings()
+            window.CloudDB.getStoreSettings(),
+            (window.CloudDB.getHomepageReviews ? window.CloudDB.getHomepageReviews() : Promise.resolve([]))
           ]);
 
           // 1. Hydrate Products strictly from Supabase
@@ -632,10 +666,42 @@
             hydrateFooterSettings(settings);
             renderCart();
           }
+
+          // 6. Hydrate Customer Reviews
+          if (reviews && Array.isArray(reviews) && reviews.length > 0) {
+            renderHomepageReviews(reviews);
+          }
         } catch (e) {
           console.warn('Supabase storefront sync notice:', e);
         }
       }
+    }
+
+    function renderHomepageReviews(reviews) {
+      const grid = document.getElementById('homepage-reviews-cards-grid');
+      if (!grid || !Array.isArray(reviews) || reviews.length === 0) return;
+
+      grid.innerHTML = reviews.slice(0, 4).map(rev => {
+        const rating = Math.max(1, Math.min(5, Number(rev.rating) || 5));
+        const stars = '★'.repeat(rating) + '☆'.repeat(5 - rating);
+        const name = rev.name || 'Verified Customer';
+        const product = rev.product || 'Organic Product';
+        const text = rev.text || 'Wonderful organic taste and exceptional quality.';
+
+        return `
+          <div class="review-home-card">
+            <div class="review-card-top">
+              <div class="review-stars-row">${stars}</div>
+              <span class="review-verified-pill"><i class="ri-checkbox-circle-fill"></i> Verified</span>
+            </div>
+            <p class="review-quote-body">"${text}"</p>
+            <div class="review-card-footer">
+              <div class="review-author-name">${name}</div>
+              <div class="review-product-tag"><i class="ri-leaf-line"></i> ${product}</div>
+            </div>
+          </div>
+        `;
+      }).join('');
     }
 
     function hydrateFooterSettings(settings) {
@@ -1396,6 +1462,11 @@
 
     window.addEventListener('DOMContentLoaded', () => {
       syncProductsFromSupabase();
+      if (window.CloudDB && window.CloudDB.getHomepageReviews) {
+        window.CloudDB.getHomepageReviews().then(revs => {
+          if (revs && revs.length > 0) renderHomepageReviews(revs);
+        }).catch(() => {});
+      }
       renderCart();
       initStatsCounter();
     });

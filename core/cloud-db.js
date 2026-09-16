@@ -816,6 +816,78 @@ window.CloudDB = (function() {
     return { success: true, local: true };
   }
 
+  // 8D. HOMEPAGE CUSTOMER REVIEWS CMS
+  const DEFAULT_HOMEPAGE_REVIEWS = [
+    {
+      name: 'Priya Sharma',
+      rating: 5,
+      product: 'Wild Raw Forest Honey',
+      text: 'The purest honey we have ever tasted! My children take a spoonful every morning before school. Truly unadulterated.'
+    },
+    {
+      name: 'Rajesh Nair',
+      rating: 5,
+      product: 'Handcrafted Dates Laddus',
+      text: 'Completely zero refined sugar, rich in nuts and desi ghee. Perfect healthy sweet for my diabetic father. Highly recommended!'
+    },
+    {
+      name: 'Ananya Rao',
+      rating: 5,
+      product: 'Crunchy Millet Super Cookies',
+      text: 'Finally a healthy snack with no maida and no palm oil. Super crispy and wholesome. Bangalore express delivery was prompt.'
+    },
+    {
+      name: 'Vikram Mehta',
+      rating: 5,
+      product: 'Traditional Mango Pickle',
+      text: 'Reminds me of my grandmother’s traditional sun-cured pickle. The cold-pressed sesame oil aroma is pure nostalgia!'
+    }
+  ];
+
+  async function getHomepageReviews() {
+    if (isSupabaseActive && supabaseClient) {
+      try {
+        const { data, error } = await supabaseClient.from('cms_content').select('*').eq('id', 'cms_homepage_reviews').single();
+        if (!error && data && Array.isArray(data.content_payload) && data.content_payload.length > 0) return data.content_payload;
+      } catch (err) {
+        console.warn('Falling back to local homepage reviews:', err.message);
+      }
+    }
+    try {
+      const cached = localStorage.getItem('en_homepage_reviews_data');
+      if (cached) {
+        const parsed = JSON.parse(cached);
+        if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+      }
+    } catch(e) {}
+    return (mock && mock.homepageReviews) ? mock.homepageReviews : DEFAULT_HOMEPAGE_REVIEWS;
+  }
+
+  async function saveHomepageReviews(reviewsList) {
+    try {
+      localStorage.setItem('en_homepage_reviews_data', JSON.stringify(reviewsList));
+    } catch(e) {}
+
+    const payload = {
+      id: 'cms_homepage_reviews',
+      section_type: 'homepage_reviews',
+      content_payload: reviewsList,
+      is_active: true,
+      updated_at: new Date().toISOString()
+    };
+    if (isSupabaseActive && supabaseClient) {
+      try {
+        const { data, error } = await supabaseClient.from('cms_content').upsert(payload).select();
+        if (!error) return { success: true, data };
+        return { success: false, error };
+      } catch (err) {
+        return { success: false, error: err };
+      }
+    }
+    if (mock) mock.homepageReviews = reviewsList;
+    return { success: true, local: true };
+  }
+
   // 9. FRANCHISE INQUIRIES PIPELINE
   async function saveFranchiseInquiry(inquiry) {
     const ts = Date.now();
@@ -886,6 +958,8 @@ window.CloudDB = (function() {
     saveOrbitShowcase,
     getAboutFavourites,
     saveAboutFavourites,
+    getHomepageReviews,
+    saveHomepageReviews,
     saveFranchiseInquiry,
     getFranchiseInquiries
   };

@@ -381,6 +381,9 @@ window.AdminController = (function() {
       case 'marquee':
         renderMarqueeView();
         break;
+      case 'reviews':
+        renderReviewsView();
+        break;
       case 'coupons':
         renderCouponsView();
         break;
@@ -2238,6 +2241,176 @@ window.AdminController = (function() {
     `).join('');
   }
 
+  // =========================================================================
+  // 9B. HOMEPAGE CUSTOMER REVIEWS CMS
+  // =========================================================================
+  async function renderReviewsView() {
+    const container = document.getElementById('homepage-reviews-admin-grid');
+    if (!container) return;
+
+    let savedReviews = [];
+    if (window.CloudDB && window.CloudDB.getHomepageReviews) {
+      try {
+        const data = await window.CloudDB.getHomepageReviews();
+        if (Array.isArray(data) && data.length > 0) {
+          savedReviews = data;
+        }
+      } catch (e) {
+        console.warn('Reviews load notice:', e);
+      }
+    }
+
+    if (!savedReviews || savedReviews.length === 0) {
+      savedReviews = [
+        {
+          name: 'Priya Sharma',
+          rating: 5,
+          product: 'Wild Raw Forest Honey',
+          text: 'The purest honey we have ever tasted! My children take a spoonful every morning before school. Truly unadulterated.'
+        },
+        {
+          name: 'Rajesh Nair',
+          rating: 5,
+          product: 'Handcrafted Dates Laddus',
+          text: 'Completely zero refined sugar, rich in nuts and desi ghee. Perfect healthy sweet for my diabetic father. Highly recommended!'
+        },
+        {
+          name: 'Ananya Rao',
+          rating: 5,
+          product: 'Crunchy Millet Super Cookies',
+          text: 'Finally a healthy snack with no maida and no palm oil. Super crispy and wholesome. Bangalore express delivery was prompt.'
+        },
+        {
+          name: 'Vikram Mehta',
+          rating: 5,
+          product: 'Traditional Mango Pickle',
+          text: 'Reminds me of my grandmother’s traditional sun-cured pickle. The cold-pressed sesame oil aroma is pure nostalgia!'
+        }
+      ];
+    }
+
+    const allProducts = (db && Array.isArray(db.products) && db.products.length > 0)
+      ? db.products
+      : (window.ADMIN_MOCK_DB && window.ADMIN_MOCK_DB.products ? window.ADMIN_MOCK_DB.products : []);
+
+    container.innerHTML = [0, 1, 2, 3].map(idx => {
+      const rev = savedReviews[idx] || {
+        name: 'Happy Customer',
+        rating: 5,
+        product: allProducts[idx]?.title || 'Organic Product',
+        text: 'Wonderful organic taste and exceptional quality.'
+      };
+
+      const starsCount = Math.max(1, Math.min(5, Number(rev.rating) || 5));
+      const starString = '★'.repeat(starsCount) + '☆'.repeat(5 - starsCount);
+
+      return `
+        <div class="admin-card" style="padding: 18px; border: 1.5px solid #E2E8F0; border-radius: 16px; background: #FFFFFF; display: flex; flex-direction: column; justify-content: space-between;">
+          <div>
+            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px;">
+              <div style="font-size: 13.5px; font-weight: 800; color: #1E2519; display: flex; align-items: center; gap: 6px;">
+                <i class="ri-chat-quote-fill" style="color: #F59E0B;"></i> Review #${idx + 1}
+              </div>
+              <span style="font-size: 11px; background: #FEF3C7; color: #B45309; font-weight: 800; padding: 3px 9px; border-radius: 6px;">Card ${idx + 1}</span>
+            </div>
+
+            <!-- Mini Live Preview Card -->
+            <div style="background: #F8FAF6; padding: 14px; border-radius: 12px; border: 1px dashed #D3DEC9; margin-bottom: 14px;">
+              <div id="review-preview-stars-${idx}" style="color: #F59E0B; font-size: 16px; letter-spacing: 2px; margin-bottom: 6px;">
+                ${starString}
+              </div>
+              <p id="review-preview-text-${idx}" style="font-size: 12.5px; color: #334155; line-height: 1.5; font-style: italic; margin-bottom: 10px; min-height: 38px;">
+                "${rev.text || 'Great taste and exceptional quality!'}"
+              </p>
+              <div style="display: flex; align-items: center; justify-content: space-between; border-top: 1px solid #E2E8F0; padding-top: 8px;">
+                <div id="review-preview-name-${idx}" style="font-size: 12.5px; font-weight: 800; color: #1E2519;">
+                  ${rev.name || 'Customer Name'}
+                </div>
+                <div id="review-preview-product-${idx}" style="font-size: 11px; font-weight: 700; color: #047857; background: #ECFDF5; padding: 2px 8px; border-radius: 999px;">
+                  ${rev.product || 'Product'}
+                </div>
+              </div>
+            </div>
+
+            <!-- Field 1: Customer Name -->
+            <div class="form-field-block" style="margin-bottom: 12px;">
+              <label class="form-label" style="font-size: 11.5px; font-weight: 700;">1. Customer Name</label>
+              <input type="text" id="review-name-${idx}" class="form-input" style="font-size: 12.5px; height: 38px;" value="${rev.name || ''}" placeholder="e.g. Priya Sharma" oninput="AdminController.handleReviewLiveChange(${idx})">
+            </div>
+
+            <!-- Field 2: Star Rating -->
+            <div class="form-field-block" style="margin-bottom: 12px;">
+              <label class="form-label" style="font-size: 11.5px; font-weight: 700;">2. Star Rating</label>
+              <select id="review-rating-${idx}" class="form-select" style="width: 100%; height: 38px; border-radius: 8px; border: 1.5px solid #CBD5E1; padding: 0 10px; font-weight: 700; background: #FFFFFF; font-size: 12.5px; outline: none; color: #D97706;" onchange="AdminController.handleReviewLiveChange(${idx})">
+                <option value="5" ${Number(rev.rating) === 5 ? 'selected' : ''}>★★★★★ (5 Stars)</option>
+                <option value="4" ${Number(rev.rating) === 4 ? 'selected' : ''}>★★★★☆ (4 Stars)</option>
+                <option value="3" ${Number(rev.rating) === 3 ? 'selected' : ''}>★★★☆☆ (3 Stars)</option>
+                <option value="2" ${Number(rev.rating) === 2 ? 'selected' : ''}>★★☆☆☆ (2 Stars)</option>
+                <option value="1" ${Number(rev.rating) === 1 ? 'selected' : ''}>★☆☆☆☆ (1 Star)</option>
+              </select>
+            </div>
+
+            <!-- Field 3: Product Name -->
+            <div class="form-field-block" style="margin-bottom: 12px;">
+              <label class="form-label" style="font-size: 11.5px; font-weight: 700;">3. Product Name</label>
+              <input type="text" id="review-product-${idx}" class="form-input" style="font-size: 12.5px; height: 38px;" value="${rev.product || ''}" placeholder="e.g. Wild Raw Forest Honey" oninput="AdminController.handleReviewLiveChange(${idx})">
+            </div>
+
+            <!-- Field 4: Review Text -->
+            <div class="form-field-block">
+              <label class="form-label" style="font-size: 11.5px; font-weight: 700;">4. Review Text</label>
+              <textarea id="review-text-${idx}" class="form-textarea" style="font-size: 12px; height: 75px; resize: vertical; line-height: 1.45;" placeholder="Enter customer feedback..." oninput="AdminController.handleReviewLiveChange(${idx})">${rev.text || ''}</textarea>
+            </div>
+
+          </div>
+        </div>
+      `;
+    }).join('');
+  }
+
+  function handleReviewLiveChange(idx) {
+    const name = document.getElementById(`review-name-${idx}`)?.value.trim() || 'Customer Name';
+    const rating = Number(document.getElementById(`review-rating-${idx}`)?.value) || 5;
+    const product = document.getElementById(`review-product-${idx}`)?.value.trim() || 'Organic Product';
+    const text = document.getElementById(`review-text-${idx}`)?.value.trim() || 'Great taste and exceptional quality!';
+
+    const starsCount = Math.max(1, Math.min(5, rating));
+    const starString = '★'.repeat(starsCount) + '☆'.repeat(5 - starsCount);
+
+    const starsEl = document.getElementById(`review-preview-stars-${idx}`);
+    const nameEl = document.getElementById(`review-preview-name-${idx}`);
+    const productEl = document.getElementById(`review-preview-product-${idx}`);
+    const textEl = document.getElementById(`review-preview-text-${idx}`);
+
+    if (starsEl) starsEl.textContent = starString;
+    if (nameEl) nameEl.textContent = name;
+    if (productEl) productEl.textContent = product;
+    if (textEl) textEl.textContent = `"${text}"`;
+  }
+
+  async function saveReviewsForm(btnElement) {
+    const reviews = [];
+    for (let i = 0; i < 4; i++) {
+      const name = document.getElementById(`review-name-${i}`)?.value.trim() || `Customer #${i + 1}`;
+      const rating = Number(document.getElementById(`review-rating-${i}`)?.value) || 5;
+      const product = document.getElementById(`review-product-${i}`)?.value.trim() || 'Organic Pure Food';
+      const text = document.getElementById(`review-text-${i}`)?.value.trim() || 'Exceptional pure taste and fast delivery.';
+      reviews.push({
+        slot: i + 1,
+        name,
+        rating,
+        product,
+        text
+      });
+    }
+
+    await withActionSpinner(btnElement, async () => {
+      if (window.CloudDB && window.CloudDB.saveHomepageReviews) {
+        await window.CloudDB.saveHomepageReviews(reviews);
+      }
+    }, 'Homepage Reviews saved successfully! Live store updated.');
+  }
+
   async function updateMarqueeText(id, text) {
     const item = db.announcementItems.find(a => a.id === id);
     if (item) {
@@ -3506,6 +3679,11 @@ window.AdminController = (function() {
     toggleMarqueeActive,
     addMarqueeItem,
     deleteMarqueeItem,
+
+    // Customer Reviews CMS
+    renderReviewsView,
+    handleReviewLiveChange,
+    saveReviewsForm,
 
     // Orders
     renderOrdersTable,

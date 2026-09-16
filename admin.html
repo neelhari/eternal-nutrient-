@@ -102,6 +102,12 @@
                 <span>Coupons & Discounts</span>
               </button>
             </li>
+            <li>
+              <button class="sidebar-nav-btn" data-tab="reviews" onclick="AdminController.switchTab('reviews')">
+                <i class="ri-star-smile-line"></i>
+                <span>Customer Reviews</span>
+              </button>
+            </li>
           </ul>
         </div>
 
@@ -720,6 +726,32 @@
           </div>
 
           <div id="marquee-items-list" class="marquee-items-list"></div>
+
+        </section>
+
+        <!-- ================================================================= -->
+        <!-- VIEW: CUSTOMER REVIEWS (HOMEPAGE) -->
+        <!-- ================================================================= -->
+        <section id="view-reviews" class="admin-view-panel">
+          
+          <div class="view-header-strip">
+            <div>
+              <h1 class="view-heading-title" style="display: flex; align-items: center; gap: 8px;">
+                <i class="ri-star-smile-fill" style="color: #F59E0B;"></i> Customer Reviews (Homepage)
+              </h1>
+              <p class="view-heading-sub">
+                Manage the 4 customer testimonials displayed on the homepage. Keep them authentic and verified.
+              </p>
+            </div>
+            <button class="btn btn-primary" onclick="AdminController.saveReviewsForm(this)" style="padding: 10px 20px; font-weight: 700; border-radius: 8px; background: #008744;">
+              <i class="ri-save-3-line"></i> Save Reviews
+            </button>
+          </div>
+
+          <!-- 4 Review Cards Grid with 4 simple fields -->
+          <div id="homepage-reviews-admin-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px; margin-top: 16px;">
+            <!-- Rendered Dynamically by AdminController -->
+          </div>
 
         </section>
 
@@ -1579,6 +1611,12 @@
           <div class="mobile-nav-card-icon" style="background: #1E293B; color: #FBBF24;"><i class="ri-megaphone-fill"></i></div>
           <div class="mobile-nav-card-label">Announcements</div>
           <div class="mobile-nav-card-sub">Top ticker text</div>
+        </button>
+
+        <button class="mobile-nav-card" data-tab="reviews" onclick="AdminController.navToTab('reviews')">
+          <div class="mobile-nav-card-icon" style="background: #1E293B; color: #F59E0B;"><i class="ri-star-smile-fill"></i></div>
+          <div class="mobile-nav-card-label">Customer Reviews</div>
+          <div class="mobile-nav-card-sub">Homepage testimonials</div>
         </button>
       </div>
 
